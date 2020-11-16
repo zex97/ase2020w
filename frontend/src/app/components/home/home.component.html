@@ -1,0 +1,35 @@
+<div class="d-flex" id="wrapper" [ngClass]="{'toggled': toggled}" *ngIf="authService.isLoggedIn()">
+
+  <!-- Sidebar / SIDEBARCOMPONENT-->
+  <div class="bg-light border-right" id="sidebar-wrapper">
+    <a class="navbar-brand ml-lg-5" href="" style="font-size: 2em; margin: 1em">Studyboard</a>
+    <div class="list-group list-group-flush">
+      <a href="#" class="list-group-item list-group-item-action bg-light" routerLink="/message">ComponentMessage</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light">ComponentTwo</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light">ComponentThree</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light">ComponentFour</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+    </div>
+  </div>
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <!-- NAVBAR COMPONENT -->
+  <div id="page-content-wrapper" style="padding: 0">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom" style="">
+      <button id="menu-toggle"  (click)="onToggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+    <!-- NAVBAR COMPONENT -->
+
+    <router-outlet></router-outlet>
+
+  </div>
+  <!-- /#page-content-wrapper -->
+
+</div>
+
+<app-login *ngIf="!authService.isLoggedIn()"></app-login>
+

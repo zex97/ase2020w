@@ -1,0 +1,126 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Authentication problems!</strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="pt-5" id="loginWrapper" *ngIf="!registrationOn">
+  <div class="row">
+    <div class="col-md-6 mx-auto" id="formLoginWrapper">
+      <!-- Default form login -->
+      <form class="text-center border border-light p-5" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+
+        <p class="h4 mb-4">Login</p>
+
+        <div class="form-group">
+          <!-- Email -->
+          <input type="text" formControlName="username" id="defaultLoginFormUsername" class="form-control mb-4"
+                 aria-describedby="usernameHelp" placeholder="Username">
+          <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
+            <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
+              required!
+            </small>
+          </div>
+
+          <!-- Password -->
+          <input type="password" formControlName="password" id="defaultLoginFormPassword" class="form-control mb-4"
+                 placeholder="Password">
+          <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
+            <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
+              is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.minlength">Your password
+              must be at least 8 characters long!
+            </small>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-around">
+          <div>
+            <!-- Remember me -->
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+              <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
+            </div>
+          </div>
+          <div>
+            <!-- Forgot password -->
+            <a href="">Forgot password?</a>
+          </div>
+        </div>
+
+        <!-- Sign in button -->
+        <button class="btn btn-info btn-block my-4" type="submit" (click)="loginUser()">Sign in</button>
+
+        <!-- Register -->
+        <p>Not a member?
+          <a (click)="openRegistration()" style="color: dodgerblue">Register</a>
+        </p>
+
+      </form>
+      <!-- Default form login -->
+
+    </div>
+  </div>
+</div>
+
+<div class="pt-5" id="registerWrapper" *ngIf="registrationOn">
+  <div class="row">
+    <div class="col-md-6 mx-auto" id="formRegisterWrapper">
+      <!-- Default form register -->
+      <form action="#!" class="text-center border border-light p-5">
+
+        <p class="h4 mb-4">Sign up</p>
+
+        <div class="form-row mb-4">
+          <div class="col">
+            <!-- First name -->
+            <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="First name">
+          </div>
+          <div class="col">
+            <!-- Last name -->
+            <input type="text" id="defaultRegisterFormLastName" class="form-control" placeholder="Last name">
+          </div>
+        </div>
+
+        <!-- E-mail -->
+        <input type="email" id="defaultRegisterFormEmail" class="form-control mb-4"  placeholder="E-mail">
+
+        <!-- Password -->
+        <input type="password" id="defaultRegisterFormPassword" class="form-control" autocomplete="new-password" placeholder="Password" aria-describedby="defaultRegisterFormPasswordHelpBlock">
+        <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+          At least 8 characters and 1 digit
+        </small>
+
+        <!-- Phone number -->
+        <input type="text" id="defaultRegisterPhonePassword" class="form-control" placeholder="Phone number" aria-describedby="defaultRegisterFormPhoneHelpBlock">
+        <small id="defaultRegisterFormPhoneHelpBlock" class="form-text text-muted mb-4">
+          Optional - for two step authentication
+        </small>
+
+        <!-- Newsletter -->
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="defaultRegisterFormNewsletter">
+          <label class="custom-control-label" for="defaultRegisterFormNewsletter">Subscribe to our newsletter</label>
+        </div>
+
+        <!-- Sign up button -->
+        <button class="btn btn-info my-4 btn-block" type="submit" (click)="closeRegistration()">Sign in</button>
+
+        <hr>
+
+        <a (click)="closeRegistration()" style="color: dodgerblue" target="_blank">Back</a>
+
+        <!-- Terms of service -->
+        <p>By clicking
+          <em>Sign up</em> you agree to our
+          <a  target="_blank">terms of service</a>
+
+      </form>
+      <!-- Default form register -->
+    </div>
+  </div>
+</div>
+
