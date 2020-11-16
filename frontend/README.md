@@ -1,4 +1,4 @@
-# SEPM Group Phase
+# ASE Group Phase
 
 ## First Steps
 
