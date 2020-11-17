@@ -4,7 +4,7 @@
   <div class="bg-light border-right" id="sidebar-wrapper">
     <a class="navbar-brand ml-lg-5" href="" style="font-size: 2em; margin: 1em">Studyboard</a>
     <div class="list-group list-group-flush">
-      <a href="#" class="list-group-item list-group-item-action bg-light" routerLink="/message">ComponentMessage</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'message'}}]">ComponentMessage</a>
       <a href="#" class="list-group-item list-group-item-action bg-light">ComponentTwo</a>
       <a href="#" class="list-group-item list-group-item-action bg-light">ComponentThree</a>
       <a href="#" class="list-group-item list-group-item-action bg-light">ComponentFour</a>
@@ -24,7 +24,7 @@
     </nav>
     <!-- NAVBAR COMPONENT -->
 
-    <router-outlet name="homeOutlet"></router-outlet>
+    <router-outlet name="view"></router-outlet>
 
   </div>
   <!-- /#page-content-wrapper -->

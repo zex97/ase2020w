@@ -26,10 +26,10 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
           {
-            path: '',
+            path: 'message',
             component: MessageComponent,
-            outlet: 'homeOutlet'
-          },
+            outlet: 'view'
+          }
         ]
       }
     ]
