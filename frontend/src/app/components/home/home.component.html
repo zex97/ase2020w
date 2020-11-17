@@ -24,12 +24,10 @@
     </nav>
     <!-- NAVBAR COMPONENT -->
 
-    <router-outlet></router-outlet>
+    <router-outlet name="homeOutlet"></router-outlet>
 
   </div>
   <!-- /#page-content-wrapper -->
 
 </div>
-
-<app-login *ngIf="!authService.isLoggedIn()"></app-login>
 

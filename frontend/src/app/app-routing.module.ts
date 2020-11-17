@@ -4,13 +4,36 @@ import {LoginComponent} from './components/login/login.component';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
+import {HomeComponent} from './components/home/home.component';
+import {AppComponent} from './app.component';
 
 
 const routes: Routes = [
-  { path: '', component: MessageComponent},
-  { path: 'login', component: LoginComponent},
-  { path: '404', component: PageNotFoundComponent },
-  { path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  { path: '',
+    component: AppComponent,
+    children: [
+      {
+        path: '',
+        component: LoginComponent
+      },
+      {
+        path: 'login',
+        component: LoginComponent
+      },
+      {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            component: MessageComponent,
+            outlet: 'homeOutlet'
+          },
+        ]
+      }
+    ]
+  },
   { path: '**', component: PageNotFoundComponent }
 ];
 
