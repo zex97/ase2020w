@@ -13,8 +13,6 @@ import {AuthRequest} from '../../dtos/auth-request';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  registerForm: FormGroup;
-  registrationOn: boolean = false;
   // After first submission attempt, form validation will start
   submitted: boolean = false;
   // Error flag
@@ -26,7 +24,6 @@ export class LoginComponent implements OnInit {
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
-    this.registerForm = this.formBuilder.group({});
   }
 
   /**
@@ -59,7 +56,7 @@ export class LoginComponent implements OnInit {
         this.errorMessage = error.error.message;
       }
     );
-    // this.router.navigate(['/start/home']);
+    this.router.navigate(['/home']);
   }
 
   /**
@@ -72,11 +69,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  openRegistration() {
-    this.registrationOn = true;
-  }
-
-  closeRegistration() {
-    this.registrationOn = false;
+  navigateToRegister() {
+    this.router.navigate(['/register']);
   }
 }

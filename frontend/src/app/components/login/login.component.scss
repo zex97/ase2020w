@@ -1,8 +1,15 @@
-#formLoginWrapper,#formRegisterWrapper {
+#formLoginWrapper {
   max-width: 25em;
 }
 
-#loginWrapper,#registerWrapper {
+#loginWrapper {
   padding-top: 7rem !important;
+}
+
+#registerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 

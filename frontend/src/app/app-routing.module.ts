@@ -6,6 +6,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
 import {HomeComponent} from './components/home/home.component';
 import {AppComponent} from './app.component';
+import {RegisterComponent} from './components/register/register.component';
 
 
 const routes: Routes = [
@@ -21,10 +22,19 @@ const routes: Routes = [
         component: LoginComponent
       },
       {
+        path: 'register',
+        component: RegisterComponent
+      },
+      {
         path: 'home',
         component: HomeComponent,
         canActivate: [AuthGuard],
         children: [
+          {
+            path: '',
+            component: MessageComponent,
+            outlet: 'view'
+          },
           {
             path: 'message',
             component: MessageComponent,

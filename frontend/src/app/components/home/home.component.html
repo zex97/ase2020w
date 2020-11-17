@@ -2,13 +2,13 @@
 
   <!-- Sidebar / SIDEBARCOMPONENT-->
   <div class="bg-light border-right" id="sidebar-wrapper">
-    <a class="navbar-brand ml-lg-5" href="" style="font-size: 2em; margin: 1em">Studyboard</a>
+    <a class="navbar-brand ml-lg-5" href="home" style="font-size: 2em; margin: 1em">Studyboard</a>
     <div class="list-group list-group-flush">
-      <a href="#" class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'message'}}]">ComponentMessage</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light">ComponentTwo</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light">ComponentThree</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light">ComponentFour</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+      <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'message'}}]">ComponentMessage</a>
+      <a class="list-group-item list-group-item-action bg-light">ComponentTwo</a>
+      <a class="list-group-item list-group-item-action bg-light">ComponentThree</a>
+      <a class="list-group-item list-group-item-action bg-light">ComponentFour</a>
+      <a class="list-group-item list-group-item-action bg-light" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
     </div>
   </div>
   <!-- /#sidebar-wrapper -->

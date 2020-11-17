@@ -21,25 +21,25 @@ export class AuthService {
     this.scheduleReAuthentication();
   }
 
-  /**
+  /** AUTHENTIFICATION IMPL
    * Login in the user. If it was successful, a valid JWT token will be stored
    * @param authRequest User data
-  */
+  *
   loginUser(authRequest: AuthRequest): Observable<AuthResponse> {
     return this.httpClient.post<AuthResponse>(this.authBaseUri, authRequest)
       .pipe(
         tap((authResponse: AuthResponse) => this.setToken(authResponse))
       );
-  }
+  }*/
 
   /**
    * Login in the user. If it was successful, a valid JWT token will be stored
    * @param authRequest User data
-
+   */
   loginUser(authRequest: AuthRequest): Observable<AuthResponse> {
     this.isLoggedInHELP = true;
     return new Observable<AuthResponse>();
-  }*/
+  }
 
 
 
@@ -47,15 +47,16 @@ export class AuthService {
    * Check if a valid JWT token is saved in the localStorage
    */
   isLoggedIn() {
-    return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
-    /**return this.isLoggedInHELP;*/
+    /**return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
+     */
+     return this.isLoggedInHELP;
   }
 
   logoutUser() {
-    /**this.isLoggedInHELP = false;*/
-    console.log('Logout');
+    this.isLoggedInHELP = false;
+    /**console.log('Logout');
     localStorage.removeItem('currentToken');
-    localStorage.removeItem('futureToken');
+    localStorage.removeItem('futureToken');*/
   }
 
   getToken() {
