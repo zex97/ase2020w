@@ -13,17 +13,26 @@
     </parent>
 
     <dependencies>
-        <!-- Internal dependencies -->
-        <dependency>
-            <groupId>com.studyboard</groupId>
-            <artifactId>studyboard-domain</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-
         <!-- Spring Framework -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.studyboard</groupId>
+            <artifactId>studyboard-user-space</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
