@@ -29,12 +29,13 @@
     </properties>
 
     <modules>
-        <module>application</module>
-        <module>service</module>
-        <module>domain</module>
-        <module>persistence</module>
+        <module>file-uploader</module>
+        <module>flashcard-organiser</module>
         <module>rest-api</module>
         <module>security</module>
+        <module>transcriber</module>
+        <module>user-space</module>
+        <module>storage</module>
     </modules>
 
     <build>
