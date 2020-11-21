@@ -1,12 +1,22 @@
 ## How to run the backend
 
-1. In your Maven side panel select Studyboard -> Lifecycle -> package and Run Maven Build
+1. In your Maven side panel select Studyboard -> Lifecycle -> package and Run Maven Clean + Install
+```bash
+mvn clean install
+```
 
-2. Run a local docker server
+2. Start a local docker server
 
-3. In your terminal go to local and execute "docker-compose up -d"
-
-4. Run StudyboardApplication
+3. In your terminal go to local and execute
+```bash
+docker-compose -f local/docker-compose-db.yml up
+```
+to start the database container or
+```bash
+docker-compose -f local/docker-compose.yml up
+```
+to start both, database and application, containers-
+4. (Optional) Run StudyboardApplication if you have not deployed the application container in the step before.
 
 If the postgres container won't run with docker (Docker displays error: Database is uninitialized and superuser password is not specified) you can add the line
 
