@@ -20,7 +20,7 @@ public class UserSpaceService implements UserSpace {
     private UserRepository userRepository;
 
     @Override
-    public List<Space> getUserSpaces(long userId){
+    public List<Space> getUserSpaces(long userId) {
         User user = findUserById(userId);
         return user.getSpaces();
     }
@@ -40,7 +40,7 @@ public class UserSpaceService implements UserSpace {
     }
 
     @Override
-    public List<Document> geAllDocumentsFromSpace(long spaceId){
+    public List<Document> geAllDocumentsFromSpace(long spaceId) {
         Space space = findSpaceById(spaceId);
         return space.getDocuments();
     }
@@ -59,7 +59,7 @@ public class UserSpaceService implements UserSpace {
         spaceRepository.save(space);
     }
 
-    private Space findSpaceById(long spaceId){
+    private Space findSpaceById(long spaceId) {
         Space space = spaceRepository.findSpaceById(spaceId);
         if (space == null) {
             throw new SpaceDoesNotExist();
@@ -67,7 +67,7 @@ public class UserSpaceService implements UserSpace {
         return space;
     }
 
-    private User findUserById(long userId){
+    private User findUserById(long userId) {
         User user = userRepository.findUserById(userId);
         if (user == null) {
             throw new UserDoesNotExist();

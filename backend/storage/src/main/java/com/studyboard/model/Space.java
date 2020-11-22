@@ -32,7 +32,7 @@ public class Space {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "spaceId")
     public List<Document> getDocuments() {
-        if (documents == null){
+        if (documents == null) {
             documents = new ArrayList<>();
         }
         return documents;

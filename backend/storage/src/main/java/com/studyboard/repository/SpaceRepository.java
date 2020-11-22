@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface SpaceRepository extends CrudRepository<Space, Long> {
     List<Space> findAll();
+
     Space findSpaceById(long spaceId);
 }

@@ -23,7 +23,7 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "userId")
     public List<Space> getSpaces() {
-        if (spaces == null){
+        if (spaces == null) {
             spaces = new ArrayList<>();
         }
         return spaces;
