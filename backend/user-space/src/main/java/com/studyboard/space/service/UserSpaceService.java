@@ -40,6 +40,12 @@ public class UserSpaceService implements UserSpace {
     }
 
     @Override
+    public List<Document> geAllDocumentsFromSpace(long spaceId){
+        Space space = findSpaceById(spaceId);
+        return space.getDocuments();
+    }
+
+    @Override
     public void addDocumentToSpace(long spaceId, Document document) {
         Space space = findSpaceById(spaceId);
         space.getDocuments().add(document);

@@ -31,4 +31,8 @@ public class UserSpaceController {
         return ResponseEntity.ok().build();
     }
 
+    @RequestMapping(value="/{userId}/{spaceId}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity getAllDocuments(@PathVariable(name = "userId") long userId, @PathVariable(name = "spaceId") long spaceId){
+        return ResponseEntity.ok().body(service.geAllDocumentsFromSpace(spaceId));
+    }
 }
