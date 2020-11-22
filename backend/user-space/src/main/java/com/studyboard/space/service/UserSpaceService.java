@@ -19,10 +19,6 @@ public class UserSpaceService implements UserSpace {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Space> getAllSpaces(){
-        return spaceRepository.findAll();
-    }
-
     @Override
     public List<Space> getUserSpaces(long userId){
         User user = findUserById(userId);

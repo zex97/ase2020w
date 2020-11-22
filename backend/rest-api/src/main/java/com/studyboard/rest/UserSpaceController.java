@@ -1,8 +1,6 @@
 package com.studyboard.rest;
 
 import com.studyboard.model.Space;
-import com.studyboard.model.User;
-import com.studyboard.repository.UserRepository;
 import com.studyboard.space.service.UserSpaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +13,6 @@ import java.util.List;
 public class UserSpaceController {
     @Autowired
     private UserSpaceService service;
-
-    @Autowired
-    private UserRepository repository;
 
     @RequestMapping(value="/{userId}", method = RequestMethod.GET, produces = "application/json")
     public List<Space> getUserSpaces(@PathVariable(name = "userId") long userId){
@@ -36,23 +31,4 @@ public class UserSpaceController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="/users", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity getUsers(){
-        return ResponseEntity.ok().body(repository.findAll());
-    }
-
-
-
-
-    @RequestMapping(value="/test", method = RequestMethod.GET, produces = "application/json")
-    public List<Space> runTest(){
-        User user = repository.save(new User());
-        Space spase = new Space();
-        spase.setName("ololo");
-        service.addSpaceToUser(user.getId(), spase);
-
-        List<Space> spaces = service.getUserSpaces(user.getId());
-
-        return spaces;
-    }
 }
