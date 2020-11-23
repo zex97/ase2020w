@@ -1,5 +1,6 @@
 package com.studyboard.flashcard.service;
 
+import com.studyboard.flashcard.exception.DeckDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class DeckSpaceService {
     public Deck getOneDeck(Long id) {
         Deck deck = repository.findById(id).orElse(null);
         if(deck == null) {
-            //add Exception
+            throw new DeckDoesNotExist();
         }
         return deck;
     }
