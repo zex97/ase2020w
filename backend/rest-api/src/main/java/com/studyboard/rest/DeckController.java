@@ -1,6 +1,6 @@
 package com.studyboard.rest;
 
-import com.studyboard.flashcard.service.DeckSpace;
+import com.studyboard.flashcard.service.DeckSpaceService;
 import com.studyboard.model.Deck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 public class DeckController {
 
     @Autowired
-    private DeckSpace service;
+    private DeckSpaceService service;
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
     public List<Deck> getAllDecks(){
