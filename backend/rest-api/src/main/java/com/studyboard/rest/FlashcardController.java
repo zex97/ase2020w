@@ -1,6 +1,6 @@
 package com.studyboard.rest;
 
-import com.studyboard.flashcard.service.SimpleFlashcardService;
+import com.studyboard.flashcard.service.FlashcardService;
 import com.studyboard.model.Deck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +13,21 @@ import java.util.List;
 public class FlashcardController {
 
     @Autowired
-    private SimpleFlashcardService service;
+    private FlashcardService service;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
-    public List<Deck> getAllDecks(){
-        return service.getAllDecks();
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
+    public List<Deck> getAllDecks(@PathVariable (name="userId") long userId){
+        return service.getAllDecks(userId);
     }
 
-    @RequestMapping(value = "/{deckId}", method = RequestMethod.GET, produces = "application/json")
-    public Deck getOneDeck(@PathVariable(name = "deckId") long deckId){
-        return service.getOneDeck(deckId);
+    @RequestMapping(value = "/{userId}/{deckId}", method = RequestMethod.GET, produces = "application/json")
+    public Deck getOneDeck(@PathVariable (name="userId") long userId, @PathVariable(name = "deckId") long deckId){
+        return service.getOneDeck(userId, deckId);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity createDeck(@RequestBody Deck deck) {
-        service.createDeck(deck);
+    @RequestMapping(value = "/{userId}", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity createDeck(@PathVariable (name="userId") long userId, @RequestBody Deck deck) {
+        service.createDeck(userId, deck);
         return ResponseEntity.ok().build();
     }
 

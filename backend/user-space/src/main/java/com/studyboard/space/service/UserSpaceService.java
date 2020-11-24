@@ -6,7 +6,7 @@ import com.studyboard.model.User;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.space.exception.SpaceDoesNotExist;
-import com.studyboard.space.exception.UserDoesNotExist;
+import com.studyboard.exception.UserDoesNotExist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -9,25 +9,27 @@ public interface FlashcardService {
     /**
      * Find all decks user created
      *
+     * @param userId - id of the user who created the deck
      * @return list of all decks
      */
-    public List<Deck> getAllDecks();
+    public List<Deck> getAllDecks(long userId);
 
     /**
      * Find a single deck by id
      *
-     * @param id of the deck
+     * @param userId - id of the user who created the deck
+     * @param deckId of the deck
      * @return the deck with the corresponding id
      */
-    public Deck getOneDeck(Long id);
+    public Deck getOneDeck(long userId, long deckId);
 
     /**
      * Create a single deck
      *
+     * @param userId - id of the user who created the deck
      * @param deck with all the necessary information about a deck
      * @return created deck
      */
-    public Deck createDeck(Deck deck);
+    public void createDeck(long userId, Deck deck);
 
-    /**TO-DO: connect flashcards to deck*/
 }

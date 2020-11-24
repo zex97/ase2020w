@@ -9,6 +9,7 @@ import java.util.List;
 public class User {
     private long id;
     private List<Space> spaces;
+    private List<Deck> decks;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -31,5 +32,18 @@ public class User {
 
     public void setSpaces(List<Space> spaces) {
         this.spaces = spaces;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "userId")
+    public List<Deck> getDecks() {
+        if (decks == null) {
+            decks = new ArrayList<>();
+        }
+        return decks;
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
     }
 }

@@ -1,29 +1,49 @@
 package com.studyboard.flashcard.service;
 
+import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.flashcard.exception.DeckDoesNotExist;
 import com.studyboard.model.Deck;
+import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
+import com.studyboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class SimpleFlashcardService {
+public class SimpleFlashcardService implements FlashcardService{
     @Autowired
-    private DeckRepository repository;
+    private DeckRepository deckRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public List<Deck> getAllDecks(){
-        return repository.findAll();
+    @Override
+    public List<Deck> getAllDecks(long userId){
+        User user = findUserById(userId);
+        return user.getDecks();
     }
-
-    public Deck getOneDeck(Long id) {
-        Deck deck = repository.findById(id).orElse(null);
+    @Override
+    public Deck getOneDeck(long userId, long deckId) {
+        Deck deck = deckRepository.findById(deckId).orElse(null);
         if(deck == null) {
             throw new DeckDoesNotExist();
         }
         return deck;
     }
 
-    public Deck createDeck(Deck deck) { return repository.save(deck); }
+    @Override
+    public void createDeck(long userId, Deck deck) {
+        User user = findUserById(userId);
+        user.getDecks().add(deck);
+        userRepository.save(user);
+    }
+
+    private User findUserById(long userId) {
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new UserDoesNotExist();
+        }
+        return user;
+    }
 }

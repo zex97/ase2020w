@@ -12,7 +12,5 @@ public interface DeckRepository extends CrudRepository<Deck, Long> {
 
     List<Deck> findAll();
 
-    Optional<Deck> findById(Long id);
-
-    Deck save(Deck deck);
+    Optional<Deck> findById(long deckId);
 }
