@@ -19,7 +19,7 @@ public interface UserService {
      * @param user to create
      * @return created user entry
      */
-    User createUser(User user);
+    User createUser(User user) throws UniqueConstraintException;
 
 
     /**

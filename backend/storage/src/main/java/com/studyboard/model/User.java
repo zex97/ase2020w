@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sb_user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "email"})})
+@Table(name = "sb_user")
 public class User {
     private long id;
     private List<Space> spaces;
@@ -37,7 +37,7 @@ public class User {
         this.spaces = spaces;
     }
 
-    @Column(nullable = false, name = "username")
+    @Column(nullable = false, name = "username", unique = true)
     public String getUsername() {
         return username;
     }
@@ -55,7 +55,7 @@ public class User {
         this.password = password;
     }
 
-    @Column(nullable = false, name = "email")
+    @Column(nullable = false, name = "email", unique = true)
     public String getEmail() {
         return email;
     }

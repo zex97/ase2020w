@@ -1,5 +1,6 @@
 package com.studyboard.rest;
 
+import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.model.User;
 import com.studyboard.space.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity createUser(@RequestBody User user) {
+    public ResponseEntity createUser(@RequestBody User user) throws UniqueConstraintException {
         userService.createUser(user);
         return ResponseEntity.ok().build();
     }
