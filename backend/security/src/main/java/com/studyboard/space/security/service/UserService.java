@@ -3,6 +3,8 @@ package com.studyboard.space.security.service;
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.model.User;
 
+import java.util.List;
+
 public interface UserService {
 
     /**
@@ -12,6 +14,12 @@ public interface UserService {
      * @return the user object with the specified id
      */
     User getUser(Long id);
+
+    /**
+     * Returns a list of all users.
+     *
+     */
+    List<User> getAllUsers();
 
     /**
      * Create a single user entry

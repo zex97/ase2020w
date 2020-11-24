@@ -4,6 +4,8 @@ import com.studyboard.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
@@ -23,6 +25,12 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * @return user object with specified username
      */
     User findOneByUsername(String username);
+
+    /**
+     * Returns a list of all users.
+     *
+     */
+    List<User> findAll();
 
 
 }

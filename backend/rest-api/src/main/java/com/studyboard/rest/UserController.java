@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value="/api/user")
 public class UserController {
@@ -17,6 +19,11 @@ public class UserController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
     public User getUser(@PathVariable(name = "userId") long userId){
         return userService.getUser(userId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SimpleUserService implements UserService{
 
@@ -24,8 +26,13 @@ public class SimpleUserService implements UserService{
     }
 
     @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public User createUser(User user) throws UniqueConstraintException {
-        //TODO hash password when backend connected to frontend
+        //TODO hash password after authentication is done
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
@@ -35,7 +42,7 @@ public class SimpleUserService implements UserService{
 
     @Override
     public User updateUserPassword(User user) {
-        //TODO encode the password before saving
+        //TODO hash password after authentication is done
         User storedUser = userRepository.findUserById(user.getId());
         if (storedUser == null) {
             throw new UserDoesNotExistException();
