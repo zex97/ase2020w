@@ -17,7 +17,6 @@ public interface UserService {
 
     /**
      * Returns a list of all users.
-     *
      */
     List<User> getAllUsers();
 

@@ -28,7 +28,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     /**
      * Returns a list of all users.
-     *
      */
     List<User> findAll();
 

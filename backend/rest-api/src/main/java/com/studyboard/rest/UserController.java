@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/api/user")
+@RequestMapping(value = "/api/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
-    public User getUser(@PathVariable(name = "userId") long userId){
+    public User getUser(@PathVariable(name = "userId") long userId) {
         return userService.getUser(userId);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 

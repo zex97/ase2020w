@@ -1,7 +1,7 @@
 package com.studyboard.space.security.service;
 
 import com.studyboard.exception.UniqueConstraintException;
-import com.studyboard.exception.UserDoesNotExistException;
+import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.model.User;
 import com.studyboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SimpleUserService implements UserService{
+public class SimpleUserService implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -20,7 +20,7 @@ public class SimpleUserService implements UserService{
     public User getUser(Long id) {
         User user = userRepository.findUserById(id);
         if (user == null) {
-            throw new UserDoesNotExistException();
+            throw new UserDoesNotExist();
         }
         return user;
     }
@@ -45,7 +45,7 @@ public class SimpleUserService implements UserService{
         //TODO hash password after authentication is done
         User storedUser = userRepository.findUserById(user.getId());
         if (storedUser == null) {
-            throw new UserDoesNotExistException();
+            throw new UserDoesNotExist();
         }
         storedUser.setPassword(user.getPassword());
         return userRepository.save(storedUser);
@@ -55,7 +55,7 @@ public class SimpleUserService implements UserService{
     public User resetLoginAttempts(Long id) {
         User user = userRepository.findUserById(id);
         if (user == null) {
-            throw new UserDoesNotExistException();
+            throw new UserDoesNotExist();
         }
         user.setLoginAttempts(0);
         return userRepository.save(user);
