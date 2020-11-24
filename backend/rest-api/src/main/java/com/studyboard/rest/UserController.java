@@ -1,9 +1,9 @@
 package com.studyboard.rest;
 
 import com.studyboard.model.User;
-import com.studyboard.space.security.service.UniqueConstraintException;
 import com.studyboard.space.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,23 +15,25 @@ public class UserController {
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
     public User getUser(@PathVariable(name = "userId") long userId){
-        //TODO throw http exception
         return userService.getUser(userId);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public User createUser(@RequestBody User user) throws UniqueConstraintException {
-        return userService.createUser(user);
+    public ResponseEntity createUser(@RequestBody User user) {
+        userService.createUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json")
-    public User editUser(@RequestBody User user) {
-        return userService.updateUserPassword(user);
+    public ResponseEntity editUserPassword(@RequestBody User user) {
+        userService.updateUserPassword(user);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.PUT, produces = "application/json")
-    public User invertEnabled(@PathVariable Long userId) {
-        return userService.resetLoginAttempts(userId);
+    public ResponseEntity resetLoginAttempts(@PathVariable Long userId) {
+        userService.resetLoginAttempts(userId);
+        return ResponseEntity.ok().build();
     }
 
 }

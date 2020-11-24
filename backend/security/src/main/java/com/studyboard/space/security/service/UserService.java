@@ -1,8 +1,7 @@
 package com.studyboard.space.security.service;
 
+import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.model.User;
-
-import java.util.List;
 
 public interface UserService {
 
@@ -20,7 +19,7 @@ public interface UserService {
      * @param user to create
      * @return created user entry
      */
-    User createUser(User user) throws UniqueConstraintException;
+    User createUser(User user);
 
 
     /**
