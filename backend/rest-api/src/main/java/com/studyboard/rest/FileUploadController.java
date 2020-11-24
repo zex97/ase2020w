@@ -23,14 +23,17 @@ public class FileUploadController {
 
   @Autowired FileUploaderService fileUploaderService;
 
-  /** @param file accepts files up to 10MB (can be changed in application.properties) */
-  @RequestMapping(value = "/new")
+  /** @param file accepts files up to 20MB (can be changed in application.properties) */
+  @RequestMapping(value = "/single-file", method = RequestMethod.POST, produces = "application/json")
   public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
     fileUploaderService.store(file);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(file.getOriginalFilename());
   }
 
-  @RequestMapping(value = "/file/{fileName}", method = RequestMethod.GET)
+  @RequestMapping(
+      value = "/file/{fileName}",
+      method = RequestMethod.GET,
+      produces = "application/json")
   @ResponseBody
   public ResponseEntity<Resource> getFile(@PathVariable(name = "fileName") String fileName) {
     Resource file = fileUploaderService.loadAsResource(fileName);
@@ -40,16 +43,23 @@ public class FileUploadController {
         .body(file);
   }
 
-  @RequestMapping(value = "/multiple-files", method = RequestMethod.GET)
+  @RequestMapping(
+      value = "/multiple-files",
+      method = RequestMethod.POST,
+      produces = "application/json")
   @ResponseBody
   public List<ResponseEntity<String>> uploadMultipleFiles(
-      @RequestParam("files") MultipartFile[] files) {
+      @RequestParam("file") MultipartFile[] files) {
+    System.out.println("TEST");
     return Arrays.stream(files).map(this::handleFileUpload).collect(Collectors.toList());
   }
 
-  @RequestMapping(value = "/delete-file/{fileId}", method = RequestMethod.DELETE, produces = "application/json")
-  public void deleteUserUpload(@PathVariable(value = "fileId") String fileId) {
-    fileUploaderService.deleteUserFile(fileId);
+  @RequestMapping(
+      value = "/delete-file/{fileName}",
+      method = RequestMethod.DELETE,
+      produces = "application/json")
+  public void deleteUserUpload(@PathVariable(value = "fileName") String fileName) {
+    fileUploaderService.deleteUserFile(fileName);
   }
 
   @ExceptionHandler(FileNotFoundExceptionFile.class)
