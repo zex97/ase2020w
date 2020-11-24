@@ -14,9 +14,11 @@ public interface FileUploader {
 
   Stream<Resource> loadAll();
 
-  Path load(String filename);
+  Path load(String fileName);
 
-  Resource loadAsResource(String filename);
+  Resource loadAsResource(String fileName);
 
-  void deleteUserFile();
+  void deleteUserFile(String fileName);
+
+  void deleteUserFolder();
 }

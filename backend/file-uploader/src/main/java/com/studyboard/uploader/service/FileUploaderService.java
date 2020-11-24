@@ -102,11 +102,22 @@ public class FileUploaderService implements FileUploader {
     }
   }
 
+  @Override
+  public void deleteUserFile(String fileName) {
+    Path filePath = load(fileName);
+
+    try {
+      Files.delete(filePath);
+    } catch (IOException e) {
+      throw new FileStorageException("Failed to delete file (" + fileName +")");
+    }
+  }
+
   /**
    * In case we want to delete a user, we delete his directory Username required for file deletion
    */
   @Override
-  public void deleteUserFile() {
+  public void deleteUserFolder() {
     FileSystemUtils.deleteRecursively(rootLocation.toFile());
   }
 }

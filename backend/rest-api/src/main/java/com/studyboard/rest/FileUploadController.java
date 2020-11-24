@@ -47,6 +47,11 @@ public class FileUploadController {
     return Arrays.stream(files).map(this::handleFileUpload).collect(Collectors.toList());
   }
 
+  @RequestMapping(value = "/delete-file/{fileId}", method = RequestMethod.DELETE, produces = "application/json")
+  public void deleteUserUpload(@PathVariable(value = "fileId") String fileId) {
+    fileUploaderService.deleteUserFile(fileId);
+  }
+
   @ExceptionHandler(FileNotFoundExceptionFile.class)
   public ResponseEntity<?> handleStorageException(FileNotFoundExceptionFile e) {
     return ResponseEntity.notFound().build();
