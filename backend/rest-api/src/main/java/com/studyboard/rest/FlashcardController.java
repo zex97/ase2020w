@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value="/api/decks")
-public class DeckController {
+public class FlashcardController {
 
     @Autowired
     private SimpleFlashcardService service;
