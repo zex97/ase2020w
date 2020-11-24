@@ -1,6 +1,7 @@
 package com.studyboard.rest;
 
 import com.studyboard.uploader.StorageProperties;
+import com.studyboard.uploader.exception.FileNotFoundException;
 import com.studyboard.uploader.exception.StorageException;
 import com.studyboard.uploader.service.FileUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(value = "/api/upload")
 @EnableConfigurationProperties(StorageProperties.class)
@@ -22,7 +27,6 @@ public class FileUploadController {
   /** @param file accepts files up to 10MB (can be changed in application.properties) */
   @RequestMapping(value = "/new")
   public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-    String message = "";
     fileUploaderService.store(file);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(file.getOriginalFilename());
   }
@@ -37,8 +41,15 @@ public class FileUploadController {
         .body(file);
   }
 
-  @ExceptionHandler
-  public ResponseEntity<?> handleStorageException(StorageException e) {
+  @RequestMapping(value = "/multiple-files", method = RequestMethod.GET)
+  @ResponseBody
+  public List<ResponseEntity<String>> uploadMultipleFiles(
+      @RequestParam("files") MultipartFile[] files) {
+    return Arrays.stream(files).map(this::handleFileUpload).collect(Collectors.toList());
+  }
+
+  @ExceptionHandler(FileNotFoundException.class)
+  public ResponseEntity<?> handleStorageException(FileNotFoundException e) {
     return ResponseEntity.notFound().build();
   }
 }

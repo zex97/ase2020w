@@ -1,11 +1,13 @@
 package com.studyboard.uploader.service;
 
 import com.studyboard.uploader.StorageProperties;
+import com.studyboard.uploader.exception.FileNotFoundException;
 import com.studyboard.uploader.exception.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
@@ -22,9 +24,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
 /**
- * Service used to manage user uploaded files.
- * Important: All files saved in the rootLocation, user directories remains to be implemented
- * */
+ * Service used to manage user uploaded files. Important: All files saved in the rootLocation, user
+ * directories remains to be implemented
+ */
 @Service
 public class FileUploaderService implements FileUploader {
 
@@ -60,14 +62,14 @@ public class FileUploaderService implements FileUploader {
       throw new StorageException("File name contains illegal char sequence \"../\"");
     }
 
+    Path uploadFilePath =
+        this.rootLocation
+            .resolve(Paths.get(file.getOriginalFilename()))
+            .normalize()
+            .toAbsolutePath();
+
     try {
-      Files.copy(
-          file.getInputStream(),
-          this.rootLocation
-              .resolve(Paths.get(file.getOriginalFilename()))
-              .normalize()
-              .toAbsolutePath(),
-          StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       throw new StorageException("Failed to store file (" + fileName + ")!", e);
     }
@@ -93,7 +95,8 @@ public class FileUploaderService implements FileUploader {
       if (resource.exists() || resource.isReadable()) {
         return resource;
       } else {
-        throw new StorageException("File (" + fileName + " could not be read, or doesn't exist");
+        throw new FileNotFoundException(
+            "File (" + fileName + " could not be read, or doesn't exist");
       }
 
     } catch (MalformedURLException e) {
@@ -101,12 +104,12 @@ public class FileUploaderService implements FileUploader {
     }
   }
 
-
   /**
-   * Remains for the possibility of deleting the user
+   * In case we want to delete a user, we delete his directory
+   * Username required for file deletion
    * */
   @Override
-  public void deleteAll() {
+  public void deleteUserFile() {
     FileSystemUtils.deleteRecursively(rootLocation.toFile());
   }
 }

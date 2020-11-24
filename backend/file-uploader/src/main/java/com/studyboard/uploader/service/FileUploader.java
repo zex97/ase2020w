@@ -18,6 +18,6 @@ public interface FileUploader {
 
     Resource loadAsResource(String filename);
 
-    void deleteAll();
+    void deleteUserFile();
 
 }
