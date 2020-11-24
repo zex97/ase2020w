@@ -3,7 +3,6 @@ package com.studyboard.repository;
 import com.studyboard.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 
@@ -30,6 +29,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * Returns a list of all users.
      */
     List<User> findAll();
-
 
 }
