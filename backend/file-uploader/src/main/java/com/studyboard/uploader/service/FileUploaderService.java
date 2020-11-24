@@ -1,7 +1,7 @@
 package com.studyboard.uploader.service;
 
 import com.studyboard.uploader.FileStorageProperties;
-import com.studyboard.uploader.exception.FileNotFoundExceptionFile;
+import com.studyboard.uploader.exception.StorageFileNotFoundException;
 import com.studyboard.uploader.exception.FileStorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -15,10 +15,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.stream.Stream;
 
 /**
@@ -93,7 +90,7 @@ public class FileUploaderService implements FileUploader {
       if (resource.exists() || resource.isReadable()) {
         return resource;
       } else {
-        throw new FileNotFoundExceptionFile(
+        throw new StorageFileNotFoundException(
             "File (" + fileName + " could not be read, or doesn't exist");
       }
 
@@ -108,8 +105,11 @@ public class FileUploaderService implements FileUploader {
 
     try {
       Files.delete(filePath);
+    } catch (NoSuchFileException e) {
+      System.out.println("vla");
+      throw new StorageFileNotFoundException("File(" + fileName + ") not in the directory");
     } catch (IOException e) {
-      throw new FileStorageException("Failed to delete file (" + fileName +")");
+      throw new FileStorageException("Failed to delete file(" + fileName + ")");
     }
   }
 

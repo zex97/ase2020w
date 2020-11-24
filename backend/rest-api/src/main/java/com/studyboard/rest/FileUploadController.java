@@ -1,7 +1,7 @@
 package com.studyboard.rest;
 
 import com.studyboard.uploader.FileStorageProperties;
-import com.studyboard.uploader.exception.FileNotFoundExceptionFile;
+import com.studyboard.uploader.exception.StorageFileNotFoundException;
 import com.studyboard.uploader.service.FileUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,7 +24,10 @@ public class FileUploadController {
   @Autowired FileUploaderService fileUploaderService;
 
   /** @param file accepts files up to 20MB (can be changed in application.properties) */
-  @RequestMapping(value = "/single-file", method = RequestMethod.POST, produces = "application/json")
+  @RequestMapping(
+      value = "/single-file",
+      method = RequestMethod.POST,
+      produces = "application/json")
   public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
     fileUploaderService.store(file);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(file.getOriginalFilename());
@@ -62,8 +65,9 @@ public class FileUploadController {
     fileUploaderService.deleteUserFile(fileName);
   }
 
-  @ExceptionHandler(FileNotFoundExceptionFile.class)
-  public ResponseEntity<?> handleStorageException(FileNotFoundExceptionFile e) {
-    return ResponseEntity.notFound().build();
+  @ExceptionHandler(StorageFileNotFoundException.class)
+  public ResponseEntity<?> handleStorageException(StorageFileNotFoundException e) {
+    System.out.println(Arrays.toString(e.getStackTrace()));
+    return ResponseEntity.noContent().build();
   }
 }
