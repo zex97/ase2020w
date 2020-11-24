@@ -8,16 +8,15 @@ import java.util.stream.Stream;
 
 public interface FileUploader {
 
-    void init();
+  void init();
 
-    String store(MultipartFile file);
+  String store(MultipartFile file);
 
-    Stream<Path> loadAll();
+  Stream<Resource> loadAll();
 
-    Path load(String filename);
+  Path load(String filename);
 
-    Resource loadAsResource(String filename);
+  Resource loadAsResource(String filename);
 
-    void deleteUserFile();
-
+  void deleteUserFile();
 }

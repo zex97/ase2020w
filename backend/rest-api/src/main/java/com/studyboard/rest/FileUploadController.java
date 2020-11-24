@@ -1,8 +1,7 @@
 package com.studyboard.rest;
 
-import com.studyboard.uploader.StorageProperties;
-import com.studyboard.uploader.exception.FileNotFoundException;
-import com.studyboard.uploader.exception.StorageException;
+import com.studyboard.uploader.FileStorageProperties;
+import com.studyboard.uploader.exception.FileNotFoundExceptionFile;
 import com.studyboard.uploader.service.FileUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/upload")
-@EnableConfigurationProperties(StorageProperties.class)
+@EnableConfigurationProperties(FileStorageProperties.class)
 public class FileUploadController {
 
   @Autowired FileUploaderService fileUploaderService;
@@ -48,8 +47,8 @@ public class FileUploadController {
     return Arrays.stream(files).map(this::handleFileUpload).collect(Collectors.toList());
   }
 
-  @ExceptionHandler(FileNotFoundException.class)
-  public ResponseEntity<?> handleStorageException(FileNotFoundException e) {
+  @ExceptionHandler(FileNotFoundExceptionFile.class)
+  public ResponseEntity<?> handleStorageException(FileNotFoundExceptionFile e) {
     return ResponseEntity.notFound().build();
   }
 }

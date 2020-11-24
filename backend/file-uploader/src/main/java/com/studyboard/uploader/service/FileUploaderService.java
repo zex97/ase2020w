@@ -1,13 +1,11 @@
 package com.studyboard.uploader.service;
 
-import com.studyboard.uploader.StorageProperties;
-import com.studyboard.uploader.exception.FileNotFoundException;
-import com.studyboard.uploader.exception.StorageException;
+import com.studyboard.uploader.FileStorageProperties;
+import com.studyboard.uploader.exception.FileNotFoundExceptionFile;
+import com.studyboard.uploader.exception.FileStorageException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
@@ -33,8 +31,8 @@ public class FileUploaderService implements FileUploader {
   private final Path rootLocation;
 
   @Autowired
-  public FileUploaderService(StorageProperties storageProperties) {
-    this.rootLocation = Paths.get(storageProperties.getLocation());
+  public FileUploaderService(FileStorageProperties fileStorageProperties) {
+    this.rootLocation = Paths.get(fileStorageProperties.getLocation());
   }
 
   @Override
@@ -43,7 +41,7 @@ public class FileUploaderService implements FileUploader {
     try {
       Files.createDirectories(rootLocation);
     } catch (IOException e) {
-      throw new StorageException("Unable to initialize local storage");
+      throw new FileStorageException("Unable to initialize local storage");
     }
   }
 
@@ -55,11 +53,11 @@ public class FileUploaderService implements FileUploader {
     String fileName = file.getOriginalFilename();
 
     if (file.isEmpty()) {
-      throw new StorageException("Uploaded file (" + fileName + ") is empty!");
+      throw new FileStorageException("Uploaded file (" + fileName + ") is empty!");
     }
 
     if (StringUtils.uriDecode(file.getOriginalFilename(), StandardCharsets.UTF_8).contains("../")) {
-      throw new StorageException("File name contains illegal char sequence \"../\"");
+      throw new FileStorageException("File name contains illegal char sequence \"../\"");
     }
 
     Path uploadFilePath =
@@ -71,14 +69,14 @@ public class FileUploaderService implements FileUploader {
     try {
       Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
-      throw new StorageException("Failed to store file (" + fileName + ")!", e);
+      throw new FileStorageException("Failed to store file (" + fileName + ")!", e);
     }
 
     return fileName;
   }
 
   @Override
-  public Stream<Path> loadAll() {
+  public Stream<Resource> loadAll() {
     return null;
   }
 
@@ -95,19 +93,18 @@ public class FileUploaderService implements FileUploader {
       if (resource.exists() || resource.isReadable()) {
         return resource;
       } else {
-        throw new FileNotFoundException(
+        throw new FileNotFoundExceptionFile(
             "File (" + fileName + " could not be read, or doesn't exist");
       }
 
     } catch (MalformedURLException e) {
-      throw new StorageException("Could not read the file (" + fileName + ")", e);
+      throw new FileStorageException("Could not read the file (" + fileName + ")", e);
     }
   }
 
   /**
-   * In case we want to delete a user, we delete his directory
-   * Username required for file deletion
-   * */
+   * In case we want to delete a user, we delete his directory Username required for file deletion
+   */
   @Override
   public void deleteUserFile() {
     FileSystemUtils.deleteRecursively(rootLocation.toFile());

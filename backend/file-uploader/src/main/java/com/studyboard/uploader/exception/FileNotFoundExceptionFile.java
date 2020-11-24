@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class FileNotFoundException extends StorageException {
-  public FileNotFoundException(String message) {
+public class FileNotFoundExceptionFile extends FileStorageException {
+  public FileNotFoundExceptionFile(String message) {
     super(message);
   }
 
-  public FileNotFoundException(String message, Throwable cause) {
+  public FileNotFoundExceptionFile(String message, Throwable cause) {
     super(message, cause);
   }
 }
