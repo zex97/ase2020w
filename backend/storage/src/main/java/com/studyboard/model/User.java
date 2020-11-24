@@ -9,6 +9,11 @@ import java.util.List;
 public class User {
     private long id;
     private List<Space> spaces;
+    private List<Deck> decks;
+    private String username;
+    private String password;
+    private String email;
+    private Integer loginAttempts;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -31,5 +36,54 @@ public class User {
 
     public void setSpaces(List<Space> spaces) {
         this.spaces = spaces;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "userId")
+    public List<Deck> getDecks() {
+        if (decks == null) {
+            decks = new ArrayList<>();
+        }
+        return decks;
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
+    }
+
+    @Column(nullable = false, name = "username", unique = true)
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Column(nullable = false, name = "password")
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Column(nullable = false, name = "email", unique = true)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Column(nullable = false, name = "loginAttempts")
+    public Integer getLoginAttempts() {
+        return loginAttempts;
+    }
+
+    public void setLoginAttempts(Integer loginAttempts) {
+        this.loginAttempts = loginAttempts;
     }
 }
