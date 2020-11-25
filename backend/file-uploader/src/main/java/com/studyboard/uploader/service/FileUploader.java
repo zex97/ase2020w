@@ -4,15 +4,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
-import java.util.stream.Stream;
 
 public interface FileUploader {
 
   void init();
 
   String store(MultipartFile file, long userId);
-
-  Stream<Resource> loadAll(long userId);
 
   Path load(String fileName, long userId);
 

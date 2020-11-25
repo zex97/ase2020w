@@ -1,5 +1,6 @@
 package com.studyboard.uploader.service;
 
+import com.studyboard.model.User;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.FileStorageException;
@@ -17,14 +18,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
 
 /** Service used to manage user files. Performs file saving, loading, and deletion */
 @Service
 public class FileUploaderService implements FileUploader {
 
   private final Path rootLocation;
-
   private final UserRepository userRepository;
 
   @Autowired
@@ -50,15 +51,16 @@ public class FileUploaderService implements FileUploader {
     String fileName = file.getOriginalFilename();
 
     // create folder path for each individual user
-    Path userName = Paths.get(userRepository.findUserById(userId).getUsername());
-    Path completeUserPath = rootLocation.resolve(userName);
+    User user = userRepository.findUserById(userId);
+    Path completeUserPath = rootLocation.resolve(Paths.get(user.getUsername()));
 
     // check if folder already exists
     if (!Files.exists(completeUserPath)) {
       try {
         Files.createDirectories(completeUserPath);
       } catch (IOException e) {
-        throw new FileStorageException("Failed to create separate folder for user: " + userName);
+        throw new FileStorageException(
+            "Failed to create separate folder for user: " + user.getUsername());
       }
     }
 
@@ -72,23 +74,24 @@ public class FileUploaderService implements FileUploader {
 
     Path uploadFilePath =
         this.rootLocation
-            .resolve(userName)
+            .resolve(user.getUsername())
             .resolve(Paths.get(file.getOriginalFilename()))
             .normalize()
             .toAbsolutePath();
 
     try {
       Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
+
     } catch (IOException e) {
       throw new FileStorageException("Failed to store file (" + fileName + ")!", e);
     }
 
-    return fileName;
-  }
+    List<String> userPaths = user.getFilePaths();
+    userPaths.add(uploadFilePath.toString());
+    user.setFilePaths(userPaths);
+    userRepository.save(user);
 
-  @Override
-  public Stream<Resource> loadAll(long userId) {
-    return null;
+    return fileName;
   }
 
   @Override
@@ -126,11 +129,19 @@ public class FileUploaderService implements FileUploader {
     } catch (IOException e) {
       throw new FileStorageException("Failed to delete file(" + fileName + ")");
     }
+
+    User user = userRepository.findUserById(userId);
+    user.getFilePaths().removeIf(path -> (Paths.get(path).endsWith(fileName)));
+    user.setFilePaths(user.getFilePaths());
+    userRepository.save(user);
   }
 
   @Override
   public void deleteUserFolder(long userId) {
     FileSystemUtils.deleteRecursively(
         rootLocation.resolve(userRepository.findUserById(userId).getUsername()).toFile());
+    User user = userRepository.findUserById(userId);
+    user.setFilePaths(Collections.emptyList());
+    userRepository.save(user);
   }
 }
