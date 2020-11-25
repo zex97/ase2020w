@@ -10,15 +10,15 @@ public interface FileUploader {
 
   void init();
 
-  String store(MultipartFile file);
+  String store(MultipartFile file, long userId);
 
-  Stream<Resource> loadAll();
+  Stream<Resource> loadAll(long userId);
 
-  Path load(String fileName);
+  Path load(String fileName, long userId);
 
-  Resource loadAsResource(String fileName);
+  Resource loadAsResource(String fileName, long usedId);
 
-  void deleteUserFile(String fileName);
+  void deleteUserFile(String fileName, long userId);
 
-  void deleteUserFolder();
+  void deleteUserFolder(long userId);
 }
