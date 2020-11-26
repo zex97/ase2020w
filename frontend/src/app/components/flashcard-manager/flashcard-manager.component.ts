@@ -7,6 +7,7 @@ import {Deck} from "../../dtos/deck"
   templateUrl: './flashcard-manager.component.html',
   styleUrls: ['./flashcard-manager.component.scss']
 })
+
 export class FlashcardManagerComponent implements OnInit {
 
   constructor(private flashcardService: FlashcardService) { }
