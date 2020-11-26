@@ -5,7 +5,6 @@ import com.studyboard.model.Deck;
 import java.util.List;
 
 public interface FlashcardService {
-
     /**
      * Find all decks user created
      *

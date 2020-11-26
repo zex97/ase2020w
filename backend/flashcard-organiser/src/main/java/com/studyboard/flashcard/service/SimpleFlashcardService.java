@@ -20,23 +20,27 @@ public class SimpleFlashcardService implements FlashcardService{
 
     @Override
     public List<Deck> getAllDecks(long userId){
-        User user = findUserById(userId);
-        return user.getDecks();
+        return deckRepository.findByUser(userId);
     }
     @Override
     public Deck getOneDeck(long userId, long deckId) {
         Deck deck = deckRepository.findById(deckId).orElse(null);
+        User user = findUserById(userId);
         if(deck == null) {
             throw new DeckDoesNotExist();
+        }
+        if(deck.getUser() != user) {
+            //create a Not Allowed exception
         }
         return deck;
     }
 
     @Override
     public void createDeck(long userId, Deck deck) {
-        User user = findUserById(userId);
-        user.getDecks().add(deck);
-        userRepository.save(user);
+        //User user = findUserById(userId);
+        //deck.setUser(user);
+        //user.getDecks().add(deck);
+        deckRepository.save(deck);
     }
 
     private User findUserById(long userId) {
