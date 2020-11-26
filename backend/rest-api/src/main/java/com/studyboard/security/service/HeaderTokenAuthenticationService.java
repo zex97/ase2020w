@@ -1,7 +1,7 @@
 package com.studyboard.security.service;
 
-import com.studyboard.security.dto.authentication.AuthenticationToken;
-import com.studyboard.security.dto.authentication.AuthenticationTokenInfo;
+import com.studyboard.security.dto.AuthenticationToken;
+import com.studyboard.security.dto.AuthenticationTokenInfo;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 

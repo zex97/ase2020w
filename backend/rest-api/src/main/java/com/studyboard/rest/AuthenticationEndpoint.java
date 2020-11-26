@@ -1,8 +1,8 @@
 package com.studyboard.rest;
 
-import com.studyboard.security.dto.authentication.AuthenticationRequest;
-import com.studyboard.security.dto.authentication.AuthenticationToken;
-import com.studyboard.security.dto.authentication.AuthenticationTokenInfo;
+import com.studyboard.security.dto.AuthenticationRequest;
+import com.studyboard.security.dto.AuthenticationToken;
+import com.studyboard.security.dto.AuthenticationTokenInfo;
 import com.studyboard.security.authentication.AuthenticationConstants;
 import com.studyboard.security.service.HeaderTokenAuthenticationService;
 import com.studyboard.security.service.SimpleHeaderTokenAuthenticationService;

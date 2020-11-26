@@ -25,7 +25,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -72,18 +71,10 @@ public class SecurityConfiguration {
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     private static class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-        //private final String h2ConsolePath;
-        //private final String h2AccessMatcher;
-
         @Autowired
         private AuthenticationManager authenticationManager;
 
-        public WebSecurityConfiguration(
-            //H2ConsoleConfigurationProperties h2ConsoleConfigurationProperties
-        ) {
-            //h2ConsolePath = h2ConsoleConfigurationProperties.getPath();
-            //h2AccessMatcher = h2ConsoleConfigurationProperties.getAccessMatcher();
-        }
+        public WebSecurityConfiguration() {}
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -102,11 +93,6 @@ public class SecurityConfiguration {
                     "/swagger-ui.html")
                 .permitAll()
             ;
-            /**if (h2ConsolePath != null && h2AccessMatcher != null) {
-                http
-                    .authorizeRequests()
-                    .antMatchers(h2ConsolePath + "/**").access(h2AccessMatcher);
-            }*/
             http
                 .authorizeRequests()
                 .anyRequest().fullyAuthenticated()
@@ -124,7 +110,7 @@ public class SecurityConfiguration {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() { ///?????????????????????????????
+        return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry

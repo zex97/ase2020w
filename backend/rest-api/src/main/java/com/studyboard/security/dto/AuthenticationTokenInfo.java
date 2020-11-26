@@ -1,4 +1,4 @@
-package com.studyboard.security.dto.authentication;
+package com.studyboard.security.dto;
 
 import io.swagger.annotations.ApiModel;
 
