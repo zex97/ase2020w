@@ -60,8 +60,8 @@ public class SecurityConfiguration {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {
         new InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
-            .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
-            .withUser("admin").password(passwordEncoder.encode("password")).authorities("ADMIN", "USER").and()
+            .withUser("user1").password(passwordEncoder.encode("password")).authorities("USER").and()
+            .withUser("user2").password(passwordEncoder.encode("password")).authorities("USER").and()
             .passwordEncoder(passwordEncoder)
             .configure(auth);
         providerList.forEach(auth::authenticationProvider);
