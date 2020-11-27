@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class DeckDTO {
-    
+
     private Long id;
     private String name;
     private Integer size;
@@ -37,7 +37,7 @@ public class DeckDTO {
 
     public void setSize(Integer size) {
         this.size = size;
-    }    
+    }
 
     public LocalDate getCreationDate() {
         return creationDate;
@@ -93,7 +93,7 @@ public class DeckDTO {
                 ", size=" + size +
                 ", creationDate=" + creationDate +
                 ", lastTimeUsed=" + lastTimeUsed +
-                ", user=" + userDTO.toString() +
+                (userDTO == null ? ", userDTO=null" : ", userDTO=" + userDTO.toString()) +
                 '}';
     }
 

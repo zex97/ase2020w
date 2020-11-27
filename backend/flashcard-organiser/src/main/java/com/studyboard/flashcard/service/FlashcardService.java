@@ -26,7 +26,7 @@ public interface FlashcardService {
      * Create a single deck
      *
      * @param userId - id of the user who created the deck
-     * @param deck with all the necessary information about a deck
+     * @param deck   with all the necessary information about a deck
      * @return created deck
      */
     public void createDeck(long userId, Deck deck);

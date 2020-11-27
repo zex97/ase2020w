@@ -2,9 +2,12 @@
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button  type="button" class="btn btn-secondary btn-sm mr-4" data-toggle="modal" data-target=".create-deck-modal">Create a deck</button>
+    <button type="button" class="btn btn-secondary btn-sm mr-4" data-toggle="modal" data-target=".create-deck-modal">
+      Create a deck
+    </button>
 
-    <div class="modal fade create-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Create deck modal" aria-hidden="true">
+    <div class="modal fade create-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Create deck modal"
+         aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -17,12 +20,12 @@
             <form action="#!" class="text-center border border-light p-5">
 
               <p class="h4 mb-4">New flashcard deck</p>
-              <input type="text" class="form-control mb-4"  placeholder="Title">
+              <input type="text" class="form-control mb-4" placeholder="Title">
 
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info float-right">Save</button>
+            <button type="button" class="btn btn-info float-right" (click)="createDeck()">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -30,25 +33,25 @@
     </div>
   </div>
 
-    <!-- View all decks -->
-    <div class="row" id="allDiv">
+  <!-- View all decks -->
+  <div class="row" id="allDiv">
 
-      <div class="col-xl-3 col-lg-4 p-2">
+    <div class="col-xl-3 col-lg-4 p-2">
 
-        <div class="card">
+      <div class="card">
 
-          <div class="card-body">
-            <h5 class="card-title">Deck title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Created: 24-11-2020</h6>
-            <p class="card-text">Size: 0</p>
-            <button type="button" class="btn btn-info"
-                    data-toggle="modal">
-              Details
-            </button>
-          </div>
+        <div class="card-body">
+          <h5 class="card-title">Deck title</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Created: 24-11-2020</h6>
+          <p class="card-text">Size: 0</p>
+          <button type="button" class="btn btn-info"
+                  data-toggle="modal">
+            Details
+          </button>
         </div>
-
       </div>
+
     </div>
+  </div>
 
 </div>

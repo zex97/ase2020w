@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FlashcardService} from '../../services/flashcard.service';
+import {UserService} from '../../services/user.service';
 import {Deck} from "../../dtos/deck"
+import {User} from '../../dtos/user';
+
 
 @Component({
   selector: 'app-flashcard-manager',
@@ -10,7 +13,11 @@ import {Deck} from "../../dtos/deck"
 
 export class FlashcardManagerComponent implements OnInit {
 
-  constructor(private flashcardService: FlashcardService) { }
+  error: boolean = false;
+  errorMessage: string = '';
+  user: User;
+
+  constructor(private flashcardService: FlashcardService, private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -20,9 +27,32 @@ export class FlashcardManagerComponent implements OnInit {
    * If the procedure was successful, the form will be cleared.
    */
   createDeck() {
-    const deck : Deck = new Deck(null, "test", new Date().toISOString(), new Date().toISOString());
-    this.flashcardService.createDeck(deck);
+  //dto for testing purposes, will be replaced - name and userId
+    const date = new Date();
+    date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
+    const dateString = date.toISOString();
+    this.userService.getUserById(3).subscribe(res => {
+       this.user = res;
+       const deck = new Deck(0, "test", 0, dateString, dateString, res);
+           this.flashcardService.createDeck(deck).subscribe(
+                () => {
+                       console.log("Back");
+                         //TO-DO: back to Deck View
+                       },
+                       error => {
+                         this.defaultErrorHandling(error);
+                       }
+                     );
+    });
+
     //this.clearForm();
   }
+
+  private defaultErrorHandling(error: any) {
+      console.log(error);
+      this.error = true;
+      this.errorMessage = '';
+      this.errorMessage = error.error.message;
+    }
 
 }

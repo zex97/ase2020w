@@ -12,24 +12,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SimpleFlashcardService implements FlashcardService{
+public class SimpleFlashcardService implements FlashcardService {
     @Autowired
     private DeckRepository deckRepository;
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public List<Deck> getAllDecks(long userId){
+    public List<Deck> getAllDecks(long userId) {
         return deckRepository.findByUser(userId);
     }
+
     @Override
     public Deck getOneDeck(long userId, long deckId) {
         Deck deck = deckRepository.findById(deckId).orElse(null);
         User user = findUserById(userId);
-        if(deck == null) {
+        if (deck == null) {
             throw new DeckDoesNotExist();
         }
-        if(deck.getUser() != user) {
+        if (deck.getUser() != user) {
             //create a Not Allowed exception
         }
         return deck;
