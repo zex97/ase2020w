@@ -26,10 +26,6 @@ const routes: Routes = [
         component: RegisterComponent
       },
       {
-         path: 'flashcards',
-         component: FlashcardManagerComponent
-      },
-      {
         path: 'home',
         component: HomeComponent,
         canActivate: [AuthGuard],
@@ -42,6 +38,11 @@ const routes: Routes = [
           {
             path: 'message',
             component: MessageComponent,
+            outlet: 'view'
+          },
+          {
+            path: 'flashcards',
+            component: FlashcardManagerComponent,
             outlet: 'view'
           }
         ]

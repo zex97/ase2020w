@@ -46,6 +46,11 @@ export class FlashcardService {
     return this.httpClient.post<Deck>(this.flashcardBaseUri + '/3', deck);
   }
 
+  editDeck(deck: Deck): Observable<Deck> {
+     console.log('Change the deck name to ' + deck.name);
+    return this.httpClient.put<Deck>(this.flashcardBaseUri + '/3' + 'deck' + deck.id, deck);
+  }
+
   getUsers(): Observable<User[]> {
       console.log('Searching for users.');
       return this.httpClient.get<User[]>(this.globals.backendUri + '/api/user');

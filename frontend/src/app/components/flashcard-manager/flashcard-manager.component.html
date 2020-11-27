@@ -1,4 +1,4 @@
-<h3>Decks</h3>
+<h3 style="margin-left: 45%;">Flashcard Decks</h3>
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
@@ -59,12 +59,24 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <h6>Created: {{deck.creationDate}}</h6>
-                  <h6>Last time used: {{deck.lastTimeUsed.substring(0,10)}}</h6>
-                  <h6>Flashcards</h6>
+                  <div *ngIf="load; else elseBlockShow">
+                   <h6>Created: {{deck.creationDate}}</h6>
+                   <h6>Last time used: {{deck.lastTimeUsed.substring(0,10)}}</h6>
+                    <h6>Flashcards</h6>
+                  </div>
+                  <ng-template #elseBlockShow>
+                      <form action="#!" class="text-center border border-light p-5" [formGroup]="deckForm">
+                        <h6>New name for the deck:</h6>
+                        <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
+
+                      </form>
+                    <h6>Flashcards</h6>
+                  </ng-template>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <div *ngIf="load; else elseBlockBtn"><button type="button" class="btn btn-info" (click)="this.load=false;">Edit</button></div>
+                  <ng-template #elseBlockBtn><button type="button" class="btn btn-info" (click)="this.load=true; saveEdits(deck)">Save</button></ng-template>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="this.load=true;">Close</button>
                 </div>
               </div>
             </div>

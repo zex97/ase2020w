@@ -17,6 +17,7 @@ export class FlashcardManagerComponent implements OnInit {
   deckForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
+  load: boolean = true;
   private decks: Deck[];
 
 
@@ -68,6 +69,21 @@ export class FlashcardManagerComponent implements OnInit {
                      );
     });
    //this.clearForm();
+  }
+
+  saveEdits(deck: Deck) {
+      //send edits to backend
+      this.userService.getUserById(3).subscribe(res => {
+             deck.name = this.deckForm.controls.title.value;
+                 this.flashcardService.editDeck(deck).subscribe(
+                      () => {
+                             this.loadAllDecks();
+                             },
+                             error => {
+                               this.defaultErrorHandling(error);
+                             }
+                           );
+          });
   }
 
   private defaultErrorHandling(error: any) {
