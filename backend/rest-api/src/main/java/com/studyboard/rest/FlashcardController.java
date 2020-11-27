@@ -15,22 +15,28 @@ import java.util.stream.Collectors;
 public class FlashcardController {
 
     @Autowired
-    private FlashcardService service;
+    private FlashcardService flashcardService;
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
     public List<DeckDTO> getAllDecks(@PathVariable(name = "userId") long userId) {
-        return service.getAllDecks(userId).stream().map(DeckDTO::of).collect(Collectors.toList());
+        return flashcardService.getAllDecks(userId).stream().map(DeckDTO::of).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/{userId}/deck{deckId}", method = RequestMethod.GET, produces = "application/json")
     public DeckDTO getOneDeck(@PathVariable(name = "userId") long userId, @PathVariable(name = "deckId") long deckId) {
-        return DeckDTO.of(service.getOneDeck(userId, deckId));
+        return DeckDTO.of(flashcardService.getOneDeck(userId, deckId));
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity createDeck(@PathVariable(name = "userId") long userId, @RequestBody DeckDTO deckDTO) {
         System.out.println(deckDTO.toString());
-        service.createDeck(userId, deckDTO.toDeck());
+        flashcardService.createDeck(userId, deckDTO.toDeck());
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/{userId}/deck{deckId}", method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity editDeckName(@PathVariable(name = "userId") long userId,  @RequestBody DeckDTO deckDTO) {
+        flashcardService.updateDeckName(userId, deckDTO.toDeck());
         return ResponseEntity.ok().build();
     }
 

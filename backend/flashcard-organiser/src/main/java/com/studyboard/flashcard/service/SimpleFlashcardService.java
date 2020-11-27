@@ -44,6 +44,13 @@ public class SimpleFlashcardService implements FlashcardService {
         deckRepository.save(deck);
     }
 
+    @Override
+    public Deck updateDeckName(long userId, Deck deck) {
+        Deck storedDeck = getOneDeck(userId, deck.getId());
+        storedDeck.setName(deck.getName());
+        return deckRepository.save(storedDeck);
+    }
+
     private User findUserById(long userId) {
         User user = userRepository.findUserById(userId);
         if (user == null) {
