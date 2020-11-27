@@ -17,10 +17,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="#!" class="text-center border border-light p-5">
+            <form action="#!" class="text-center border border-light p-5" [formGroup]="deckForm">
 
               <p class="h4 mb-4">New flashcard deck</p>
-              <input type="text" class="form-control mb-4" placeholder="Title">
+              <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
 
             </form>
           </div>

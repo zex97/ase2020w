@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {Deck} from "../../dtos/deck"
@@ -13,11 +14,16 @@ import {User} from '../../dtos/user';
 
 export class FlashcardManagerComponent implements OnInit {
 
+  deckForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   user: User;
 
-  constructor(private flashcardService: FlashcardService, private userService: UserService) { }
+  constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
+    this.deckForm = this.formBuilder.group({
+      title: ['']
+    })
+   }
 
   ngOnInit(): void {
   }
@@ -33,7 +39,7 @@ export class FlashcardManagerComponent implements OnInit {
     const dateString = date.toISOString();
     this.userService.getUserById(3).subscribe(res => {
        this.user = res;
-       const deck = new Deck(0, "test", 0, dateString, dateString, res);
+       const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
            this.flashcardService.createDeck(deck).subscribe(
                 () => {
                        console.log("Back");
