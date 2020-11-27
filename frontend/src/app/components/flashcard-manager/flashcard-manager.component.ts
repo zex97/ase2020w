@@ -60,15 +60,13 @@ export class FlashcardManagerComponent implements OnInit {
        const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
            this.flashcardService.createDeck(deck).subscribe(
                 () => {
-                       console.log("Back");
-                         //TO-DO: back to Deck View
+                       this.loadAllDecks();
                        },
                        error => {
                          this.defaultErrorHandling(error);
                        }
                      );
     });
-
    //this.clearForm();
   }
 

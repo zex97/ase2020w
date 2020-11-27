@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface FlashcardService {
     /**
-     * Find all decks user created
+     * Find all decks user created order by the last time they were used for revision
      *
      * @param userId - id of the user who created the deck
-     * @return list of all decks
+     * @return list of all decks order by the last time used attribute
      */
     public List<Deck> getAllDecks(long userId);
 

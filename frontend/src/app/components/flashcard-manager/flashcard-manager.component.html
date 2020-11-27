@@ -25,7 +25,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info float-right" (click)="createDeck()">Save</button>
+            <button type="button" class="btn btn-info float-right" (click)="createDeck()" data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -36,22 +36,44 @@
   <!-- View all decks -->
   <div class="row" id="allDiv">
 
-    <div class="col-xl-3 col-lg-4 p-2" *ngFor="let deck of getDecks()">
+    <div class="col-xl-3 col-4 p-2" *ngFor="let deck of getDecks()">
 
       <div class="card">
 
         <div class="card-body">
           <h5 class="card-title">Title: {{deck.name}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Created: {{deck.creationDate}}</h6>
           <p class="card-text">Size: {{deck.size}}</p>
           <button type="button" class="btn btn-info"
-                  data-toggle="modal">
+                  data-toggle="modal" data-target=".load-deck-modal" (click)="loadDeckDetails(deck.id)">
             Details
           </button>
+
+          <div class="modal fade load-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Load deck modal"
+               aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Deck {{deck.name}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h6>Created: {{deck.creationDate}}</h6>
+                  <h6>Last time used: {{deck.lastTimeUsed.substring(0,10)}}</h6>
+                  <h6>Flashcards</h6>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+
         </div>
       </div>
 
     </div>
   </div>
 
+</div>
 </div>
