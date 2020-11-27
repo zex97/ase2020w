@@ -17,7 +17,8 @@ export class FlashcardManagerComponent implements OnInit {
   deckForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
-  user: User;
+  private decks: Deck[];
+
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
     this.deckForm = this.formBuilder.group({
@@ -26,6 +27,24 @@ export class FlashcardManagerComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.loadAllDecks();
+  }
+
+  /**
+  * Get a list of all decks belonging to the logged-in user from backend
+  */
+  loadAllDecks() {
+    this.flashcardService.getDecks(3).subscribe(
+    (decksList : Deck[]) => {
+      this.decks = decksList;
+     })
+  }
+
+  /**
+  * @return all decks belonging to the logged-in user
+  */
+  getDecks() {
+    return this.decks;
   }
 
   /**
@@ -33,12 +52,11 @@ export class FlashcardManagerComponent implements OnInit {
    * If the procedure was successful, the form will be cleared.
    */
   createDeck() {
-  //dto for testing purposes, will be replaced - name and userId
+  //dto for testing purposes, will be replaced - userId
     const date = new Date();
     date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
     const dateString = date.toISOString();
     this.userService.getUserById(3).subscribe(res => {
-       this.user = res;
        const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
            this.flashcardService.createDeck(deck).subscribe(
                 () => {
@@ -51,7 +69,7 @@ export class FlashcardManagerComponent implements OnInit {
                      );
     });
 
-    //this.clearForm();
+   //this.clearForm();
   }
 
   private defaultErrorHandling(error: any) {

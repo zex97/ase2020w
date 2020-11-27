@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface DeckRepository extends CrudRepository<Deck, Long> {
 
-    List<Deck> findByUser(Long userId);
+    List<Deck> findByUserId(long userId);
 
     Optional<Deck> findById(long deckId);
 }

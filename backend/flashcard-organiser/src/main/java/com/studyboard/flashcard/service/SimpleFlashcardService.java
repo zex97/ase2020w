@@ -20,7 +20,7 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public List<Deck> getAllDecks(long userId) {
-        return deckRepository.findByUser(userId);
+        return deckRepository.findByUserId(userId);
     }
 
     @Override

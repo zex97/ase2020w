@@ -22,9 +22,9 @@ export class FlashcardService {
   /**
    * Loads all decks from the backend
    */
-  getDecks(): Observable<Deck[]> {
+  getDecks(userId: number): Observable<Deck[]> {
     console.log('Searching for decks.')
-    return this.httpClient.get<Deck[]>(this.flashcardBaseUri + '/3');
+    return this.httpClient.get<Deck[]>(this.flashcardBaseUri + '/' + userId);
   }
 
   /**
