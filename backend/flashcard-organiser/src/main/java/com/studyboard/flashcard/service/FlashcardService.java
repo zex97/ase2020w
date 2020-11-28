@@ -42,8 +42,17 @@ public interface FlashcardService {
     public Deck updateDeckName(long userId, Deck deck);
 
 
-
     public List<Flashcard> getAllFlashcardsOfDeck(long deckId);
+
+    /**
+     * Get as many flashcards from a deck as the user choose
+     *
+     * @param userId of the user deck belongs to
+     * @param deckId of the deck flashcards belong to
+     * @param size   - amount of flashcards to revise
+     * @return chosen number of flashcards from a specified deck
+     */
+    public List<Flashcard> getFlashcardsForRevision(long userId, long deckId, int size);
 
     public Flashcard getOneFlashcard(long deckId, long flashcardId);
 
