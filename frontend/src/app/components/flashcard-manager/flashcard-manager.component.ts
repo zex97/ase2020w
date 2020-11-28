@@ -15,6 +15,7 @@ import {User} from '../../dtos/user';
 export class FlashcardManagerComponent implements OnInit {
 
   deckForm: FormGroup;
+  deckEditForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   load: boolean = true;
@@ -23,6 +24,9 @@ export class FlashcardManagerComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
     this.deckForm = this.formBuilder.group({
+      title: ['']
+    })
+    this.deckEditForm = this.formBuilder.group({
       title: ['']
     })
    }
@@ -68,13 +72,13 @@ export class FlashcardManagerComponent implements OnInit {
                        }
                      );
     });
-   //this.clearForm();
+   //this.deckForm.reset({'title':''});
   }
 
   saveEdits(deck: Deck) {
       //send edits to backend
       this.userService.getUserById(3).subscribe(res => {
-             deck.name = this.deckForm.controls.title.value;
+             deck.name = this.deckEditForm.controls.title.value;
                  this.flashcardService.editDeck(deck).subscribe(
                       () => {
                              this.loadAllDecks();
@@ -83,7 +87,8 @@ export class FlashcardManagerComponent implements OnInit {
                                this.defaultErrorHandling(error);
                              }
                            );
-          });
+       });
+       //this.deckForm.reset({'title':''});
   }
 
   private defaultErrorHandling(error: any) {

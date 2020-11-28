@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 public class SimpleFlashcardService implements FlashcardService {
+
     @Autowired
     private DeckRepository deckRepository;
     @Autowired
@@ -38,9 +39,6 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public void createDeck(long userId, Deck deck) {
-        //User user = findUserById(userId);
-        //deck.setUser(user);
-        //user.getDecks().add(deck);
         deckRepository.save(deck);
     }
 

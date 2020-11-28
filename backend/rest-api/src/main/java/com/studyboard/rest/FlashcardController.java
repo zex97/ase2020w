@@ -35,7 +35,7 @@ public class FlashcardController {
     }
 
     @RequestMapping(value = "/{userId}/deck{deckId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity editDeckName(@PathVariable(name = "userId") long userId,  @RequestBody DeckDTO deckDTO) {
+    public ResponseEntity editDeckName(@PathVariable(name = "userId") long userId, @RequestBody DeckDTO deckDTO) {
         flashcardService.updateDeckName(userId, deckDTO.toDeck());
         return ResponseEntity.ok().build();
     }

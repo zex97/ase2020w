@@ -35,7 +35,7 @@ public interface FlashcardService {
      * Update a single deck
      *
      * @param userId - id of the user who created the deck
-     * @param deck - with the information to be updated
+     * @param deck   - with the information to be updated
      * @return updated deck
      */
     public Deck updateDeckName(long userId, Deck deck);
