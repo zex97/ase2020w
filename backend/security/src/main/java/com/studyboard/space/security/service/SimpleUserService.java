@@ -6,15 +6,19 @@ import com.studyboard.model.User;
 import com.studyboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class SimpleUserService implements UserService {
+public class SimpleUserService implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User getUser(Long id) {
@@ -27,13 +31,14 @@ public class SimpleUserService implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return null;
     }
 
     @Override
     public User createUser(User user) throws UniqueConstraintException {
-        //TODO hash password after authentication is done
         try {
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPassword);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new UniqueConstraintException("User with the same username or email already exists.");
@@ -42,11 +47,12 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User updateUserPassword(User user) {
-        //TODO hash password after authentication is done
         User storedUser = userRepository.findUserById(user.getId());
         if (storedUser == null) {
             throw new UserDoesNotExist();
         }
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        storedUser.setPassword(hashedPassword);
         storedUser.setPassword(user.getPassword());
         return userRepository.save(storedUser);
     }
