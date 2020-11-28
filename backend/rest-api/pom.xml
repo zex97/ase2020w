@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>com.studyboard</groupId>
-            <artifactId>studyboard-security</artifactId>
+            <artifactId>studyboard-user</artifactId>
             <version>0.0.1</version>
         </dependency>
         <dependency>

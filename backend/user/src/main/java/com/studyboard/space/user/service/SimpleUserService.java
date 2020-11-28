@@ -1,4 +1,4 @@
-package com.studyboard.space.security.service;
+package com.studyboard.space.user.service;
 
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.exception.UserDoesNotExist;
@@ -44,6 +44,8 @@ public class SimpleUserService implements UserService {
         try {
             authoritiesRepository.save(new Authorities(user.getUsername(), "USER"));
             String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setRole("USER");
+            user.setEnabled(true);
             user.setPassword(hashedPassword);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {

@@ -1,13 +1,13 @@
 package com.studyboard.repository;
 
 import com.studyboard.model.Authorities;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface AuthoritiesRepository extends JpaRepository<Authorities, Long> {
+public interface AuthoritiesRepository extends CrudRepository<Authorities, Long> {
 
     /**
      * Find a single authority entry by id.

@@ -2,7 +2,7 @@ package com.studyboard.rest;
 
 import com.studyboard.dto.UserDTO;
 import com.studyboard.exception.UniqueConstraintException;
-import com.studyboard.space.security.service.UserService;
+import com.studyboard.space.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 

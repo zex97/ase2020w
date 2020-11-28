@@ -4,18 +4,12 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "user_roles")
 public class Authorities {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_authorities_id")
-    @SequenceGenerator(name = "seq_authorities_id", sequenceName = "seq_authorities_id")
+
     private Long id;
-
-    @Column(nullable = false, name = "username")
     private String username;
-
-    @Column(nullable = false, name = "role")
     private String authority;
 
     public Authorities(String username, String authority) {
@@ -30,6 +24,9 @@ public class Authorities {
         this.id = id;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_authorities_id")
+    @SequenceGenerator(name = "seq_authorities_id", sequenceName = "seq_authorities_id")
     public Long getId() {
         return id;
     }
@@ -38,6 +35,7 @@ public class Authorities {
         this.username = username;
     }
 
+    @Column(nullable = false, name = "username", unique = true)
     public String getUsername() {
         return username;
     }
@@ -46,6 +44,7 @@ public class Authorities {
         this.authority = authority;
     }
 
+    @Column(nullable = false, name = "role")
     public String getAuthority() {
         return authority;
     }
