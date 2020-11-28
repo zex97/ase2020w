@@ -14,6 +14,26 @@ public class User {
     private String password;
     private String email;
     private Integer loginAttempts;
+    private String role;
+    private Boolean enabled;
+
+    @Column(nullable = false, name = "role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Column(nullable = false, name = "enabled")
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
