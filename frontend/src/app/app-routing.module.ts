@@ -7,7 +7,7 @@ import {MessageComponent} from './components/message/message.component';
 import {HomeComponent} from './components/home/home.component';
 import {AppComponent} from './app.component';
 import {RegisterComponent} from './components/register/register.component';
-
+import { FlashcardManagerComponent } from './components/flashcard-manager/flashcard-manager.component';
 
 const routes: Routes = [
   { path: '',
@@ -38,6 +38,11 @@ const routes: Routes = [
           {
             path: 'message',
             component: MessageComponent,
+            outlet: 'view'
+          },
+          {
+            path: 'flashcards',
+            component: FlashcardManagerComponent,
             outlet: 'view'
           }
         ]

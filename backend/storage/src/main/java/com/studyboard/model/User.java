@@ -7,13 +7,15 @@ import java.util.List;
 @Entity
 @Table(name = "sb_user")
 public class User {
+
+    @Column(name="sb_user_id")
     private long id;
     private List<Space> spaces;
-    private List<Deck> decks;
     private String username;
     private String password;
     private String email;
     private Integer loginAttempts;
+    private List<Deck> decks;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -38,8 +40,7 @@ public class User {
         this.spaces = spaces;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "userId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Deck> getDecks() {
         if (decks == null) {
             decks = new ArrayList<>();

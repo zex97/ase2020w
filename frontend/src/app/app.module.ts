@@ -14,6 +14,7 @@ import {httpInterceptorProviders} from './interceptors';
 import {Globals} from './global/globals';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
 import { RegisterComponent } from './components/register/register.component';
+import { FlashcardManagerComponent } from './components/flashcard-manager/flashcard-manager.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { RegisterComponent } from './components/register/register.component';
     MessageComponent,
     PageNotFoundComponent,
     RegisterComponent,
+    FlashcardManagerComponent,
   ],
   imports: [
     BrowserModule,
