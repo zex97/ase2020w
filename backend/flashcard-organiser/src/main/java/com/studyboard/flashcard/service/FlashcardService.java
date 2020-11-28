@@ -1,6 +1,7 @@
 package com.studyboard.flashcard.service;
 
 import com.studyboard.model.Deck;
+import com.studyboard.model.Flashcard;
 
 import java.util.List;
 
@@ -39,5 +40,17 @@ public interface FlashcardService {
      * @return updated deck
      */
     public Deck updateDeckName(long userId, Deck deck);
+
+
+
+    public List<Flashcard> getAllFlashcardsOfDeck(long deckId);
+
+    public Flashcard getOneFlashcard(long deckId, long flashcardId);
+
+    public void createFlashcard(long deckId, Flashcard flashcard);
+
+    void deleteDeck(long userId, long deckId);
+
+    void deleteFlashcard(long deckId, long flashcardId);
 
 }
