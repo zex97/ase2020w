@@ -1,5 +1,6 @@
 package com.studyboard.security.configuration;
 
+import com.studyboard.repository.UserRepository;
 import com.studyboard.security.authentication.HeaderTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,13 @@ import java.util.Map;
 public class SecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     public SecurityConfiguration(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -63,6 +72,12 @@ public class SecurityConfiguration {
             .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
             .passwordEncoder(passwordEncoder)
             .configure(auth);
+
+        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder)
+                .usersByUsernameQuery("select username,password, enabled from sb_user where username=?")
+                .authoritiesByUsernameQuery("select username, role from user_roles where username=?")
+                .configure(auth);
+
         providerList.forEach(auth::authenticationProvider);
     }
 

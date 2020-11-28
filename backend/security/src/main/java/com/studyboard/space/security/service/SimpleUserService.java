@@ -2,7 +2,9 @@ package com.studyboard.space.security.service;
 
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.exception.UserDoesNotExist;
+import com.studyboard.model.Authorities;
 import com.studyboard.model.User;
+import com.studyboard.repository.AuthoritiesRepository;
 import com.studyboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,10 +14,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SimpleUserService implements UserService{
+public class SimpleUserService implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AuthoritiesRepository authoritiesRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -37,6 +42,7 @@ public class SimpleUserService implements UserService{
     @Override
     public User createUser(User user) throws UniqueConstraintException {
         try {
+            authoritiesRepository.save(new Authorities(user.getUsername(), "USER"));
             String hashedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashedPassword);
             return userRepository.save(user);
