@@ -3,13 +3,15 @@ package com.studyboard.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Deck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     private String name;
@@ -27,11 +29,25 @@ public class Deck {
     @JoinColumn(name = "sb_user_id")
     private User user;
 
-    public Long getId() {
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flashcard> flashcards;
+
+    public List<Flashcard> getFlashcards() {
+        if (flashcards == null) {
+            flashcards = new ArrayList<>();
+        }
+        return flashcards;
+    }
+
+    public void setFlashcards(List<Flashcard> flashcards) {
+        this.flashcards = flashcards;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
