@@ -32,7 +32,7 @@
         <module>file-uploader</module>
         <module>flashcard-organiser</module>
         <module>rest-api</module>
-        <module>security</module>
+        <module>user</module>
         <module>transcriber</module>
         <module>user-space</module>
         <module>storage</module>
