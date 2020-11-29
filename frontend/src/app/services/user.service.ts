@@ -32,6 +32,11 @@ export class UserService {
     return this.httpClient.get<User>(this.userBaseUri + '/' + id);
   }
 
+  getUserByUsername(username: string): Observable<User> {
+      console.log('Load user with username ' + username);
+      return this.httpClient.get<User>(this.userBaseUri + '/username' + username);
+    }
+
   /**
    * Persists user to the backend
    * @param user to persist

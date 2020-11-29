@@ -35,6 +35,15 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        User user = userRepository.findOneByUsername(username);
+        if (user == null) {
+            throw new UserDoesNotExist();
+        }
+        return user;
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return null;
     }

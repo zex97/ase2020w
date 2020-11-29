@@ -42,12 +42,13 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title">Title: {{deck.name}}</h5>
-          <p class="card-text">Size: {{deck.size}}</p>
-          <button type="button" class="btn btn-info"
+          <h5 class="card-title" style="text-align:center">Title: {{deck.name}}</h5>
+          <p class="card-text" style="text-align:center">Size: {{deck.size}}</p>
+          <div style="text-align:center"><img src="../../../assets/deck.png" width="90%;"></div>
+          <div style="text-align:center"><button type="button" class="btn btn-info" style="position:absolute, top:50%"
                   data-toggle="modal" data-target=".load-deck-modal" (click)="loadDeckDetails(deck.id)">
             Details
-          </button>
+          </button></div>
 
           <div class="modal fade load-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Load deck modal"
                aria-hidden="true">
@@ -79,7 +80,7 @@
                     <button type="button" class="btn btn-info" (click)="this.load=false;">Edit</button>
                   </div>
                   <ng-template #elseBlockBtn>
-                    <button type="button" class="btn btn-info" (click)="this.load=true; saveEdits(deck)">Save</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal" (click)="this.load=true; saveEdits(deck)">Save</button>
                   </ng-template>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="this.load=true;">Close
                   </button>

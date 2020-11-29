@@ -20,41 +20,39 @@ public class FlashcardController {
 
   @Autowired private FlashcardService flashcardService;
 
-  @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/{username}", method = RequestMethod.GET, produces = "application/json")
   @ApiOperation(value = "Get all decs associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
-  public List<DeckDTO> getAllDecks(@PathVariable(name = "userId") long userId) {
-    return flashcardService.getAllDecks(userId).stream()
+  public List<DeckDTO> getAllDecks(@PathVariable(name = "username") String username) {
+    return flashcardService.getAllDecks(username).stream()
         .map(DeckDTO::of)
         .collect(Collectors.toList());
   }
 
   @RequestMapping(
-      value = "/{userId}/deck{deckId}",
+      value = "/{username}/deck{deckId}",
       method = RequestMethod.GET,
       produces = "application/json")
-  @ApiOperation(value = "Get deck associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
+  @ApiOperation(value = "Get deck associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
   public DeckDTO getOneDeck(
-      @PathVariable(name = "userId") long userId, @PathVariable(name = "deckId") long deckId) {
-    return DeckDTO.of(flashcardService.getOneDeck(userId, deckId));
+      @PathVariable(name = "username") String username, @PathVariable(name = "deckId") long deckId) {
+    return DeckDTO.of(flashcardService.getOneDeck(username, deckId));
   }
 
-  @RequestMapping(value = "/{userId}", method = RequestMethod.POST, produces = "application/json")
-  @ApiOperation(value = "Create deck associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
-  public ResponseEntity createDeck(
-      @PathVariable(name = "userId") long userId, @RequestBody DeckDTO deckDTO) {
-    System.out.println(deckDTO.toString());
-    flashcardService.createDeck(userId, deckDTO.toDeck());
+  @RequestMapping(value = "/{username}", method = RequestMethod.POST, produces = "application/json")
+  @ApiOperation(value = "Create deck associated to a user specified in the DTO", authorizations = {@Authorization(value = "apiKey")})
+  public ResponseEntity createDeck(@PathVariable(name = "username") String  username, @RequestBody DeckDTO deckDTO) {
+    flashcardService.createDeck(username, deckDTO.toDeck());
     return ResponseEntity.ok().build();
   }
 
   @RequestMapping(
-      value = "/{userId}/deck{deckId}",
+      value = "/{username}/deck{deckId}",
       method = RequestMethod.PUT,
       produces = "application/json")
-  @ApiOperation(value = "Edit deck associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
+  @ApiOperation(value = "Edit deck associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity editDeckName(
-      @PathVariable(name = "userId") long userId, @RequestBody DeckDTO deckDTO) {
-    flashcardService.updateDeckName(userId, deckDTO.toDeck());
+      @PathVariable(name = "username") String  username, @RequestBody DeckDTO deckDTO) {
+    flashcardService.updateDeckName(username, deckDTO.toDeck());
     return ResponseEntity.ok().build();
   }
 
