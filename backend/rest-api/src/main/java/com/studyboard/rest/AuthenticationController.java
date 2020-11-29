@@ -16,11 +16,11 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping(value = "/authentication")
 @Api(value = "authentication")
-public class AuthenticationEndpoint {
+public class AuthenticationController {
 
     private final HeaderTokenAuthenticationService authenticationService;
 
-    public AuthenticationEndpoint(SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService) {
+    public AuthenticationController(SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService) {
         authenticationService = simpleHeaderTokenAuthenticationService;
     }
 

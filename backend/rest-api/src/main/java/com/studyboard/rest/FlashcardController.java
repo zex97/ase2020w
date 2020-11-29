@@ -4,6 +4,8 @@ import com.studyboard.dto.DeckDTO;
 import com.studyboard.dto.FlashcardDTO;
 import com.studyboard.flashcard.service.FlashcardService;
 import com.studyboard.model.Flashcard;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ public class FlashcardController {
   @Autowired private FlashcardService flashcardService;
 
   @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
+  @ApiOperation(value = "Get all decs associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
   public List<DeckDTO> getAllDecks(@PathVariable(name = "userId") long userId) {
     return flashcardService.getAllDecks(userId).stream()
         .map(DeckDTO::of)
@@ -29,12 +32,14 @@ public class FlashcardController {
       value = "/{userId}/deck{deckId}",
       method = RequestMethod.GET,
       produces = "application/json")
+  @ApiOperation(value = "Get deck associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
   public DeckDTO getOneDeck(
       @PathVariable(name = "userId") long userId, @PathVariable(name = "deckId") long deckId) {
     return DeckDTO.of(flashcardService.getOneDeck(userId, deckId));
   }
 
   @RequestMapping(value = "/{userId}", method = RequestMethod.POST, produces = "application/json")
+  @ApiOperation(value = "Create deck associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity createDeck(
       @PathVariable(name = "userId") long userId, @RequestBody DeckDTO deckDTO) {
     System.out.println(deckDTO.toString());
@@ -46,6 +51,7 @@ public class FlashcardController {
       value = "/{userId}/deck{deckId}",
       method = RequestMethod.PUT,
       produces = "application/json")
+  @ApiOperation(value = "Edit deck associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity editDeckName(
       @PathVariable(name = "userId") long userId, @RequestBody DeckDTO deckDTO) {
     flashcardService.updateDeckName(userId, deckDTO.toDeck());
@@ -56,6 +62,7 @@ public class FlashcardController {
       value = "/{userId}/deck{deckId}/flashcards",
       method = RequestMethod.GET,
       produces = "application/json")
+  @ApiOperation(value = "Get all flashcards associated with specific user and deck id.", authorizations = {@Authorization(value = "apiKey")})
   public List<FlashcardDTO> getAllFlashcards(
       @PathVariable(name = "userId") long userId, @PathVariable(name = "deckId") long deckId) {
     return flashcardService.getAllFlashcardsOfDeck(deckId).stream()
@@ -67,6 +74,7 @@ public class FlashcardController {
       value = "/{userId}/deck{deckId}/flashcard{flashcardId}",
       method = RequestMethod.GET,
       produces = "application/json")
+  @ApiOperation(value = "Get flashcard with specific flashcard, user and deck id.", authorizations = {@Authorization(value = "apiKey")})
   public FlashcardDTO getOneFlashcard(
       @PathVariable(name = "userId") long userId,
       @PathVariable(name = "deckId") long deckId,
@@ -79,6 +87,7 @@ public class FlashcardController {
       value = "/{userId}/deck{deckId}",
       method = RequestMethod.POST,
       produces = "application/json")
+  @ApiOperation(value = "Create a flashcard.", authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity createFlashcard(
       @PathVariable(name = "userId") long userId,
       @PathVariable(name = "deckId") long deckId,
@@ -92,6 +101,7 @@ public class FlashcardController {
       value = "/{userId}/{deckId}",
       method = RequestMethod.DELETE,
       produces = "application/json")
+  @ApiOperation(value = "Delete deck.", authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity deleteDeck(
       @PathVariable(name = "userId") long userId, @PathVariable(name = "deckId") long deckId) {
     flashcardService.deleteDeck(userId, deckId);
@@ -102,6 +112,7 @@ public class FlashcardController {
       value = "/{userId}/{deckId}/{flashcardId}",
       method = RequestMethod.DELETE,
       produces = "application/json")
+  @ApiOperation(value = "Delete flashcard.", authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity deleteFlashcard(
       @PathVariable(name = "userId") long userId,
       @PathVariable(name = "deckId") long deckId,
