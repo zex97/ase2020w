@@ -25,31 +25,32 @@ public class SimpleFlashcardService implements FlashcardService {
     private FlashcardRepository flashcardRepository;
 
     @Override
-    public List<Deck> getAllDecks(long userId) {
-        return deckRepository.findByUserIdOrderByLastTimeUsedDesc(userId);
+    public List<Deck> getAllDecks(String username) {
+        return deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(username);
     }
 
     @Override
-    public Deck getOneDeck(long userId, long deckId) {
+    public Deck getOneDeck(String username, long deckId) {
         Deck deck = deckRepository.findById(deckId).orElse(null);
-        User user = findUserById(userId);
+        /**TODO: username*/
+        //User user = findUserById(userId);
         if (deck == null) {
             throw new DeckDoesNotExist();
         }
-        if (deck.getUser() != user) {
+        /*if (deck.getUser() != user) {
             //create a Not Allowed exception
-        }
+        }*/
         return deck;
     }
 
     @Override
-    public void createDeck(long userId, Deck deck) {
+    public void createDeck(String username, Deck deck) {
         deckRepository.save(deck);
     }
 
     @Override
-    public Deck updateDeckName(long userId, Deck deck) {
-        Deck storedDeck = getOneDeck(userId, deck.getId());
+    public Deck updateDeckName(String username, Deck deck) {
+        Deck storedDeck = getOneDeck(username, deck.getId());
         storedDeck.setName(deck.getName());
         return deckRepository.save(storedDeck);
     }
