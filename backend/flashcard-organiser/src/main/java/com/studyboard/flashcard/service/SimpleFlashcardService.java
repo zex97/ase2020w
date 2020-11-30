@@ -75,6 +75,8 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public void createFlashcard(long deckId, Flashcard flashcard) {
+        Deck deck = findDeckById(deckId);
+        flashcard.setDeck(deck);
         flashcardRepository.save(flashcard);
     }
 
