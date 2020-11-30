@@ -1,8 +1,8 @@
-<h3 style="margin-left: 45%;">Flashcard Decks</h3>
+<h3 style="margin-left: 45%; color: #17a2b8">Flashcard Decks</h3>
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button type="button" class="btn btn-secondary btn-sm mr-4" data-toggle="modal" data-target=".create-deck-modal">
+    <button type="button" class="btn btn-sm mr-4" style="background-color: #ffc7a4" data-toggle="modal" data-target=".create-deck-modal">
       Create a deck
     </button>
 
@@ -42,12 +42,13 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title">Title: {{deck.name}}</h5>
-          <p class="card-text">Size: {{deck.size}}</p>
-          <button type="button" class="btn btn-info"
+          <h5 class="card-title wrapper" style="color: #17a2b8">Title: {{deck.name}}</h5>
+          <p class="card-text wrapper" style="color: #ffc7a4">Size: {{deck.size}}</p>
+          <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
+          <div class="wrapper"><button type="button" class="btn btn-info" style="position:absolute, top:50%"
                   data-toggle="modal" data-target=".load-deck-modal" (click)="loadDeckDetails(deck.id)">
             Details
-          </button>
+          </button></div>
 
           <div class="modal fade load-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Load deck modal"
                aria-hidden="true">
@@ -79,7 +80,7 @@
                     <button type="button" class="btn btn-info" (click)="this.load=false;">Edit</button>
                   </div>
                   <ng-template #elseBlockBtn>
-                    <button type="button" class="btn btn-info" (click)="this.load=true; saveEdits(deck)">Save</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal" (click)="this.load=true; saveEdits(deck)">Save</button>
                   </ng-template>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="this.load=true;">Close
                   </button>
