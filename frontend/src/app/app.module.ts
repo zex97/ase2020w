@@ -16,6 +16,7 @@ import {PageNotFoundComponent} from './components/page-not-found/page-not-found.
 import {RegisterComponent} from './components/register/register.component';
 import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
 import {DocumentSpaceComponent} from './components/document-space/document-space.component';
+import {DocumentComponent} from './components/document/document.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {DocumentSpaceComponent} from './components/document-space/document-space
     RegisterComponent,
     FlashcardManagerComponent,
     DocumentSpaceComponent,
+    DocumentComponent,
   ],
   imports: [
     BrowserModule,

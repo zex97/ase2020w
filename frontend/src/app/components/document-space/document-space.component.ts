@@ -7,7 +7,7 @@ import {Space} from '../../dtos/space';
 
 
 @Component({
-  selector: 'app-flashcard-manager',
+  selector: 'app-document-space',
   templateUrl: './document-space.component.html',
   styleUrls: ['./document-space.component.scss']
 })
@@ -17,6 +17,7 @@ export class DocumentSpaceComponent implements OnInit {
   spaceForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
+  spaceId: number = 1;
   private spaces: Space[];
 
 
@@ -60,6 +61,10 @@ export class DocumentSpaceComponent implements OnInit {
                          }
                        );
       });
+    }
+
+    loadSpaceDetails(id: number) {
+      this.spaceId = id;
     }
 
   private defaultErrorHandling(error: any) {

@@ -35,26 +35,23 @@
   </div>
 </div>
 
-<div>
-  <!--mat-list dense>
-    <mat-list-item *ngFor="let space of spaces">
-      <h3>{{space.name}}</h3>
-    </mat-list-item>
-  </mat-list-->
+<div class="flex-grid">
 
-  <div class="row" id="allDiv">
+  <div class="col">
+    <div *ngFor="let space of getSpaces()">
 
-    <div class="col-xl-3 p-2" *ngFor="let space of getSpaces()">
-
-      <div class="card">
+      <div class="card" (click)="loadSpaceDetails(space.id)">
 
         <div class="card-body">
           <h5 class="card-title wrapper" style="color: #17a2b8">Name: {{space.name}}</h5>
-          <div class="wrapper"><button type="button" class="btn btn-info" style="position:absolute, top:50%">
-            Details
-          </button></div>
+          <div class="card-text"> Lorem ipsum </div>
+
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="col">
+      <app-document [spaceId]=this.spaceId></app-document>
   </div>
 </div>
