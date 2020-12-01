@@ -18,6 +18,13 @@ export class SpaceService {
   constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
   }
 
+    /**
+     * Loads all spaces from the backend
+     */
+    getSpaces(username: string): Observable<Space[]> {
+      console.log('Searching for spaces.')
+      return this.httpClient.get<Space[]>(this.spaceBaseUri + '/' + username);
+    }
 
   /**
    * Persists space to the backend

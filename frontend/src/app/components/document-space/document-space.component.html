@@ -20,7 +20,7 @@
             <form action="#!" class="text-center border border-light p-5" [formGroup]="spaceForm">
 
               <p class="h4 mb-4">New document space</p>
-              <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
+              <input type="text" formControlName="name" class="form-control mb-4" placeholder="Name">
 
             </form>
           </div>
@@ -33,3 +33,28 @@
       </div>
     </div>
   </div>
+</div>
+
+<div>
+  <!--mat-list dense>
+    <mat-list-item *ngFor="let space of spaces">
+      <h3>{{space.name}}</h3>
+    </mat-list-item>
+  </mat-list-->
+
+  <div class="row" id="allDiv">
+
+    <div class="col-xl-3 p-2" *ngFor="let space of getSpaces()">
+
+      <div class="card">
+
+        <div class="card-body">
+          <h5 class="card-title wrapper" style="color: #17a2b8">Name: {{space.name}}</h5>
+          <div class="wrapper"><button type="button" class="btn btn-info" style="position:absolute, top:50%">
+            Details
+          </button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

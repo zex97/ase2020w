@@ -17,6 +17,7 @@ export class DocumentSpaceComponent implements OnInit {
   spaceForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
+  private spaces: Space[];
 
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService) {
@@ -26,6 +27,22 @@ export class DocumentSpaceComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.loadAllSpaces();
+  }
+
+  loadAllSpaces() {
+    this.spaceService.getSpaces(localStorage.getItem('currentUser')).subscribe(
+         (spaceList : Space[]) => {
+                      this.spaces = spaceList;
+                      },
+                      error => {
+                            this.defaultErrorHandling(error);
+                      }
+                  );
+   }
+
+  getSpaces() {
+    return this.spaces;
   }
 
   /**
@@ -36,7 +53,7 @@ export class DocumentSpaceComponent implements OnInit {
          const space = new Space(0, this.spaceForm.controls.name.value, res);
              this.spaceService.createSpace(space, localStorage.getItem('currentUser')).subscribe(
                   () => {
-                         //load all spaces
+                         this.loadAllSpaces();
                          },
                          error => {
                            this.defaultErrorHandling(error);
