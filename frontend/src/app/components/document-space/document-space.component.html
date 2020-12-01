@@ -1,0 +1,35 @@
+<h3 style="margin-left: 45%; color: #17a2b8">Document Space</h3>
+
+<div class="mt-4 container">
+  <div class="row p-2 mb-4">
+    <button type="button" class="btn btn-sm mr-4" style="background-color: #ffc7a4" data-toggle="modal" data-target=".create-space-modal">
+      Create a space
+    </button>
+
+    <div class="modal fade create-space-modal" tabindex="-1" role="dialog" aria-labelledby="Create space modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#!" class="text-center border border-light p-5" [formGroup]="spaceForm">
+
+              <p class="h4 mb-4">New document space</p>
+              <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info float-right" (click)="createSpace()" data-dismiss="modal">Save
+            </button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

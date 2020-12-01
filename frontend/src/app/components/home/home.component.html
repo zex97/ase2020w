@@ -5,7 +5,7 @@
     <a class="navbar-brand ml-lg-5" href="home" style="font-size: 2em; margin: 1em; color: #17a2b8">Studyboard</a>
     <div class="list-group list-group-flush">
       <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'message'}}]">ComponentMessage</a>
-      <a class="list-group-item list-group-item-action bg-light">ComponentTwo</a>
+      <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'spaces'}}]">Spaces</a>
       <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'flashcards'}}]">Flashcards</a>
       <a class="list-group-item list-group-item-action bg-light">ComponentFour</a>
       <a class="list-group-item list-group-item-action bg-light" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>

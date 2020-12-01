@@ -58,10 +58,8 @@ export class FlashcardManagerComponent implements OnInit {
 
   /**
    * Builds a deck dto and sends a creation request.
-   * If the procedure was successful, the form will be cleared.
    */
   createDeck() {
-  //dto for testing purposes, will be replaced - userId
     const date = new Date();
     date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
     const dateString = date.toISOString();
