@@ -49,8 +49,7 @@ public class User {
         this.id = id;
     }
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "userId")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   public List<Space> getSpaces() {
     if (spaces == null) {
       spaces = new ArrayList<>();
