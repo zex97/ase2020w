@@ -14,49 +14,37 @@ export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
   private authScheduler: Observable<any> = interval(1000);
-
-  private isLoggedInHELP: boolean = false;
+  error: boolean = false;
+  errorMessage: string = '';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
     this.scheduleReAuthentication();
   }
-
-  /** AUTHENTIFICATION IMPL
-   * Login in the user. If it was successful, a valid JWT token will be stored
-   * @param authRequest User data
-  *
-  loginUser(authRequest: AuthRequest): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(this.authBaseUri, authRequest)
-      .pipe(
-        tap((authResponse: AuthResponse) => this.setToken(authResponse))
-      );
-  }*/
 
   /**
    * Login in the user. If it was successful, a valid JWT token will be stored
    * @param authRequest User data
    */
   loginUser(authRequest: AuthRequest): Observable<AuthResponse> {
-    this.isLoggedInHELP = true;
-    return new Observable<AuthResponse>();
+    return this.httpClient.post<AuthResponse>(this.authBaseUri, authRequest)
+      .pipe(
+        tap((authResponse: AuthResponse) => this.setToken(authResponse))
+      );
   }
-
 
 
   /**
    * Check if a valid JWT token is saved in the localStorage
    */
   isLoggedIn() {
-    /**return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
-     */
-     return this.isLoggedInHELP;
+    return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
   }
 
   logoutUser() {
-    this.isLoggedInHELP = false;
-    /**console.log('Logout');
+    console.log('Logout');
     localStorage.removeItem('currentToken');
-    localStorage.removeItem('futureToken');*/
+    localStorage.removeItem('futureToken');
+    localStorage.removeItem('currentUser');
   }
 
   getToken() {
@@ -67,27 +55,13 @@ export class AuthService {
     return localStorage.getItem('futureToken');
   }
 
-  /**
-   * Returns the user role based on the current token
-   */
-  getUserRole() {
-    return 'ADMIN';
-    /**
-    if (this.getToken() != null) {
-      const decoded: any = jwt_decode(this.getToken());
-      const authInfo = decoded.aut;
-      if (authInfo.includes('ADMIN')) {
-        return 'ADMIN';
-      } else if (authInfo.includes('USER')) {
-        return 'USER';
-      }
-    }
-    return 'UNDEFINED';*/
-  }
-
   private setToken(authResponse: AuthResponse) {
     localStorage.setItem('currentToken', authResponse.currentToken);
     localStorage.setItem('futureToken', authResponse.futureToken);
+  }
+
+  setUsername(username: string) {
+    localStorage.setItem('currentUser', username);
   }
 
   /**

@@ -1,4 +1,4 @@
-package com.studyboard.space.security.service;
+package com.studyboard.space.user.service;
 
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.model.User;
@@ -14,6 +14,14 @@ public interface UserService {
      * @return the user object with the specified id
      */
     User getUser(Long id);
+
+    /**
+     * Find a single user entry by username.
+     *
+     * @param username of the user
+     * @return the user object with the specified username
+     */
+    User getUserByUsername(String username);
 
     /**
      * Returns a list of all users.

@@ -1,11 +1,14 @@
-package com.studyboard.space.security.service;
+package com.studyboard.space.user.service;
 
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.exception.UserDoesNotExist;
+import com.studyboard.model.Authorities;
 import com.studyboard.model.User;
+import com.studyboard.repository.AuthoritiesRepository;
 import com.studyboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,12 @@ public class SimpleUserService implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AuthoritiesRepository authoritiesRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User getUser(Long id) {
@@ -26,14 +35,27 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        User user = userRepository.findOneByUsername(username);
+        if (user == null) {
+            throw new UserDoesNotExist();
+        }
+        return user;
+    }
+
+    @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return null;
     }
 
     @Override
     public User createUser(User user) throws UniqueConstraintException {
-        //TODO hash password after authentication is done
         try {
+            authoritiesRepository.save(new Authorities(user.getUsername(), "USER"));
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setRole("USER");
+            user.setEnabled(true);
+            user.setPassword(hashedPassword);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new UniqueConstraintException("User with the same username or email already exists.");
@@ -42,11 +64,12 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User updateUserPassword(User user) {
-        //TODO hash password after authentication is done
         User storedUser = userRepository.findUserById(user.getId());
         if (storedUser == null) {
             throw new UserDoesNotExist();
         }
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        storedUser.setPassword(hashedPassword);
         storedUser.setPassword(user.getPassword());
         return userRepository.save(storedUser);
     }

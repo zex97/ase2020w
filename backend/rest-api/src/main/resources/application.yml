@@ -1,0 +1,6 @@
+application:
+  authentication:
+    signature-algorithm: HS256
+    secret: jwtSecret
+    validity-duration: 600
+    overlap-duration: 300

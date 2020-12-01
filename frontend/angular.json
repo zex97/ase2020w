@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "studyboard"
+  "defaultProject": "studyboard",
+  "cli": {
+    "analytics": "83369889-9027-4cc2-b661-478e9e542741"
+  }
 }
