@@ -57,7 +57,9 @@ public class FlashcardDTO {
         flashcard.setQuestion(this.question);
         flashcard.setAnswer(this.answer);
         flashcard.setConfidence_level(this.confidence_level);
-        flashcard.setDeck(this.deckDTO.toDeck());
+        if (this.deckDTO != null) {
+            flashcard.setDeck(this.deckDTO.toDeck());
+        }
         return flashcard;
     }
 

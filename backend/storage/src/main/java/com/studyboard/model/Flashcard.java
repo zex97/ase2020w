@@ -15,7 +15,7 @@ public class Flashcard {
     @Column(nullable = false, name = "answer")
     private String answer;
 
-    @Column(nullable = false, name = "confidenceLevel")
+    @Column(nullable = true, name = "confidenceLevel")
     private int confidence_level;
 
     @ManyToOne(fetch = FetchType.LAZY)
