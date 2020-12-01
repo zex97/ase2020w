@@ -5,7 +5,6 @@ import {SpaceService} from '../../services/space.service';
 import {User} from '../../dtos/user';
 import {Space} from '../../dtos/space';
 
-
 @Component({
   selector: 'app-document-space',
   templateUrl: './document-space.component.html',
@@ -49,23 +48,33 @@ export class DocumentSpaceComponent implements OnInit {
   /**
      * Builds a space dto and sends a creation request.
      */
-    createSpace() {
-      this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-         const space = new Space(0, this.spaceForm.controls.name.value, res);
-             this.spaceService.createSpace(space, localStorage.getItem('currentUser')).subscribe(
-                  () => {
-                         this.loadAllSpaces();
-                         },
-                         error => {
-                           this.defaultErrorHandling(error);
-                         }
-                       );
-      });
-    }
+  createSpace() {
+    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
+       const space = new Space(0, this.spaceForm.controls.name.value, res);
+           this.spaceService.createSpace(space, localStorage.getItem('currentUser')).subscribe(
+                () => {
+                       this.loadAllSpaces();
+                       },
+                       error => {
+                         this.defaultErrorHandling(error);
+                       }
+                     );
+    });
+  }
 
-    loadSpaceDetails(id: number) {
-      this.spaceId = id;
-    }
+  deleteSpace(id: number) {
+    this.spaceService.deleteSpace(id, localStorage.getItem('currentUser')).subscribe(
+                () => {
+                       this.loadAllSpaces();
+                       },
+                       error => {
+                         this.defaultErrorHandling(error);
+                       });
+  }
+
+  loadSpaceDetails(id: number) {
+    this.spaceId = id;
+   }
 
   private defaultErrorHandling(error: any) {
       console.log(error);

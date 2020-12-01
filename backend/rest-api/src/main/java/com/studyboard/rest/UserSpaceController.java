@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/space")
 public class UserSpaceController {
@@ -44,6 +45,7 @@ public class UserSpaceController {
         return ResponseEntity.ok().build();
     }
 
+    /**Change after file upload is done*/
     /*@RequestMapping(
             value = "/{username}/{spaceId}",
             method = RequestMethod.GET,
