@@ -8,7 +8,10 @@ import java.util.List;
 
 @Repository
 public interface SpaceRepository extends CrudRepository<Space, Long> {
+
     List<Space> findAll();
+
+    List<Space> findByUserUsername(String username);
 
     Space findSpaceById(long spaceId);
 }

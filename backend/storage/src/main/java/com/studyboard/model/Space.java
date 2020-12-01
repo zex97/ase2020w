@@ -11,6 +11,10 @@ public class Space {
     private String name;
     private List<Document> documents;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sb_user_id")
+    private User user;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public long getId() {
@@ -40,6 +44,14 @@ public class Space {
 
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

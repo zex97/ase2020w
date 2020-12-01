@@ -21,7 +21,7 @@ public class FlashcardController {
   @Autowired private FlashcardService flashcardService;
 
   @RequestMapping(value = "/{username}", method = RequestMethod.GET, produces = "application/json")
-  @ApiOperation(value = "Get all decs associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
+  @ApiOperation(value = "Get all decks associated with specific user id.", authorizations = {@Authorization(value = "apiKey")})
   public List<DeckDTO> getAllDecks(@PathVariable(name = "username") String username) {
     return flashcardService.getAllDecks(username).stream()
         .map(DeckDTO::of)
