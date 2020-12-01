@@ -1,6 +1,8 @@
 package com.studyboard.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 public class Flashcard {
@@ -16,6 +18,8 @@ public class Flashcard {
     private String answer;
 
     @Column(nullable = true, name = "confidenceLevel")
+    @Min(0)
+    @Max(5)
     private int confidence_level;
 
     @ManyToOne(fetch = FetchType.LAZY)

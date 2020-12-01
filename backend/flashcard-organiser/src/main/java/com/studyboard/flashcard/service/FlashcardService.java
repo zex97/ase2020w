@@ -1,5 +1,6 @@
 package com.studyboard.flashcard.service;
 
+import com.studyboard.flashcard.exception.FlashcardConstraintException;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 
@@ -81,5 +82,8 @@ public interface FlashcardService {
      * @param flashcardId of the flashcard that should be deleted
      */
     void deleteFlashcard(long deckId, long flashcardId);
+
+
+    Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
 
 }
