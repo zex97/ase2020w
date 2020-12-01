@@ -14,6 +14,7 @@ public class User {
     private String password;
     private String email;
     private Integer loginAttempts;
+    private List<String> filePaths;
     private String role;
     private Boolean enabled;
     private List<Deck> decks;
@@ -48,18 +49,30 @@ public class User {
         this.id = id;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "userId")
-    public List<Space> getSpaces() {
-        if (spaces == null) {
-            spaces = new ArrayList<>();
-        }
-        return spaces;
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "userId")
+  public List<Space> getSpaces() {
+    if (spaces == null) {
+      spaces = new ArrayList<>();
     }
+    return spaces;
+  }
 
-    public void setSpaces(List<Space> spaces) {
-        this.spaces = spaces;
+  @ElementCollection
+  public List<String> getFilePaths() {
+    if(filePaths == null) {
+      filePaths = new ArrayList<>();
     }
+    return filePaths;
+  }
+
+  public void setFilePaths(List<String> filePaths) {
+    this.filePaths = filePaths;
+  }
+
+  public void setSpaces(List<Space> spaces) {
+    this.spaces = spaces;
+  }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Deck> getDecks() {
