@@ -2,10 +2,12 @@
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button type="button" class="btn btn-sm mr-4" style="background-color: #ffc7a4" data-toggle="modal" data-target=".create-space-modal">
+    <button type="button" class="btn btn-sm mr-4" style="background-color: #ffc7a4" data-toggle="modal"
+            data-target=".create-space-modal">
       Create a space
     </button>
 
+    <!--Create space modal-->
     <div class="modal fade create-space-modal" tabindex="-1" role="dialog" aria-labelledby="Create space modal"
          aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -43,10 +45,41 @@
       <div class="card" (click)="loadSpaceDetails(space.id)">
 
         <div class="card-body">
-          <div class="card-title wrapper">
-            <h5 style="color: #17a2b8">Name: {{space.name}}</h5>
+          <div class="card-title">
+            <h5 class="space-name">Name: {{space.name}}</h5>
             <span class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
+            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img src="../../../assets/edit.png" width="15px;"></span>
 
+            <!--Edit space modal-->
+            <div class="modal fade edit-space-modal" tabindex="-1" role="dialog" aria-labelledby="Edit space modal"
+                 aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="#!" class="text-center border border-light p-5" [formGroup]="nameEditForm">
+
+                      <p class="h4 mb-4">New name:</p>
+                      <input type="text" formControlName="name" class="form-control mb-4" placeholder="Name">
+
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-info float-right" (click)="saveEdits(space)"
+                            data-dismiss="modal">Ok
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Delete space modal-->
             <div class="modal fade delete-space-modal" tabindex="-1" role="dialog" aria-labelledby="Delete space modal"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
@@ -61,7 +94,8 @@
                     <h5>Are you sure you want to delete space {{space.name}}?</h5>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-info float-right" (click)="deleteSpace(space.id)" data-dismiss="modal">Ok
+                    <button type="button" class="btn btn-info float-right" (click)="deleteSpace(space.id)"
+                            data-dismiss="modal">Ok
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
@@ -69,7 +103,7 @@
               </div>
             </div>
           </div>
-          <div class="card-text"> Lorem ipsum </div>
+          <div class="card-text"> Lorem ipsum</div>
 
         </div>
       </div>
@@ -77,6 +111,7 @@
   </div>
 
   <div class="col">
-      <app-document [spaceId]=this.spaceId></app-document>
+    <!--Document component-->
+    <app-document [spaceId]=this.spaceId></app-document>
   </div>
 </div>

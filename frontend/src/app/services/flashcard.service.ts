@@ -46,9 +46,13 @@ export class FlashcardService {
     return this.httpClient.post<Deck>(this.flashcardBaseUri + '/' + username, deck);
   }
 
+   /**
+    * Change deck name in the backend
+    * @param deck to make changes to
+    */
   editDeck(deck: Deck, username: string): Observable<Deck> {
      console.log('Change the deck name to ' + deck.name);
-    return this.httpClient.put<Deck>(this.flashcardBaseUri + '/' + username + '/deck' + deck.id, deck);
+    return this.httpClient.put<Deck>(this.flashcardBaseUri + '/' + username, deck);
   }
 
   getUsers(): Observable<User[]> {

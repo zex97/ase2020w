@@ -45,6 +45,17 @@ public class UserSpaceController {
         return ResponseEntity.ok().build();
     }
 
+    @RequestMapping(
+            value = "/{username}",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    @ApiOperation(value = "Edit space associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity editSpaceName(
+            @PathVariable(name = "username") String username, @RequestBody SpaceDTO spaceDTO) {
+        service.updateSpaceName(username, spaceDTO.toSpace());
+        return ResponseEntity.ok().build();
+    }
+
     /**Change after file upload is done*/
     /*@RequestMapping(
             value = "/{username}/{spaceId}",

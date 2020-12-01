@@ -35,4 +35,22 @@ export class SpaceService {
     return this.httpClient.post<Space>(this.spaceBaseUri + '/' + username, space);
   }
 
+  /**
+     * Delete space from backend
+     * @param id of the space to delete
+     * @param username of the user
+     */
+    deleteSpace(id: number, username: string): Observable<Space> {
+      console.log('Delete a space');
+      return this.httpClient.delete<Space>(this.spaceBaseUri + '/' + username + '/'+ id);
+    }
+
+    /**
+    * Change space name in the backend
+    * @param space to make changes to
+    */
+    editSpace(space: Space, username: string): Observable<Space> {
+         console.log('Change the space name to ' + space.name);
+        return this.httpClient.put<Space>(this.spaceBaseUri + '/' + username, space);
+      }
 }
