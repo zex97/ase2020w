@@ -2,6 +2,7 @@ package com.studyboard.flashcard.service;
 
 import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.flashcard.exception.DeckDoesNotExist;
+import com.studyboard.flashcard.exception.FlashcardConstraintException;
 import com.studyboard.flashcard.exception.FlashcardDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
@@ -12,6 +13,8 @@ import com.studyboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.List;
 
 @Service
@@ -25,31 +28,32 @@ public class SimpleFlashcardService implements FlashcardService {
     private FlashcardRepository flashcardRepository;
 
     @Override
-    public List<Deck> getAllDecks(long userId) {
-        return deckRepository.findByUserIdOrderByLastTimeUsedDesc(userId);
+    public List<Deck> getAllDecks(String username) {
+        return deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(username);
     }
 
     @Override
-    public Deck getOneDeck(long userId, long deckId) {
+    public Deck getOneDeck(String username, long deckId) {
         Deck deck = deckRepository.findById(deckId).orElse(null);
-        User user = findUserById(userId);
+        /**TODO: username*/
+        //User user = findUserById(userId);
         if (deck == null) {
             throw new DeckDoesNotExist();
         }
-        if (deck.getUser() != user) {
+        /*if (deck.getUser() != user) {
             //create a Not Allowed exception
-        }
+        }*/
         return deck;
     }
 
     @Override
-    public void createDeck(long userId, Deck deck) {
+    public void createDeck(String username, Deck deck) {
         deckRepository.save(deck);
     }
 
     @Override
-    public Deck updateDeckName(long userId, Deck deck) {
-        Deck storedDeck = getOneDeck(userId, deck.getId());
+    public Deck updateDeckName(String username, Deck deck) {
+        Deck storedDeck = getOneDeck(username, deck.getId());
         storedDeck.setName(deck.getName());
         return deckRepository.save(storedDeck);
     }
@@ -74,6 +78,8 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public void createFlashcard(long deckId, Flashcard flashcard) {
+        Deck deck = findDeckById(deckId);
+        flashcard.setDeck(deck);
         flashcardRepository.save(flashcard);
     }
 
@@ -89,6 +95,17 @@ public class SimpleFlashcardService implements FlashcardService {
         Deck deck = findDeckById(deckId);
         deck.getFlashcards().removeIf(f -> f.getId() == flashcardId);
         deckRepository.save(deck);
+    }
+
+    @Override
+    public Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException{
+        Flashcard storedFlashcard = getOneFlashcard(deckId, flashcard.getId());
+        try {
+            storedFlashcard.setConfidence_level(flashcard.getConfidence_level());
+            return flashcardRepository.save(storedFlashcard);
+        } catch (ConstraintViolationException e){
+            throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");
+        }
     }
 
 

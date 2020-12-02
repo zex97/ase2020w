@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface DeckRepository extends CrudRepository<Deck, Long> {
 
-    List<Deck> findByUserIdOrderByLastTimeUsedDesc(long userId);
+    List<Deck> findByUserUsernameOrderByLastTimeUsedDesc(String username);
 
     Optional<Deck> findById(long deckId);
 }
