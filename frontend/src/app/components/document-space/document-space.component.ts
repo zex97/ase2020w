@@ -66,8 +66,17 @@ export class DocumentSpaceComponent implements OnInit {
     this.filesToUpload = Array.from(files);
   }
 
+  /**
+   * If file is removed check if the list is empty.
+   * Important: If empty initialize with new array to avoid
+   * file number of input field
+   * */
   removeFileFromList(i: number) {
     this.filesToUpload.splice(i, 1);
+
+    if (this.filesToUpload.length === 0) {
+      this.filesToUpload = [];
+    }
   }
 
   uploadFile() {
@@ -80,8 +89,16 @@ export class DocumentSpaceComponent implements OnInit {
         console.log('file uploaded successfully');
       });
     }
-    this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
+    if (this.filesToUpload.length > 0) {
+      this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
+    } else {
+      this.successMessage = 'No files were chosen.';
+    }
     this.success = true;
+  }
+
+  clearInputFiles() {
+    this.filesToUpload = [];
   }
 
   getSpaces() {

@@ -67,17 +67,19 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title">File Upload</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!--<button (click)="clearInputFiles()" type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button>-->
                   </div>
 
                   <div class="modal-body">
                     <div style="max-width: 100%" class="form-group">
-                      <input style="max-width: 100%" class="hide-text" type="file" id="files" (change)="handleFileInput($event.target.files)" multiple>
+                      <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
+                      <input [(ngModel)]="filesToUpload" class="hide-text" type="file" id="files"
+                             (change)="handleFileInput($event.target.files)" multiple>
                       <!--<label for="files">Choose files </label>-->
                     </div>
-                    <label for="files">Names of files to upload: </label>
+                    <label *ngIf="filesToUpload.length!==0" for="files">Names of files to upload: </label>
                     <ul class="files">
                       <li *ngFor="let file of filesToUpload; let i = index">
                         {{file.name}}
@@ -90,7 +92,9 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-info" data-dismiss="modal" (click)="uploadFile()">Submit
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button (click)="clearInputFiles()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                      Close
+                    </button>
                   </div>
                 </div>
               </div>
