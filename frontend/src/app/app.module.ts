@@ -13,8 +13,10 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {Globals} from './global/globals';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
-import { RegisterComponent } from './components/register/register.component';
-import { FlashcardManagerComponent } from './components/flashcard-manager/flashcard-manager.component';
+import {RegisterComponent} from './components/register/register.component';
+import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
+import {DocumentSpaceComponent} from './components/document-space/document-space.component';
+import {DocumentComponent} from './components/document/document.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { FlashcardManagerComponent } from './components/flashcard-manager/flashc
     PageNotFoundComponent,
     RegisterComponent,
     FlashcardManagerComponent,
+    DocumentSpaceComponent,
+    DocumentComponent,
   ],
   imports: [
     BrowserModule,

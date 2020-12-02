@@ -4,7 +4,6 @@ import com.studyboard.dto.DeckDTO;
 import com.studyboard.dto.FlashcardDTO;
 import com.studyboard.flashcard.exception.FlashcardConstraintException;
 import com.studyboard.flashcard.service.FlashcardService;
-import com.studyboard.model.Flashcard;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +18,12 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/flashcards")
 public class FlashcardController {
 
-  @Autowired private FlashcardService flashcardService;
+    @Autowired
+    private FlashcardService flashcardService;
 
   @RequestMapping(value = "/{username}", method = RequestMethod.GET, produces = "application/json")
   @ApiOperation(
-      value = "Get all decs associated with specific user id.",
+      value = "Get all decks associated with specific user id.",
       authorizations = {@Authorization(value = "apiKey")})
   public List<DeckDTO> getAllDecks(@PathVariable(name = "username") String username) {
     return flashcardService.getAllDecks(username).stream()

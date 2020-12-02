@@ -2,76 +2,47 @@ package com.studyboard.space.service;
 
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
-import com.studyboard.model.User;
-import com.studyboard.repository.SpaceRepository;
-import com.studyboard.repository.UserRepository;
-import com.studyboard.space.exception.SpaceDoesNotExist;
-import com.studyboard.exception.UserDoesNotExist;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class UserSpaceService implements UserSpace {
-    @Autowired
-    private SpaceRepository spaceRepository;
-    @Autowired
-    private UserRepository userRepository;
+public interface UserSpaceService {
 
-    @Override
-    public List<Space> getUserSpaces(long userId) {
-        User user = findUserById(userId);
-        return user.getSpaces();
-    }
+    /**
+     * Get all spaces belonging to the user with the specified username.
+     *
+     * @param username of the user
+     * @return all spaces user created
+     */
+    List<Space> getUserSpaces(String username);
 
-    @Override
-    public void addSpaceToUser(long userId, Space space) {
-        User user = findUserById(userId);
-        user.getSpaces().add(space);
-        userRepository.save(user);
-    }
+    /**
+     * Create a space
+     *
+     * @param username of the user creating the space
+     * @param space    to be created
+     */
+    void addSpaceToUser(String username, Space space);
 
-    @Override
-    public void removeSpaceFromUser(long userId, long spaceId) {
-        User user = findUserById(userId);
-        user.getSpaces().removeIf(s -> s.getId() == spaceId);
-        userRepository.save(user);
-    }
+    /**
+     * Delete a space
+     *
+     * @param username of the user the space belongs to
+     * @param spaceId  of the space to be created
+     */
+    void removeSpaceFromUser(String username, long spaceId);
 
-    @Override
-    public List<Document> geAllDocumentsFromSpace(long spaceId) {
-        Space space = findSpaceById(spaceId);
-        return space.getDocuments();
-    }
+    /**
+     * Update a single space
+     *
+     * @param username of the user who created the deck
+     * @param space    - with the information to be updated
+     * @return updated space
+     */
+    public Space updateSpaceName(String username, Space space);
 
-    @Override
-    public void addDocumentToSpace(long spaceId, Document document) {
-        Space space = findSpaceById(spaceId);
-        space.getDocuments().add(document);
-        spaceRepository.save(space);
-    }
+    List<Document> geAllDocumentsFromSpace(long spaceId);
 
-    @Override
-    public void removeDocumentFromSpace(long spaceId, long documentId) {
-        Space space = findSpaceById(spaceId);
-        space.getDocuments().removeIf(d -> d.getId() == documentId);
-        spaceRepository.save(space);
-    }
+    void addDocumentToSpace(long spaceId, Document document);
 
-    private Space findSpaceById(long spaceId) {
-        Space space = spaceRepository.findSpaceById(spaceId);
-        if (space == null) {
-            throw new SpaceDoesNotExist();
-        }
-        return space;
-    }
-
-    private User findUserById(long userId) {
-        User user = userRepository.findUserById(userId);
-        if (user == null) {
-            throw new UserDoesNotExist();
-        }
-        return user;
-    }
+    void removeDocumentFromSpace(long spaceId, long documentId);
 }

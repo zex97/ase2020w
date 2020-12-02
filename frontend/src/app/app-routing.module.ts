@@ -7,7 +7,10 @@ import {MessageComponent} from './components/message/message.component';
 import {HomeComponent} from './components/home/home.component';
 import {AppComponent} from './app.component';
 import {RegisterComponent} from './components/register/register.component';
-import { FlashcardManagerComponent } from './components/flashcard-manager/flashcard-manager.component';
+import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
+import {DocumentSpaceComponent} from './components/document-space/document-space.component';
+import {DocumentComponent} from './components/document/document.component';
+
 
 const routes: Routes = [
   { path: '',
@@ -44,6 +47,17 @@ const routes: Routes = [
             path: 'flashcards',
             component: FlashcardManagerComponent,
             outlet: 'view'
+          },
+          {
+            path: 'spaces',
+            component: DocumentSpaceComponent,
+            outlet: 'view',
+            children: [
+              {
+                path: 'document',
+                component: DocumentComponent
+              }
+            ]
           }
         ]
       }
