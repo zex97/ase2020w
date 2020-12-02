@@ -19,12 +19,17 @@ public class UserRepositoryTest {
     private static final String TEST_USER_PASSWORD_1 = "password1";
     private static final String TEST_USER_EMAIL_1 = "demo1@email.com";
     private static final Integer TEST_USER_LOGIN_ATTEMPTS_1 = 0;
+    private static final String TEST_ROLE_1 = "USER";
+    private static final boolean TEST_ENABLED_1 = true;
 
     private static final long TEST_USER_ID_2 = 2L;
     private static final String TEST_USER_USERNAME_2 = "username2";
     private static final String TEST_USER_PASSWORD_2 = "password2";
     private static final String TEST_USER_EMAIL_2 = "demo2@email.com";
     private static final Integer TEST_USER_LOGIN_ATTEMPTS_2 = 2;
+    private static final String TEST_ROLE_2 = "USER";
+    private static final boolean TEST_ENABLED_2 = true;
+
 
 
     @Autowired
@@ -40,6 +45,8 @@ public class UserRepositoryTest {
         user.setPassword(TEST_USER_PASSWORD_1);
         user.setEmail(TEST_USER_EMAIL_1);
         user.setLoginAttempts(TEST_USER_LOGIN_ATTEMPTS_1);
+        user.setEnabled(TEST_ENABLED_1);
+        user.setRole(TEST_ROLE_1);
         userRepository.save(user);
 
         Assertions.assertEquals(1, userRepository.findAll().size());
@@ -51,6 +58,8 @@ public class UserRepositoryTest {
         Assertions.assertEquals(TEST_USER_PASSWORD_1, storedUser.getPassword());
         Assertions.assertEquals(TEST_USER_EMAIL_1, storedUser.getEmail());
         Assertions.assertEquals(TEST_USER_LOGIN_ATTEMPTS_1, storedUser.getLoginAttempts());
+        Assertions.assertEquals(TEST_ENABLED_1, storedUser.getEnabled());
+        Assertions.assertEquals(TEST_ROLE_1, storedUser.getRole());
     }
 
     @Test
@@ -63,6 +72,8 @@ public class UserRepositoryTest {
         user.setPassword(TEST_USER_PASSWORD_1);
         user.setEmail(TEST_USER_EMAIL_1);
         user.setLoginAttempts(TEST_USER_LOGIN_ATTEMPTS_1);
+        user.setEnabled(TEST_ENABLED_1);
+        user.setRole(TEST_ROLE_1);
         userRepository.save(user);
 
         Assertions.assertEquals(1, userRepository.findAll().size());
@@ -79,6 +90,8 @@ public class UserRepositoryTest {
         Assertions.assertEquals(TEST_USER_PASSWORD_1, storedUser.getPassword());
         Assertions.assertEquals(TEST_USER_EMAIL_1, storedUser.getEmail());
         Assertions.assertEquals(TEST_USER_LOGIN_ATTEMPTS_1, storedUser.getLoginAttempts());
+        Assertions.assertEquals(TEST_ENABLED_1, storedUser.getEnabled());
+        Assertions.assertEquals(TEST_ROLE_1, storedUser.getRole());
 
         User user2 = new User();
         user2.setId(TEST_USER_ID_2);
@@ -86,6 +99,8 @@ public class UserRepositoryTest {
         user2.setPassword(TEST_USER_PASSWORD_2);
         user2.setEmail(TEST_USER_EMAIL_2);
         user2.setLoginAttempts(TEST_USER_LOGIN_ATTEMPTS_2);
+        user2.setEnabled(TEST_ENABLED_2);
+        user2.setRole(TEST_ROLE_2);
         userRepository.save(user2);
 
         Assertions.assertEquals(2, userRepository.findAll().size());
@@ -98,6 +113,8 @@ public class UserRepositoryTest {
         Assertions.assertEquals(TEST_USER_PASSWORD_2, storedUser2.getPassword());
         Assertions.assertEquals(TEST_USER_EMAIL_2, storedUser2.getEmail());
         Assertions.assertEquals(TEST_USER_LOGIN_ATTEMPTS_2, storedUser2.getLoginAttempts());
+        Assertions.assertEquals(TEST_ENABLED_2, storedUser.getEnabled());
+        Assertions.assertEquals(TEST_ROLE_2, storedUser.getRole());
 
     }
 
