@@ -9,7 +9,7 @@ export class DocumentComponent implements OnInit {
 
   constructor() { }
 
-  @Input() spaceId: number
+  @Input() spaceId: number;
 
   ngOnInit() {
   }

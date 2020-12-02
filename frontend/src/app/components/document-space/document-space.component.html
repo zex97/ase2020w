@@ -1,3 +1,11 @@
+<!-- Error messages should have use the same principle -->
+<div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{{successMessage}}</strong> {{ errorMessage }}
+  <button type="button" (click)="vanishSuccessMessage()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
 <h3 style="margin-left: 45%; color: #17a2b8">Document Space</h3>
 
 <div class="mt-4 container">
@@ -48,7 +56,38 @@
           <div class="card-title">
             <h5 class="space-name">Name: {{space.name}}</h5>
             <span class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
-            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img src="../../../assets/edit.png" width="15px;"></span>
+            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
+              src="../../../assets/edit.png" width="15px;"></span>
+            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
+              src="../../../assets/upload-logo.png" width="25px;"></span>
+
+            <!-- file upload modal -->
+            <div class="modal fade upload-file-modal" tabindex="-1" role="dialog" aria-label="Upload Files"
+                 aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">File Upload</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label for="files">Choose files </label>
+                      <input type="file" id="files" (change)="handleFileInput($event.target.files)" multiple>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal" (click)="uploadFile()">Submit
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <!--Edit space modal-->
             <div class="modal fade edit-space-modal" tabindex="-1" role="dialog" aria-labelledby="Edit space modal"
