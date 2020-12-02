@@ -5,7 +5,6 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-
 <h3 style="margin-left: 45%; color: #17a2b8">Document Space</h3>
 
 <div class="mt-4 container">
@@ -74,10 +73,18 @@
                   </div>
 
                   <div class="modal-body">
-                    <div class="form-group">
-                      <label for="files">Choose files </label>
-                      <input type="file" id="files" (change)="handleFileInput($event.target.files)" multiple>
+                    <div style="max-width: 100%" class="form-group">
+                      <input style="max-width: 100%" class="hide-text" type="file" id="files" (change)="handleFileInput($event.target.files)" multiple>
+                      <!--<label for="files">Choose files </label>-->
                     </div>
+                    <label for="files">Names of files to upload: </label>
+                    <ul class="files">
+                      <li *ngFor="let file of filesToUpload; let i = index">
+                        {{file.name}}
+                        <span (click)="removeFileFromList(i)" class="close" data-toggle="modal">x</span>
+                      </li>
+                    </ul>
+
                   </div>
 
                   <div class="modal-footer">

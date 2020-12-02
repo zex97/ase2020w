@@ -16,7 +16,7 @@ export class DocumentSpaceComponent implements OnInit {
   spaceForm: FormGroup;
   nameEditForm: FormGroup;
   fileUploadForm: FormGroup;
-  filesToUpload: FileList = null;
+  filesToUpload: File[] = [];
   error: boolean = false;
   success: boolean = false;
   successMessage: String = '';
@@ -63,7 +63,11 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   handleFileInput(files: FileList) {
-    this.filesToUpload = files;
+    this.filesToUpload = Array.from(files);
+  }
+
+  removeFileFromList(i: number) {
+    this.filesToUpload.splice(i, 1);
   }
 
   uploadFile() {
@@ -71,7 +75,7 @@ export class DocumentSpaceComponent implements OnInit {
     // tslint:disable-next-line:forin
     for (let i = 0; i < this.filesToUpload.length; i++) {
       // TODO: should file types be validated in frontend???
-      const file = this.filesToUpload.item(i);
+      const file = this.filesToUpload[i];
       this.fileUploadService.uploadFile(file, user).subscribe(res => {
         console.log('file uploaded successfully');
       });
