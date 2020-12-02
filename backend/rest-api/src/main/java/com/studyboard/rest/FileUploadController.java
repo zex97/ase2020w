@@ -25,23 +25,23 @@ public class FileUploadController {
 
   /** @param file accepts files up to 20MB (can be changed in application.properties) */
   @RequestMapping(
-      value = "/single-file/{userId}",
+      value = "/single-file/{userName}",
       method = RequestMethod.POST,
       produces = "application/json")
   public ResponseEntity<String> handleFileUpload(
-          @RequestParam("file") MultipartFile file, @PathVariable long userId) {
-    fileUploaderService.store(file, userId);
+          @RequestParam("file") MultipartFile file, @PathVariable String userName) {
+    fileUploaderService.store(file, userName);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(file.getOriginalFilename());
   }
 
   @RequestMapping(
-      value = "/file/{fileName}/{userId}",
+      value = "/file/{fileName}/{userName}",
       method = RequestMethod.GET,
       produces = "application/json")
   @ResponseBody
   public ResponseEntity<Resource> getFile(
-      @PathVariable(name = "fileName") String fileName, @PathVariable long userId) {
-    Resource file = fileUploaderService.loadAsResource(fileName, userId);
+      @PathVariable(name = "fileName") String fileName, @PathVariable String userName) {
+    Resource file = fileUploaderService.loadAsResource(fileName, userName);
     return ResponseEntity.ok()
         .header(
             HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
@@ -49,31 +49,31 @@ public class FileUploadController {
   }
 
   @RequestMapping(
-      value = "/multiple-files/{userId}",
+      value = "/multiple-files/{userName}",
       method = RequestMethod.POST,
       produces = "application/json")
   @ResponseBody
   public List<ResponseEntity<String>> uploadMultipleFiles(
-      @RequestParam("file") MultipartFile[] files, @PathVariable long userId) {
+      @RequestParam("file") MultipartFile[] files, @PathVariable String userName) {
     return Arrays.stream(files)
-            .map(file -> handleFileUpload(file, userId))
+            .map(file -> handleFileUpload(file, userName))
             .collect(Collectors.toList());
   }
 
   @RequestMapping(
-      value = "/delete-file/{fileName}/{userId}",
+      value = "/delete-file/{fileName}/{userName}",
       method = RequestMethod.DELETE,
       produces = "application/json")
-  public void deleteUserUpload(@PathVariable(value = "fileName") String fileName, @PathVariable long userId) {
-    fileUploaderService.deleteUserFile(fileName, userId);
+  public void deleteUserUpload(@PathVariable(value = "fileName") String fileName, @PathVariable String userName) {
+    fileUploaderService.deleteUserFile(fileName, userName);
   }
 
   @RequestMapping(
-      value = "/delete-folder/{userId}",
+      value = "/delete-folder/{userName}",
       method = RequestMethod.DELETE,
       produces = "application/json")
-  public void deleteUserFolder(@PathVariable long userId) {
-    fileUploaderService.deleteUserFolder(userId);
+  public void deleteUserFolder(@PathVariable String userName) {
+    fileUploaderService.deleteUserFolder(userName);
   }
 
   @ExceptionHandler(StorageFileNotFoundException.class)

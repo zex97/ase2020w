@@ -9,13 +9,13 @@ public interface FileUploader {
 
   void init();
 
-  String store(MultipartFile file, long userId);
+  String store(MultipartFile file, String userId);
 
-  Path load(String fileName, long userId);
+  Path load(String fileName, String userId);
 
-  Resource loadAsResource(String fileName, long usedId);
+  Resource loadAsResource(String fileName, String usedId);
 
-  void deleteUserFile(String fileName, long userId);
+  void deleteUserFile(String fileName, String userId);
 
-  void deleteUserFolder(long userId);
+  void deleteUserFolder(String userId);
 }

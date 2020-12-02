@@ -46,12 +46,12 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public String store(MultipartFile file, long userId) {
+  public String store(MultipartFile file, String userName) {
 
     String fileName = file.getOriginalFilename();
 
     // create folder path for each individual user
-    User user = userRepository.findUserById(userId);
+    User user = userRepository.findOneByUsername(userName);
     Path completeUserPath = rootLocation.resolve(Paths.get(user.getUsername()));
 
     // check if folder already exists
@@ -95,15 +95,15 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public Path load(String filename, long userId) {
+  public Path load(String filename, String userName) {
     return rootLocation
-        .resolve(userRepository.findUserById(userId).getUsername())
+        .resolve(userName)
         .resolve(filename);
   }
 
   @Override
-  public Resource loadAsResource(String fileName, long userId) {
-    Path filePath = load(fileName, userId);
+  public Resource loadAsResource(String fileName, String userName) {
+    Path filePath = load(fileName, userName);
     try {
       Resource resource = new UrlResource(filePath.toUri());
       if (resource.exists() || resource.isReadable()) {
@@ -119,8 +119,8 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public void deleteUserFile(String fileName, long userId) {
-    Path filePath = load(fileName, userId);
+  public void deleteUserFile(String fileName, String userName) {
+    Path filePath = load(fileName, userName);
 
     try {
       Files.delete(filePath);
@@ -130,17 +130,17 @@ public class FileUploaderService implements FileUploader {
       throw new FileStorageException("Failed to delete file(" + fileName + ")");
     }
 
-    User user = userRepository.findUserById(userId);
+    User user = userRepository.findOneByUsername(userName);
     user.getFilePaths().removeIf(path -> (Paths.get(path).endsWith(fileName)));
     user.setFilePaths(user.getFilePaths());
     userRepository.save(user);
   }
 
   @Override
-  public void deleteUserFolder(long userId) {
+  public void deleteUserFolder(String userName) {
     FileSystemUtils.deleteRecursively(
-        rootLocation.resolve(userRepository.findUserById(userId).getUsername()).toFile());
-    User user = userRepository.findUserById(userId);
+        rootLocation.resolve(userName).toFile());
+    User user = userRepository.findOneByUsername(userName);
     user.setFilePaths(Collections.emptyList());
     userRepository.save(user);
   }
