@@ -16,6 +16,14 @@ public interface UserService {
     User getUser(Long id);
 
     /**
+     * Find a single user entry by username.
+     *
+     * @param username of the user
+     * @return the user object with the specified username
+     */
+    User getUserByUsername(String username);
+
+    /**
      * Returns a list of all users.
      */
     List<User> getAllUsers();

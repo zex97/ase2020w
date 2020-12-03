@@ -28,6 +28,12 @@ public class UserController {
         return UserDTO.of(userService.getUser(userId));
     }
 
+    @RequestMapping(value = "/username{username}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Get user with specific username.", authorizations = {@Authorization(value = "apiKey")})
+    public UserDTO getUserByUsername(@PathVariable(name = "username") String username) {
+        return UserDTO.of(userService.getUserByUsername(username));
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(value = "Get all users.", authorizations = {@Authorization(value = "apiKey")})
     public List<UserDTO> getAllUsers() {

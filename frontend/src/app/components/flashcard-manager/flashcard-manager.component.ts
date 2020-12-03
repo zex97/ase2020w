@@ -39,10 +39,14 @@ export class FlashcardManagerComponent implements OnInit {
   * Get a list of all decks belonging to the logged-in user from backend
   */
   loadAllDecks() {
-    this.flashcardService.getDecks(3).subscribe(
-    (decksList : Deck[]) => {
-      this.decks = decksList;
-     })
+    this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
+        (decksList : Deck[]) => {
+                     this.decks = decksList;
+                     },
+                     error => {
+                           this.defaultErrorHandling(error);
+                     }
+                 );
   }
 
   /**
@@ -54,16 +58,14 @@ export class FlashcardManagerComponent implements OnInit {
 
   /**
    * Builds a deck dto and sends a creation request.
-   * If the procedure was successful, the form will be cleared.
    */
   createDeck() {
-  //dto for testing purposes, will be replaced - userId
     const date = new Date();
     date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
     const dateString = date.toISOString();
-    this.userService.getUserById(3).subscribe(res => {
+    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
        const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
-           this.flashcardService.createDeck(deck).subscribe(
+           this.flashcardService.createDeck(deck, localStorage.getItem('currentUser')).subscribe(
                 () => {
                        this.loadAllDecks();
                        },
@@ -77,11 +79,12 @@ export class FlashcardManagerComponent implements OnInit {
 
   saveEdits(deck: Deck) {
       //send edits to backend
-      this.userService.getUserById(3).subscribe(res => {
+      this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
              deck.name = this.deckEditForm.controls.title.value;
-                 this.flashcardService.editDeck(deck).subscribe(
+                 this.flashcardService.editDeck(deck, localStorage.getItem('currentUser')).subscribe(
                       () => {
                              this.loadAllDecks();
+                             location.reload();
                              },
                              error => {
                                this.defaultErrorHandling(error);
