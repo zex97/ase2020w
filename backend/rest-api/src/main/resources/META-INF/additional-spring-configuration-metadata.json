@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "application.authentication.signature-algorithm",
+      "type": "java.lang.String",
+      "description": "The signature algorithm to use for signing tokens, defaults to HS256."
+    },
+    {
+      "name": "application.authentication.secret",
+      "type": "java.lang.String",
+      "description": "The secret used to sign the authentication token."
+    },
+    {
+      "name": "application.authentication.overlap-duration",
+      "type": "java.lang.Long",
+      "description": "The duration in seconds for which the new and the old authentication token are both valid, defaults to 300."
+    },
+    {
+      "name": "application.authentication.validity-duration",
+      "type": "java.lang.String",
+      "description": "Description for application.authentication.validity-duration."
+    }
+  ]
+}

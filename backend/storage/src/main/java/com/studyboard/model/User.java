@@ -10,12 +10,33 @@ public class User {
 
     @Column(name="sb_user_id")
     private long id;
-    private List<Space> spaces;
     private String username;
     private String password;
     private String email;
     private Integer loginAttempts;
+    private String role;
+    private Boolean enabled;
     private List<Deck> decks;
+    private List<Space> spaces;
+
+    @Column(nullable = false, name = "role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Column(nullable = false, name = "enabled")
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

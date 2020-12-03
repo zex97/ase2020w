@@ -1,4 +1,4 @@
-package com.studyboard.space.security.service;
+package com.studyboard.space.user.service;
 
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.model.User;
