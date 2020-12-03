@@ -25,17 +25,17 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     @Override
-    public void addSpaceToUser(String username, Space space) {
+    public void addSpace(Space space) {
         spaceRepository.save(space);
     }
 
     @Override
-    public void removeSpaceFromUser(String username, long spaceId) {
+    public void removeSpace(long spaceId) {
         spaceRepository.deleteById(spaceId);
     }
 
     @Override
-    public Space updateSpaceName(String username, Space space) {
+    public Space updateSpaceName(Space space) {
         Space storedSpace = findSpaceById(space.getId());
         storedSpace.setName(space.getName());
         return spaceRepository.save(storedSpace);
@@ -69,7 +69,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
         return space;
     }
 
-    private User findUserById(String username) {
+    private User findUserByUsername(String username) {
         User user = userRepository.findOneByUsername(username);
         if (user == null) {
             throw new UserDoesNotExist();

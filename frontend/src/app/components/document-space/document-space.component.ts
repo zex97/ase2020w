@@ -59,7 +59,7 @@ export class DocumentSpaceComponent implements OnInit {
   createSpace() {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
        const space = new Space(0, this.spaceForm.controls.name.value, res);
-           this.spaceService.createSpace(space, localStorage.getItem('currentUser')).subscribe(
+           this.spaceService.createSpace(space).subscribe(
                 () => {
                        this.loadAllSpaces();
                        },
@@ -74,7 +74,7 @@ export class DocumentSpaceComponent implements OnInit {
   * Sends a request to delete a specific space.
   */
   deleteSpace(id: number) {
-    this.spaceService.deleteSpace(id, localStorage.getItem('currentUser')).subscribe(
+    this.spaceService.deleteSpace(id).subscribe(
                 () => {
                        this.loadAllSpaces();
                        },
@@ -90,7 +90,7 @@ export class DocumentSpaceComponent implements OnInit {
         //send edits to backend
         this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
                space.name = this.nameEditForm.controls.name.value;
-                   this.spaceService.editSpace(space, localStorage.getItem('currentUser')).subscribe(
+                   this.spaceService.editSpace(space).subscribe(
                         () => {
                                this.loadAllSpaces();
                                location.reload();
