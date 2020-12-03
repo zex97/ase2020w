@@ -12,5 +12,5 @@ public interface DeckRepository extends CrudRepository<Deck, Long> {
 
     List<Deck> findByUserUsernameOrderByLastTimeUsedDesc(String username);
 
-    Optional<Deck> findById(long deckId);
+    Deck findDeckById(long deckId);
 }

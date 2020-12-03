@@ -65,7 +65,7 @@ export class FlashcardManagerComponent implements OnInit {
     const dateString = date.toISOString();
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
        const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
-           this.flashcardService.createDeck(deck, localStorage.getItem('currentUser')).subscribe(
+           this.flashcardService.createDeck(deck).subscribe(
                 () => {
                        this.loadAllDecks();
                        },
@@ -81,7 +81,7 @@ export class FlashcardManagerComponent implements OnInit {
       //send edits to backend
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
              deck.name = this.deckEditForm.controls.title.value;
-                 this.flashcardService.editDeck(deck, localStorage.getItem('currentUser')).subscribe(
+                 this.flashcardService.editDeck(deck).subscribe(
                       () => {
                              this.loadAllDecks();
                              location.reload();

@@ -18,7 +18,6 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import java.util.List;
 
 @Service
@@ -37,27 +36,13 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public Deck getOneDeck(String username, long deckId) {
-        Deck deck = deckRepository.findById(deckId).orElse(null);
-        /**TODO: username*/
-        //User user = findUserById(userId);
-        if (deck == null) {
-            throw new DeckDoesNotExist();
-        }
-        /*if (deck.getUser() != user) {
-            //create a Not Allowed exception
-        }*/
-        return deck;
-    }
-
-    @Override
-    public void createDeck(String username, Deck deck) {
+    public void createDeck(Deck deck) {
         deckRepository.save(deck);
     }
 
     @Override
-    public Deck updateDeckName(String username, Deck deck) {
-        Deck storedDeck = getOneDeck(username, deck.getId());
+    public Deck updateDeckName(Deck deck) {
+        Deck storedDeck = findDeckById(deck.getId());
         storedDeck.setName(deck.getName());
         return deckRepository.save(storedDeck);
     }
@@ -68,8 +53,8 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public List<Flashcard> getFlashcardsForRevision(String username, long deckId, int size) {
-        Deck deck = getOneDeck(username, deckId);
+    public List<Flashcard> getFlashcardsForRevision(long deckId, int size) {
+        Deck deck = findDeckById(deckId);
         if (deck.getSize() < size) {
             throw new IllegalArgumentException("Deck size too large!");
         }
@@ -109,18 +94,15 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public void deleteDeck(long userId, long deckId) {
-        User user = findUserById(userId);
-        user.getDecks().removeIf(d -> d.getId() == deckId);
-        userRepository.save(user);
+    public void deleteDeck(long deckId) {
+        deckRepository.deleteById(deckId);
     }
 
     @Override
     public void deleteFlashcard(long deckId, long flashcardId) {
         Deck deck = findDeckById(deckId);
-        deck.getFlashcards().removeIf(f -> f.getId() == flashcardId);
         deck.setSize(deck.getSize() - 1);
-        deckRepository.save(deck);
+        flashcardRepository.deleteById(flashcardId);
     }
 
     @Override
@@ -145,7 +127,7 @@ public class SimpleFlashcardService implements FlashcardService {
 
 
     private Deck findDeckById(long deckId) {
-        Deck deck = deckRepository.findById(deckId).orElse(null);
+        Deck deck = deckRepository.findDeckById(deckId);
         if (deck == null) {
             throw new DeckDoesNotExist();
         }
