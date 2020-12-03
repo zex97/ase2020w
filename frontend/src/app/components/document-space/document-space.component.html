@@ -61,7 +61,8 @@
               src="../../../assets/upload-logo.png" width="25px;"></span>
 
             <!-- file upload modal -->
-            <div data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal" tabindex="-1" role="dialog" aria-label="Upload Files"
+            <div data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal" tabindex="-1"
+                 role="dialog" aria-label="Upload Files"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -74,23 +75,31 @@
 
                   <div class="modal-body">
                     <div style="max-width: 100%" class="form-group">
+                      <div *ngIf="fileUploadModuleError" class="alert alert-warning alert-dismissible fade show"
+                           role="alert">
+                        <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
+                      </div>
                       <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
-                      <input [(ngModel)]="filesToUpload" class="hide-text" type="file" id="files"
+                      <input class="hide-text" type="file" id="files" value="name"
                              (change)="handleFileInput($event.target.files)" multiple>
                       <!--<label for="files">Choose files </label>-->
                     </div>
-                    <label *ngIf="filesToUpload.length!==0" for="files">Names of files to upload: </label>
-                    <ul class="files">
-                      <li *ngFor="let file of filesToUpload; let i = index">
-                        {{file.name}}
-                        <span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>
-                      </li>
-                    </ul>
+                    <div *ngIf="filesToUpload.length>0">
+                    <label for="files">Names of files to upload: </label>
+                      <ul class="files">
+                      <li *ngFor="let file of getFilesToUpload(); let i = index"
+                            [value]="file.name">
+                          {{file.name}}
+                          <span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>
+                        </li>
+                      </ul>
+                    </div>
 
                   </div>
 
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" (click)="uploadFile()">Submit
+                    <button *ngIf="filesReadyForUpload()" type="button" class="btn btn-info" data-dismiss="modal"
+                            (click)="uploadFile()">Submit
                     </button>
                     <button (click)="clearInputFiles()" type="button" class="btn btn-secondary" data-dismiss="modal">
                       Close

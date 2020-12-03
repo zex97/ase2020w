@@ -21,6 +21,8 @@ export class DocumentSpaceComponent implements OnInit {
   success: boolean = false;
   successMessage: String = '';
   errorMessage: string = '';
+  fileUploadModuleError: boolean = false;
+  fileUploadModuleErrorMessage: String = '';
   /**TODO: think what happens when the user deletes space with id 1*/
   spaceId: number = 1;
   private spaces: Space[];
@@ -62,23 +64,58 @@ export class DocumentSpaceComponent implements OnInit {
     this.successMessage = '';
   }
 
-  handleFileInput(files: FileList) {
+  vanishModuleErrorMessage() {
+    this.fileUploadModuleError = false;
+    this.fileUploadModuleErrorMessage = '';
+  }
+
+  /**
+   * Save uploaded files into a global variable and check if any of them exceed the upload limit.
+   * */
+  handleFileInput(files: File[]) {
     this.filesToUpload = Array.from(files);
+    this.vanishModuleErrorMessage();
+    for (let i = 0; i < this.filesToUpload.length; i++) {
+      const file = this.filesToUpload[i];
+      if (file.size > 20000000) {
+        console.log(file.size);
+        this.fileUploadModuleError = true;
+        this.fileUploadModuleErrorMessage = 'File \'' + file.name + '\' size exceeds maximum size of 20MB';
+      }
+    }
   }
 
   /**
    * If file is removed check if the list is empty.
-   * Important: If empty initialize with new array to avoid
-   * file number of input field
+   * Important: If empty initialize with new array to avoid file number of input field
    * */
   removeFileFromList(i: number) {
     this.filesToUpload.splice(i, 1);
 
+    // delete this.filesToUpload[i];
+
     if (this.filesToUpload.length === 0) {
       this.filesToUpload = [];
     }
+    this.handleFileInput(this.filesToUpload);
   }
 
+
+  /**
+   * Confirms that all files are valid size and there is at least one file to be uploaded
+   * */
+  filesReadyForUpload() {
+    return (this.filesToUpload.length > 0 && !this.fileUploadModuleError);
+  }
+
+  getFilesToUpload() {
+    return Array.from(this.filesToUpload);
+  }
+
+
+  /**
+   * Iterate through the list of objects and send a post request to backend for each one of them
+   * */
   uploadFile() {
     const user = localStorage.getItem('currentUser');
     // tslint:disable-next-line:forin
