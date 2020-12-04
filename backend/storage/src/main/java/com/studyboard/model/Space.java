@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @Entity
 public class Space {
+    @Column(name="sb_space_id")
     private long id;
     private String name;
     private List<Document> documents;

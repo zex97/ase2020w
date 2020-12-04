@@ -3,6 +3,8 @@ import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
+import {Space} from '../dtos/space';
+import {stringify} from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +21,14 @@ export class FileUploadService {
    * @param file to upload
    * @param userId name of the user that is uploading the file
    * */
-  uploadFile(file: File, userId: String): Observable<HttpEvent<unknown>> {
+  uploadFile(file: File, space: Space): Observable<HttpEvent<unknown>> {
 
     const formData: FormData = new FormData();
 
     formData.append('file', file);
 
-    const req = new HttpRequest('POST', `${this.userBaseUri}/single-file/` + userId, formData, {
-      reportProgress: true,
+    const req = new HttpRequest('POST', `${this.userBaseUri}/single-file/` + space.id, formData, {
+      // reportProgress: true,
       responseType: 'json'
     });
 

@@ -1,5 +1,6 @@
 package com.studyboard.uploader.service;
 
+import com.studyboard.model.Space;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,13 +10,13 @@ public interface FileUploader {
 
   void init();
 
-  String store(MultipartFile file, String userId);
+  String store(MultipartFile file, long spaceId);
 
   Path load(String fileName, String userId);
 
   Resource loadAsResource(String fileName, String usedId);
 
-  void deleteUserFile(String fileName, String userId);
+  void deleteUserFile(String fileName, Space space);
 
   void deleteUserFolder(String userId);
 }

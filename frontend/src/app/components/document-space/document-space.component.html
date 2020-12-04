@@ -99,7 +99,7 @@
 
                   <div class="modal-footer">
                     <button *ngIf="filesReadyForUpload()" type="button" class="btn btn-info" data-dismiss="modal"
-                            (click)="uploadFile()">Submit
+                            (click)="uploadFile(space)">Submit
                     </button>
                     <button (click)="clearInputFiles()" type="button" class="btn btn-secondary" data-dismiss="modal">
                       Close

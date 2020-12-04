@@ -1,10 +1,16 @@
 package com.studyboard.uploader.service;
 
+import com.studyboard.model.Document;
+import com.studyboard.model.Space;
 import com.studyboard.model.User;
+import com.studyboard.repository.DocumentRepository;
+import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.FileStorageException;
 import com.studyboard.uploader.exception.StorageFileNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,21 +24,27 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.Collections;
-import java.util.List;
 
 /** Service used to manage user files. Performs file saving, loading, and deletion */
 @Service
 public class FileUploaderService implements FileUploader {
 
+  private final Logger logger = LoggerFactory.getLogger(FileUploaderService.class);
   private final Path rootLocation;
   private final UserRepository userRepository;
+  private final DocumentRepository documentRepository;
+  private final SpaceRepository spaceRepository;
 
   @Autowired
   public FileUploaderService(
-      FileStorageProperties fileStorageProperties, UserRepository userRepository) {
+      FileStorageProperties fileStorageProperties,
+      UserRepository userRepository,
+      DocumentRepository documentRepository,
+      SpaceRepository spaceRepository) {
     this.rootLocation = Paths.get(fileStorageProperties.getLocation());
     this.userRepository = userRepository;
+    this.documentRepository = documentRepository;
+    this.spaceRepository = spaceRepository;
   }
 
   @Override
@@ -46,12 +58,12 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public String store(MultipartFile file, String userName) {
-
+  public String store(MultipartFile file, long spaceId) {
+    Space space = spaceRepository.findSpaceById(spaceId);
     String fileName = file.getOriginalFilename();
 
     // create folder path for each individual user
-    User user = userRepository.findOneByUsername(userName);
+    User user = space.getUser();
     Path completeUserPath = rootLocation.resolve(Paths.get(user.getUsername()));
 
     // check if folder already exists
@@ -86,19 +98,42 @@ public class FileUploaderService implements FileUploader {
       throw new FileStorageException("Failed to store file (" + fileName + ")!", e);
     }
 
-    List<String> userPaths = user.getFilePaths();
-    userPaths.add(uploadFilePath.toString());
-    user.setFilePaths(userPaths);
-    userRepository.save(user);
+    storeRefToNewDocument(space, uploadFilePath);
 
     return fileName;
   }
 
+  private void storeRefToNewDocument(Space space, Path path) {
+
+    Document document =
+        documentRepository.findByFilePath(path.toAbsolutePath().toString()).orElse(null);
+    if (document == null) {
+      document = new Document();
+      document.setFilePath(path.toAbsolutePath().toString());
+      document.setName(path.getFileName().toString());
+      document.setSpace(space);
+      // TODO: check if transcription is necessary
+      document.setNeedsTranscription(false);
+      document.setTranscription("");
+      documentRepository.save(document);
+
+      logger.info(
+          "Created new document for file("
+              + path.getFileName().toString()
+              + ") in space("
+              + space.getName()
+              + ") of user " + space.getUser().getUsername());
+    } else {
+      logger.info(
+          "File ("
+              + path.getFileName().toString()
+              + ") already exists, overriding the file content.");
+    }
+  }
+
   @Override
   public Path load(String filename, String userName) {
-    return rootLocation
-        .resolve(userName)
-        .resolve(filename);
+    return rootLocation.resolve(userName).resolve(filename);
   }
 
   @Override
@@ -119,8 +154,8 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public void deleteUserFile(String fileName, String userName) {
-    Path filePath = load(fileName, userName);
+  public void deleteUserFile(String fileName, Space space) {
+    Path filePath = load(fileName, space.getUser().getUsername());
 
     try {
       Files.delete(filePath);
@@ -130,18 +165,17 @@ public class FileUploaderService implements FileUploader {
       throw new FileStorageException("Failed to delete file(" + fileName + ")");
     }
 
-    User user = userRepository.findOneByUsername(userName);
-    user.getFilePaths().removeIf(path -> (Paths.get(path).endsWith(fileName)));
-    user.setFilePaths(user.getFilePaths());
-    userRepository.save(user);
+    Document document =
+        documentRepository.findByFilePath(filePath.toAbsolutePath().toString()).orElse(null);
+    if (document != null) {
+      documentRepository.delete(document);
+    } else {
+      throw new StorageFileNotFoundException("File(" + fileName + ") could not be found");
+    }
   }
 
   @Override
   public void deleteUserFolder(String userName) {
-    FileSystemUtils.deleteRecursively(
-        rootLocation.resolve(userName).toFile());
-    User user = userRepository.findOneByUsername(userName);
-    user.setFilePaths(Collections.emptyList());
-    userRepository.save(user);
+    FileSystemUtils.deleteRecursively(rootLocation.resolve(userName).toFile());
   }
 }

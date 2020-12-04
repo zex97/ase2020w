@@ -1,5 +1,7 @@
 package com.studyboard.rest;
 
+import com.studyboard.dto.SpaceDTO;
+import com.studyboard.model.Space;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.StorageFileNotFoundException;
 import com.studyboard.uploader.service.FileUploaderService;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +28,12 @@ public class FileUploadController {
 
   /** @param file accepts files up to 20MB (can be changed in application.properties) */
   @RequestMapping(
-      value = "/single-file/{userName}",
+      value = "/single-file/{space}",
       method = RequestMethod.POST,
       produces = "application/json")
   public ResponseEntity<String> handleFileUpload(
-          @RequestParam("file") MultipartFile file, @PathVariable String userName) {
-    fileUploaderService.store(file, userName);
+          @RequestParam("file") MultipartFile file, @PathVariable long space) {
+    fileUploaderService.store(file, space);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(file.getOriginalFilename());
   }
 
@@ -48,24 +51,28 @@ public class FileUploadController {
         .body(file);
   }
 
-  @RequestMapping(
-      value = "/multiple-files/{userName}",
+  /**
+   * Not necessary, can be recreated by multiple calls of single-file upload.
+   * Better because with single file upload we guarantee that files can be maximum file size each
+   * */
+  /*@RequestMapping(
+      value = "/multiple-files/{spaceId}",
       method = RequestMethod.POST,
       produces = "application/json")
   @ResponseBody
   public List<ResponseEntity<String>> uploadMultipleFiles(
-      @RequestParam("file") MultipartFile[] files, @PathVariable String userName) {
+      @RequestParam("file") MultipartFile[] files, @PathVariable long spaceId) {
     return Arrays.stream(files)
-            .map(file -> handleFileUpload(file, userName))
+            .map(file -> handleFileUpload(file, spaceId))
             .collect(Collectors.toList());
-  }
+  }*/
 
   @RequestMapping(
-      value = "/delete-file/{fileName}/{userName}",
+      value = "/delete-file/{fileName}}",
       method = RequestMethod.DELETE,
       produces = "application/json")
-  public void deleteUserUpload(@PathVariable(value = "fileName") String fileName, @PathVariable String userName) {
-    fileUploaderService.deleteUserFile(fileName, userName);
+  public void deleteUserUpload(@PathVariable(value = "fileName") String fileName, @RequestBody SpaceDTO spaceDTO) {
+    fileUploaderService.deleteUserFile(fileName, spaceDTO.toSpace());
   }
 
   @RequestMapping(

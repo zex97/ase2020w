@@ -116,13 +116,13 @@ export class DocumentSpaceComponent implements OnInit {
   /**
    * Iterate through the list of objects and send a post request to backend for each one of them
    * */
-  uploadFile() {
+  uploadFile(space: Space) {
     const user = localStorage.getItem('currentUser');
     // tslint:disable-next-line:forin
     for (let i = 0; i < this.filesToUpload.length; i++) {
       // TODO: should file types be validated in frontend???
       const file = this.filesToUpload[i];
-      this.fileUploadService.uploadFile(file, user).subscribe(res => {
+      this.fileUploadService.uploadFile(file, space).subscribe(res => {
         console.log('file uploaded successfully');
       });
     }
