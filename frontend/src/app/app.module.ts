@@ -17,6 +17,9 @@ import {RegisterComponent} from './components/register/register.component';
 import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
 import {DocumentSpaceComponent} from './components/document-space/document-space.component';
 import {DocumentComponent} from './components/document/document.component';
+import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -31,14 +34,17 @@ import {DocumentComponent} from './components/document/document.component';
     DocumentSpaceComponent,
     DocumentComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgbModule,
-    FormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        NgbModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatIconModule
+    ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]
 })

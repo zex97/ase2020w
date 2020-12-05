@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-md-6 mx-auto" id="formLoginWrapper">
       <!-- Default form login -->
-      <form class="text-center border border-light p-5" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+      <form class="text-center border border-light p-5" [formGroup]="loginForm" (ngSubmit)="loginUser()" id="loginBox">
 
         <p class="h4 mb-4">Login</p>
 
@@ -40,24 +40,21 @@
         <div class="d-flex justify-content-around">
           <div>
             <!-- Remember me -->
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
-              <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
-            </div>
+            <a mat-button>Remember me</a>
           </div>
           <div>
             <!-- Forgot password -->
-            <a href="">Forgot password?</a>
+            <a mat-button>Forgot password?</a>
           </div>
         </div>
 
         <!-- Sign in button -->
-        <button class="btn btn-info btn-block my-4" type="button" (click)="loginUser()">Sign in</button>
+        <button mat-raised-button type="button" (click)="loginUser()">Sign in</button>
 
         <!-- Register -->
         <div id="registerDiv">
           <p style="margin-bottom: 0em">Not a member?</p>
-          <button type="button" class="btn btn-link"  (click)="navigateToRegister()">Register</button>
+          <a mat-button type="button"  (click)="navigateToRegister()">Register</a>
         </div>
       </form>
       <!-- Default form login -->

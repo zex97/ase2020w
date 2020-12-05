@@ -5,13 +5,19 @@
   </button>
 </div>
 
+
 <div class="pt-5" id="registerWrapper">
   <div class="row">
     <div class="col-md-6 mx-auto" id="formRegisterWrapper">
       <!-- Default form register -->
-      <form class="form text-center border border-light p-5" [formGroup]="registerForm" (ngSubmit)="registerUser()" >
+      <form class="form text-center border border-light p-5" [formGroup]="registerForm" (ngSubmit)="registerUser()"  id="registerBox">
 
-        <p class="h4 mb-4">Sign up</p>
+
+        <div id="topBox">
+          <div><mat-icon (click)="navigateToLogin()">arrow_back_ios</mat-icon></div>
+          <div><p class="h4 mb-4">Sign up</p></div>
+          <div><mat-icon style="opacity: 0.0">arrow_back_ios</mat-icon></div>
+        </div>
 
         <!-- Username -->
         <div class="form-group">
@@ -59,7 +65,7 @@
         </div>
 
         <!-- Sign up button -->
-        <button class="btn btn-info my-4 btn-block" type="submit">Sign up</button>
+        <button mat-raised-button type="submit">Sign up</button>
 
         <hr>
 
