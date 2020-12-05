@@ -2,7 +2,6 @@ package com.studyboard.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-
 import java.util.Collection;
 
 public class AuthenticationHeaderToken extends AbstractAuthenticationToken {
@@ -19,8 +18,7 @@ public class AuthenticationHeaderToken extends AbstractAuthenticationToken {
         setAuthenticated(false);
     }
 
-    public AuthenticationHeaderToken(Object principal, String token,
-                                     Collection<? extends GrantedAuthority> authorities) {
+    public AuthenticationHeaderToken(Object principal, String token, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.token = token;

@@ -2,12 +2,11 @@
 
   <!-- Sidebar / SIDEBARCOMPONENT-->
   <div class="bg-light border-right" id="sidebar-wrapper">
-    <a class="navbar-brand ml-lg-5" href="home" style="font-size: 2em; margin: 1em; color: #17a2b8">Studyboard</a>
+    <a class="navbar-brand ml-lg-5" style="font-size: 2em; margin: 1em; color: #17a2b8">Studyboard</a>
     <div class="list-group list-group-flush">
       <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'message'}}]">ComponentMessage</a>
       <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'spaces'}}]">Spaces</a>
       <a class="list-group-item list-group-item-action bg-light" [routerLink]="[{outlets:{view:'flashcards'}}]">Flashcards</a>
-      <a class="list-group-item list-group-item-action bg-light">ComponentFour</a>
       <a class="list-group-item list-group-item-action bg-light" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
     </div>
   </div>
@@ -17,7 +16,7 @@
   <!-- NAVBAR COMPONENT -->
   <div id="page-content-wrapper" style="padding: 0">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom" style="">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom" id="navbarComponent">
       <button id="menu-toggle"  (click)="onToggle()">
         <span class="navbar-toggler-icon"></span>
       </button>
