@@ -1,4 +1,6 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {SpaceService} from '../../services/space.service';
+import {Document} from '../../dtos/document';
 
 @Component({
   selector: 'app-document',
@@ -7,11 +9,41 @@ import {Component, OnInit, Input} from '@angular/core';
 })
 export class DocumentComponent implements OnInit {
 
-  constructor() { }
+  documentsOfSpace: Document[] = [];
+
+  constructor(private spaceService: SpaceService) {
+  }
 
   @Input() spaceId: number;
 
   ngOnInit() {
+    this.loadAllDocuments(this.spaceId);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(this.spaceId);
+    console.log(changes);
+    this.loadAllDocuments(this.spaceId);
+  }
+
+  loadAllDocuments(spaceId: number) {
+    this.documentsOfSpace = [];
+    this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), spaceId).subscribe(
+      (res) => {
+        this.documentsOfSpace = res as Document[];
+      }
+      /*(documentList: Document[]) => {
+        this.documentsOfSpace = documentList;
+      },*/
+    );
+  }
+
+  getAllDocuments() {
+    return this.documentsOfSpace;
+  }
+
+  getsisd() {
+    console.log(this.spaceId);
   }
 
 }

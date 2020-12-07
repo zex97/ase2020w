@@ -1,5 +1,7 @@
 package com.studyboard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -45,8 +47,9 @@ public class Document {
     public void setTranscription(String transcription) {
         this.transcription = transcription;
     }
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sb_user_id")
+    @JoinColumn(name = "sb_space_id")
     public Space getSpace() {
         return space;
     }

@@ -17,6 +17,7 @@ export class DocumentSpaceComponent implements OnInit {
   nameEditForm: FormGroup;
   fileUploadForm: FormGroup;
   filesToUpload: File[] = [];
+  filesToUploadNames: String[] = [];
   error: boolean = false;
   success: boolean = false;
   successMessage: String = '';
@@ -73,6 +74,7 @@ export class DocumentSpaceComponent implements OnInit {
    * Save uploaded files into a global variable and check if any of them exceed the upload limit.
    * */
   handleFileInput(files: File[]) {
+    console.log('>>>>>>>>>>>>>>>>' + this.spaceId);
     this.filesToUpload = Array.from(files);
     this.vanishModuleErrorMessage();
     for (let i = 0; i < this.filesToUpload.length; i++) {
@@ -91,11 +93,12 @@ export class DocumentSpaceComponent implements OnInit {
    * */
   removeFileFromList(i: number) {
     this.filesToUpload.splice(i, 1);
+    this.filesToUploadNames.splice(i, 1);
 
-    // delete this.filesToUpload[i];
 
     if (this.filesToUpload.length === 0) {
       this.filesToUpload = [];
+      this.filesToUploadNames = [];
     }
     this.handleFileInput(this.filesToUpload);
   }
@@ -112,34 +115,55 @@ export class DocumentSpaceComponent implements OnInit {
     return Array.from(this.filesToUpload);
   }
 
+  getFilesToUploadNames() {
+    return this.filesToUploadNames;
+  }
+
 
   /**
    * Iterate through the list of objects and send a post request to backend for each one of them
    * */
   uploadFile(space: Space) {
-    const user = localStorage.getItem('currentUser');
+    const spaceId = space.id;
+    console.log('>>>>>>>>>>>>>>>' + spaceId);
+    let successUploadCount: number = 0;
     // tslint:disable-next-line:forin
     for (let i = 0; i < this.filesToUpload.length; i++) {
       // TODO: should file types be validated in frontend???
       const file = this.filesToUpload[i];
-      this.fileUploadService.uploadFile(file, space).subscribe(res => {
-        console.log('file uploaded successfully');
+      this.fileUploadService.uploadFile(file, spaceId).subscribe((res) => {
+        if (res) {
+          if (res.status === 200) {
+            successUploadCount = successUploadCount + 1;
+          } else {
+            // create error message if at least one of the files fails to be uploaded
+            this.error = true;
+            this.errorMessage += file.name + ' failed to be uploaded; ';
+          }
+          // create success message if all files successfully uploaded
+          if (this.filesToUpload.length > 0 && this.filesToUpload.length === successUploadCount) {
+            this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
+            this.success = true;
+          } else {
+            this.errorMessage = '';
+            this.error = true;
+          }
+        }
       });
     }
-    if (this.filesToUpload.length > 0) {
-      this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
-    } else {
-      this.successMessage = 'No files were chosen.';
-    }
-    this.success = true;
   }
 
   clearInputFiles() {
     this.filesToUpload = [];
+    this.filesToUploadNames = [];
   }
 
   getSpaces() {
     return this.spaces;
+  }
+
+  loadFile(space: Space, fileName: string) {
+    this.fileUploadService.getFile(space, fileName);
   }
 
   /**

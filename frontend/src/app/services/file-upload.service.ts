@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
-import {stringify} from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -19,20 +18,24 @@ export class FileUploadService {
   /**
    * Send a single file request to backend
    * @param file to upload
-   * @param userId name of the user that is uploading the file
+   * @param spaceId
    * */
-  uploadFile(file: File, space: Space): Observable<HttpEvent<unknown>> {
-
+  uploadFile(file: File, spaceId: number): Observable<HttpResponse<Object>> {
+    console.log(file.name + ' for ' + spaceId);
     const formData: FormData = new FormData();
 
     formData.append('file', file);
-
-    const req = new HttpRequest('POST', `${this.userBaseUri}/single-file/` + space.id, formData, {
-      // reportProgress: true,
-      responseType: 'json'
-    });
-
-    return this.httpClient.request(req);
+    return this.httpClient.post(`${this.userBaseUri}/single-file/` + spaceId, formData, {observe: 'response'});
   }
+
+  getFile(space: Space, filename: string) {
+
+    return this.httpClient.post(`${this.userBaseUri}/single-file/` + filename, space, {observe: 'response'})
+      .subscribe((res) => {
+          console.log(res.headers);
+        }
+      );
+  }
+
 
 }

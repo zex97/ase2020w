@@ -67,10 +67,7 @@
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">File Upload</h5>
-                    <!--<button (click)="clearInputFiles()" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>-->
+                    <h5 class="modal-title">File Upload {{space.name}}</h5>
                   </div>
 
                   <div class="modal-body">
@@ -80,14 +77,14 @@
                         <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
                       </div>
                       <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
-                      <input class="hide-text" type="file" id="files" value="name"
+                      <input [value]="filesToUploadNames" class="hide-text" type="file" id="files" value="name"
                              (change)="handleFileInput($event.target.files)" multiple>
                       <!--<label for="files">Choose files </label>-->
                     </div>
                     <div *ngIf="filesToUpload.length>0">
-                    <label for="files">Names of files to upload: </label>
+                      <label for="files">Names of files to upload: </label>
                       <ul class="files">
-                      <li *ngFor="let file of getFilesToUpload(); let i = index"
+                        <li *ngFor="let file of getFilesToUpload(); let i = index"
                             [value]="file.name">
                           {{file.name}}
                           <span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>
@@ -140,7 +137,7 @@
 
             <!--Delete space modal-->
             <div class="modal fade delete-space-modal" tabindex="-1" role="dialog" aria-labelledby="Delete space modal"
-                 aria-hidden="true">
+                 aria-hidden="true" [attr.space]="space">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">

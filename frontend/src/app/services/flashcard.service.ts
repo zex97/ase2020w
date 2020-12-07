@@ -59,4 +59,5 @@ export class FlashcardService {
       console.log('Searching for users.');
       return this.httpClient.get<User[]>(this.globals.backendUri + '/api/user');
     }
+
 }
