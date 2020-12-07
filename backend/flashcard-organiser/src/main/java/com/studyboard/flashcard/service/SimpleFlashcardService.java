@@ -106,16 +106,24 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException{
+    public Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException {
         Flashcard storedFlashcard = getOneFlashcard(deckId, flashcard.getId());
         try {
             storedFlashcard.setConfidence_level(flashcard.getConfidence_level());
             return flashcardRepository.save(storedFlashcard);
-        } catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");
         }
     }
 
+    @Override
+    public Deck findDeckById(Long deckId) {
+        Deck deck = deckRepository.findDeckById(deckId);
+        if (deck == null) {
+            throw new DeckDoesNotExist();
+        }
+        return deck;
+    }
 
     private User findUserById(long userId) {
         User user = userRepository.findUserById(userId);
@@ -124,13 +132,7 @@ public class SimpleFlashcardService implements FlashcardService {
         }
         return user;
     }
-
-
-    private Deck findDeckById(long deckId) {
-        Deck deck = deckRepository.findDeckById(deckId);
-        if (deck == null) {
-            throw new DeckDoesNotExist();
-        }
-        return deck;
-    }
 }
+
+
+

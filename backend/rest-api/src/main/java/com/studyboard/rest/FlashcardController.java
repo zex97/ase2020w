@@ -31,6 +31,14 @@ public class FlashcardController {
         .collect(Collectors.toList());
   }
 
+  @RequestMapping(value = "/deck{deckId}", method = RequestMethod.GET, produces = "application/json")
+  @ApiOperation(
+          value = "Get the decks with a specific id.",
+          authorizations = {@Authorization(value = "apiKey")})
+  public DeckDTO getOneDeck(@PathVariable(name = "deckId") Long deckId) {
+    return DeckDTO.of(flashcardService.findDeckById(deckId));
+  }
+
   @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
   @ApiOperation(
       value = "Create deck associated to a user specified in the DTO",

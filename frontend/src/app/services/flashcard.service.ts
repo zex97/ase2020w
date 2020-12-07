@@ -5,6 +5,7 @@ import {Globals} from '../global/globals';
 import {FormBuilder} from '@angular/forms';
 import {AuthService} from './auth.service';
 import {Deck} from "../dtos/deck"
+import {Flashcard} from "../dtos/flashcard"
 import {User} from '../dtos/user';
 
 
@@ -23,8 +24,16 @@ export class FlashcardService {
    * Loads all decks from the backend
    */
   getDecks(username: string): Observable<Deck[]> {
-    console.log('Searching for decks.')
+    console.log('Searching for decks.');
     return this.httpClient.get<Deck[]>(this.flashcardBaseUri + '/' + username);
+  }
+
+  /**
+   * Loads a deck from the backend
+   */
+  getDeckById(deckId: number): Observable<Deck> {
+    console.log('Searching for a deck.');
+    return this.httpClient.get<Deck>(this.flashcardBaseUri + '/deck' + deckId);
   }
 
   /**
@@ -43,6 +52,11 @@ export class FlashcardService {
   editDeck(deck: Deck,): Observable<Deck> {
      console.log('Change the deck name to ' + deck.name);
     return this.httpClient.put<Deck>(this.flashcardBaseUri, deck);
+  }
+
+  createFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+      console.log('Create flashcard with question ' + flashcard.question);
+      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/' + deckId, flashcard);
   }
 
   getUsers(): Observable<User[]> {

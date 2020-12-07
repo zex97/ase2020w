@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {Deck} from "../../dtos/deck"
+import {Flashcard} from "../../dtos/flashcard"
 import {User} from '../../dtos/user';
 
 
@@ -16,10 +17,12 @@ export class FlashcardManagerComponent implements OnInit {
 
   deckForm: FormGroup;
   deckEditForm: FormGroup;
+  flashcardForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   load: boolean = true;
   private decks: Deck[];
+  private selectedDeckId: number;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
@@ -29,6 +32,10 @@ export class FlashcardManagerComponent implements OnInit {
     this.deckEditForm = this.formBuilder.group({
       title: ['']
     })
+    this.flashcardForm = this.formBuilder.group({
+          question: [''],
+          answer: ['']
+        })
    }
 
   ngOnInit(): void {
@@ -92,6 +99,25 @@ export class FlashcardManagerComponent implements OnInit {
                            );
        });
        //this.deckForm.reset({'title':''});
+  }
+
+  createFlashcard() {
+    this.flashcardService.getDeckById(this.selectedDeckId).subscribe(res => {
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, res);
+       this.flashcardService.createFlashcard(flashcard, this.selectedDeckId).subscribe(
+                       () => {
+                              this.loadAllDecks();
+                              },
+                              error => {
+                                this.defaultErrorHandling(error);
+                              }
+                            );
+      });
+  }
+
+  deckClicked(select : number) {
+    console.log(select);
+    this.selectedDeckId = select;
   }
 
   private defaultErrorHandling(error: any) {
