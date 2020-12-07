@@ -1,15 +1,22 @@
 package com.studyboard.security.configuration;
 
-import com.studyboard.repository.UserRepository;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.studyboard.StudyboardApplication;
 import com.studyboard.security.authentication.HeaderTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Configuration
 @EnableWebSecurity
@@ -39,15 +47,11 @@ public class SecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
-    @Autowired
-    private UserRepository userRepository;
-
-
-    public SecurityConfiguration(PasswordEncoder passwordEncoder) {
+    public SecurityConfiguration(PasswordEncoder passwordEncoder, DataSource dataSource) {
         this.passwordEncoder = passwordEncoder;
+        this.dataSource = dataSource;
     }
 
     @Bean
@@ -58,8 +62,8 @@ public class SecurityConfiguration {
     @Bean
     public ErrorAttributes errorAttributes() {
         return new DefaultErrorAttributes() {
-            public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
-                Map<String, Object> errorAttributes = super.getErrorAttributes((WebRequest) requestAttributes, includeStackTrace);
+            public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes) {
+                Map<String, Object> errorAttributes = super.getErrorAttributes((WebRequest) requestAttributes, ErrorAttributeOptions.defaults());
                 errorAttributes.remove("exception");
                 return errorAttributes;
             }
@@ -79,6 +83,27 @@ public class SecurityConfiguration {
                 .configure(auth);
 
         providerList.forEach(auth::authenticationProvider);
+    }
+
+    @Configuration
+    @EntityScan(basePackageClasses = {StudyboardApplication.class, Jsr310JpaConverters.class})
+    public static class JpaJsr310Configuration {
+    }
+
+    @Configuration
+    public static class JacksonConfiguration {
+
+        @Bean
+        public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
+            return new Jackson2ObjectMapperBuilder()
+                    .serializationInclusion(JsonInclude.Include.NON_NULL)
+                    .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                    .indentOutput(true)
+                    .findModulesViaServiceLoader(true)
+                    .modules(new JavaTimeModule())
+                    .timeZone(TimeZone.getDefault())
+                    ;
+        }
     }
 
     @Configuration
@@ -115,11 +140,11 @@ public class SecurityConfiguration {
                 .addFilterBefore(new HeaderTokenAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
         }
 
-           @Bean
-          @Override
-            public AuthenticationManager authenticationManagerBean() throws Exception {
-              return super.authenticationManagerBean();
-          }
+        @Bean
+        @Override
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
 
     }
 
