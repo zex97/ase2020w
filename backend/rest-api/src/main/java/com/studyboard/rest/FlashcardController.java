@@ -151,13 +151,13 @@ public class FlashcardController {
       produces = "application/json")
   @ApiOperation(
       value =
-          "Rate the flashcard based on personal confidence level with the value between 1 and 5.",
+          "Edit or rate the flashcard based on personal confidence level with the value between 1 and 5.",
       authorizations = {@Authorization(value = "apiKey")})
-  public ResponseEntity rateFlashcard(
+  public ResponseEntity editFlashcard(
       @PathVariable(name = "deckId") long deckId,
       @RequestBody FlashcardDTO flashcardDTO)
       throws FlashcardConstraintException {
-    flashcardService.rateFlashcard(deckId, flashcardDTO.FlashcardFromFlashcardDTO());
+    flashcardService.editFlashcard(deckId, flashcardDTO.FlashcardFromFlashcardDTO());
     return ResponseEntity.ok().build();
   }
 }

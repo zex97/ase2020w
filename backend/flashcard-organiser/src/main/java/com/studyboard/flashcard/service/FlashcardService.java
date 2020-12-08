@@ -91,6 +91,6 @@ public interface FlashcardService {
     void deleteFlashcard(long deckId, long flashcardId);
 
 
-    Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
+    Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
 
 }

@@ -106,9 +106,11 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException {
+    public Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException {
         Flashcard storedFlashcard = getOneFlashcard(deckId, flashcard.getId());
         try {
+            storedFlashcard.setQuestion(flashcard.getQuestion());
+            storedFlashcard.setAnswer(flashcard.getAnswer());
             storedFlashcard.setConfidence_level(flashcard.getConfidence_level());
             return flashcardRepository.save(storedFlashcard);
         } catch (ConstraintViolationException e) {

@@ -18,13 +18,15 @@ export class FlashcardManagerComponent implements OnInit {
   deckForm: FormGroup;
   deckEditForm: FormGroup;
   flashcardForm: FormGroup;
+  flashcardEditForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   viewAll: boolean = true;
   showAnswer: boolean = false;
-  private decks: Deck[];
   selectedDeck: Deck;
-  private selectedDeckId: number;
+  selectedDeckId: number;
+  selectedFlashcard: Flashcard;
+  private decks: Deck[];
   private flashcards: Flashcard[];
 
 
@@ -38,8 +40,12 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardForm = this.formBuilder.group({
           question: [''],
           answer: ['']
-        })
-   }
+   })
+   this.flashcardEditForm = this.formBuilder.group({
+         question: [''],
+         answer: ['']
+   })
+  }
 
   ngOnInit(): void {
     this.loadAllDecks();
@@ -126,10 +132,11 @@ export class FlashcardManagerComponent implements OnInit {
 
   createFlashcard() {
     this.flashcardService.getDeckById(this.selectedDeckId).subscribe(res => {
+       console.log(res);
        const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, res);
        this.flashcardService.createFlashcard(flashcard, this.selectedDeckId).subscribe(
                        () => {
-                              this.loadAllDecks();
+                              this.loadFlashcards(res);
                               },
                               error => {
                                 this.defaultErrorHandling(error);
@@ -138,10 +145,42 @@ export class FlashcardManagerComponent implements OnInit {
       });
   }
 
+  saveFlashcardEdits(flashcard: Flashcard) {
+        //send edits to backend
+        console.log(flashcard);
+         this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
+                let question = this.flashcardEditForm.controls.question.value;
+                let answer = this.flashcardEditForm.controls.answer.value;
+               if(question != null && question != "") {
+                flashcard.question = question;
+               }
+               if(answer != null && answer != "") {
+                flashcard.question = answer;
+              }
+              this.flashcardService.editFlashcard(flashcard, this.selectedDeck.id).subscribe(
+                    () => {
+                           this.loadFlashcards(this.selectedDeck);
+                           },
+                           error => {
+                             this.defaultErrorHandling(error);
+                           }
+                         );
+              });
+    }
+
   deckClicked(select : number) {
     console.log(select);
     this.selectedDeckId = select;
   }
+
+  flashcardClicked(select : Flashcard) {
+     console.log(select);
+     this.selectedFlashcard = select;
+     this.flashcardEditForm.patchValue({
+        question: select.question,
+        answer: select.answer
+     })
+   }
 
   private defaultErrorHandling(error: any) {
       console.log(error);

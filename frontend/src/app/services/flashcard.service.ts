@@ -73,6 +73,11 @@ export class FlashcardService {
       return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/' + deckId, flashcard);
   }
 
+  editFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+        console.log('Edit flashcard - question ' + flashcard.question);
+        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/flashcard' + flashcard.id, flashcard);
+  }
+
 
   getUsers(): Observable<User[]> {
       console.log('Searching for users.');
