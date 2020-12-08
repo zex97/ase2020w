@@ -20,9 +20,12 @@ export class FlashcardManagerComponent implements OnInit {
   flashcardForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
-  load: boolean = true;
+  viewAll: boolean = true;
+  showAnswer: boolean = false;
   private decks: Deck[];
+  selectedDeck: Deck;
   private selectedDeckId: number;
+  private flashcards: Flashcard[];
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
@@ -99,6 +102,26 @@ export class FlashcardManagerComponent implements OnInit {
                            );
        });
        //this.deckForm.reset({'title':''});
+  }
+
+
+  /**
+  * Get a list of all flashcards belonging to a deck from backend
+  */
+  loadFlashcards(deck: Deck) {
+    this.selectedDeck = deck;
+    this.flashcardService.getFlashcards(deck.id).subscribe(
+        (flashcards : Flashcard[]) => {
+                     this.flashcards = flashcards;
+                     },
+                     error => {
+                           this.defaultErrorHandling(error);
+                     }
+                 );
+  }
+
+  getFlashcards() {
+    return this.flashcards;
   }
 
   createFlashcard() {

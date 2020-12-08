@@ -1,15 +1,17 @@
-<h3 style="margin-left: 45%; color: #2b7a78">Flashcard Decks</h3>
+<h3 style="text-align: center; color: #2b7a78">Flashcard Decks</h3>
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
+    <button *ngIf="!this.viewAll" type="button" class="btn btn-sm mr-4" style="background-color: #2b7a78; color: #ffffff" (click)="this.viewAll=true;">Back to all</button>
     <button type="button" class="btn btn-sm mr-4" style="background-color: #def2f1" data-toggle="modal"
-            data-target=".create-deck-modal">
+            data-target=".create-deck-modal" *ngIf="this.viewAll">
       Create a deck
     </button>
     <button type="button" class="btn btn-sm mr-4" style="background-color: #def2f1" data-toggle="modal"
             data-target=".create-flashcard-modal">
       Create a flashcard
     </button>
+  </div>
 
     <div class="modal fade create-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Create deck modal"
          aria-hidden="true">
@@ -79,6 +81,7 @@
     </div>
 
     <!-- View all decks -->
+    <div *ngIf="viewAll; else elseBlockDetails">
     <div class="row" id="allDiv">
 
       <div class="col-xl-3 col-4 p-2" *ngFor="let deck of getDecks()">
@@ -90,59 +93,73 @@
             <p class="card-text wrapper" style="color: #2b7a78">Size: {{deck.size}}</p>
             <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
+              <!--button type="button" class="btn btn-info" style="position:absolute, top:50%; background-color: #3aafa9;"
+                      data-toggle="modal" data-target=".load-deck-modal" (click)="loadFlashcards(deck.id); this.load=true;">
+                Details
+              </button-->
               <button type="button" class="btn btn-info" style="position:absolute, top:50%; background-color: #3aafa9;"
-                      data-toggle="modal" data-target=".load-deck-modal" (click)="loadDeckDetails(deck.id)">
+                      (click)=" this.viewAll=false; loadFlashcards(deck)">
                 Details
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <ng-template #elseBlockDetails>
+      <div>
+        <h3 style="color: #2b7a78; display: inline-block">Deck {{this.selectedDeck.name}}</h3>
+        <button type="button" class="btn btn-sm mr-4" data-toggle="modal" data-target=".edit-deck-modal"
+                style="background-color: #def2f1; margin-left:60%; display: inline-block">Edit</button>
+        <button type="button" class="btn btn-sm mr-4" style="background-color: #def2f1; margin-left:2px;">Revise</button>
+        <div>
+          <h5>Created: {{this.selectedDeck.creationDate}}</h5>
+          <h5>Last time revised: {{this.selectedDeck.lastTimeUsed.substring(0,10)}}</h5>
+          <h3 style="color: #2b7a78; text-align: center;">Flashcards:</h3>
+        </div>
+        <div class="col-xl-3 col-4 p-2" *ngFor="let flashcard of getFlashcards()">
+          <mat-card style="background-color: #3aafa9; color: #ffffff">
+           <mat-card-content style="text-align:center;">
+             <h4>Q: {{flashcard.question}}</h4>
+           </mat-card-content>
+         </mat-card>
+          <mat-card [hidden]="!this.showAnswer" style="background-color: #2b7a78; color: #ffffff">
+            <mat-card-content style="text-align:center;">
+              <h4>A: {{flashcard.answer}}</h4>
+            </mat-card-content>
+          </mat-card>
+          <button class="btn btn-sm mr-4" style="background-color: #def2f1;">Edit</button>
+          <button [hidden]="this.showAnswer" class="btn btn-sm mr-4" (click)="this.showAnswer=true;" style="background-color: #def2f1;">Show answer</button>
+          <button [hidden]="!this.showAnswer" class="btn btn-sm mr-4" (click)="this.showAnswer=false;" style="background-color: #def2f1;">Hide answer</button>
+        </div>
+      </div>
+    </ng-template>
 
             <!--Load individual decks-->
-            <div class="modal fade load-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Load deck modal"
+            <div class="modal fade edit-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Edit deck modal"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">Deck {{deck.name}}</h5>
+                    <h4 class="modal-title">Deck</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <div *ngIf="load; else elseBlockShow">
-                      <h6>Created: {{deck.creationDate}}</h6>
-                      <h6>Last time revised: {{deck.lastTimeUsed.substring(0,10)}}</h6>
-                      <h6>Flashcards</h6>
-                    </div>
-                    <ng-template #elseBlockShow>
                       <form action="#!" class="text-center border border-light p-5" [formGroup]="deckEditForm">
-                        <h6>New name for the deck:</h6>
+                        <h4>New name for the deck:</h4>
                         <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
 
                       </form>
-                      <h6>Flashcards</h6>
-                    </ng-template>
                   </div>
                   <div class="modal-footer">
-                    <div *ngIf="load; else elseBlockBtn">
-                      <button type="button" class="btn btn-info" style="margin-right: 5px;">Add flashcard</button>
-                      <button type="button" class="btn btn-info" (click)="this.load=false;">Edit</button>
-                    </div>
-                    <ng-template #elseBlockBtn>
-                      <button type="button" class="btn btn-info" data-dismiss="modal"
-                              (click)="this.load=true; saveEdits(deck)">Save
-                      </button>
-                    </ng-template>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="this.load=true;">Close
-                    </button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal" (click)="saveEdits(this.selectedDeck)">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
                 </div>
               </div>
-
             </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
+</div>

@@ -20,6 +20,8 @@ import {DocumentComponent} from './components/document/document.component';
 import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import {MatIconModule} from '@angular/material/icon';
         FormsModule,
         BrowserAnimationsModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        MatSelectModule,
+        MatCardModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]
