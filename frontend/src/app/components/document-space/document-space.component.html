@@ -57,17 +57,17 @@
             <span class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
             <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
               src="../../../assets/edit.png" width="15px;"></span>
-            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
+            <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
               src="../../../assets/upload-logo.png" width="25px;"></span>
 
             <!-- file upload modal -->
-            <div data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal" tabindex="-1"
+            <div *ngIf="currentSpace" data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal" tabindex="-1"
                  role="dialog" aria-label="Upload Files"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">File Upload {{space.name}}</h5>
+                    <h5 class="modal-title">File Upload</h5>
                   </div>
 
                   <div class="modal-body">
@@ -96,7 +96,7 @@
 
                   <div class="modal-footer">
                     <button *ngIf="filesReadyForUpload()" type="button" class="btn btn-info" data-dismiss="modal"
-                            (click)="uploadFile(space)">Submit
+                            (click)="uploadFile(currentSpace)">Submit
                     </button>
                     <button (click)="clearInputFiles()" type="button" class="btn btn-secondary" data-dismiss="modal">
                       Close
@@ -147,7 +147,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <h5>Are you sure you want to delete space {{space.name}}?</h5>
+                    <h5>Are you sure you want to delete space {{getCurrentSpace().name}}?</h5>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-info float-right" (click)="deleteSpace(space.id)"

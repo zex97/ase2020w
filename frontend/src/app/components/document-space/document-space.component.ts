@@ -27,6 +27,7 @@ export class DocumentSpaceComponent implements OnInit {
   /**TODO: think what happens when the user deletes space with id 1*/
   spaceId: number = 1;
   private spaces: Space[];
+  currentSpace: Space;
 
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
@@ -68,6 +69,14 @@ export class DocumentSpaceComponent implements OnInit {
   vanishModuleErrorMessage() {
     this.fileUploadModuleError = false;
     this.fileUploadModuleErrorMessage = '';
+  }
+
+  setCurrentSpace(space: Space) {
+    this.currentSpace = space;
+  }
+
+  getCurrentSpace() {
+    return this.currentSpace;
   }
 
   /**
