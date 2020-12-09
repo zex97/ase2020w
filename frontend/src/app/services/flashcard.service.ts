@@ -28,31 +28,21 @@ export class FlashcardService {
   }
 
   /**
-   * Loads specific deck from the backend
-   * @param id of deck to load
-   */
-  getDeckById(username: string, id: number): Observable<Deck> {
-    console.log('Load deck with id ' + id);
-    return this.httpClient.get<Deck>(this.flashcardBaseUri + '/' + username + '/deck' + id);
-  }
-
-  /**
    * Persists deck to the backend
    * @param deck to persist
    */
-  createDeck(deck: Deck, username: string): Observable<Deck> {
+  createDeck(deck: Deck): Observable<Deck> {
     console.log('Create deck with name ' + deck.name);
-    console.log(deck);
-    return this.httpClient.post<Deck>(this.flashcardBaseUri + '/' + username, deck);
+    return this.httpClient.post<Deck>(this.flashcardBaseUri, deck);
   }
 
    /**
     * Change deck name in the backend
     * @param deck to make changes to
     */
-  editDeck(deck: Deck, username: string): Observable<Deck> {
+  editDeck(deck: Deck,): Observable<Deck> {
      console.log('Change the deck name to ' + deck.name);
-    return this.httpClient.put<Deck>(this.flashcardBaseUri + '/' + username, deck);
+    return this.httpClient.put<Deck>(this.flashcardBaseUri, deck);
   }
 
   getUsers(): Observable<User[]> {
