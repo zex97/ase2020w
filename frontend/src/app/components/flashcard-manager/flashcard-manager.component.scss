@@ -1,3 +1,30 @@
+.my-title {
+  text-align: center; 
+  color: #2b7a78 
+}
+
+.txt-clr-dark {
+  color: #2b7a78; 
+}
+
+.button-light {
+  background-color: #def2f1;
+}
+
+.btn-middle {
+  background-color: #3aafa9;
+  color: #ffffff;
+}
+
+.button-dark {
+  background-color: #2b7a78; 
+  color: #ffffff;
+}
+
+#deck-buttons > button {
+  margin-left: 5px;
+}
+
 .wrapper{
   text-align:center;
 }
@@ -5,3 +32,28 @@
 .flashcardModalBody {
   overflow-y:inherit !important;
 }
+
+.flex-container-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-container-space-between > button {
+  margin-left: 5%;
+  margin-right: 5%;
+  background-color: #def2f1;
+}
+
+.flashcard-question {
+  background-color: #3aafa9; 
+  color: #ffffff;
+  text-align:center;
+}
+
+.flashcard-answer {
+  background-color: #2b7a78; 
+  color: #ffffff;
+  text-align:center;
+}
+
+

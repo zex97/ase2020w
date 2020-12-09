@@ -1,13 +1,13 @@
-<h3 style="text-align: center; color: #2b7a78">Flashcard Decks</h3>
+<h3 class="my-title">Flashcard Decks</h3>
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button *ngIf="!this.viewAll" type="button" class="btn btn-sm mr-4" style="background-color: #2b7a78; color: #ffffff" (click)="this.viewAll=true;">Back to all</button>
-    <button type="button" class="btn btn-sm mr-4" style="background-color: #def2f1" data-toggle="modal"
+    <button button mat-button *ngIf="!this.viewAll"  class="btn btn-sm mr-4 button-dark" (click)="this.viewAll=true;">Back to all</button>
+    <button button mat-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
             data-target=".create-deck-modal" *ngIf="this.viewAll">
       Create a deck
     </button>
-    <button type="button" class="btn btn-sm mr-4" style="background-color: #def2f1" data-toggle="modal"
+    <button button mat-button  class="btn btn-sm mr-4 button-light" data-toggle="modal"
             data-target=".create-flashcard-modal">
       Create a flashcard
     </button>
@@ -20,7 +20,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title"></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button mat-button  class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -33,9 +33,9 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info float-right" (click)="createDeck()" data-dismiss="modal">Save
+            <button mat-button  class="btn btn-middle float-right" (click)="createDeck()" data-dismiss="modal">Save
             </button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button mat-button  class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title"></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button mat-button  class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -74,9 +74,9 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info float-right" (click)="createFlashcard()" data-dismiss="modal">Save
+            <button mat-button  class="btn btn-middle float-right" (click)="createFlashcard()" data-dismiss="modal">Save
             </button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button  class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -91,15 +91,11 @@
         <div class="card">
 
           <div class="card-body">
-            <h5 class="card-title wrapper" style="color: #2b7a78">Title: {{deck.name}}</h5>
-            <p class="card-text wrapper" style="color: #2b7a78">Size: {{deck.size}}</p>
+            <h5 class="card-title wrapper txt-clr-dark">Title: {{deck.name}}</h5>
+            <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
-              <!--button type="button" class="btn btn-info" style="position:absolute, top:50%; background-color: #3aafa9;"
-                      data-toggle="modal" data-target=".load-deck-modal" (click)="loadFlashcards(deck.id); this.load=true;">
-                Details
-              </button-->
-              <button type="button" class="btn btn-info" style="position:absolute, top:50%; background-color: #3aafa9;"
+              <button mat-button  class="btn btn-middle"
                       (click)=" this.viewAll=false; loadFlashcards(deck);">
                 Details
               </button>
@@ -113,29 +109,36 @@
     <!--View details of a deck-->
     <ng-template #elseBlockDetails>
       <div>
-        <h3 style="color: #2b7a78; display: inline-block">Deck {{this.selectedDeck.name}}</h3>
-        <button type="button" class="btn btn-sm mr-4" data-toggle="modal" data-target=".edit-deck-modal"
-                style="background-color: #def2f1; margin-left:60%; display: inline-block">Edit</button>
-        <button type="button" class="btn btn-sm mr-4" style="background-color: #def2f1; margin-left:2px;">Revise</button>
-        <div>
+      <div class="flex-container-space-between">
+        <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
+        <div id="deck-buttons">
+        <button mat-button  class="btn btn-sm button-light" data-toggle="modal" data-target=".edit-deck-modal">Edit</button>
+        <button mat-button  class="btn btn-sm button-light">Revise</button>
+        </div>
+      </div>
+          <div>
           <h5>Created: {{this.selectedDeck.creationDate}}</h5>
           <h5>Last time revised: {{this.selectedDeck.lastTimeUsed.substring(0,10)}}</h5>
-          <h3 style="color: #2b7a78; text-align: center;">Flashcards:</h3>
+          <h3 class="my-title">Flashcards:</h3>
         </div>
+        <div class="row">
         <div class="col-xl-3 col-4 p-2" *ngFor="let flashcard of getFlashcards()">
-          <mat-card style="background-color: #3aafa9; color: #ffffff">
-           <mat-card-content style="text-align:center;">
+          <mat-card class="flashcard-question">
+           <mat-card-content>
              <h4>Q: {{flashcard.question}}</h4>
            </mat-card-content>
          </mat-card>
-          <mat-card [hidden]="!this.showAnswer" style="background-color: #2b7a78; color: #ffffff">
-            <mat-card-content style="text-align:center;">
+          <mat-card [hidden]="!this.showAnswer || flashcard.id!=this.showFlashcardId" class="flashcard-answer">
+            <mat-card-content>
               <h4>A: {{flashcard.answer}}</h4>
             </mat-card-content>
           </mat-card>
-          <button class="btn btn-sm mr-4" style="background-color: #def2f1;"  data-toggle="modal" data-target=".edit-flashcard-modal" (click)="flashcardClicked(flashcard)">Edit</button>
-          <button [hidden]="this.showAnswer" class="btn btn-sm mr-4" (click)="this.showAnswer=true;" style="background-color: #def2f1;">Show answer</button>
-          <button [hidden]="!this.showAnswer" class="btn btn-sm mr-4" (click)="this.showAnswer=false;" style="background-color: #def2f1;">Hide answer</button>
+          <div class="flex-container-space-between">
+            <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".edit-flashcard-modal" (click)="flashcardClicked(flashcard)">Edit</button>
+            <button mat-button [hidden]="this.showAnswer" class="btn btn-sm" (click)="this.showAnswer=true; flashcardClicked(flashcard)">Show answer</button>
+            <button mat-button [hidden]="!this.showAnswer || flashcard.id!=this.showFlashcardId" class="btn btn-sm" (click)="this.showAnswer=false;">Hide answer</button>
+          </div>
+        </div>
         </div>
       </div>
 
@@ -147,7 +150,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Deck {{this.selectedDeck.name}}</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button mat-button  class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -159,8 +162,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-info" data-dismiss="modal" (click)="saveEdits(this.selectedDeck)">Save</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button mat-button  class="btn btn-middle" data-dismiss="modal" (click)="saveEdits(this.selectedDeck)">Save</button>
+              <button mat-button  class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -173,7 +176,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Flashcard</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button  class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -186,8 +189,8 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-info" data-dismiss="modal" (click)="saveFlashcardEdits(this.selectedFlashcard)">Save</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button mat-button  class="btn btn-middle" data-dismiss="modal" (click)="saveFlashcardEdits(this.selectedFlashcard)">Save</button>
+              <button mat-button  class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>

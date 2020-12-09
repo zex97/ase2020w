@@ -26,6 +26,7 @@ export class FlashcardManagerComponent implements OnInit {
   selectedDeck: Deck;
   selectedDeckId: number;
   selectedFlashcard: Flashcard;
+  showFlashcardId: number;
   private decks: Deck[];
   private flashcards: Flashcard[];
 
@@ -176,6 +177,8 @@ export class FlashcardManagerComponent implements OnInit {
   flashcardClicked(select : Flashcard) {
      console.log(select);
      this.selectedFlashcard = select;
+     this.showFlashcardId = select.id;
+     console.log(this.showFlashcardId);
      this.flashcardEditForm.patchValue({
         question: select.question,
         answer: select.answer
