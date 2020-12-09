@@ -4,6 +4,7 @@ import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,7 @@ export class RegisterComponent implements OnInit {
 
 
   constructor(private userService: UserService, private formBuilder: FormBuilder, private authService: AuthService,
-              private router: Router) {
+              private router: Router, private snackBar: MatSnackBar) {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required]],
@@ -45,6 +46,24 @@ export class RegisterComponent implements OnInit {
       this.createUser(user);
       // this.clearUserForm();
     } else {
+      if (this.registerForm.controls.username.errors?.required) {
+        this.openSnackbar('Username is required!', 'warning-snackbar');
+      }
+      if (this.registerForm.controls.password.errors?.required) {
+        this.openSnackbar('Password is required!', 'warning-snackbar');
+      }
+      if (this.registerForm.controls.username.value === 'user') {
+        this.openSnackbar('user is a reserved username!', 'warning-snackbar');
+      }
+      if (this.registerForm.controls.email.errors?.required) {
+        this.openSnackbar('Email is required!', 'warning-snackbar');
+      }
+      if (this.registerForm.controls.password.errors?.minlength) {
+        this.openSnackbar('Password must be at least 8 characters long!', 'warning-snackbar');
+      }
+      if (this.registerForm.controls.password.errors?.pattern) {
+        this.openSnackbar('Password must have at least one digit!', 'warning-snackbar');
+      }
       console.log('Invalid input');
     }
   }
@@ -56,6 +75,7 @@ export class RegisterComponent implements OnInit {
   createUser(user: User) {
     this.userService.createUser(user).subscribe(
       () => {
+        this.openSnackbar('Registration successful!', 'success-snackbar');
         this.navigateToLogin();
       },
       error => {
@@ -82,6 +102,13 @@ export class RegisterComponent implements OnInit {
   //   this.registerForm.reset();
   //   this.submitted = false;
   // }
+
+  openSnackbar(message: string, type: string) {
+    this.snackBar.open(message, 'close', {
+      duration: 4000,
+      panelClass: [type]
+    });
+  }
 
   /**
    * Error flag will be deactivated, which clears the error message

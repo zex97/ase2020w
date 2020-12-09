@@ -23,45 +23,18 @@
         <div class="form-group">
           <input type="text" name="username" formControlName="username" class="form-control mb-4" id="inputUsername"
                  aria-describedby="usernameHelp" placeholder="Username">
-          <div *ngIf="submitted && registerForm.controls.username.errors" class="error">
-            <small class="form-text text-warning" *ngIf="registerForm.controls.username.errors.required">Username is
-              required!
-            </small>
-          </div>
-          <div
-            *ngIf="submitted && (registerForm.controls.username.value === 'user')"
-            class="error">
-            <small class="form-text text-warning">"user" is a reserved username!
-            </small>
-          </div>
         </div>
 
         <!-- E-mail -->
         <div class="form-group">
           <input type="email" name="email" formControlName="email" class="form-control mb-4" id="inputEmail"
                  aria-describedby="emailHelp" placeholder="E-mail">
-          <div *ngIf="submitted && registerForm.controls.email.errors" class="error">
-            <small class="form-text text-warning" *ngIf="registerForm.controls.email.errors.required">E-mail is
-              required!
-            </small>
-          </div>
         </div>
 
         <!-- Password -->
         <div class="form-group">
           <input type="password" name="password" formControlName="password" class="form-control mb-4" id="inputPassword"
                  aria-describedby="passwordHelp" placeholder="Password">
-          <div *ngIf="submitted && registerForm.controls.password.errors" class="error">
-            <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.required">Password is
-              required!
-            </small>
-            <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.minlength">Your
-              password must be at least 8 characters long!
-            </small>
-            <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.pattern">Your
-              password must have at least one digit!
-            </small>
-          </div>
         </div>
 
         <!-- Sign up button -->

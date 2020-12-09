@@ -45,3 +45,28 @@ html, body {
   height: 100%;
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.warning-snackbar {
+  background: #ffffba;
+  color: black;
+  .mat-simple-snackbar-action {
+    color: black !important;
+  }
+}
+
+.success-snackbar {
+  background: #90EE90;
+  color: black;
+  .mat-simple-snackbar-action {
+    color: black !important;
+  }
+}
+
+.error-snackbar {
+  background: #ff6666;
+  color: black;
+  .mat-simple-snackbar-action {
+    color: black !important;
+  }
+}
+
