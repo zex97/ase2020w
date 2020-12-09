@@ -20,6 +20,27 @@ public class User {
     private List<Deck> decks;
     private List<Space> spaces;
 
+    public User () {}
+
+    public User (User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.loginAttempts = user.getLoginAttempts();
+        this.role = user.getRole();
+        this.enabled = user.getEnabled();
+    }
+
+    public User (String username, String password, String email, int loginAttempts, String role, boolean enabled) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.loginAttempts = loginAttempts;
+        this.role = role;
+        this.enabled = enabled;
+    }
+
     @Column(nullable = false, name = "role")
     public String getRole() {
         return role;
@@ -119,5 +140,17 @@ public class User {
 
     public void setLoginAttempts(Integer loginAttempts) {
         this.loginAttempts = loginAttempts;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username=" + username +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", loginAttempts='" + loginAttempts + '\'' +
+                ", enabled='" + enabled + '\'' +
+                '}';
     }
 }

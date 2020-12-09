@@ -31,7 +31,6 @@ public class UserRepositoryTest {
     private static final boolean TEST_ENABLED_2 = true;
 
 
-
     @Autowired
     private UserRepository userRepository;
 
