@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {Deck} from "../../dtos/deck"
+import {Flashcard} from "../../dtos/flashcard"
 import {User} from '../../dtos/user';
 
 
@@ -16,10 +17,18 @@ export class FlashcardManagerComponent implements OnInit {
 
   deckForm: FormGroup;
   deckEditForm: FormGroup;
+  flashcardForm: FormGroup;
+  flashcardEditForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
-  load: boolean = true;
+  viewAll: boolean = true;
+  showAnswer: boolean = false;
+  selectedDeck: Deck;
+  selectedDeckId: number;
+  selectedFlashcard: Flashcard;
+  showFlashcardId: number;
   private decks: Deck[];
+  private flashcards: Flashcard[];
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
@@ -29,7 +38,15 @@ export class FlashcardManagerComponent implements OnInit {
     this.deckEditForm = this.formBuilder.group({
       title: ['']
     })
-   }
+    this.flashcardForm = this.formBuilder.group({
+          question: [''],
+          answer: ['']
+   })
+   this.flashcardEditForm = this.formBuilder.group({
+         question: [''],
+         answer: ['']
+   })
+  }
 
   ngOnInit(): void {
     this.loadAllDecks();
@@ -93,6 +110,80 @@ export class FlashcardManagerComponent implements OnInit {
        });
        //this.deckForm.reset({'title':''});
   }
+
+
+  /**
+  * Get a list of all flashcards belonging to a deck from backend
+  */
+  loadFlashcards(deck: Deck) {
+    this.selectedDeck = deck;
+    this.flashcardService.getFlashcards(deck.id).subscribe(
+        (flashcards : Flashcard[]) => {
+                     this.flashcards = flashcards;
+                     },
+                     error => {
+                           this.defaultErrorHandling(error);
+                     }
+                 );
+  }
+
+  getFlashcards() {
+    return this.flashcards;
+  }
+
+  createFlashcard() {
+    this.flashcardService.getDeckById(this.selectedDeckId).subscribe(res => {
+       console.log(res);
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, res);
+       this.flashcardService.createFlashcard(flashcard, this.selectedDeckId).subscribe(
+                       () => {
+                              this.loadFlashcards(res);
+                              },
+                              error => {
+                                this.defaultErrorHandling(error);
+                              }
+                            );
+      });
+  }
+
+  saveFlashcardEdits(flashcard: Flashcard) {
+        //send edits to backend
+        console.log(flashcard);
+         this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
+                let question = this.flashcardEditForm.controls.question.value;
+                let answer = this.flashcardEditForm.controls.answer.value;
+               if(question != null && question != "") {
+                flashcard.question = question;
+               }
+               if(answer != null && answer != "") {
+                flashcard.question = answer;
+              }
+              this.flashcardService.editFlashcard(flashcard, this.selectedDeck.id).subscribe(
+                    () => {
+                           this.loadFlashcards(this.selectedDeck);
+                           },
+                           error => {
+                             this.defaultErrorHandling(error);
+                           }
+                         );
+              });
+    }
+
+  deckClicked(select : number) {
+    console.log(select);
+    this.selectedDeckId = select;
+  }
+
+  flashcardClicked(select : Flashcard) {
+     console.log(select);
+     this.selectedFlashcard = select;
+     this.showFlashcardId = select.id;
+     console.log(this.showFlashcardId);
+     this.flashcardEditForm.patchValue({
+        question: select.question,
+        answer: select.answer
+     })
+   }
 
   private defaultErrorHandling(error: any) {
       console.log(error);

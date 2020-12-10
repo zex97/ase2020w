@@ -21,6 +21,8 @@ import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSelectModule} from '@angular/material/select';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         BrowserAnimationsModule,
         MatButtonModule,
         MatIconModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatSelectModule,
+        MatCardModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

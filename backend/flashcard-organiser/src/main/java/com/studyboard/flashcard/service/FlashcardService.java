@@ -17,6 +17,14 @@ public interface FlashcardService {
     List<Deck> getAllDecks(String username);
 
     /**
+     * Find a deck with the given id
+     *
+     * @param deckId of the deck to find
+     * @return deck with the specified id
+     */
+    Deck findDeckById(Long deckId);
+
+    /**
      * Create a single deck
      *
      * @param deck with all the necessary information about a deck
@@ -83,6 +91,6 @@ public interface FlashcardService {
     void deleteFlashcard(long deckId, long flashcardId);
 
 
-    Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
+    Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
 
 }
