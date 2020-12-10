@@ -17,12 +17,11 @@ export class DocumentComponent implements OnInit {
   @Input() spaceId: number;
 
   ngOnInit() {
-    //this.loadAllDocuments(this.spaceId);
+    // this.loadAllDocuments(this.spaceId);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.spaceId);
-    console.log(changes);
+    // if selected space changes load the documents for the newly selected space
     this.loadAllDocuments(this.spaceId);
   }
 
@@ -40,10 +39,6 @@ export class DocumentComponent implements OnInit {
 
   getAllDocuments() {
     return this.documentsOfSpace;
-  }
-
-  getsisd() {
-    console.log(this.spaceId);
   }
 
 }

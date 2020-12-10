@@ -1,6 +1,7 @@
 package com.studyboard.rest;
 
 import com.studyboard.dto.SpaceDTO;
+import com.studyboard.model.Document;
 import com.studyboard.space.service.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -57,14 +58,15 @@ public class UserSpaceController {
     }
 
     /**Change after file upload is done*/
-    /*@RequestMapping(
+    @RequestMapping(
             value = "/{username}/{spaceId}",
             method = RequestMethod.GET,
             produces = "application/json")
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity getAllDocuments(
+    public List<Document> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        return ResponseEntity.ok().body(service.geAllDocumentsFromSpace(spaceId));
+    System.out.println(username + " " + spaceId);
+        return service.geAllDocumentsFromSpace(spaceId);
     }
 
     @RequestMapping(
@@ -78,5 +80,5 @@ public class UserSpaceController {
             @PathVariable(name = "documentId") long documentId) {
         service.removeDocumentFromSpace(spaceId, documentId);
         return ResponseEntity.ok().build();
-    }*/
+    }
 }

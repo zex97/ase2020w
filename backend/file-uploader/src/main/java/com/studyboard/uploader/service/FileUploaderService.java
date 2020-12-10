@@ -3,7 +3,6 @@ package com.studyboard.uploader.service;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
 import com.studyboard.model.User;
-import com.studyboard.repository.DocumentRepository;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.uploader.FileStorageProperties;
@@ -20,10 +19,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.List;
 
 /** Service used to manage user files. Performs file saving, loading, and deletion */
 @Service
@@ -32,18 +33,15 @@ public class FileUploaderService implements FileUploader {
   private final Logger logger = LoggerFactory.getLogger(FileUploaderService.class);
   private final Path rootLocation;
   private final UserRepository userRepository;
-  private final DocumentRepository documentRepository;
   private final SpaceRepository spaceRepository;
 
   @Autowired
   public FileUploaderService(
       FileStorageProperties fileStorageProperties,
       UserRepository userRepository,
-      DocumentRepository documentRepository,
       SpaceRepository spaceRepository) {
     this.rootLocation = Paths.get(fileStorageProperties.getLocation());
     this.userRepository = userRepository;
-    this.documentRepository = documentRepository;
     this.spaceRepository = spaceRepository;
   }
 
@@ -105,25 +103,37 @@ public class FileUploaderService implements FileUploader {
 
   private void storeRefToNewDocument(Space space, Path path) {
 
-    Document document =
-        documentRepository.findByFilePath(path.toAbsolutePath().toString()).orElse(null);
+    Document document = null;
+    for (Document d : space.getDocuments()) {
+      if (d.getFilePath().equals(path.toAbsolutePath().toString())) {
+        document = d;
+      }
+    }
+
     if (document == null) {
       document = new Document();
       document.setFilePath(path.toAbsolutePath().toString());
-      document.setName(path.getFileName().toString());
+      // use name without the file extension
+      document.setName(path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".")));
       document.setSpace(space);
       // TODO: check if transcription is necessary
       document.setNeedsTranscription(false);
-      document.setTranscription("");
-      documentRepository.save(document);
+      document.setTranscription(null);
+
+      List<Document> docList = space.getDocuments();
+      docList.add(document);
+      space.setDocuments(docList);
+      spaceRepository.save(space);
 
       logger.info(
           "Created new document for file("
               + path.getFileName().toString()
               + ") in space("
               + space.getName()
-              + ") of user " + space.getUser().getUsername());
+              + ") of user "
+              + space.getUser().getUsername());
     } else {
+
       logger.info(
           "File ("
               + path.getFileName().toString()
@@ -137,7 +147,8 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public Resource loadAsResource(String fileName, String userName) {
+  public Resource loadAsResource(Space space, String fileName) {
+    String userName = space.getUser().getUsername();
     Path filePath = load(fileName, userName);
     try {
       Resource resource = new UrlResource(filePath.toUri());
@@ -165,13 +176,13 @@ public class FileUploaderService implements FileUploader {
       throw new FileStorageException("Failed to delete file(" + fileName + ")");
     }
 
-    Document document =
+    /*Document document =
         documentRepository.findByFilePath(filePath.toAbsolutePath().toString()).orElse(null);
     if (document != null) {
       documentRepository.delete(document);
     } else {
       throw new StorageFileNotFoundException("File(" + fileName + ") could not be found");
-    }
+    }*/
   }
 
   @Override

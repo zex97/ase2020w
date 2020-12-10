@@ -1,6 +1,7 @@
 package com.studyboard.rest;
 
 import com.studyboard.dto.SpaceDTO;
+import com.studyboard.model.Document;
 import com.studyboard.model.Space;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.StorageFileNotFoundException;
@@ -31,41 +32,26 @@ public class FileUploadController {
       value = "/single-file/{space}",
       method = RequestMethod.POST,
       produces = "application/json")
-  public ResponseEntity<String> handleFileUpload(
+  public ResponseEntity handleFileUpload(
           @RequestParam("file") MultipartFile file, @PathVariable long space) {
+    System.out.println(file.getName() + " " + space);
     fileUploaderService.store(file, space);
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body(file.getOriginalFilename());
+    return ResponseEntity.ok().build();
   }
 
   @RequestMapping(
-      value = "/file/{fileName}/{userName}",
-      method = RequestMethod.GET,
+      value = "/file/{fileName}",
+      method = RequestMethod.POST,
       produces = "application/json")
   @ResponseBody
   public ResponseEntity<Resource> getFile(
-      @PathVariable(name = "fileName") String fileName, @PathVariable String userName) {
-    Resource file = fileUploaderService.loadAsResource(fileName, userName);
+      @RequestParam(name = "fileName") SpaceDTO spaceDTO, @PathVariable String fileName) {
+    Resource file = fileUploaderService.loadAsResource(spaceDTO.toSpace(), fileName);
     return ResponseEntity.ok()
         .header(
             HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
         .body(file);
   }
-
-  /**
-   * Not necessary, can be recreated by multiple calls of single-file upload.
-   * Better because with single file upload we guarantee that files can be maximum file size each
-   * */
-  /*@RequestMapping(
-      value = "/multiple-files/{spaceId}",
-      method = RequestMethod.POST,
-      produces = "application/json")
-  @ResponseBody
-  public List<ResponseEntity<String>> uploadMultipleFiles(
-      @RequestParam("file") MultipartFile[] files, @PathVariable long spaceId) {
-    return Arrays.stream(files)
-            .map(file -> handleFileUpload(file, spaceId))
-            .collect(Collectors.toList());
-  }*/
 
   @RequestMapping(
       value = "/delete-file/{fileName}}",

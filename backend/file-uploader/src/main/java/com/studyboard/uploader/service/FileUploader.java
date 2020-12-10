@@ -14,7 +14,7 @@ public interface FileUploader {
 
   Path load(String fileName, String userId);
 
-  Resource loadAsResource(String fileName, String usedId);
+  Resource loadAsResource(Space space, String fileName);
 
   void deleteUserFile(String fileName, Space space);
 
