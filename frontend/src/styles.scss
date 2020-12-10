@@ -44,7 +44,11 @@ body {
 html, body {
   height: 100%;
 }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: #def2f1;
+}
 
 
 /* Snackbars */
@@ -73,7 +77,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 /* Buttons*/
-.mat-icon-button:active {
+.mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus, {
   outline: none;
 }
 .mat-raised-button:focus {

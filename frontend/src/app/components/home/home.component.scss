@@ -1,3 +1,9 @@
+#title {
+  font-size: 2.6em;
+  margin: 1.5em 0.8em;
+  color: #3AAFA9;
+}
+
 #wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
@@ -39,52 +45,21 @@
   margin-right: -250px;
 }
 
-/* Sidebar Styles */
-
-.sidebar-nav {
-  position: absolute;
-  top: 0;
-  width: 250px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+#matToolbar {
+  min-height: 44px;
+  max-height: 44px;
 }
 
-.sidebar-nav li {
-  text-indent: 20px;
-  line-height: 40px;
+#matToolbar, #sidebar-wrapper, .list-group-item {
+  background: #17262A !important;
+  color: #def2f1;
 }
 
-.sidebar-nav li a {
-  display: block;
-  text-decoration: none;
-  color: #999999;
-}
-
-.sidebar-nav li a:hover {
-  text-decoration: none;
-  color: #fff;
-  background: rgba(255,255,255,0.2);
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-  text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-  height: 65px;
-  font-size: 18px;
-  line-height: 60px;
-}
-
-.sidebar-nav > .sidebar-brand a {
-  color: #999999;
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-  color: #fff;
-  background: none;
+.mat-button {
+  font-size: larger;
+  font-weight: lighter;
+  height: 3.5em;
+  text-align: left;
 }
 
 @media(min-width:768px) {

@@ -12,6 +12,10 @@ export class HomeComponent implements OnInit {
 
   toggled = false;
 
+  isToggled() {
+    return this.toggled;
+  }
+
   ngOnInit() {
   }
 
