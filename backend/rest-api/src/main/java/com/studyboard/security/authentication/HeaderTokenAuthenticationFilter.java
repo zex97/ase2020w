@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,12 +28,12 @@ public class HeaderTokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if ((header == null) || !header.startsWith(AuthenticationConstants.TOKEN_PREFIX)) {
+        if ((header == null) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
         try {
-            AuthenticationHeaderToken authenticationRequest = new AuthenticationHeaderToken(header.substring(AuthenticationConstants.TOKEN_PREFIX.length()));
+            AuthenticationHeaderToken authenticationRequest = new AuthenticationHeaderToken(header.substring("Bearer ".length()));
             authenticationRequest.setDetails(authenticationDetailsSource.buildDetails(request));
             Authentication authResult = authenticationManager.authenticate(authenticationRequest);
             SecurityContextHolder.getContext().setAuthentication(authResult);

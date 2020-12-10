@@ -1,15 +1,8 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Authentication problems!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <div class="pt-5" id="loginWrapper">
   <div class="row">
     <div class="col-md-6 mx-auto" id="formLoginWrapper">
       <!-- Default form login -->
-      <form class="text-center border border-light p-5" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+      <form class="text-center border border-light p-5" [formGroup]="loginForm" (ngSubmit)="loginUser()" id="loginBox">
 
         <p class="h4 mb-4">Login</p>
 
@@ -17,47 +10,30 @@
           <!-- Email -->
           <input type="text" formControlName="username" id="defaultLoginFormUsername" class="form-control mb-4"
                  aria-describedby="usernameHelp" placeholder="Username">
-          <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-            <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
-              required!
-            </small>
-          </div>
 
           <!-- Password -->
           <input type="password" formControlName="password" id="defaultLoginFormPassword" class="form-control mb-4"
                  placeholder="Password">
-          <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
-            <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
-              is
-              required!
-            </small>
-            <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.minlength">Your password
-              must be at least 8 characters long!
-            </small>
-          </div>
         </div>
 
         <div class="d-flex justify-content-around">
           <div>
             <!-- Remember me -->
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
-              <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
-            </div>
+            <a mat-button>Remember me</a>
           </div>
           <div>
             <!-- Forgot password -->
-            <a href="">Forgot password?</a>
+            <a mat-button>Forgot password?</a>
           </div>
         </div>
 
         <!-- Sign in button -->
-        <button class="btn btn-info btn-block my-4" type="button" (click)="loginUser()">Sign in</button>
+        <button mat-raised-button type="button" (click)="loginUser()">Sign in</button>
 
         <!-- Register -->
         <div id="registerDiv">
           <p style="margin-bottom: 0em">Not a member?</p>
-          <button type="button" class="btn btn-link"  (click)="navigateToRegister()">Register</button>
+          <a mat-button type="button"  (click)="navigateToRegister()">Register</a>
         </div>
       </form>
       <!-- Default form login -->

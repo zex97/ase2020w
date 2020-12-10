@@ -1,23 +1,20 @@
 package com.studyboard.security.configuration.properties;
 
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 @Validated
 @Configuration
-@ConfigurationProperties("application.authentication")
 public class AuthenticationConfigurationProperties {
 
     @NotNull
     private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     @NotNull
-    private String secret;
+    private String secret = "jwtSecret";
     @NotNull
     private Duration validityDuration = Duration.of(600L, ChronoUnit.SECONDS);
     @NotNull

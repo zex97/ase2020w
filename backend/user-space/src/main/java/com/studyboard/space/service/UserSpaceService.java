@@ -18,27 +18,24 @@ public interface UserSpaceService {
     /**
      * Create a space
      *
-     * @param username of the user creating the space
      * @param space    to be created
      */
-    void addSpaceToUser(String username, Space space);
+    void addSpace(Space space);
 
     /**
      * Delete a space
      *
-     * @param username of the user the space belongs to
      * @param spaceId  of the space to be created
      */
-    void removeSpaceFromUser(String username, long spaceId);
+    void removeSpace(long spaceId);
 
     /**
      * Update a single space
      *
-     * @param username of the user who created the deck
-     * @param space    - with the information to be updated
+     * @param space - with the information to be updated
      * @return updated space
      */
-    public Space updateSpaceName(String username, Space space);
+    public Space updateSpaceName(Space space);
 
     List<Document> geAllDocumentsFromSpace(long spaceId);
 

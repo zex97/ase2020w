@@ -45,7 +45,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
@@ -70,7 +70,6 @@ public class SimpleUserService implements UserService {
         }
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         storedUser.setPassword(hashedPassword);
-        storedUser.setPassword(user.getPassword());
         return userRepository.save(storedUser);
     }
 

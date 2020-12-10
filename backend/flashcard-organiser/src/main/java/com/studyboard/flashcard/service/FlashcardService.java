@@ -17,30 +17,28 @@ public interface FlashcardService {
     List<Deck> getAllDecks(String username);
 
     /**
-     * Find a single deck by id
+     * Find a deck with the given id
      *
-     * @param username of the user who created the deck
-     * @param deckId of the deck
-     * @return the deck with the corresponding id
+     * @param deckId of the deck to find
+     * @return deck with the specified id
      */
-    Deck getOneDeck(String username, long deckId);
+    Deck findDeckById(Long deckId);
 
     /**
      * Create a single deck
      *
-     * @param username of the user who is creating the deck
      * @param deck with all the necessary information about a deck
      */
-    void createDeck(String username, Deck deck);
+    void createDeck(Deck deck);
 
     /**
      * Update a single deck
      *
-     * @param username of the user who created the deck
-     * @param deck   - with the information to be updated
+     * @param deck - with the information to be updated
      * @return updated deck
      */
-    Deck updateDeckName(String username, Deck deck);
+
+    Deck updateDeckName(Deck deck);
 
     /**
      * Find all flashcards user created and assigned to one deck
@@ -49,6 +47,16 @@ public interface FlashcardService {
      * @return list of all flashcards
      */
     List<Flashcard> getAllFlashcardsOfDeck(long deckId);
+
+    /**
+     * Get as many flashcards from a deck as the user choose
+     *
+     * @param deckId of the deck flashcards belong to
+     * @param size   - amount of flashcards to revise
+     * @return chosen number of flashcards from a specified deck
+     */
+    public List<Flashcard> getFlashcardsForRevision(long deckId, int size);
+
 
     /**
      * Find a single flashcard by id
@@ -70,10 +78,9 @@ public interface FlashcardService {
     /**
      * Delete a single deck with all of its flashcards
      *
-     * @param userId of the user who created and wants to delete deck
      * @param deckId of the deck that should be deleted
      */
-    void deleteDeck(long userId, long deckId);
+    void deleteDeck(long deckId);
 
     /**
      * Delete a single flashcard
@@ -84,6 +91,6 @@ public interface FlashcardService {
     void deleteFlashcard(long deckId, long flashcardId);
 
 
-    Flashcard rateFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
+    Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
 
 }

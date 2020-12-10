@@ -64,6 +64,10 @@ export class AuthService {
     localStorage.setItem('currentUser', username);
   }
 
+  getUsername() {
+    return localStorage.getItem('currentUser');
+  }
+
   /**
    * JWT token expires after 10 minutes, therefore a new token will requested 1 minute before the expiration
    */

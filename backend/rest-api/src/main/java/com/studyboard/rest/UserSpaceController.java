@@ -27,33 +27,33 @@ public class UserSpaceController {
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/{username}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
     @ApiOperation(value = "Add space to specific user.", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity addUserSpace(
-            @PathVariable(name = "username") String username, @RequestBody SpaceDTO spaceDTO) {
-        service.addSpaceToUser(username, spaceDTO.toSpace());
+            @RequestBody SpaceDTO spaceDTO) {
+        service.addSpace(spaceDTO.toSpace());
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(
-            value = "/{username}/{spaceId}",
+            value = "/{spaceId}",
             method = RequestMethod.DELETE,
             produces = "application/json")
     @ApiOperation(value = "Delete a specific user space.", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity deleteUserSpace(
-            @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        service.removeSpaceFromUser(username, spaceId);
+            @PathVariable(name = "spaceId") long spaceId) {
+        service.removeSpace(spaceId);
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(
-            value = "/{username}",
+            value = "",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(value = "Edit space associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity editSpaceName(
-            @PathVariable(name = "username") String username, @RequestBody SpaceDTO spaceDTO) {
-        service.updateSpaceName(username, spaceDTO.toSpace());
+            @RequestBody SpaceDTO spaceDTO) {
+        service.updateSpaceName(spaceDTO.toSpace());
         return ResponseEntity.ok().build();
     }
 

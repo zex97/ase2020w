@@ -1,7 +1,40 @@
+html, body {
+  height: 100%;
+}
+
 #formRegisterWrapper {
   max-width: 25em;
 }
 
 #registerWrapper {
   padding-top: 7rem !important;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #3AAFA9;
+  overflow-x: hidden; //horizontal
+  overflow-y: hidden; //vertical
 }
+
+#registerBox {
+  border-radius: 5px;
+  background-color: #FEFFFF;
+  -webkit-box-shadow: 0 8px 6px -6px black;
+  -moz-box-shadow: 0 8px 6px -6px black;
+  box-shadow: 0 8px 6px -6px black;
+}
+
+#topBox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mat-raised-button {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  width: 100%;
+  background-color: #3AAFA9;
+  color: white;
+  font-size: large;
+}
+

@@ -48,8 +48,8 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   /**
-   * Sends a request to load all spaces belonging to the currently logged-in user.
-   */
+  * Sends a request to load all spaces belonging to the currently logged-in user.
+  */
   loadAllSpaces() {
     this.spaceService.getSpaces(localStorage.getItem('currentUser')).subscribe(
       (spaceList: Space[]) => {
@@ -176,52 +176,52 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   /**
-   * Builds a space dto and sends a creation request.
-   */
+  * Builds a space dto and sends a creation request.
+  */
   createSpace() {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      const space = new Space(0, this.spaceForm.controls.name.value, res);
-      this.spaceService.createSpace(space, localStorage.getItem('currentUser')).subscribe(
-        () => {
-          this.loadAllSpaces();
-        },
-        error => {
-          this.defaultErrorHandling(error);
-        }
-      );
+       const space = new Space(0, this.spaceForm.controls.name.value, res);
+           this.spaceService.createSpace(space).subscribe(
+                () => {
+                       this.loadAllSpaces();
+                       },
+                       error => {
+                         this.defaultErrorHandling(error);
+                       }
+                     );
     });
   }
 
   /**
-   * Sends a request to delete a specific space.
-   */
+  * Sends a request to delete a specific space.
+  */
   deleteSpace(id: number) {
-    this.spaceService.deleteSpace(id, localStorage.getItem('currentUser')).subscribe(
-      () => {
-        this.loadAllSpaces();
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      });
+    this.spaceService.deleteSpace(id).subscribe(
+                () => {
+                       this.loadAllSpaces();
+                       },
+                       error => {
+                         this.defaultErrorHandling(error);
+                       });
   }
 
   /**
-   * Sends a put request to change a specific space.
-   */
+  * Sends a put request to change a specific space.
+  */
   saveEdits(space: Space) {
-    // send edits to backend
-    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      space.name = this.nameEditForm.controls.name.value;
-      this.spaceService.editSpace(space, localStorage.getItem('currentUser')).subscribe(
-        () => {
-          this.loadAllSpaces();
-          location.reload();
-        },
-        error => {
-          this.defaultErrorHandling(error);
-        }
-      );
-    });
+        //send edits to backend
+        this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
+               space.name = this.nameEditForm.controls.name.value;
+                   this.spaceService.editSpace(space).subscribe(
+                        () => {
+                               this.loadAllSpaces();
+                               location.reload();
+                               },
+                               error => {
+                                 this.defaultErrorHandling(error);
+                               }
+                             );
+         });
   }
 
 

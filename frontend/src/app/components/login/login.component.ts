@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   error: boolean = false;
   errorMessage: string = '';
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private snackBar: MatSnackBar) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -35,6 +36,9 @@ export class LoginComponent implements OnInit {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
     } else {
+      if (this.loginForm.controls.username.errors?.required || this.loginForm.controls.password.errors?.required) {
+        this.openSnackbar('Your username and password are required!', 'warning-snackbar');
+      }
       console.log('Invalid input');
     }
   }
@@ -50,12 +54,15 @@ export class LoginComponent implements OnInit {
         console.log('Successfully logged in user: ' + authRequest.username);
         this.authService.setUsername(authRequest.username);
         console.log('User: ' + authRequest.username + ' authenticated.');
+        this.openSnackbar('Welcome ' + authRequest.username + `!`, 'success-snackbar');
         this.router.navigate(['/home']);
       },
       error => {
-        console.log('Could not log in due to: ' + error.message);
         this.error = true;
-        this.errorMessage = error.error.message;
+        this.errorMessage = 'Invalid username or password!';
+        console.log('Could not log in: ' + this.errorMessage);
+        this.openSnackbar(this.errorMessage, 'warning-snackbar');
+        this.loginForm.reset();
       }
     );
     this.router.navigate(['/home']);
@@ -66,6 +73,13 @@ export class LoginComponent implements OnInit {
    */
   vanishError() {
     this.error = false;
+  }
+
+  openSnackbar(message: string, type: string) {
+    this.snackBar.open(message, 'close', {
+      duration: 4000,
+      panelClass: [type]
+    });
   }
 
   ngOnInit() {
