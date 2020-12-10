@@ -78,7 +78,7 @@
                       </div>
                       <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
                       <input [value]="filesToUploadNames" class="hide-text" type="file" id="files" value="name"
-                             (change)="handleFileInput($event.target.files)" multiple>
+                             (change)="handleFileInput($event.target.files)" accept=".pdf,.mp3,.mp4,.jpeg,.png" multiple>
                       <!--<label for="files">Choose files </label>-->
                     </div>
                     <div *ngIf="filesToUpload.length>0">
@@ -96,7 +96,7 @@
 
                   <div class="modal-footer">
                     <button *ngIf="filesReadyForUpload()" type="button" class="btn btn-info" data-dismiss="modal"
-                            (click)="uploadFile(currentSpace)">Submit
+                            (click)="uploadFiles(currentSpace)">Submit
                     </button>
                     <button (click)="clearInputFiles()" type="button" class="btn btn-secondary" data-dismiss="modal">
                       Close
@@ -107,7 +107,7 @@
             </div>
 
             <!--Edit space modal-->
-            <div class="modal fade edit-space-modal" tabindex="-1" role="dialog" aria-labelledby="Edit space modal"
+            <div *ngIf="currentSpace" class="modal fade edit-space-modal" tabindex="-1" role="dialog" aria-labelledby="Edit space modal"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -136,7 +136,7 @@
             </div>
 
             <!--Delete space modal-->
-            <div class="modal fade delete-space-modal" tabindex="-1" role="dialog" aria-labelledby="Delete space modal"
+            <div *ngIf="currentSpace" class="modal fade delete-space-modal" tabindex="-1" role="dialog" aria-labelledby="Delete space modal"
                  aria-hidden="true" [attr.space]="space">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">

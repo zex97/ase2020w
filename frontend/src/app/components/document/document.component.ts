@@ -17,7 +17,7 @@ export class DocumentComponent implements OnInit {
   @Input() spaceId: number;
 
   ngOnInit() {
-    this.loadAllDocuments(this.spaceId);
+    //this.loadAllDocuments(this.spaceId);
   }
 
   ngOnChanges(changes: SimpleChanges) {

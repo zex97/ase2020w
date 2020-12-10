@@ -132,7 +132,7 @@ export class DocumentSpaceComponent implements OnInit {
   /**
    * Iterate through the list of objects and send a post request to backend for each one of them
    * */
-  uploadFile(space: Space) {
+  uploadFiles(space: Space) {
     const spaceId = space.id;
     console.log('>>>>>>>>>>>>>>>' + spaceId);
     let successUploadCount: number = 0;
