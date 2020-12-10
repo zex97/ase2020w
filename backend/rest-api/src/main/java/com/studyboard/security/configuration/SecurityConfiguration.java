@@ -8,9 +8,6 @@ import com.studyboard.security.authentication.HeaderTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -29,15 +26,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 @Configuration
@@ -59,16 +53,6 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
-    @Bean
-    public ErrorAttributes errorAttributes() {
-        return new DefaultErrorAttributes() {
-            public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes) {
-                Map<String, Object> errorAttributes = super.getErrorAttributes((WebRequest) requestAttributes, ErrorAttributeOptions.defaults());
-                errorAttributes.remove("exception");
-                return errorAttributes;
-            }
-        };
-    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {

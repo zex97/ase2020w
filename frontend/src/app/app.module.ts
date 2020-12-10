@@ -20,6 +20,7 @@ import {DocumentComponent} from './components/document/document.component';
 import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
 
@@ -46,6 +47,7 @@ import {MatCardModule} from '@angular/material/card';
         BrowserAnimationsModule,
         MatButtonModule,
         MatIconModule,
+        MatSnackBarModule,
         MatSelectModule,
         MatCardModule
     ],
