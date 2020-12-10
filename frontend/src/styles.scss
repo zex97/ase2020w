@@ -46,6 +46,8 @@ html, body {
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+
+/* Snackbars */
 .warning-snackbar {
   background: #ffffba;
   color: black;
@@ -53,7 +55,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: black !important;
   }
 }
-
 .success-snackbar {
   background: #90EE90;
   color: black;
@@ -61,7 +62,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: black !important;
   }
 }
-
 .error-snackbar {
   background: #ff6666;
   color: black;
@@ -69,4 +69,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: black !important;
   }
 }
+
+
+
+/* Buttons*/
+.mat-icon-button:active {
+  outline: none;
+}
+.mat-raised-button:focus {
+  outline: none;
+}
+.mat-button:focus {
+  outline: none;
+}
+
+
 

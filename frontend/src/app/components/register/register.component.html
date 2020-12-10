@@ -12,9 +12,12 @@
       <!-- Default form register -->
       <form class="form text-center border border-light p-5" [formGroup]="registerForm" (ngSubmit)="registerUser()"  id="registerBox">
 
-
         <div id="topBox">
-          <div><mat-icon (click)="navigateToLogin()">arrow_back_ios</mat-icon></div>
+          <div>
+            <button mat-icon-button>
+              <mat-icon (click)="navigateToLogin()">arrow_back_ios</mat-icon>
+            </button>
+          </div>
           <div><p class="h4 mb-4">Sign up</p></div>
           <div><mat-icon style="opacity: 0.0">arrow_back_ios</mat-icon></div>
         </div>
