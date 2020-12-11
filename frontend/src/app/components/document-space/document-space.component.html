@@ -49,7 +49,7 @@
   <div class="col">
     <div *ngFor="let space of getSpaces()">
 
-      <div class="card" (click)="loadSpaceDetails(space.id)">
+      <div class="card" (click)="loadSpaceDetails(space.id); setCurrentSpace(space)">
 
         <div class="card-body">
           <div class="card-title">
@@ -57,7 +57,7 @@
             <span class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
             <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
               src="../../../assets/edit.png" width="15px;"></span>
-            <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
+            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
               src="../../../assets/upload-logo.png" width="25px;"></span>
 
             <!-- file upload modal -->
@@ -168,6 +168,6 @@
 
   <div class="col">
     <!--Document component-->
-    <app-document [spaceId]=this.spaceId></app-document>
+    <app-document *ngIf="currentSpace" [space]=currentSpace></app-document>
   </div>
 </div>

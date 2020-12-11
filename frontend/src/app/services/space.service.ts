@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {FormBuilder} from '@angular/forms';
 import {AuthService} from './auth.service';
-import {User} from '../dtos/user';
 import {Space} from '../dtos/space';
 
 
@@ -13,10 +11,10 @@ import {Space} from '../dtos/space';
 })
 export class SpaceService {
 
-  private spaceBaseUri: string = this.globals.backendUri + '/api/space';
-
   constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
   }
+
+  private spaceBaseUri: string = this.globals.backendUri + '/api/space';
 
   /**
    * Loads all spaces from the backend
@@ -36,23 +34,23 @@ export class SpaceService {
   }
 
   /**
-     * Delete space from backend
-     * @param id of the space to delete
-     * @param username of the user
-     */
-    deleteSpace(id: number): Observable<Space> {
-      console.log('Delete a space');
-      return this.httpClient.delete<Space>(this.spaceBaseUri + '/'+ id);
-    }
+   * Delete space from backend
+   * @param id of the space to delete
+   * @param username of the user
+   */
+  deleteSpace(id: number): Observable<Space> {
+    console.log('Delete a space');
+    return this.httpClient.delete<Space>(this.spaceBaseUri + '/' + id);
+  }
 
-    /**
-    * Change space name in the backend
-    * @param space to make changes to
-    */
-    editSpace(space: Space): Observable<Space> {
-         console.log('Change the space name to ' + space.name);
-        return this.httpClient.put<Space>(this.spaceBaseUri, space);
-      }
+  /**
+   * Change space name in the backend
+   * @param space to make changes to
+   */
+  editSpace(space: Space): Observable<Space> {
+    console.log('Change the space name to ' + space.name);
+    return this.httpClient.put<Space>(this.spaceBaseUri, space);
+  }
 
   /**
    * Load all documents for a given user space
@@ -62,5 +60,16 @@ export class SpaceService {
   getAllDocuments(userName: string, spaceId: number): Observable<Object> {
     console.log('Getting all the documents for space ');
     return this.httpClient.get(this.spaceBaseUri + '/' + userName + '/' + spaceId);
+  }
+
+  /**
+   * Delete a single document from a given user space
+   * @param space where we want to delete a document
+   * @param documentId id of the exact document we want to delete
+   * */
+  deleteDocument(space: Space, documentId: number): Observable<Object> {
+    console.log('Deleting document ' + documentId + ' for space ' + space.name);
+    // this.httpClient.delete(this.spaceBaseUri);
+    return this.httpClient.delete(this.spaceBaseUri + '/' + space.id + '/' + documentId);
   }
 }

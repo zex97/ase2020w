@@ -48,8 +48,8 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   /**
-  * Sends a request to load all spaces belonging to the currently logged-in user.
-  */
+   * Sends a request to load all spaces belonging to the currently logged-in user.
+   */
   loadAllSpaces() {
     this.spaceService.getSpaces(localStorage.getItem('currentUser')).subscribe(
       (spaceList: Space[]) => {
@@ -71,6 +71,11 @@ export class DocumentSpaceComponent implements OnInit {
     this.fileUploadModuleErrorMessage = '';
   }
 
+  /**
+   * Sets the value of the space user is currently observing
+   * Necessary for document fetching and transfering space value
+   * into individual modules
+   * */
   setCurrentSpace(space: Space) {
     this.currentSpace = space;
   }
@@ -80,7 +85,8 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   /**
-   * Save uploaded files into a global variable and check if any of them exceed the upload limit.
+   * Save uploaded files into a global variable and check if any
+   * of them exceed the upload limit.
    * */
   handleFileInput(files: File[]) {
     console.log('>>>>>>>>>>>>>>>>' + this.spaceId);
@@ -98,7 +104,8 @@ export class DocumentSpaceComponent implements OnInit {
 
   /**
    * If file is removed check if the list is empty.
-   * Important: If empty initialize with new array to avoid file number of input field
+   * Important: If empty initialize with new array to
+   * avoid file number of input field
    * */
   removeFileFromList(i: number) {
     this.filesToUpload.splice(i, 1);
@@ -130,7 +137,9 @@ export class DocumentSpaceComponent implements OnInit {
 
 
   /**
-   * Iterate through the list of objects and send a post request to backend for each one of them
+   * Iterate through the list of objects and send a post
+   * request to backend for each one of them.
+   * @param space where we are uploading the files
    * */
   uploadFiles(space: Space) {
     const spaceId = space.id;
@@ -162,6 +171,9 @@ export class DocumentSpaceComponent implements OnInit {
     }
   }
 
+  /**
+   * Resets the file input field after a close or submit
+   * */
   clearInputFiles() {
     this.filesToUpload = [];
     this.filesToUploadNames = [];
@@ -171,62 +183,66 @@ export class DocumentSpaceComponent implements OnInit {
     return this.spaces;
   }
 
+  /**
+   * Fetches a file as resource from the backend
+   * */
   loadFile(space: Space, fileName: string) {
     this.fileUploadService.getFile(space, fileName);
   }
 
   /**
-  * Builds a space dto and sends a creation request.
-  */
+   * Builds a space dto and sends a creation request.
+   */
   createSpace() {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-       const space = new Space(0, this.spaceForm.controls.name.value, res);
-           this.spaceService.createSpace(space).subscribe(
-                () => {
-                       this.loadAllSpaces();
-                       },
-                       error => {
-                         this.defaultErrorHandling(error);
-                       }
-                     );
+      const space = new Space(0, this.spaceForm.controls.name.value, res);
+      this.spaceService.createSpace(space).subscribe(
+        () => {
+          this.loadAllSpaces();
+        },
+        error => {
+          this.defaultErrorHandling(error);
+        }
+      );
     });
   }
 
   /**
-  * Sends a request to delete a specific space.
-  */
+   * Sends a request to delete a specific space.
+   */
   deleteSpace(id: number) {
     this.spaceService.deleteSpace(id).subscribe(
-                () => {
-                       this.loadAllSpaces();
-                       },
-                       error => {
-                         this.defaultErrorHandling(error);
-                       });
+      () => {
+        this.loadAllSpaces();
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
   }
 
   /**
-  * Sends a put request to change a specific space.
-  */
+   * Sends a put request to change a specific space.
+   */
   saveEdits(space: Space) {
-        //send edits to backend
-        this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-               space.name = this.nameEditForm.controls.name.value;
-                   this.spaceService.editSpace(space).subscribe(
-                        () => {
-                               this.loadAllSpaces();
-                               location.reload();
-                               },
-                               error => {
-                                 this.defaultErrorHandling(error);
-                               }
-                             );
-         });
+    // send edits to backend
+    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
+      space.name = this.nameEditForm.controls.name.value;
+      this.spaceService.editSpace(space).subscribe(
+        () => {
+          this.loadAllSpaces();
+          location.reload();
+        },
+        error => {
+          this.defaultErrorHandling(error);
+        }
+      );
+    });
   }
 
 
   /**
-   * Saves the id of the space user clicked on, to connect it with document component.
+   * Saves the id of the space user clicked on,
+   * to connect it with document component.
    */
   loadSpaceDetails(id: number) {
     this.spaceId = id;

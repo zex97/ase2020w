@@ -70,12 +70,11 @@ public class UserSpaceController {
     }
 
     @RequestMapping(
-            value = "/{username}/{spaceId}/{documentId}",
-            method = RequestMethod.GET,
+            value = "/{spaceId}/{documentId}",
+            method = RequestMethod.DELETE,
             produces = "application/json")
     @ApiOperation(value = "Delete specific document from user space.", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity deleteDocumentFromSpace(
-            @PathVariable(name = "username") String username,
             @PathVariable(name = "spaceId") long spaceId,
             @PathVariable(name = "documentId") long documentId) {
         service.removeDocumentFromSpace(spaceId, documentId);
