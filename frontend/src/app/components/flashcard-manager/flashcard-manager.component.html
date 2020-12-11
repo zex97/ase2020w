@@ -1,13 +1,15 @@
-<h3 class="my-title">Flashcard Decks</h3>
+<div class="page-title-wrapper">
+  <h1 class="page-title">Flashcard Decks</h1>
+</div>
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button button mat-button *ngIf="!this.viewAll"  class="btn btn-sm mr-4 button-dark" (click)="this.viewAll=true;">Back to all</button>
-    <button button mat-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
+    <button mat-raised-button *ngIf="!this.viewAll"  class="btn btn-sm mr-4 button-dark" (click)="this.viewAll=true;">Back to all</button>
+    <button mat-raised-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
             data-target=".create-deck-modal" *ngIf="this.viewAll">
       Create a deck
     </button>
-    <button button mat-button  class="btn btn-sm mr-4 button-light" data-toggle="modal"
+    <button mat-raised-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
             data-target=".create-flashcard-modal">
       Create a flashcard
     </button>

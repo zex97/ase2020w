@@ -51,6 +51,18 @@ body {
 }
 
 
+/* Page title wrapper */
+.page-title {  // aditional css properties required in component scss files
+  text-align: center;
+  color: white;
+  margin: 0px;
+  padding: 0.3em;
+}
+.page-title-wrapper{
+  background: #2b7a78;
+  height: 4em;
+}
+
 /* Snackbars */
 .warning-snackbar {
   background: #ffffba;
@@ -85,6 +97,11 @@ body {
 }
 .mat-button:focus {
   outline: none;
+}
+
+.mat-raised-button {
+  background-color: #2b7a78;
+  color: white;
 }
 
 
