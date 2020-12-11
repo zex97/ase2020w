@@ -83,13 +83,14 @@
                     </div>
                     <div *ngIf="filesToUpload.length>0">
                       <label for="files">Names of files to upload: </label>
-                      <ul class="files">
-                        <li *ngFor="let file of getFilesToUpload(); let i = index"
-                            [value]="file.name">
+                        <mat-card *ngFor="let file of getFilesToUpload(); let i = index"
+                            [value]="file.name" style="padding-bottom: 1em">
                           {{file.name}}
-                          <span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>
-                        </li>
-                      </ul>
+                          <button mat-button (click)="removeFileFromList(i)" class="close" aria-label="Remove">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                         <!-- <span (click)="removeFileFromList(i)" class="" data-toggle="modal">&times;</span>-->
+                        </mat-card>
                     </div>
 
                   </div>
