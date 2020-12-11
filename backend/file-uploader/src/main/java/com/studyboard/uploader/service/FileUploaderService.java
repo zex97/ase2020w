@@ -19,12 +19,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /** Service used to manage user files. Performs file saving, loading, and deletion */
 @Service
@@ -62,7 +62,8 @@ public class FileUploaderService implements FileUploader {
 
     // create folder path for each individual user
     User user = space.getUser();
-    Path completeUserPath = rootLocation.resolve(Paths.get(user.getUsername()));
+    Path completeUserPath =
+        rootLocation.resolve(Paths.get(user.getUsername())).normalize().toAbsolutePath();
 
     // check if folder already exists
     if (!Files.exists(completeUserPath)) {
@@ -114,7 +115,9 @@ public class FileUploaderService implements FileUploader {
       document = new Document();
       document.setFilePath(path.toAbsolutePath().toString());
       // use name without the file extension
-      document.setName(path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".")));
+      document.setName(path.getFileName().toString());
+      // extension is lost then
+      // .substring(0, path.getFileName().toString().lastIndexOf(".")));
       document.setSpace(space);
       // TODO: check if transcription is necessary
       document.setNeedsTranscription(false);
@@ -143,7 +146,7 @@ public class FileUploaderService implements FileUploader {
 
   @Override
   public Path load(String filename, String userName) {
-    return rootLocation.resolve(userName).resolve(filename);
+    return rootLocation.resolve(userName).resolve(filename).normalize().toAbsolutePath();
   }
 
   @Override
@@ -165,28 +168,57 @@ public class FileUploaderService implements FileUploader {
   }
 
   @Override
-  public void deleteUserFile(String fileName, Space space) {
+  public void deleteUserFile(String fileName, long spaceId) {
+    Space space = spaceRepository.findSpaceById(spaceId);
     Path filePath = load(fileName, space.getUser().getUsername());
 
-    try {
-      Files.delete(filePath);
-    } catch (NoSuchFileException e) {
-      throw new StorageFileNotFoundException("File(" + fileName + ") not in the directory");
-    } catch (IOException e) {
-      throw new FileStorageException("Failed to delete file(" + fileName + ")");
+    // if some other space also needs this document skip deletion of the file
+    if (checkAllOtherSpaces(space, fileName)) {
+      System.out.println("File(" + fileName + ") not deleted because it is used by at least one other space.");
+      return;
     }
 
-    /*Document document =
-        documentRepository.findByFilePath(filePath.toAbsolutePath().toString()).orElse(null);
-    if (document != null) {
-      documentRepository.delete(document);
-    } else {
-      throw new StorageFileNotFoundException("File(" + fileName + ") could not be found");
-    }*/
+    List<Document> list = space.getDocuments();
+    try {
+      // see if document is deleted, if not
+      // skip deletion of file to avoid inconsistency
+      list.stream().filter(document1 -> !document1.getFilePath().equals(fileName)).findAny().get();
+
+      try {
+        System.out.println("Deleting the file... " + filePath.toAbsolutePath().toString());
+        Files.delete(filePath);
+        System.out.println("Success, I guess...");
+      } catch (NoSuchFileException e) {
+        throw new StorageFileNotFoundException("File(" + fileName + ") not in the directory");
+      } catch (IOException e) {
+        throw new FileStorageException("Failed to delete file(" + fileName + ")");
+      }
+
+    } catch (NoSuchElementException e) {
+      throw new FileStorageException(
+          "Trying to delete a file(" + fileName + ") whose document still exists");
+    }
   }
 
   @Override
   public void deleteUserFolder(String userName) {
     FileSystemUtils.deleteRecursively(rootLocation.resolve(userName).toFile());
+  }
+
+  /**
+   * Iterates through all other user spaces to see if they use this document as well.
+   *
+   * @return true if any other space has a document based on this file
+   */
+  private boolean checkAllOtherSpaces(Space space, String fileName) {
+    for (Space help : space.getUser().getSpaces()) {
+      if (help.getId() != space.getId())
+        for (Document document : help.getDocuments()) {
+          if (document.getName().equals(fileName)) {
+            return true;
+          }
+        }
+    }
+    return false;
   }
 }

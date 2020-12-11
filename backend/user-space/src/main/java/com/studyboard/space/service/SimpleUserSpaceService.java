@@ -45,7 +45,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     public List<Document> geAllDocumentsFromSpace(long spaceId) {
         Space space = findSpaceById(spaceId);
         for (Document d : space.getDocuments()) {
-      System.out.println(">>>" + d.getFilePath());
+      System.out.println("Filepath: " + d.getFilePath());
         }
         return space.getDocuments();
     }

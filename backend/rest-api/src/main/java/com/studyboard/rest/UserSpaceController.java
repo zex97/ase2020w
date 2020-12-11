@@ -65,7 +65,6 @@ public class UserSpaceController {
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
     public List<Document> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-    System.out.println(username + " " + spaceId);
         return service.geAllDocumentsFromSpace(spaceId);
     }
 
