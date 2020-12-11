@@ -26,6 +26,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         MatCardModule,
         MatToolbarModule,
         MatSidenavModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatExpansionModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

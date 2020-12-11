@@ -125,20 +125,16 @@
         </div>
         <div class="row">
         <div class="col-xl-3 col-4 p-2" *ngFor="let flashcard of getFlashcards()">
-          <mat-card class="flashcard-question">
-           <mat-card-content>
-             <h4>Q: {{flashcard.question}}</h4>
-           </mat-card-content>
-         </mat-card>
-          <mat-card [hidden]="!this.showAnswer || flashcard.id!=this.showFlashcardId" class="flashcard-answer">
-            <mat-card-content>
+          <mat-accordion>
+          <mat-expansion-panel class="flashcard" style="justify-content:center" (opened)="this.showAnswer = true" (closed)="this.showAnswer = false">
+            <mat-expansion-panel-header>
+              <h4> Q: {{flashcard.question}}</h4>
+            </mat-expansion-panel-header>
               <h4>A: {{flashcard.answer}}</h4>
-            </mat-card-content>
-          </mat-card>
+          </mat-expansion-panel>
+          </mat-accordion>
           <div class="flex-container-space-between">
             <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".edit-flashcard-modal" (click)="flashcardClicked(flashcard)">Edit</button>
-            <button mat-button [hidden]="this.showAnswer" class="btn btn-sm" (click)="this.showAnswer=true; flashcardClicked(flashcard)">Show answer</button>
-            <button mat-button [hidden]="!this.showAnswer || flashcard.id!=this.showFlashcardId" class="btn btn-sm" (click)="this.showAnswer=false;">Hide answer</button>
           </div>
         </div>
         </div>
