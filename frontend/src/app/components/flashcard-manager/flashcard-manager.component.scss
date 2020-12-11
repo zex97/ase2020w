@@ -1,23 +1,14 @@
-.my-title {
-  text-align: center; 
-  color: #2b7a78 
+.page-title {
+  font-size: 3em;
+  font-weight: lighter;
 }
 
 .txt-clr-dark {
-  color: #2b7a78; 
-}
-
-.button-light {
-  background-color: #def2f1;
+  color: #2b7a78;
 }
 
 .btn-middle {
   background-color: #3aafa9;
-  color: #ffffff;
-}
-
-.button-dark {
-  background-color: #2b7a78; 
   color: #ffffff;
 }
 
@@ -45,13 +36,13 @@
 }
 
 .flashcard-question {
-  background-color: #3aafa9; 
+  background-color: #3aafa9;
   color: #ffffff;
   text-align:center;
 }
 
 .flashcard-answer {
-  background-color: #2b7a78; 
+  background-color: #2b7a78;
   color: #ffffff;
   text-align:center;
 }
