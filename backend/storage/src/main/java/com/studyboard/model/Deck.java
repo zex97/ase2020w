@@ -32,6 +32,26 @@ public class Deck {
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flashcard> flashcards;
 
+    public Deck() {
+    }
+
+    public Deck(Deck deck) {
+        this.id = deck.getId();
+        this.name = deck.getName();
+        this.size = deck.getSize();
+        this.creationDate = deck.getCreationDate();
+        this.lastTimeUsed = deck.getLastTimeUsed();
+        this.user = deck.getUser();
+    }
+
+    public Deck(String name, Integer size, LocalDate creationDate, LocalDateTime lastTimeUsed, User user) {
+        this.name = name;
+        this.size = size;
+        this.creationDate = creationDate;
+        this.lastTimeUsed = lastTimeUsed;
+        this.user = user;
+    }
+
     public List<Flashcard> getFlashcards() {
         if (flashcards == null) {
             flashcards = new ArrayList<>();
