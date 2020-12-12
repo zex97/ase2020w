@@ -55,13 +55,13 @@ public interface FlashcardService {
      * @param size   - amount of flashcards to revise
      * @return chosen number of flashcards from a specified deck
      */
-    public List<Flashcard> getFlashcardsForRevision(long deckId, int size);
+    List<Flashcard> getFlashcardsForRevision(long deckId, int size);
 
 
     /**
      * Find a single flashcard by id
      *
-     * @param deckId of the deck in which flashcard is
+     * @param deckId      of the deck in which flashcard is
      * @param flashcardId of the flashcard
      * @return the flashcard with the corresponding id
      */
@@ -70,7 +70,7 @@ public interface FlashcardService {
     /**
      * Create a single flashcard
      *
-     * @param deckId of the deck in which flashcard will be
+     * @param deckId    of the deck in which flashcard will be
      * @param flashcard entity with all the necessary information
      */
     void createFlashcard(long deckId, Flashcard flashcard);
@@ -85,7 +85,7 @@ public interface FlashcardService {
     /**
      * Delete a single flashcard
      *
-     * @param deckId of the deck in which flashcard is
+     * @param deckId      of the deck in which flashcard is
      * @param flashcardId of the flashcard that should be deleted
      */
     void deleteFlashcard(long deckId, long flashcardId);
