@@ -5,6 +5,7 @@ import com.studyboard.flashcard.exception.DeckDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.User;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -27,7 +28,7 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
     private static final User TEST_USER = new User("testUsername", "testPassword", "user@email.com", 2, "USER", true);
     private static Deck TEST_DECK;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() throws Exception {
         User user = new User(TEST_USER);
         String requestJson = convertObjectToStringForJson(user);
