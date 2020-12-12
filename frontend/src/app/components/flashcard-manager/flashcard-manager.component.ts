@@ -19,6 +19,7 @@ export class FlashcardManagerComponent implements OnInit {
   deckEditForm: FormGroup;
   flashcardForm: FormGroup;
   flashcardEditForm: FormGroup;
+  revisionSizeForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   viewAll: boolean = true;
@@ -27,8 +28,12 @@ export class FlashcardManagerComponent implements OnInit {
   selectedDeckId: number;
   selectedFlashcard: Flashcard;
   showFlashcardId: number;
+  chooseSize: boolean = true
+  revisionCounter: number = 0;
+  currentlyRevisedCard: Flashcard;
   private decks: Deck[];
   private flashcards: Flashcard[];
+  revisionFlashcards: Flashcard[];
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService, private snackBar: MatSnackBar) {
@@ -46,6 +51,9 @@ export class FlashcardManagerComponent implements OnInit {
          question: [''],
          answer: ['']
    })
+   this.revisionSizeForm = this.formBuilder.group({
+            revisionSize: [0]
+      })
   }
 
   ngOnInit(): void {
@@ -127,6 +135,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardService.getFlashcards(deck.id).subscribe(
         (flashcards : Flashcard[]) => {
                      this.flashcards = flashcards;
+                     this.chooseSize = true;
                      },
                      error => {
                            this.defaultErrorHandling(error);
@@ -184,6 +193,32 @@ export class FlashcardManagerComponent implements OnInit {
                          );
               });
     }
+
+    revise() {
+      let size = this.revisionSizeForm.controls.revisionSize.value;
+      if(size < 0 || size > this.selectedDeck.size) {
+         this.openSnackbar('Number of chosen cards not corresponding to the size of the deck', 'warning-snackbar');
+      } else {
+            this.chooseSize = false;
+            this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
+                (flashcards : Flashcard[]) => {
+                             this.revisionFlashcards = flashcards;
+                             this.getRevisionFlashcard();
+                             },
+                             error => {
+                                   this.defaultErrorHandling(error);
+                             }
+                         );
+      }
+    }
+
+   getRevisionFlashcard() {
+     this.showAnswer = false;
+     this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
+     if(this.revisionCounter < this.revisionFlashcards.length) {
+        this.revisionCounter=this.revisionCounter +1;
+     }
+   }
 
   deckClicked(select : number) {
     console.log(select);
