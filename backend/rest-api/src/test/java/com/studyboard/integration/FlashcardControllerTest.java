@@ -4,11 +4,9 @@ import com.studyboard.dto.DeckDTO;
 import com.studyboard.flashcard.exception.DeckDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.http.MediaType;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -49,6 +47,13 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
         User[] responseArray = mapper.readValue(responseString, User[].class);
         TEST_DECK = new Deck("testName", 0, LocalDate.of(2020, 12, 10), LocalDateTime.of(2020, 12, 10, 23, 55, 55), responseArray[0]);
     }
+
+    @AfterAll
+    void tearDown() {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "deck");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "sb_user", "user_roles");
+    }
+
 
     @Test
     public void findDeckByIdWhichDoesNotExistThrowsException() throws Exception {
