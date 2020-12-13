@@ -49,25 +49,26 @@
   <div class="col">
     <div *ngFor="let space of getSpaces()">
 
-      <div class="card" (click)="loadSpaceDetails(space.id); setCurrentSpace(space)">
+      <div class="card" (click)="loadSpaceDetails(space.id); setSelectSpace(space)"  >
 
         <div class="card-body">
           <div class="card-title">
             <h5 class="space-name">Name: {{space.name}}</h5>
-            <span class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
-            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
+            <span (click)="setCurrentSpace(space)" class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
+            <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
               src="../../../assets/edit.png" width="15px;"></span>
-            <span class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
+            <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
               src="../../../assets/upload-logo.png" width="25px;"></span>
 
             <!-- file upload modal -->
-            <div *ngIf="currentSpace" data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal" tabindex="-1"
+            <div *ngIf="currentSpace" data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal"
+                 tabindex="-1"
                  role="dialog" aria-label="Upload Files"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">File Upload</h5>
+                    <h5 class="modal-title">File Upload {{getCurrentSpace().name}}</h5>
                   </div>
 
                   <div class="modal-body">
@@ -78,19 +79,20 @@
                       </div>
                       <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
                       <input [value]="filesToUploadNames" class="hide-text" type="file" id="files" value="name"
-                             (change)="handleFileInput($event.target.files)" accept=".pdf,.mp3,.mp4,.jpeg,.png" multiple>
+                             (change)="handleFileInput($event.target.files)" accept=".pdf,.mp3,.mp4,.jpeg,.png"
+                             multiple>
                       <!--<label for="files">Choose files </label>-->
                     </div>
                     <div *ngIf="filesToUpload.length>0">
                       <label for="files">Names of files to upload: </label>
-                        <mat-card *ngFor="let file of getFilesToUpload(); let i = index"
-                            [value]="file.name" style="padding-bottom: 1em">
-                          {{file.name}}
-                          <button mat-button (click)="removeFileFromList(i)" class="close" aria-label="Remove">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                         <!-- <span (click)="removeFileFromList(i)" class="" data-toggle="modal">&times;</span>-->
-                        </mat-card>
+                      <mat-card *ngFor="let file of getFilesToUpload(); let i = index"
+                                style="padding-bottom: 1em">
+                        {{file.name}}
+                        <button mat-button (click)="removeFileFromList(i)" data-toggle="modal" aria-label="Remove">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                         <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
+                      </mat-card>
                     </div>
 
                   </div>
@@ -108,7 +110,8 @@
             </div>
 
             <!--Edit space modal-->
-            <div *ngIf="currentSpace" class="modal fade edit-space-modal" tabindex="-1" role="dialog" aria-labelledby="Edit space modal"
+            <div *ngIf="currentSpace" class="modal fade edit-space-modal" tabindex="-1" role="dialog"
+                 aria-labelledby="Edit space modal"
                  aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -137,7 +140,8 @@
             </div>
 
             <!--Delete space modal-->
-            <div *ngIf="currentSpace" class="modal fade delete-space-modal" tabindex="-1" role="dialog" aria-labelledby="Delete space modal"
+            <div *ngIf="currentSpace" class="modal fade delete-space-modal" tabindex="-1" role="dialog"
+                 aria-labelledby="Delete space modal"
                  aria-hidden="true" [attr.space]="space">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -169,6 +173,6 @@
 
   <div class="col">
     <!--Document component-->
-    <app-document *ngIf="currentSpace" [space]=currentSpace></app-document>
+    <app-document *ngIf="selectSpace" [space]=selectSpace></app-document>
   </div>
 </div>

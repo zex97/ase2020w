@@ -1,7 +1,8 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {SpaceService} from '../../services/space.service';
 import {Document} from '../../dtos/document';
 import {Space} from '../../dtos/space';
+import {FileUploadService} from '../../services/file-upload.service';
 
 @Component({
   selector: 'app-document',
@@ -16,7 +17,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   success: boolean = false;
   successMessage: string = '';
 
-  constructor(private spaceService: SpaceService) {
+  constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService) {
   }
 
   @Input() space: Space;
@@ -57,10 +58,20 @@ export class DocumentComponent implements OnInit, OnChanges {
         // update frontend display if the delete is successful, no need for another GET
         this.documentsOfSpace = this.documentsOfSpace.filter(document => document.id !== doc.id);
         this.defaultSuccessHandling('You successfully deleted document ' + doc.name);
+
+        // if document is deleted, then delete the file related to it as well
+        this.fileUploadService.deleteFile(this.space, doc.name).subscribe(
+          () => {
+            console.log('File has been deleted');
+          },
+          error => {
+            this.defaultErrorHandling(error);
+          });
       },
       error => {
         this.defaultErrorHandling(error);
       });
+
   }
 
   private defaultSuccessHandling(message: string) {

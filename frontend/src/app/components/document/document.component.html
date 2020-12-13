@@ -6,6 +6,7 @@
   </button>
 </div>
 <mat-card *ngFor="let doc of getAllDocuments()">
-    {{doc.name}}
-  <button mat-button style="float: right" class="btn btn-outline-secondary" (click)="deleteDocument(doc)">Delete</button>
+  {{doc.name}}
+  <button mat-button style="float: right" class="btn btn-outline-secondary" (click)="deleteDocument(doc)">Delete
+  </button>
 </mat-card>

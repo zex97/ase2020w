@@ -42,5 +42,9 @@ export class FileUploadService {
       );
   }
 
+  deleteFile(space: Space, fileName: string) {
+    console.log('Deleting file ' + fileName + ' from space' + space.name);
+    return this.httpClient.delete(this.userBaseUri + '/delete-file/' + space.id + '/' + fileName);
+  }
 
 }

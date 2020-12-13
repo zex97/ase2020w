@@ -28,6 +28,7 @@ export class DocumentSpaceComponent implements OnInit {
   spaceId: number = 1;
   private spaces: Space[];
   currentSpace: Space;
+  selectSpace: Space;
 
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
@@ -78,10 +79,15 @@ export class DocumentSpaceComponent implements OnInit {
    * */
   setCurrentSpace(space: Space) {
     this.currentSpace = space;
+    console.log(this.currentSpace);
   }
 
   getCurrentSpace() {
     return this.currentSpace;
+  }
+
+  setSelectSpace(space: Space) {
+    this.selectSpace = space;
   }
 
   /**
@@ -89,7 +95,7 @@ export class DocumentSpaceComponent implements OnInit {
    * of them exceed the upload limit.
    * */
   handleFileInput(files: File[]) {
-    console.log('>>>>>>>>>>>>>>>>' + this.spaceId);
+    console.log('Handling files for space: ' + this.spaceId);
     this.filesToUpload = Array.from(files);
     this.vanishModuleErrorMessage();
     for (let i = 0; i < this.filesToUpload.length; i++) {
@@ -143,7 +149,7 @@ export class DocumentSpaceComponent implements OnInit {
    * */
   uploadFiles(space: Space) {
     const spaceId = space.id;
-    console.log('>>>>>>>>>>>>>>>' + spaceId);
+    console.log('Uploading file for space: ' + spaceId);
     let successUploadCount: number = 0;
     // tslint:disable-next-line:forin
     for (let i = 0; i < this.filesToUpload.length; i++) {
@@ -225,7 +231,7 @@ export class DocumentSpaceComponent implements OnInit {
    */
   saveEdits(space: Space) {
     // send edits to backend
-    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
+    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(() => {
       space.name = this.nameEditForm.controls.name.value;
       this.spaceService.editSpace(space).subscribe(
         () => {
