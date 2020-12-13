@@ -10,18 +10,21 @@ import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
 import com.studyboard.repository.FlashcardRepository;
 import com.studyboard.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import javax.validation.ConstraintViolationException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Service
 public class SimpleFlashcardService implements FlashcardService {
+
+    private final Logger logger = LoggerFactory.getLogger(FlashcardService.class);
 
     @Autowired
     private DeckRepository deckRepository;
@@ -32,17 +35,25 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public List<Deck> getAllDecks(String username) {
+        logger.info("Getting all decks belonging to the user with username " + username);
         return deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(username);
     }
 
     @Override
     public void createDeck(Deck deck) {
         deckRepository.save(deck);
+        logger.info("Created new deck with name "
+                + deck.getName() +
+                " for user with username "
+                + deck.getUser().getUsername());
     }
 
     @Override
     public Deck updateDeckName(Deck deck) {
         Deck storedDeck = findDeckById(deck.getId());
+        logger.info("Changed the deck name: from "
+                + storedDeck.getName() + " to: "
+                + deck.getName());
         storedDeck.setName(deck.getName());
         return deckRepository.save(storedDeck);
     }
@@ -68,6 +79,7 @@ public class SimpleFlashcardService implements FlashcardService {
         for (int i = 0; i < size; i++) {
             random.add(copy.remove(rand.nextInt(copy.size())));
         }
+        logger.info("Getting " + size + " flashcards of the deck named " + deck.getName() + " for revision");
         return random;
     }
 
@@ -122,6 +134,7 @@ public class SimpleFlashcardService implements FlashcardService {
     public Deck findDeckById(Long deckId) {
         Deck deck = deckRepository.findDeckById(deckId);
         if (deck == null) {
+            logger.warn("Deck does not exist");
             throw new DeckDoesNotExist();
         }
         return deck;
