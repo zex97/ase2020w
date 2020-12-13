@@ -31,6 +31,7 @@ export class FlashcardManagerComponent implements OnInit {
   chooseSize: boolean = true
   revisionCounter: number = 0;
   currentlyRevisedCard: Flashcard;
+  sizeError: boolean = false;
   private decks: Deck[];
   private flashcards: Flashcard[];
   revisionFlashcards: Flashcard[];
@@ -194,12 +195,16 @@ export class FlashcardManagerComponent implements OnInit {
               });
     }
 
+
     revise() {
+      this.sizeError = false;
       let size = this.revisionSizeForm.controls.revisionSize.value;
       if(size < 0 || size > this.selectedDeck.size) {
-         this.openSnackbar('Number of chosen cards not corresponding to the size of the deck', 'warning-snackbar');
+          this.sizeError = true;
+         //this.openSnackbar('Number of chosen cards not corresponding to the size of the deck', 'warning-snackbar');
       } else {
             this.chooseSize = false;
+            this.revisionCounter = 0;
             this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
                 (flashcards : Flashcard[]) => {
                              this.revisionFlashcards = flashcards;
@@ -210,6 +215,7 @@ export class FlashcardManagerComponent implements OnInit {
                              }
                          );
       }
+
     }
 
    getRevisionFlashcard() {

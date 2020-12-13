@@ -118,7 +118,7 @@
         <div id="deck-buttons">
           <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".edit-deck-modal">Edit
           </button>
-          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck">Revise
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck" (click)="this.sizeError=false;">Revise
           </button>
         </div>
       </div>
@@ -190,23 +190,25 @@
             <form action="#!" *ngIf="this.chooseSize; else reviseBlock" class="text-center border border-light p-5"
                   [formGroup]="revisionSizeForm">
               <h4>Choose number of flashcards for revision:</h4>
+              <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not corresponding to the size of the deck!</h5>
               <input type="number" formControlName="revisionSize" class="form-control mb-4" min="0"
                      max="{{this.selectedDeck.size}}">
 
             </form>
 
             <ng-template #reviseBlock>
-              <mat-accordion *ngIf="this.currentlyRevisedCard">
-                <mat-expansion-panel class="flashcard" style="justify-content:center" [expaneded]="this.showAnswer">
-                  <mat-expansion-panel-header>
+              <div *ngIf="this.currentlyRevisedCard">
+                <mat-card class="flashcard">
                     <h4> Q: {{this.currentlyRevisedCard.question}}</h4>
-                  </mat-expansion-panel-header>
+                </mat-card>
+                <mat-card class="flashcard-answer" *ngIf="this.showAnswer">
                   <h4>A: {{this.currentlyRevisedCard.answer}}</h4>
-                </mat-expansion-panel>
+                </mat-card>
+                <button mat-button (click)="this.showAnswer=true" class="btn button-light">Show answer</button>
                 <button mat-button *ngIf="this.revisionCounter<this.revisionFlashcards.length" class="btn button-light"
-                        (click)="getRevisionFlashcard()">Next
+                        (click)="getRevisionFlashcard();">Next
                 </button>
-              </mat-accordion>
+              </div>
             </ng-template>
           </div>
           <div class="modal-footer">
