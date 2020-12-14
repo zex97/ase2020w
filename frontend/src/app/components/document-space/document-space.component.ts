@@ -164,16 +164,18 @@ export class DocumentSpaceComponent implements OnInit {
             this.error = true;
             this.errorMessage += file.name + ' failed to be uploaded; ';
           }
-          // create success message if all files successfully uploaded
-          if (this.filesToUpload.length > 0 && this.filesToUpload.length === successUploadCount) {
-            this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
-            this.success = true;
-          } else {
-            this.errorMessage = '';
-            this.error = true;
-          }
+        }
+        // create success message if all files successfully uploaded
+        if (this.filesToUpload.length > 0 && this.filesToUpload.length === successUploadCount) {
+          this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
+          this.success = true;
         }
       });
+    }
+    // if success is not true then an error has happened, notify the user
+    if (this.success) {
+      this.errorMessage = 'File Upload failed';
+      this.error = true;
     }
   }
 

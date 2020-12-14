@@ -57,7 +57,7 @@
             <span (click)="setCurrentSpace(space)" class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
             <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
               src="../../../assets/edit.png" width="15px;"></span>
-            <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
+            <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
               src="../../../assets/upload-logo.png" width="25px;"></span>
 
             <!-- file upload modal -->

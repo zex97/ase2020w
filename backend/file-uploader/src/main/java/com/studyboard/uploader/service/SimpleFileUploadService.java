@@ -198,7 +198,7 @@ public class SimpleFileUploadService implements FileUploadService {
 
     // see if document is deleted, if not
     // skip deletion of file to avoid inconsistency
-    if (list.stream().noneMatch(document -> document.getFilePath().equals(fileName))) {
+    if (list.stream().anyMatch(document -> document.getFilePath().equals(fileName))) {
       throw new FileStorageException(
           "Trying to delete a file '" + fileName + "' whose document still exists");
     }
