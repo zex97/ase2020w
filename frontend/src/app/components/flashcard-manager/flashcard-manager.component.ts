@@ -2,8 +2,8 @@ import {Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
-import {Deck} from "../../dtos/deck"
-import {Flashcard} from "../../dtos/flashcard"
+import {Deck} from '../../dtos/deck';
+import {Flashcard} from '../../dtos/flashcard';
 import {User} from '../../dtos/user';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
@@ -225,6 +225,35 @@ export class FlashcardManagerComponent implements OnInit {
         this.revisionCounter=this.revisionCounter +1;
      }
    }
+
+
+  /**
+   * Sends a request to delete a specific deck.
+   */
+  deleteDeck(id: number) {
+    this.flashcardService.deleteDeck(id).subscribe(
+      () => {
+        this.openSnackbar('You successfully deleted the deck!', 'success-snackbar');
+        this.loadAllDecks();
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
+  }
+
+  /**
+   * Sends a request to delete a specific flashcard.
+   */
+  deleteFlashcard(flashcardId: number, deckId: number) {
+    this.flashcardService.deleteFlashcard(flashcardId, deckId).subscribe(
+      () => {
+        this.openSnackbar('You successfully deleted the flashcard!', 'success-snackbar');
+        this.loadFlashcards(this.selectedDeck);
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
+  }
 
   deckClicked(select : number) {
     console.log(select);
