@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -104,6 +103,15 @@ public class SimpleFileUploadService implements FileUploadService {
     return fileName;
   }
 
+  /**
+   * Checks if the file type requires transcription.
+   * */
+  private boolean isTranscriptionNeeded(String fileName) {
+    List<String> transcriptionFormats = Arrays.asList(".mp3", ".mp4");
+    String extension = fileName.substring(fileName.lastIndexOf('.'));
+    return transcriptionFormats.contains(extension);
+  }
+
   private void storeRefToNewDocument(Space space, Path path) {
 
     Document document = null;
@@ -122,9 +130,10 @@ public class SimpleFileUploadService implements FileUploadService {
       // extension is lost then
       // .substring(0, path.getFileName().toString().lastIndexOf(".")));
       document.setSpace(space);
-      // TODO: check if transcription is necessary
-      document.setNeedsTranscription(false);
+      document.setNeedsTranscription(isTranscriptionNeeded(path.getFileName().toString()));
       document.setTranscription(null);
+
+      // TODO: add transcriber trigger
 
       List<Document> docList = space.getDocuments();
       docList.add(document);
