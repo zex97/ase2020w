@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 
-public interface FileUploader {
+public interface FileUploadService {
 
   void init();
 

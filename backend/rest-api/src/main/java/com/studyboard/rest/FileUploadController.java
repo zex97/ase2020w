@@ -3,7 +3,7 @@ package com.studyboard.rest;
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.StorageFileNotFoundException;
-import com.studyboard.uploader.service.FileUploaderService;
+import com.studyboard.uploader.service.SimpleFileUploadService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 @EnableConfigurationProperties(FileStorageProperties.class)
 public class FileUploadController {
 
-  @Autowired FileUploaderService fileUploaderService;
+  @Autowired
+  SimpleFileUploadService fileUploaderService;
 
   /** @param file accepts files up to 20MB (can be changed in application.properties) */
   @RequestMapping(
