@@ -6,6 +6,7 @@ import com.studyboard.space.transcriber.exception.FfmpegIllegalFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,12 +14,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 /**
- * This class interfaces the command line tool FFMPEG [https://ffmpeg.org/]
+ * This class implements File processor
+ * using the command line tool FFMPEG [https://ffmpeg.org/]
  *
  */
 @Service
-public class FfmpegService {
-    private final Logger logger = LoggerFactory.getLogger(FfmpegService.class);
+@Profile("!local")
+public class CliFilePreprocessor implements FilePreprocessor {
+    private final Logger logger = LoggerFactory.getLogger(CliFilePreprocessor.class);
 
     private static final int CHUNK_LENGTH = 30;
 
@@ -31,7 +34,7 @@ public class FfmpegService {
      * @param config TranscriberConfig including the path to the FFMPEG executable
      */
     @Autowired
-    public FfmpegService(TranscriberConfig config) {
+    public CliFilePreprocessor(TranscriberConfig config) {
         this.ffmpegLocation = config.getFfmpegPath();
         this.videoCmd = ffmpegLocation + " -i %s -f segment -segment_time %s -ac 1 -vn -c:a pcm_s16le %s%%03d.wav";
         this.audioCmd = ffmpegLocation + " -i %s -f segment -segment_time %s -ac 1 %s%%03d.wav";
@@ -44,6 +47,7 @@ public class FfmpegService {
      * @return new directory with chunks
      * Attention! creates an additional folder in system path.
      * */
+    @Override
     public String cutIntoChunks(String sourceFilePath) {
         logger.info("Request to FFMPEG: processing");
         String targetDirectory = "";

@@ -15,8 +15,9 @@ to start the database container or
 ```bash
 docker-compose -f local/docker-compose.yml up
 ```
-to start both, database and application, containers-
+to start both, database and application, containers.
 4. (Optional) Run StudyboardApplication if you have not deployed the application container in the step before.
+Use `-Dspring.profiles.active=local` JVM system parameter
 
 If the postgres container won't run with docker (Docker displays error: Database is uninitialized and superuser password is not specified) you can add the line
 

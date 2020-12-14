@@ -17,7 +17,7 @@ public class SimpleTranscriptionService implements TranscriptionService {
     private final Logger logger = LoggerFactory.getLogger(SpeechRecognitionService.class);
 
     @Autowired
-    private FfmpegService ffmpegService;
+    private FilePreprocessor filePreprocessor;
     @Autowired
     private SpeechRecognitionService speechRecognitionService;
 
@@ -29,7 +29,7 @@ public class SimpleTranscriptionService implements TranscriptionService {
     @Override
     public void transcribe(String filePath) {
         try{
-            String outputDirectory = ffmpegService.cutIntoChunks(filePath);
+            String outputDirectory = filePreprocessor.cutIntoChunks(filePath);
             String transcription = speechRecognitionService.transcribeFilesInDirectory(outputDirectory);
             System.out.println(transcription);
 
