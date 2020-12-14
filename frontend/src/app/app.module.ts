@@ -23,6 +23,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -49,7 +53,11 @@ import {MatCardModule} from '@angular/material/card';
         MatIconModule,
         MatSnackBarModule,
         MatSelectModule,
-        MatCardModule
+        MatCardModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatButtonToggleModule,
+        MatExpansionModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

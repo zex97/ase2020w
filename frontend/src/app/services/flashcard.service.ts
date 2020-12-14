@@ -78,6 +78,11 @@ export class FlashcardService {
         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/flashcard' + flashcard.id, flashcard);
   }
 
+  revise(size: number, deckId: number): Observable<Flashcard[]> {
+        console.log('Getting flashcards for revision.');
+        return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/flashcards/' + size);
+  }
+
 
   getUsers(): Observable<User[]> {
       console.log('Searching for users.');

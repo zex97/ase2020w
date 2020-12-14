@@ -5,7 +5,7 @@ import {UserService} from '../../services/user.service';
 import {Deck} from "../../dtos/deck"
 import {Flashcard} from "../../dtos/flashcard"
 import {User} from '../../dtos/user';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-flashcard-manager',
@@ -19,6 +19,7 @@ export class FlashcardManagerComponent implements OnInit {
   deckEditForm: FormGroup;
   flashcardForm: FormGroup;
   flashcardEditForm: FormGroup;
+  revisionSizeForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   viewAll: boolean = true;
@@ -27,11 +28,16 @@ export class FlashcardManagerComponent implements OnInit {
   selectedDeckId: number;
   selectedFlashcard: Flashcard;
   showFlashcardId: number;
+  chooseSize: boolean = true
+  revisionCounter: number = 0;
+  currentlyRevisedCard: Flashcard;
+  sizeError: boolean = false;
   private decks: Deck[];
   private flashcards: Flashcard[];
+  revisionFlashcards: Flashcard[];
 
 
-  constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService) {
+  constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService, private snackBar: MatSnackBar) {
     this.deckForm = this.formBuilder.group({
       title: ['']
     })
@@ -46,6 +52,9 @@ export class FlashcardManagerComponent implements OnInit {
          question: [''],
          answer: ['']
    })
+   this.revisionSizeForm = this.formBuilder.group({
+            revisionSize: [0]
+      })
   }
 
   ngOnInit(): void {
@@ -64,6 +73,7 @@ export class FlashcardManagerComponent implements OnInit {
                            this.defaultErrorHandling(error);
                      }
                  );
+     this.deckForm.reset();
   }
 
   /**
@@ -84,10 +94,13 @@ export class FlashcardManagerComponent implements OnInit {
        const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
            this.flashcardService.createDeck(deck).subscribe(
                 () => {
+                       this.openSnackbar('You successfully created a deck with the title ' + deck.name + `!`, 'success-snackbar');
                        this.loadAllDecks();
                        },
                        error => {
-                         this.defaultErrorHandling(error);
+                         this.error = true;
+                         this.errorMessage = 'Could not create a deck!';
+                         this.openSnackbar(this.errorMessage, 'warning-snackbar');
                        }
                      );
     });
@@ -100,11 +113,14 @@ export class FlashcardManagerComponent implements OnInit {
              deck.name = this.deckEditForm.controls.title.value;
                  this.flashcardService.editDeck(deck).subscribe(
                       () => {
+                             this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
                              this.loadAllDecks();
                              location.reload();
                              },
                              error => {
-                               this.defaultErrorHandling(error);
+                               this.error = true;
+                               this.errorMessage = 'Could not edit the deck!';
+                               this.openSnackbar(this.errorMessage, 'warning-snackbar');
                              }
                            );
        });
@@ -120,11 +136,14 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardService.getFlashcards(deck.id).subscribe(
         (flashcards : Flashcard[]) => {
                      this.flashcards = flashcards;
+                     this.chooseSize = true;
                      },
                      error => {
                            this.defaultErrorHandling(error);
                      }
                  );
+     this.deckEditForm.reset();
+     this.flashcardForm.reset();
   }
 
   getFlashcards() {
@@ -137,10 +156,14 @@ export class FlashcardManagerComponent implements OnInit {
        const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, res);
        this.flashcardService.createFlashcard(flashcard, this.selectedDeckId).subscribe(
                        () => {
+                              this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
                               this.loadFlashcards(res);
                               },
                               error => {
-                                this.defaultErrorHandling(error);
+                                this.error = true;
+                                this.errorMessage = 'Could not create a flashcard!';
+                                this.openSnackbar(this.errorMessage, 'warning-snackbar');
+
                               }
                             );
       });
@@ -156,18 +179,52 @@ export class FlashcardManagerComponent implements OnInit {
                 flashcard.question = question;
                }
                if(answer != null && answer != "") {
-                flashcard.question = answer;
+                flashcard.answer = answer;
               }
               this.flashcardService.editFlashcard(flashcard, this.selectedDeck.id).subscribe(
                     () => {
+                           this.openSnackbar('You successfully edited a flashcard!', 'success-snackbar');
                            this.loadFlashcards(this.selectedDeck);
                            },
                            error => {
-                             this.defaultErrorHandling(error);
+                             this.error = true;
+                             this.errorMessage = 'Could not edit the flashcard!';
+                             this.openSnackbar(this.errorMessage, 'warning-snackbar');
                            }
                          );
               });
     }
+
+
+    revise() {
+      this.sizeError = false;
+      let size = this.revisionSizeForm.controls.revisionSize.value;
+      if(size < 0 || size > this.selectedDeck.size) {
+          this.sizeError = true;
+         //this.openSnackbar('Number of chosen cards not corresponding to the size of the deck', 'warning-snackbar');
+      } else {
+            this.chooseSize = false;
+            this.revisionCounter = 0;
+            this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
+                (flashcards : Flashcard[]) => {
+                             this.revisionFlashcards = flashcards;
+                             this.getRevisionFlashcard();
+                             },
+                             error => {
+                                   this.defaultErrorHandling(error);
+                             }
+                         );
+      }
+
+    }
+
+   getRevisionFlashcard() {
+     this.showAnswer = false;
+     this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
+     if(this.revisionCounter < this.revisionFlashcards.length) {
+        this.revisionCounter=this.revisionCounter +1;
+     }
+   }
 
   deckClicked(select : number) {
     console.log(select);
@@ -183,6 +240,13 @@ export class FlashcardManagerComponent implements OnInit {
         question: select.question,
         answer: select.answer
      })
+   }
+
+  openSnackbar(message: string, type: string) {
+     this.snackBar.open(message, 'close', {
+       duration: 4000,
+       panelClass: [type]
+     });
    }
 
   private defaultErrorHandling(error: any) {

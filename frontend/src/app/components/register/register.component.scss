@@ -3,7 +3,8 @@ html, body {
 }
 
 #formRegisterWrapper {
-  max-width: 25em;
+  min-width: 28em;
+  max-width: 28em;
 }
 
 #registerWrapper {
@@ -34,7 +35,6 @@ html, body {
   margin-bottom: 1rem !important;
   width: 100%;
   background-color: #3AAFA9;
-  color: white;
   font-size: large;
 }
 

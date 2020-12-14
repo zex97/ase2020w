@@ -44,8 +44,24 @@ body {
 html, body {
   height: 100%;
 }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: #def2f1;
+}
 
+
+/* Page title wrapper */
+.page-title {  // aditional css properties required in component scss files
+  text-align: center;
+  color: white;
+  margin: 0px;
+  padding: 0.3em;
+}
+.page-title-wrapper{
+  background: #2b7a78;
+  height: 4em;
+}
 
 /* Snackbars */
 .warning-snackbar {
@@ -73,7 +89,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 /* Buttons*/
-.mat-icon-button:active {
+.mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus, {
   outline: none;
 }
 .mat-raised-button:focus {
@@ -81,6 +97,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .mat-button:focus {
   outline: none;
+}
+
+.mat-raised-button {
+  background-color: #2b7a78;
+  color: white;
 }
 
 
