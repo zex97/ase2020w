@@ -2,12 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {FormBuilder} from '@angular/forms';
 import {AuthService} from './auth.service';
-import {Deck} from "../dtos/deck"
-import {Flashcard} from "../dtos/flashcard"
+import {Deck} from '../dtos/deck';
+import {Flashcard} from '../dtos/flashcard';
 import {User} from '../dtos/user';
-
 
 
 @Injectable({
@@ -49,7 +47,7 @@ export class FlashcardService {
     * Change deck name in the backend
     * @param deck to make changes to
     */
-  editDeck(deck: Deck,): Observable<Deck> {
+  editDeck(deck: Deck): Observable<Deck> {
      console.log('Change the deck name to ' + deck.name);
     return this.httpClient.put<Deck>(this.flashcardBaseUri, deck);
   }
@@ -87,5 +85,24 @@ export class FlashcardService {
   getUsers(): Observable<User[]> {
       console.log('Searching for users.');
       return this.httpClient.get<User[]>(this.globals.backendUri + '/api/user');
-    }
+  }
+
+  /**
+   * Delete a deck from the backend
+   * @param deckId of the deck to be deleted
+   */
+  deleteDeck(deckId: number): Observable<Deck> {
+    console.log('Delete a deck');
+    return this.httpClient.delete<Deck>(this.flashcardBaseUri + '/' + deckId);
+  }
+
+  /**
+   * Delete a flashcard from the backend
+   * @param flashcardId of the flashcard to be deleted
+   * @param deckId of the deck in which the flashcard is
+   */
+  deleteFlashcard(flashcardId: number, deckId: number): Observable<Flashcard> {
+    console.log('Delete a flashcard');
+    return this.httpClient.delete<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/' + flashcardId);
+  }
 }

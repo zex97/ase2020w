@@ -2,8 +2,8 @@ import {Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
-import {Deck} from "../../dtos/deck"
-import {Flashcard} from "../../dtos/flashcard"
+import {Deck} from '../../dtos/deck';
+import {Flashcard} from '../../dtos/flashcard';
 import {User} from '../../dtos/user';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
@@ -28,13 +28,14 @@ export class FlashcardManagerComponent implements OnInit {
   selectedDeckId: number;
   selectedFlashcard: Flashcard;
   showFlashcardId: number;
-  chooseSize: boolean = true
+  chooseSize: boolean = true;
   revisionCounter: number = 0;
   currentlyRevisedCard: Flashcard;
   sizeError: boolean = false;
   private decks: Deck[];
   private flashcards: Flashcard[];
   revisionFlashcards: Flashcard[];
+  deleteFlash: boolean = false;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService, private snackBar: MatSnackBar) {
@@ -158,6 +159,7 @@ export class FlashcardManagerComponent implements OnInit {
                        () => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
                               this.loadFlashcards(res);
+                              this.loadAllDecks();
                               },
                               error => {
                                 this.error = true;
@@ -226,15 +228,47 @@ export class FlashcardManagerComponent implements OnInit {
      }
    }
 
+
+  /**
+   * Sends a request to delete a specific deck.
+   */
+  deleteDeck(id: number) {
+    this.flashcardService.deleteDeck(id).subscribe(
+      () => {
+        this.openSnackbar('You successfully deleted the deck!', 'success-snackbar');
+        this.loadAllDecks();
+        location.reload();
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
+  }
+
+  /**
+   * Sends a request to delete a specific flashcard.
+   */
+  deleteFlashcard(flashcardId: number, deckId: number) {
+    this.flashcardService.deleteFlashcard(flashcardId, deckId).subscribe(
+      () => {
+        this.openSnackbar('You successfully deleted the flashcard!', 'success-snackbar');
+        this.loadAllDecks();
+        this.loadFlashcards(this.selectedDeck);
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
+  }
+
   deckClicked(select : number) {
     console.log(select);
     this.selectedDeckId = select;
   }
 
-  flashcardClicked(select : Flashcard) {
+  flashcardClicked(select : Flashcard, del: boolean) {
      console.log(select);
      this.selectedFlashcard = select;
      this.showFlashcardId = select.id;
+     this.deleteFlash = del;
      console.log(this.showFlashcardId);
      this.flashcardEditForm.patchValue({
         question: select.question,
