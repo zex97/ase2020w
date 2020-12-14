@@ -32,7 +32,6 @@ public class FileUploadController {
       authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity handleFileUpload(
       @RequestParam("file") MultipartFile file, @PathVariable long space) {
-    System.out.println(file.getOriginalFilename() + " " + space);
     fileUploaderService.store(file, space);
     return ResponseEntity.ok().build();
   }
@@ -65,7 +64,6 @@ public class FileUploadController {
   public ResponseEntity deleteUserUpload(
       @PathVariable(value = "fileName") String fileName,
       @PathVariable(value = "spaceId") long spaceId) {
-    System.out.println("Filename: " + fileName + " space" + spaceId);
     fileUploaderService.deleteUserFile(fileName, spaceId);
     return ResponseEntity.ok().build();
   }
@@ -82,7 +80,7 @@ public class FileUploadController {
   }
 
   @ExceptionHandler(StorageFileNotFoundException.class)
-  public ResponseEntity<?> handleStorageException(StorageFileNotFoundException e) {
+  public ResponseEntity handleStorageException(StorageFileNotFoundException e) {
     return ResponseEntity.noContent().build();
   }
 }

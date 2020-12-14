@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /** Service used to manage user files. Performs file saving, loading, and deletion */
 @Service
@@ -33,7 +32,6 @@ public class SimpleFileUploadService implements FileUploadService {
 
   private final Logger logger = LoggerFactory.getLogger(SimpleFileUploadService.class);
   private final Path rootLocation;
-  private final UserRepository userRepository;
   private final SpaceRepository spaceRepository;
 
   @Autowired
@@ -42,7 +40,6 @@ public class SimpleFileUploadService implements FileUploadService {
       UserRepository userRepository,
       SpaceRepository spaceRepository) {
     this.rootLocation = Paths.get(fileStorageProperties.getLocation());
-    this.userRepository = userRepository;
     this.spaceRepository = spaceRepository;
   }
 
@@ -80,8 +77,14 @@ public class SimpleFileUploadService implements FileUploadService {
       throw new FileStorageException("Uploaded file (" + fileName + ") is empty!");
     }
 
-    if (StringUtils.uriDecode(file.getOriginalFilename(), StandardCharsets.UTF_8).contains("../")) {
-      throw new FileStorageException("File name contains illegal char sequence \"../\"");
+    if (file.getOriginalFilename() != null) {
+      if (StringUtils.uriDecode(file.getOriginalFilename(), StandardCharsets.UTF_8)
+          .contains("../")) {
+        throw new FileStorageException("File name contains illegal char sequence \"../\"");
+      }
+    } else {
+      logger.error("File name is null!");
+      throw new FileStorageException("File name is null!");
     }
 
     Path uploadFilePath =
@@ -103,9 +106,7 @@ public class SimpleFileUploadService implements FileUploadService {
     return fileName;
   }
 
-  /**
-   * Checks if the file type requires transcription.
-   * */
+  /** Checks if the file type requires transcription. */
   private boolean isTranscriptionNeeded(String fileName) {
     List<String> transcriptionFormats = Arrays.asList(".mp3", ".mp4");
     String extension = fileName.substring(fileName.lastIndexOf('.'));
@@ -128,7 +129,6 @@ public class SimpleFileUploadService implements FileUploadService {
       document.setName(path.getFileName().toString());
 
       // extension is lost then
-      // .substring(0, path.getFileName().toString().lastIndexOf(".")));
       document.setSpace(space);
       document.setNeedsTranscription(isTranscriptionNeeded(path.getFileName().toString()));
       document.setTranscription(null);
@@ -189,38 +189,35 @@ public class SimpleFileUploadService implements FileUploadService {
 
     // if some other space also needs this document skip deletion of the file
     if (checkAllOtherSpaces(space, fileName)) {
-      System.out.println(
+      logger.debug(
           "File '" + fileName + "' not deleted because it is used by at least one other space.");
       return;
     }
 
     List<Document> list = space.getDocuments();
-    try {
-      // see if document is deleted, if not
-      // skip deletion of file to avoid inconsistency
-      list.stream().filter(document1 -> !document1.getFilePath().equals(fileName)).findAny().get();
 
-      try {
-        Files.delete(filePath);
-        logger.info(
-            "File '"
-                + fileName
-                + "' has been successfully deleted by user("
-                + space.getUser().getUsername()
-                + ") in space("
-                + space.getName()
-                + ").");
-
-      } catch (NoSuchFileException e) {
-        logger.debug("File '" + fileName + "' not in the directory");
-        throw new StorageFileNotFoundException("File '" + fileName + "' not in the directory");
-      } catch (IOException e) {
-        throw new FileStorageException("Failed to delete file '" + fileName + "'");
-      }
-
-    } catch (NoSuchElementException e) {
+    // see if document is deleted, if not
+    // skip deletion of file to avoid inconsistency
+    if (list.stream().noneMatch(document -> document.getFilePath().equals(fileName))) {
       throw new FileStorageException(
           "Trying to delete a file '" + fileName + "' whose document still exists");
+    }
+    try {
+      Files.delete(filePath);
+      logger.info(
+          "File '"
+              + fileName
+              + "' has been successfully deleted by user("
+              + space.getUser().getUsername()
+              + ") in space("
+              + space.getName()
+              + ").");
+
+    } catch (NoSuchFileException e) {
+      logger.debug("File '" + fileName + "' not in the directory");
+      throw new StorageFileNotFoundException("File '" + fileName + "' not in the directory");
+    } catch (IOException e) {
+      throw new FileStorageException("Failed to delete file '" + fileName + "'");
     }
   }
 

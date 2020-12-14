@@ -34,7 +34,7 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    /*@Test
+    @Test
     public void repositorySavesUserCorrectly() {
         Assertions.assertEquals(0, userRepository.findAll().size());
 
@@ -115,6 +115,6 @@ public class UserRepositoryTest {
         Assertions.assertEquals(TEST_ENABLED_2, storedUser.getEnabled());
         Assertions.assertEquals(TEST_ROLE_2, storedUser.getRole());
 
-    }*/
+    }
 
 }
