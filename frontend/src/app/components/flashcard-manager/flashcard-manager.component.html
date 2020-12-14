@@ -116,11 +116,11 @@
       <div class="flex-container-space-between">
         <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
         <div id="deck-buttons">
-          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".delete-deck-modal">Delete
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck" (click)="this.sizeError=false;">Revise
           </button>
           <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".edit-deck-modal">Edit
           </button>
-          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck" (click)="this.sizeError=false;">Revise
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".delete-deck-modal">Delete
           </button>
         </div>
       </div>
@@ -144,8 +144,6 @@
             <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".edit-flashcard-modal"
                     (click)="flashcardClicked(flashcard, false)">Edit
             </button>
-          </div>
-          <div class="flex-container-space-between">
             <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".delete-flashcard-modal"
                     (click)="flashcardClicked(flashcard, true)">Delete
             </button>
