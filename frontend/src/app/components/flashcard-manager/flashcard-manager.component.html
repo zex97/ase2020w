@@ -116,9 +116,11 @@
       <div class="flex-container-space-between">
         <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
         <div id="deck-buttons">
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck" (click)="this.sizeError=false;">Revise
+          </button>
           <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".edit-deck-modal">Edit
           </button>
-          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck" (click)="this.sizeError=false;">Revise
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".delete-deck-modal">Delete
           </button>
         </div>
       </div>
@@ -140,7 +142,10 @@
           </mat-accordion>
           <div class="flex-container-space-between">
             <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".edit-flashcard-modal"
-                    (click)="flashcardClicked(flashcard)">Edit
+                    (click)="flashcardClicked(flashcard, false)">Edit
+            </button>
+            <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".delete-flashcard-modal"
+                    (click)="flashcardClicked(flashcard, true)">Delete
             </button>
           </div>
         </div>
@@ -168,6 +173,30 @@
           </div>
           <div class="modal-footer">
             <button mat-button class="btn btn-middle" data-dismiss="modal" (click)="saveEdits(this.selectedDeck)">Save
+            </button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Delete a deck-->
+    <div class="modal fade delete-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Delete deck modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Deck {{this.selectedDeck.name}}</h2>
+            <button mat-button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h3>Do you really want to delete deck "{{this.selectedDeck.name}}"? </h3>
+            <h4>  All flashcard within the deck are also going to be deleted. </h4>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" data-dismiss="modal" (click)="deleteDeck(this.selectedDeck.id)">Delete
             </button>
             <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
@@ -251,6 +280,33 @@
         </div>
       </div>
     </div>
+
+
+    <!--Delete a flashcard-->
+    <div *ngIf="this.deleteFlash" class="modal fade delete-flashcard-modal" tabindex="-1" role="dialog"
+         aria-labelledby="Delete flashcard modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Flashcard</h3>
+            <button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>Do you really want to delete this flashcard? </h4>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" data-dismiss="modal"
+                    (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedFlashcard.deckDTO.id)">Delete
+            </button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </ng-template>
 
 
