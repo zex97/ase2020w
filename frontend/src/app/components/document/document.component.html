@@ -5,8 +5,10 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<mat-card *ngFor="let doc of getAllDocuments()">
-  {{doc.name}}
-  <button mat-button style="float: right" class="btn btn-outline-secondary" (click)="deleteDocument(doc)">Delete
-  </button>
-</mat-card>
+<mat-list *ngFor="let doc of getAllDocuments()">
+  <mat-card>
+    {{doc.name}}
+    <button mat-button style="float: right" class="btn btn-outline-secondary" (click)="deleteDocument(doc)">Delete
+    </button>
+  </mat-card>
+</mat-list>

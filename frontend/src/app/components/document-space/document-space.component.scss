@@ -1,13 +1,36 @@
-.flex-grid {
-  display:flex;
-  border: 1px;
+.page-title {
+  font-size: 3em;
+  font-weight: lighter;
 }
 
-.col {
-  flex: 1;
+.flex-grid {
+  display:flex;
 }
 
 .space-name {
   color: #17a2b8;
   display: inline-block;
 }
+
+.col {
+  padding: 0px;
+}
+
+#listOfSpaces {
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-width: 50%;
+}
+
+.listOfSpaceDocuments {
+  min-width: 50%;
+}
+
+.mat-list-base {
+  padding-top: 1px;
+}
+
+
+.mat-card {
+}
+

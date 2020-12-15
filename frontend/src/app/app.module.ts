@@ -27,6 +27,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatToolbarModule,
         MatSidenavModule,
         MatButtonToggleModule,
-        MatExpansionModule
+        MatExpansionModule,
+        MatDividerModule,
+        MatListModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

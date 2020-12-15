@@ -3,7 +3,7 @@
 </div>
 
 <div class="mt-4 container">
-  <div class="row p-2 mb-4">
+  <div class="row p-2 mb-4" style="margin-bottom: 0px">
     <button mat-raised-button *ngIf="!this.viewAll" class="btn btn-sm mr-4 button-dark" (click)="this.viewAll=true;">
       Back to all
     </button>
@@ -16,6 +16,8 @@
       Create a flashcard
     </button>
   </div>
+
+  <mat-divider></mat-divider>
 
   <!--Create a deck-->
   <div class="modal fade create-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Create deck modal"

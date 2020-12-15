@@ -4,7 +4,6 @@
   <div id="sidebar-wrapper">
     <div id="title">Studyboard</div>
     <div class="list-group" id="sidenavList">
-      <button mat-button [routerLink]="[{outlets:{view:'message'}}]">ComponentMessage</button>
       <button mat-button [routerLink]="[{outlets:{view:'spaces'}}]">Spaces</button>
       <button mat-button [routerLink]="[{outlets:{view:'flashcards'}}]">Flashcards</button>
       <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</button>
