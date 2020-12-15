@@ -5,11 +5,14 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<h3 style="margin-left: 45%; color: #17a2b8">Document Space</h3>
+
+<div class="page-title-wrapper">
+  <h1 class="page-title">Spaces</h1>
+</div>
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button type="button" class="btn btn-sm mr-4" style="background-color: #ffc7a4" data-toggle="modal"
+    <button mat-raised-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
             data-target=".create-space-modal">
       Create a space
     </button>
@@ -46,13 +49,11 @@
 
 <div class="flex-grid">
 
-  <div class="col">
-    <div *ngFor="let space of getSpaces()">
-
-      <div class="card" (click)="loadSpaceDetails(space.id); setSelectSpace(space)"  >
-
-        <div class="card-body">
-          <div class="card-title">
+  <div class="col" id="listOfSpaces">
+    <mat-list *ngFor="let space of getSpaces()">
+      <mat-card (click)="loadSpaceDetails(space.id); setSelectSpace(space)">
+        <mat-card-content>
+          <mat-card-title>
             <h5 class="space-name">Name: {{space.name}}</h5>
             <span (click)="setCurrentSpace(space)" class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
             <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
@@ -68,7 +69,7 @@
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">File Upload {{getCurrentSpace().name}}</h5>
+                    <h3 class="modal-title">File Upload {{getCurrentSpace().name}}</h3>
                   </div>
 
                   <div class="modal-body">
@@ -163,15 +164,15 @@
                 </div>
               </div>
             </div>
-          </div>
+          </mat-card-title>
           <div class="card-text"> Lorem ipsum</div>
 
-        </div>
-      </div>
-    </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-list>
   </div>
 
-  <div class="col">
+  <div class="col" [class.listOfSpaceDocuments]="selectSpace" [class.listOfSpaceDocumentsCollapsed]="!selectSpace">
     <!--Document component-->
     <app-document *ngIf="selectSpace" [space]=selectSpace></app-document>
   </div>

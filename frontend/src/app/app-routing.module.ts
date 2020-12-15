@@ -35,7 +35,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: MessageComponent,
+            component: DocumentSpaceComponent,
             outlet: 'view'
           },
           {
