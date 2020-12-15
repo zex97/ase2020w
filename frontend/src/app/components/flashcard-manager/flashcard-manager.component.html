@@ -4,7 +4,9 @@
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button mat-raised-button *ngIf="!this.viewAll"  class="btn btn-sm mr-4 button-dark" (click)="this.viewAll=true;">Back to all</button>
+    <button mat-raised-button *ngIf="!this.viewAll" class="btn btn-sm mr-4 button-dark" (click)="this.viewAll=true;">
+      Back to all
+    </button>
     <button mat-raised-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
             data-target=".create-deck-modal" *ngIf="this.viewAll">
       Create a deck
@@ -15,77 +17,77 @@
     </button>
   </div>
 
-    <!--Create a deck-->
-    <div class="modal fade create-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Create deck modal"
-         aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title"></h5>
-            <button mat-button  class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form action="#!" class="text-center border border-light p-5" [formGroup]="deckForm">
+  <!--Create a deck-->
+  <div class="modal fade create-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Create deck modal"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button mat-button class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="#!" class="text-center border border-light p-5" [formGroup]="deckForm">
 
-              <p class="h4 mb-4">New flashcard deck</p>
-              <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
+            <p class="h4 mb-4">New flashcard deck</p>
+            <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
 
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button mat-button  class="btn btn-middle float-right" (click)="createDeck()" data-dismiss="modal">Save
-            </button>
-            <button mat-button  class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button mat-button class="btn btn-middle float-right" (click)="createDeck()" data-dismiss="modal">Save
+          </button>
+          <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!--Create a flashcard-->
-    <div class="modal fade create-flashcard-modal" tabindex="-1" role="dialog" aria-labelledby="Create flashcard modal"
-         aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title"></h5>
-            <button mat-button  class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body flashcardModalBody">
-            <form action="#!" class="text-center border border-light p-5" [formGroup]="flashcardForm">
+  <!--Create a flashcard-->
+  <div class="modal fade create-flashcard-modal" tabindex="-1" role="dialog" aria-labelledby="Create flashcard modal"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button mat-button class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body flashcardModalBody">
+          <form action="#!" class="text-center border border-light p-5" [formGroup]="flashcardForm">
 
-              <p class="h4 mb-4">New flashcard</p>
-              <input type="text" formControlName="question" class="form-control mb-4" placeholder="Question">
-              <input type="text" formControlName="answer" class="form-control mb-4" placeholder="Answer">
-              <!--mat-form-field appearance="fill">
-                <mat-label>Assigned deck</mat-label>
-                <mat-select>
-                  <mat-option *ngFor="let deck of getDecks()" [value]="deck.name">
-                    {{deck.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field-->
-              <label>Choose a deck:</label>
-              <select class="form-control select" (change)="deckClicked($event.target.value)">
-                <option value="null" hidden>Deck</option>
-                <option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</option>
-              </select>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button mat-button  class="btn btn-middle float-right" (click)="createFlashcard()" data-dismiss="modal">Save
-            </button>
-            <button  class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+            <p class="h4 mb-4">New flashcard</p>
+            <input type="text" formControlName="question" class="form-control mb-4" placeholder="Question">
+            <input type="text" formControlName="answer" class="form-control mb-4" placeholder="Answer">
+            <!--mat-form-field appearance="fill">
+              <mat-label>Assigned deck</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let deck of getDecks()" [value]="deck.name">
+                  {{deck.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field-->
+            <label>Choose a deck:</label>
+            <select class="form-control select" (change)="deckClicked($event.target.value)">
+              <option value="null" hidden>Deck</option>
+              <option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</option>
+            </select>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button mat-button class="btn btn-middle float-right" (click)="createFlashcard()" data-dismiss="modal">Save
+          </button>
+          <button class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- View all decks -->
-    <div *ngIf="viewAll; else elseBlockDetails">
+  <!-- View all decks -->
+  <div *ngIf="viewAll; else elseBlockDetails">
     <div class="row" id="allDiv">
 
       <div class="col-xl-3 col-4 p-2" *ngFor="let deck of getDecks()">
@@ -97,7 +99,7 @@
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
-              <button mat-button  class="btn btn-middle"
+              <button mat-button class="btn btn-middle"
                       (click)=" this.viewAll=false; loadFlashcards(deck);">
                 Details
               </button>
@@ -105,95 +107,207 @@
           </div>
         </div>
       </div>
-      </div>
     </div>
+  </div>
 
-    <!--View details of a deck-->
-    <ng-template #elseBlockDetails>
-      <div>
+  <!--View details of a deck-->
+  <ng-template #elseBlockDetails>
+    <div>
       <div class="flex-container-space-between">
         <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
         <div id="deck-buttons">
-        <button mat-button  class="btn btn-sm button-light" data-toggle="modal" data-target=".edit-deck-modal">Edit</button>
-        <button mat-button  class="btn btn-sm button-light">Revise</button>
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".revise-deck" (click)="this.sizeError=false;">Revise
+          </button>
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".edit-deck-modal">Edit
+          </button>
+          <button mat-button class="btn btn-sm button-light" data-toggle="modal" data-target=".delete-deck-modal">Delete
+          </button>
         </div>
       </div>
-          <div>
-          <h5>Created: {{this.selectedDeck.creationDate}}</h5>
-          <h5>Last time revised: {{this.selectedDeck.lastTimeUsed.substring(0,10)}}</h5>
-          <h3 class="my-title">Flashcards:</h3>
-        </div>
-        <div class="row">
+      <div>
+        <h5>Created: {{this.selectedDeck.creationDate}}</h5>
+        <h5>Last time revised: {{this.selectedDeck.lastTimeUsed.substring(0,10)}}</h5>
+        <h3 class="my-title">Flashcards:</h3>
+      </div>
+      <div class="row">
         <div class="col-xl-3 col-4 p-2" *ngFor="let flashcard of getFlashcards()">
           <mat-accordion>
-          <mat-expansion-panel class="flashcard" style="justify-content:center" (opened)="this.showAnswer = true" (closed)="this.showAnswer = false">
-            <mat-expansion-panel-header>
-              <h4> Q: {{flashcard.question}}</h4>
-            </mat-expansion-panel-header>
+            <mat-expansion-panel class="flashcard" style="justify-content:center" (opened)="this.showAnswer = true"
+                                 (closed)="this.showAnswer = false">
+              <mat-expansion-panel-header>
+                <h4> Q: {{flashcard.question}}</h4>
+              </mat-expansion-panel-header>
               <h4>A: {{flashcard.answer}}</h4>
-          </mat-expansion-panel>
+            </mat-expansion-panel>
           </mat-accordion>
           <div class="flex-container-space-between">
-            <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".edit-flashcard-modal" (click)="flashcardClicked(flashcard)">Edit</button>
-          </div>
-        </div>
-        </div>
-      </div>
-
-
-      <!--Edit a deck-->
-      <div class="modal fade edit-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Edit deck modal"
-           aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Deck {{this.selectedDeck.name}}</h4>
-              <button mat-button  class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <form action="#!" class="text-center border border-light p-5" [formGroup]="deckEditForm">
-                  <h4>New name for the deck:</h4>
-                  <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
-
-                </form>
-            </div>
-            <div class="modal-footer">
-              <button mat-button  class="btn btn-middle" data-dismiss="modal" (click)="saveEdits(this.selectedDeck)">Save</button>
-              <button mat-button  class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+            <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".edit-flashcard-modal"
+                    (click)="flashcardClicked(flashcard, false)">Edit
+            </button>
+            <button mat-button class="btn btn-sm" data-toggle="modal" data-target=".delete-flashcard-modal"
+                    (click)="flashcardClicked(flashcard, true)">Delete
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!--Edit a flashcard-->
-      <div *ngIf="this.selectedFlashcard" class="modal fade edit-flashcard-modal" tabindex="-1" role="dialog" aria-labelledby="Edit flashcard modal"
-           aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Flashcard</h4>
-              <button  class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="#!" class="text-center border border-light p-5" [formGroup]="flashcardEditForm">
-                <label>Question:</label>
-                <input type="text" formControlName="question" class="form-control mb-4" value="{{this.selectedFlashcard.question}}">
-                <label>Answer:</label>
-                <input type="text" formControlName="answer" class="form-control mb-4" value="{{this.selectedFlashcard.answer}}">
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button mat-button  class="btn btn-middle" data-dismiss="modal" (click)="saveFlashcardEdits(this.selectedFlashcard)">Save</button>
-              <button mat-button  class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+
+    <!--Edit a deck-->
+    <div class="modal fade edit-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Edit deck modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Deck {{this.selectedDeck.name}}</h4>
+            <button mat-button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#!" class="text-center border border-light p-5" [formGroup]="deckEditForm">
+              <h4>New name for the deck:</h4>
+              <input type="text" formControlName="title" class="form-control mb-4" placeholder="Title">
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" data-dismiss="modal" (click)="saveEdits(this.selectedDeck)">Save
+            </button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
-    </ng-template>
+    </div>
+
+    <!--Delete a deck-->
+    <div class="modal fade delete-deck-modal" tabindex="-1" role="dialog" aria-labelledby="Delete deck modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Deck {{this.selectedDeck.name}}</h2>
+            <button mat-button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h3>Do you really want to delete deck "{{this.selectedDeck.name}}"? </h3>
+            <h4>  All flashcard within the deck are also going to be deleted. </h4>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" data-dismiss="modal" (click)="deleteDeck(this.selectedDeck.id)">Delete
+            </button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Revise flashcards from a deck-->
+    <div class="modal fade revise-deck" tabindex="-1" role="dialog" aria-labelledby="Revise modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Deck {{this.selectedDeck.name}}</h4>
+            <button mat-button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#!" *ngIf="this.chooseSize; else reviseBlock" class="text-center border border-light p-5"
+                  [formGroup]="revisionSizeForm">
+              <h4>Choose number of flashcards for revision:</h4>
+              <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not corresponding to the size of the deck!</h5>
+              <input type="number" formControlName="revisionSize" class="form-control mb-4" min="0"
+                     max="{{this.selectedDeck.size}}">
+
+            </form>
+
+            <ng-template #reviseBlock>
+              <div *ngIf="this.currentlyRevisedCard">
+                <mat-card class="flashcard">
+                    <h4> Q: {{this.currentlyRevisedCard.question}}</h4>
+                </mat-card>
+                <mat-card class="flashcard-answer" *ngIf="this.showAnswer">
+                  <h4>A: {{this.currentlyRevisedCard.answer}}</h4>
+                </mat-card>
+                <button mat-button (click)="this.showAnswer=true" class="btn button-light">Show answer</button>
+                <button mat-button *ngIf="this.revisionCounter<this.revisionFlashcards.length" class="btn button-light"
+                        (click)="getRevisionFlashcard();">Next
+                </button>
+              </div>
+            </ng-template>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" (click)="revise()">Revise</button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal" (click)="this.chooseSize=true;">Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Edit a flashcard-->
+    <div *ngIf="this.selectedFlashcard" class="modal fade edit-flashcard-modal" tabindex="-1" role="dialog"
+         aria-labelledby="Edit flashcard modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Flashcard</h4>
+            <button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#!" class="text-center border border-light p-5" [formGroup]="flashcardEditForm">
+              <label>Question:</label>
+              <input type="text" formControlName="question" class="form-control mb-4"
+                     value="{{this.selectedFlashcard.question}}">
+              <label>Answer:</label>
+              <input type="text" formControlName="answer" class="form-control mb-4"
+                     value="{{this.selectedFlashcard.answer}}">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" data-dismiss="modal"
+                    (click)="saveFlashcardEdits(this.selectedFlashcard)">Save
+            </button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Delete a flashcard-->
+    <div *ngIf="this.deleteFlash" class="modal fade delete-flashcard-modal" tabindex="-1" role="dialog"
+         aria-labelledby="Delete flashcard modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Flashcard</h3>
+            <button class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>Do you really want to delete this flashcard? </h4>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="btn btn-middle" data-dismiss="modal"
+                    (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedFlashcard.deckDTO.id)">Delete
+            </button>
+            <button mat-button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
 
 
 </div>

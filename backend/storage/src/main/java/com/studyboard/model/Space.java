@@ -1,5 +1,8 @@
 package com.studyboard.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +10,10 @@ import java.util.Objects;
 
 @Entity
 public class Space {
+    @Column(name="sb_space_id")
     private long id;
     private String name;
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Document> documents;
     private User user;
 
@@ -30,8 +35,7 @@ public class Space {
         this.name = name;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "spaceId")
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Document> getDocuments() {
         if (documents == null) {
             documents = new ArrayList<>();

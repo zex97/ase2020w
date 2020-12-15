@@ -14,7 +14,6 @@ public class User {
     private String password;
     private String email;
     private Integer loginAttempts;
-    private List<String> filePaths;
     private String role;
     private Boolean enabled;
     private List<Deck> decks;
@@ -76,18 +75,6 @@ public class User {
       spaces = new ArrayList<>();
     }
     return spaces;
-  }
-
-  @ElementCollection
-  public List<String> getFilePaths() {
-    if(filePaths == null) {
-      filePaths = new ArrayList<>();
-    }
-    return filePaths;
-  }
-
-  public void setFilePaths(List<String> filePaths) {
-    this.filePaths = filePaths;
   }
 
   public void setSpaces(List<Space> spaces) {

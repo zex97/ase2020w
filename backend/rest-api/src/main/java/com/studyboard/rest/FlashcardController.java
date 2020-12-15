@@ -81,7 +81,6 @@ public class FlashcardController {
             method = RequestMethod.GET,
             produces = "application/json")
     public List<FlashcardDTO> getFlashcardsForRevision(
-            @PathVariable(name = "username") String username,
             @PathVariable(name = "deckId") long deckId,
             @PathVariable(name = "size") int size) {
         return flashcardService.getFlashcardsForRevision(deckId, size).stream()

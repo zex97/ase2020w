@@ -2,8 +2,8 @@ import {Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
-import {Deck} from "../../dtos/deck"
-import {Flashcard} from "../../dtos/flashcard"
+import {Deck} from '../../dtos/deck';
+import {Flashcard} from '../../dtos/flashcard';
 import {User} from '../../dtos/user';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
@@ -19,6 +19,7 @@ export class FlashcardManagerComponent implements OnInit {
   deckEditForm: FormGroup;
   flashcardForm: FormGroup;
   flashcardEditForm: FormGroup;
+  revisionSizeForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   viewAll: boolean = true;
@@ -27,8 +28,14 @@ export class FlashcardManagerComponent implements OnInit {
   selectedDeckId: number;
   selectedFlashcard: Flashcard;
   showFlashcardId: number;
+  chooseSize: boolean = true;
+  revisionCounter: number = 0;
+  currentlyRevisedCard: Flashcard;
+  sizeError: boolean = false;
   private decks: Deck[];
   private flashcards: Flashcard[];
+  revisionFlashcards: Flashcard[];
+  deleteFlash: boolean = false;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService, private snackBar: MatSnackBar) {
@@ -46,6 +53,9 @@ export class FlashcardManagerComponent implements OnInit {
          question: [''],
          answer: ['']
    })
+   this.revisionSizeForm = this.formBuilder.group({
+            revisionSize: [0]
+      })
   }
 
   ngOnInit(): void {
@@ -127,6 +137,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardService.getFlashcards(deck.id).subscribe(
         (flashcards : Flashcard[]) => {
                      this.flashcards = flashcards;
+                     this.chooseSize = true;
                      },
                      error => {
                            this.defaultErrorHandling(error);
@@ -148,6 +159,7 @@ export class FlashcardManagerComponent implements OnInit {
                        () => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
                               this.loadFlashcards(res);
+                              this.loadAllDecks();
                               },
                               error => {
                                 this.error = true;
@@ -185,15 +197,78 @@ export class FlashcardManagerComponent implements OnInit {
               });
     }
 
+
+    revise() {
+      this.sizeError = false;
+      let size = this.revisionSizeForm.controls.revisionSize.value;
+      if(size < 0 || size > this.selectedDeck.size) {
+          this.sizeError = true;
+         //this.openSnackbar('Number of chosen cards not corresponding to the size of the deck', 'warning-snackbar');
+      } else {
+            this.chooseSize = false;
+            this.revisionCounter = 0;
+            this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
+                (flashcards : Flashcard[]) => {
+                             this.revisionFlashcards = flashcards;
+                             this.getRevisionFlashcard();
+                             },
+                             error => {
+                                   this.defaultErrorHandling(error);
+                             }
+                         );
+      }
+
+    }
+
+   getRevisionFlashcard() {
+     this.showAnswer = false;
+     this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
+     if(this.revisionCounter < this.revisionFlashcards.length) {
+        this.revisionCounter=this.revisionCounter +1;
+     }
+   }
+
+
+  /**
+   * Sends a request to delete a specific deck.
+   */
+  deleteDeck(id: number) {
+    this.flashcardService.deleteDeck(id).subscribe(
+      () => {
+        this.openSnackbar('You successfully deleted the deck!', 'success-snackbar');
+        this.loadAllDecks();
+        location.reload();
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
+  }
+
+  /**
+   * Sends a request to delete a specific flashcard.
+   */
+  deleteFlashcard(flashcardId: number, deckId: number) {
+    this.flashcardService.deleteFlashcard(flashcardId, deckId).subscribe(
+      () => {
+        this.openSnackbar('You successfully deleted the flashcard!', 'success-snackbar');
+        this.loadAllDecks();
+        this.loadFlashcards(this.selectedDeck);
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      });
+  }
+
   deckClicked(select : number) {
     console.log(select);
     this.selectedDeckId = select;
   }
 
-  flashcardClicked(select : Flashcard) {
+  flashcardClicked(select : Flashcard, del: boolean) {
      console.log(select);
      this.selectedFlashcard = select;
      this.showFlashcardId = select.id;
+     this.deleteFlash = del;
      console.log(this.showFlashcardId);
      this.flashcardEditForm.patchValue({
         question: select.question,
