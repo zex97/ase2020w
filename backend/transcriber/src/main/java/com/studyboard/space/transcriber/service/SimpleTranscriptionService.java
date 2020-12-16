@@ -1,5 +1,6 @@
 package com.studyboard.space.transcriber.service;
 
+import com.studyboard.model.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +25,19 @@ public class SimpleTranscriptionService implements TranscriptionService {
     /**
      * This method is used to transcribe given file and store information in the DB.
      * If the service could not transcribe the file empty transcription will be saved.
-     * @param filePath location of the file to be transcribed
+     * @param document document representation of the file to be transcribed
      */
     @Override
-    public void transcribe(String filePath) {
+    public void transcribe(Document document) {
         try{
-            String outputDirectory = filePreprocessor.cutIntoChunks(filePath);
+            String outputDirectory = filePreprocessor.cutIntoChunks(document.getFilePath());
             String transcription = speechRecognitionService.transcribeFilesInDirectory(outputDirectory);
-            System.out.println(transcription);
-
+            logger.debug(transcription);
             cleanup(outputDirectory);
             // TODO persist transcription
             // Allow IllegalFormatException to the outside
         } catch (Exception e){
-            logger.error("Could not transcribe file {}", filePath, e);
+            logger.error("Could not transcribe file {}", document.getFilePath(), e);
         }
     }
 

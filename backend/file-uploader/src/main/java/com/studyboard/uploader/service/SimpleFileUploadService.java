@@ -5,6 +5,7 @@ import com.studyboard.model.Space;
 import com.studyboard.model.User;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
+import com.studyboard.space.transcriber.service.TranscriptionService;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.FileStorageException;
 import com.studyboard.uploader.exception.StorageFileNotFoundException;
@@ -33,14 +34,17 @@ public class SimpleFileUploadService implements FileUploadService {
   private final Logger logger = LoggerFactory.getLogger(SimpleFileUploadService.class);
   private final Path rootLocation;
   private final SpaceRepository spaceRepository;
+  private final TranscriptionService transcriptionService;
 
   @Autowired
   public SimpleFileUploadService(
-      FileStorageProperties fileStorageProperties,
-      UserRepository userRepository,
-      SpaceRepository spaceRepository) {
+          FileStorageProperties fileStorageProperties,
+          UserRepository userRepository,
+          SpaceRepository spaceRepository,
+          TranscriptionService transcriptionService) {
     this.rootLocation = Paths.get(fileStorageProperties.getLocation());
     this.spaceRepository = spaceRepository;
+    this.transcriptionService = transcriptionService;
   }
 
   @Override
@@ -134,7 +138,9 @@ public class SimpleFileUploadService implements FileUploadService {
       document.setTranscription(null);
 
       // TODO: add transcriber trigger
-
+        if (document.isNeedsTranscription()){
+            transcriptionService.transcribe(document);
+        }
       List<Document> docList = space.getDocuments();
       docList.add(document);
       space.setDocuments(docList);

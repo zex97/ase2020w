@@ -21,6 +21,11 @@
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-speech</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.studyboard</groupId>
+            <artifactId>studyboard-storage</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
