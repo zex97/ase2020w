@@ -7,7 +7,7 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.studyboard</groupId>
-        <version>0.0.1</version>
+        <version>0.1.0</version>
     </parent>
 
     <artifactId>studyboard-file-uploader</artifactId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.studyboard</groupId>
             <artifactId>studyboard-storage</artifactId>
-            <version>0.0.1</version>
+            <version>0.1.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

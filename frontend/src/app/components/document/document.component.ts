@@ -47,6 +47,10 @@ export class DocumentComponent implements OnInit, OnChanges {
     );
   }
 
+  isEmpty() {
+    return this.documentsOfSpace?.length === 0;
+  }
+
   getAllDocuments() {
     return this.documentsOfSpace;
   }

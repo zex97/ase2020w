@@ -9,7 +9,7 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.studyboard</groupId>
-        <version>0.0.1</version>
+        <version>0.1.0</version>
     </parent>
 
     <dependencies>
@@ -22,23 +22,23 @@
         <dependency>
             <groupId>com.studyboard</groupId>
             <artifactId>studyboard-user-space</artifactId>
-            <version>0.0.1</version>
+            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.studyboard</groupId>
             <artifactId>studyboard-file-uploader</artifactId>
-            <version>0.0.1</version>
+            <version>0.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.studyboard</groupId>
             <artifactId>studyboard-user</artifactId>
-            <version>0.0.1</version>
+            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.studyboard</groupId>
             <artifactId>studyboard-flashcard-organiser</artifactId>
-            <version>0.0.1</version>
+            <version>0.1.0</version>
         </dependency>
 
         <!-- Spring Framework -->
