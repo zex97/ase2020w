@@ -144,6 +144,9 @@
             </mat-expansion-panel>
           </mat-accordion>
           <div class="flex-container-space-between">
+            <button (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".rate-flashcard-modal" data-toggle="modal"
+                    mat-button>Rate
+            </button>
             <button (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".edit-flashcard-modal" data-toggle="modal"
                     mat-button>Edit
             </button>
@@ -309,6 +312,35 @@
         </div>
       </div>
     </div>
+
+    <!--Rate a flashcard-->
+    <div aria-hidden="true" aria-labelledby="Rate flashcard modal" class="modal fade rate-flashcard-modal"
+         role="dialog"
+         tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Flashcard</h4>
+            <button aria-label="Close" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="flashcardRateForm" action="#!" class="text-center border border-light p-5">
+              <label>Rate with personal confidence level from 1 to 5:</label>
+              <input class="form-control mb-4" formControlName="confidenceLevel" type="number" max="5" min="1">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button (click)="rateFlashcard(this.selectedFlashcard)" class="btn btn-middle" data-dismiss="modal"
+                    mat-button>Rate
+            </button>
+            <button class="btn btn-secondary" data-dismiss="modal" mat-button>Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </ng-template>
 
