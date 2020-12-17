@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -23,14 +24,17 @@ export class RegisterComponent implements OnInit {
 
   constructor(private userService: UserService, private formBuilder: FormBuilder, private authService: AuthService,
               private router: Router, private snackBar: MatSnackBar) {
-    this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('.*[0-9].*')]],
-    });
   }
 
   ngOnInit(): void {
+     this.registerForm = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('.*[0-9].*')]],
+      passwordConfirm: ['', Validators.required]}
+      , {
+      validator: this.checkPasswordMatch('password', 'passwordConfirm')
+      });
   }
 
   registerUser() {
@@ -46,24 +50,6 @@ export class RegisterComponent implements OnInit {
       this.createUser(user);
       // this.clearUserForm();
     } else {
-      if (this.registerForm.controls.username.errors?.required) {
-        this.openSnackbar('Username is required!', 'warning-snackbar');
-      }
-      if (this.registerForm.controls.password.errors?.required) {
-        this.openSnackbar('Password is required!', 'warning-snackbar');
-      }
-      if (this.registerForm.controls.username.value === 'user') {
-        this.openSnackbar('user is a reserved username!', 'warning-snackbar');
-      }
-      if (this.registerForm.controls.email.errors?.required) {
-        this.openSnackbar('Email is required!', 'warning-snackbar');
-      }
-      if (this.registerForm.controls.password.errors?.minlength) {
-        this.openSnackbar('Password must be at least 8 characters long!', 'warning-snackbar');
-      }
-      if (this.registerForm.controls.password.errors?.pattern) {
-        this.openSnackbar('Password must have at least one digit!', 'warning-snackbar');
-      }
       console.log('Invalid input');
     }
   }
@@ -116,5 +102,26 @@ export class RegisterComponent implements OnInit {
    */
   vanishError() {
     this.error = false;
+  }
+
+  get f() {
+    return this.registerForm.controls;
+  }
+
+  checkPasswordMatch(password: string, confirmation: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[password];
+      const matchingControl = formGroup.controls[confirmation];
+
+      if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+        return;
+      }
+
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ passwordsDifferent: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    };
   }
 }
