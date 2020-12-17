@@ -20,6 +20,7 @@ export class FlashcardManagerComponent implements OnInit {
   flashcardForm: FormGroup;
   flashcardEditForm: FormGroup;
   revisionSizeForm: FormGroup;
+  flashcardRateForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   viewAll: boolean = true;
@@ -36,26 +37,30 @@ export class FlashcardManagerComponent implements OnInit {
   private flashcards: Flashcard[];
   revisionFlashcards: Flashcard[];
   deleteFlash: boolean = false;
+  confidenceError: boolean = false;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService, private userService: UserService, private snackBar: MatSnackBar) {
     this.deckForm = this.formBuilder.group({
       title: ['']
-    })
+    });
     this.deckEditForm = this.formBuilder.group({
       title: ['']
-    })
+    });
     this.flashcardForm = this.formBuilder.group({
           question: [''],
           answer: ['']
-   })
-   this.flashcardEditForm = this.formBuilder.group({
+    });
+    this.flashcardEditForm = this.formBuilder.group({
          question: [''],
          answer: ['']
-   })
-   this.revisionSizeForm = this.formBuilder.group({
+    });
+    this.revisionSizeForm = this.formBuilder.group({
             revisionSize: [0]
-      })
+    });
+    this.flashcardRateForm = this.formBuilder.group({
+      confidence_level: [0]
+    });
   }
 
   ngOnInit(): void {
@@ -260,6 +265,29 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       });
   }
+
+  rateFlashcard(flashcard: Flashcard) {
+    console.log(flashcard);
+    this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
+      let confidence = this.flashcardEditForm.controls.confidenceLevel.value;
+      if (confidence != null) {
+        flashcard.confidenceLevel = confidence;
+      }
+      this.flashcardService.editFlashcard(flashcard, this.selectedDeck.id).subscribe(
+        () => {
+          this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
+          this.loadFlashcards(this.selectedDeck);
+        },
+        error => {
+          this.confidenceError = true;
+          this.error = true;
+          this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+          this.openSnackbar(this.errorMessage, 'warning-snackbar');
+        }
+      );
+    });
+  }
+
 
   deckClicked(select : number) {
     console.log(select);
