@@ -59,7 +59,7 @@ export class FlashcardManagerComponent implements OnInit {
             revisionSize: [0]
     });
     this.flashcardRateForm = this.formBuilder.group({
-      confidence_level: [0]
+      confidenceLevel: [0]
     });
   }
 
@@ -269,7 +269,7 @@ export class FlashcardManagerComponent implements OnInit {
   rateFlashcard(flashcard: Flashcard) {
     console.log(flashcard);
     this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
-      let confidence = this.flashcardEditForm.controls.confidenceLevel.value;
+      let confidence = this.flashcardRateForm.controls.confidenceLevel.value;
       if (confidence != null) {
         flashcard.confidenceLevel = confidence;
       }
