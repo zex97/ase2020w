@@ -20,7 +20,7 @@ public class Flashcard {
     @Column(nullable = true, name = "confidenceLevel")
     @Min(0)
     @Max(5)
-    private int confidence_level;
+    private int confidenceLevel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
@@ -50,12 +50,12 @@ public class Flashcard {
         this.answer = answer;
     }
 
-    public int getConfidence_level() {
-        return confidence_level;
+    public int getConfidenceLevel() {
+        return confidenceLevel;
     }
 
-    public void setConfidence_level(int confidence_level) {
-        this.confidence_level = confidence_level;
+    public void setConfidenceLevel(int confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
     }
 
     public Deck getDeck() {

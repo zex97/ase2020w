@@ -8,7 +8,7 @@ public class FlashcardDTO {
     private Long id;
     private String question;
     private String answer;
-    private int confidence_level;
+    private int confidenceLevel;
     private DeckDTO deckDTO;
 
     public Long getId() {
@@ -35,12 +35,12 @@ public class FlashcardDTO {
         this.answer = answer;
     }
 
-    public int getConfidence_level() {
-        return confidence_level;
+    public int getConfidenceLevel() {
+        return confidenceLevel;
     }
 
-    public void setConfidence_level(int confidence_level) {
-        this.confidence_level = confidence_level;
+    public void setConfidenceLevel(int confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
     }
 
     public DeckDTO getDeckDTO() {
@@ -56,7 +56,7 @@ public class FlashcardDTO {
         flashcard.setId(this.id);
         flashcard.setQuestion(this.question);
         flashcard.setAnswer(this.answer);
-        flashcard.setConfidence_level(this.confidence_level);
+        flashcard.setConfidenceLevel(this.confidenceLevel);
         if (this.deckDTO != null) {
             flashcard.setDeck(this.deckDTO.toDeck());
         }
@@ -68,7 +68,7 @@ public class FlashcardDTO {
         flashcardDTO.setId(flashcard.getId());
         flashcardDTO.setQuestion(flashcard.getQuestion());
         flashcardDTO.setAnswer(flashcard.getAnswer());
-        flashcardDTO.setConfidence_level(flashcard.getConfidence_level());
+        flashcardDTO.setConfidenceLevel(flashcard.getConfidenceLevel());
         flashcardDTO.setDeckDTO(DeckDTO.of(flashcard.getDeck()));
         return flashcardDTO;
     }
@@ -79,7 +79,7 @@ public class FlashcardDTO {
                 "id=" + id +
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
-                ", confidenceLevel=" + confidence_level +
+                ", confidenceLevel=" + confidenceLevel +
                 (deckDTO == null ? ", deckDTO=null" : ", deckDTO=" + deckDTO.toString()) +
                 '}';
     }
