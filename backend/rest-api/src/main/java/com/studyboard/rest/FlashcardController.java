@@ -50,11 +50,10 @@ public class FlashcardController {
     }
 
     @RequestMapping(
-            value = "/{deckId}",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
-            value = "Edit deck with a specific id.",
+            value = "Edit a specific deck",
             authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity editDeckName(
             @RequestBody DeckDTO deckDTO) {

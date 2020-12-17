@@ -113,10 +113,9 @@ export class FlashcardManagerComponent implements OnInit {
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
              deck.name = this.deckEditForm.controls.title.value;
                  this.flashcardService.editDeck(deck).subscribe(
-                      () => {
+                      (editedDeck : Deck) => {
                              this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
-                             this.loadAllDecks();
-                             location.reload();
+                             this.selectedDeck = editedDeck;
                              },
                              error => {
                                this.error = true;
@@ -143,7 +142,10 @@ export class FlashcardManagerComponent implements OnInit {
                            this.defaultErrorHandling(error);
                      }
                  );
-     this.deckEditForm.reset();
+     //this.deckEditForm.reset();
+     this.deckEditForm.patchValue({
+             title: deck.name
+     })
      this.flashcardForm.reset();
   }
 
