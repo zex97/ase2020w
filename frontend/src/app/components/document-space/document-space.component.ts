@@ -80,6 +80,9 @@ export class DocumentSpaceComponent implements OnInit {
   setCurrentSpace(space: Space) {
     this.currentSpace = space;
     console.log(this.currentSpace);
+    this.nameEditForm.patchValue({
+       name: space.name
+    });
   }
 
   getCurrentSpace() {
@@ -232,13 +235,12 @@ export class DocumentSpaceComponent implements OnInit {
    * Sends a put request to change a specific space.
    */
   saveEdits(space: Space) {
-    // send edits to backend
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(() => {
       space.name = this.nameEditForm.controls.name.value;
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
-          location.reload();
+          //location.reload();
         },
         error => {
           this.defaultErrorHandling(error);
