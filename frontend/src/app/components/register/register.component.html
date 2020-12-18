@@ -25,8 +25,7 @@
         <!-- Username -->
         <div class="form-group mb-4">
           <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
-                 aria-describedby="usernameHelp" placeholder="Username *"
-                 [ngClass]="(f.username.errors && submitted ? 'input-field-invalid':'')">
+                 aria-describedby="usernameHelp" placeholder="Username *" [ngClass]="(f.username.errors && submitted ? 'input-field-invalid':'')">
           <span class="control-label invalid-input-text" *ngIf="f.username.errors && submitted">
               Username is required!
           </span>
@@ -35,8 +34,7 @@
         <!-- E-mail -->
         <div class="form-group mb-4">
           <input type="email" name="email" formControlName="email" class="form-control" id="inputEmail"
-                 aria-describedby="emailHelp" placeholder="E-mail *"
-                 [ngClass]="(f.email.errors && submitted ? 'input-field-invalid':'')">
+                 aria-describedby="emailHelp" placeholder="E-mail *" [ngClass]="(f.email.errors && submitted ? 'input-field-invalid':'')">
           <span class="control-label invalid-input-text" *ngIf="f.email.errors && submitted">
               Email is required!
           </span>
@@ -48,16 +46,13 @@
                  aria-describedby="passwordHelp" placeholder="Password *" (keyup)="registerForm.controls['passwordConfirm'].updateValueAndValidity()"
                  [ngClass]="(f.password.errors && submitted ? 'input-field-invalid':'')">
           <span class="input-text-help" *ngIf="!submitted">Use at least 8 characters and 1 digit.</span>
-          <span class="control-label invalid-input-text" *ngIf="f.password.errors &&
-          f.password.errors.required && submitted">
+          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.required && submitted">
               Password is required!
           </span>
-          <span class="control-label invalid-input-text" *ngIf="f.password.errors &&
-          f.password.errors.minlength && submitted">
+          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.minlength && submitted">
               Password must be at least 8 characters long!
           </span>
-          <span class="control-label invalid-input-text" *ngIf="f.password.errors &&
-          f.password.errors.pattern && !f.password.errors.minlength && submitted">
+          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.pattern && !f.password.errors.minlength && submitted">
               Password must contain at least one digit!
           </span>
         </div>
@@ -67,12 +62,10 @@
           <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control" id="passwordConfirm"
                  aria-describedby="passwordConfirmHelp" placeholder="Confirm *"
                  [ngClass]="(f.passwordConfirm.errors && submitted ? 'input-field-invalid':'')">
-          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors &&
-          f.passwordConfirm.errors.required && submitted">
+          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.required && submitted">
               Password confirmation is required!
           </span>
-          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors &&
-          f.passwordConfirm.errors.passwordsDifferent && submitted">
+          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.passwordsDifferent && submitted">
               Passwords must match!
           </span>
         </div>

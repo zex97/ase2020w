@@ -55,7 +55,9 @@ public class UserDTO {
 
     public User toUser () {
         User user = new User();
-        user.setId(this.id);
+        if (this.id != null) {
+            user.setId(this.id);
+        }
         user.setUsername(this.username);
         user.setPassword(this.password);
         user.setEmail(this.email);
