@@ -37,9 +37,27 @@ public interface UserSpaceService {
      */
     public Space updateSpaceName(Space space);
 
+    /**
+     * Returns all documents for a single space
+     *
+     * @param spaceId id of the space
+     * @return list of documents that belong to space with id @param spaceId
+     */
     List<Document> geAllDocumentsFromSpace(long spaceId);
 
+    /**
+     * Adds a single document to a space
+     *
+     * @param spaceId id of the space
+     * @param document that is added to the space
+     */
     void addDocumentToSpace(long spaceId, Document document);
 
+    /**
+     * Removes a single document from space
+     *
+     * @param spaceId id of the space
+     * @param documentId id of the document that is deleted
+     */
     void removeDocumentFromSpace(long spaceId, long documentId);
 }
