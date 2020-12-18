@@ -29,7 +29,10 @@ public class Deck {
     @JoinColumn(name = "sb_user_id")
     private User user;
 
-    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(name = "flashcards",
+            joinColumns = @JoinColumn(name = "deck_id"),
+            inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
     private List<Flashcard> flashcards;
 
     public Deck() {

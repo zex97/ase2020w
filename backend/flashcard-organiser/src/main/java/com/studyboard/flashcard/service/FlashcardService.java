@@ -61,19 +61,17 @@ public interface FlashcardService {
     /**
      * Find a single flashcard by id
      *
-     * @param deckId      of the deck in which flashcard is
      * @param flashcardId of the flashcard
      * @return the flashcard with the corresponding id
      */
-    Flashcard getOneFlashcard(long deckId, long flashcardId);
+    Flashcard getOneFlashcard(long flashcardId);
 
     /**
      * Create a single flashcard
      *
-     * @param deckId    of the deck in which flashcard will be
      * @param flashcard entity with all the necessary information
      */
-    void createFlashcard(long deckId, Flashcard flashcard);
+    void createFlashcard(Flashcard flashcard);
 
     /**
      * Delete a single deck with all of its flashcards
@@ -93,11 +91,10 @@ public interface FlashcardService {
     /**
      * Edit a single flashcard in the deck
      *
-     * @param deckId id of the deck in which the flashcard is
      * @param flashcard entity that needs to be edited
      * @return flashcard object with the all the changes
      * @throws FlashcardConstraintException when confidence level is outside 1-5 range of values
      */
-    Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
+    Flashcard editFlashcard(Flashcard flashcard) throws FlashcardConstraintException;
 
 }

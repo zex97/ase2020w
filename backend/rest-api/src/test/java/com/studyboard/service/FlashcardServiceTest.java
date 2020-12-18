@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -116,6 +117,10 @@ public class FlashcardServiceTest {
         deck.setCreationDate(DECK_CREATION_DATE);
         deck.setLastTimeUsed(DECK_LAST_TIME_USED);
         deck.setUser(user);
+        deck.setFlashcards(null);
+
+        List<Deck> decks = new ArrayList<>();
+        decks.add(deck);
 
         Mockito.when(deckRepository.findDeckById(DECK_ID)).thenReturn(deck);
 
@@ -128,8 +133,8 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setConfidenceLevel(CONFIDENCE_LEVEL);
-        flashcard.setDeck(deck);
-        flashcardService.createFlashcard(DECK_ID, flashcard);
+        flashcard.setDecks(decks);
+        flashcardService.createFlashcard(flashcard);
 
         response = flashcardService.findDeckById(DECK_ID);
 

@@ -1,7 +1,11 @@
 package com.studyboard.dto;
 
 
+import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlashcardDTO {
 
@@ -9,7 +13,7 @@ public class FlashcardDTO {
     private String question;
     private String answer;
     private int confidenceLevel;
-    private DeckDTO deckDTO;
+    private List<DeckDTO> deckDTOs;
 
     public Long getId() {
         return id;
@@ -43,12 +47,12 @@ public class FlashcardDTO {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public DeckDTO getDeckDTO() {
-        return deckDTO;
+    public List<DeckDTO> getDeckDTOs() {
+        return deckDTOs;
     }
 
-    public void setDeckDTO(DeckDTO deckDTO) {
-        this.deckDTO = deckDTO;
+    public void setDeckDTOs(List<DeckDTO> deckDTOs) {
+        this.deckDTOs = deckDTOs;
     }
 
     public Flashcard FlashcardFromFlashcardDTO() {
@@ -57,9 +61,10 @@ public class FlashcardDTO {
         flashcard.setQuestion(this.question);
         flashcard.setAnswer(this.answer);
         flashcard.setConfidenceLevel(this.confidenceLevel);
-        if (this.deckDTO != null) {
-            flashcard.setDeck(this.deckDTO.toDeck());
-        }
+        flashcard.setDecks(this.deckDTOs.stream()
+                    .map(DeckDTO::toDeck)
+                    .collect(Collectors.toList()));
+
         return flashcard;
     }
 
@@ -69,7 +74,9 @@ public class FlashcardDTO {
         flashcardDTO.setQuestion(flashcard.getQuestion());
         flashcardDTO.setAnswer(flashcard.getAnswer());
         flashcardDTO.setConfidenceLevel(flashcard.getConfidenceLevel());
-        flashcardDTO.setDeckDTO(DeckDTO.of(flashcard.getDeck()));
+        flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
+                .map(DeckDTO::of)
+                .collect(Collectors.toList()));
         return flashcardDTO;
     }
 
@@ -80,7 +87,6 @@ public class FlashcardDTO {
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 ", confidenceLevel=" + confidenceLevel +
-                (deckDTO == null ? ", deckDTO=null" : ", deckDTO=" + deckDTO.toString()) +
                 '}';
     }
 
