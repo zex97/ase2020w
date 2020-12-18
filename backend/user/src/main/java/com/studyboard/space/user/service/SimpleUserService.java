@@ -11,7 +11,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SimpleUserService implements UserService {
@@ -58,6 +60,10 @@ public class SimpleUserService implements UserService {
             user.setPassword(hashedPassword);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
+            if (((Collection<?>) authoritiesRepository.findAll()).size() != userRepository.findAll().size()) {
+                Optional<Authorities> auth = authoritiesRepository.findOneByUsername(user.getUsername());
+                authoritiesRepository.deleteById(auth.get().getId());
+            }
             throw new UniqueConstraintException("User with the same username or email already exists.");
         }
     }

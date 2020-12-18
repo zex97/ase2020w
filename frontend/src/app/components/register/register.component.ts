@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
      this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('.*[0-9].*')]],
       passwordConfirm: ['', Validators.required]}
       , {
@@ -50,6 +50,9 @@ export class RegisterComponent implements OnInit {
       this.createUser(user);
       // this.clearUserForm();
     } else {
+      if (this.registerForm.controls.username.value === 'user') {
+        this.openSnackbar('user is a reserved username!', 'warning-snackbar');
+      }
       console.log('Invalid input');
     }
   }
@@ -83,6 +86,11 @@ export class RegisterComponent implements OnInit {
     this.error = true;
     this.errorMessage = '';
     this.errorMessage = error.error.message;
+
+    if (error.status == 400) {
+      this.openSnackbar('Username or email already taken!', 'warning-snackbar');
+      this.vanishError();
+    }
   }
 
   // private clearUserForm() {
@@ -92,7 +100,7 @@ export class RegisterComponent implements OnInit {
 
   openSnackbar(message: string, type: string) {
     this.snackBar.open(message, 'close', {
-      duration: 4000,
+      duration: 8000,
       panelClass: [type]
     });
   }
