@@ -100,6 +100,7 @@ public class SimpleFlashcardService implements FlashcardService {
     public void createFlashcard(long deckId, Flashcard flashcard) {
         Deck deck = findDeckById(deckId);
         flashcard.setDeck(deck);
+        flashcard.setConfidenceLevel(0);
         flashcardRepository.save(flashcard);
         deck.setSize(deck.getSize() + 1);
         deckRepository.save(deck);
@@ -123,7 +124,7 @@ public class SimpleFlashcardService implements FlashcardService {
         try {
             storedFlashcard.setQuestion(flashcard.getQuestion());
             storedFlashcard.setAnswer(flashcard.getAnswer());
-            storedFlashcard.setConfidence_level(flashcard.getConfidence_level());
+            storedFlashcard.setConfidenceLevel(flashcard.getConfidenceLevel());
             return flashcardRepository.save(storedFlashcard);
         } catch (ConstraintViolationException e) {
             throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");

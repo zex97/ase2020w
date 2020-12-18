@@ -127,7 +127,7 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
-        flashcard.setConfidence_level(CONFIDENCE_LEVEL);
+        flashcard.setConfidenceLevel(CONFIDENCE_LEVEL);
         flashcard.setDeck(deck);
         flashcardService.createFlashcard(DECK_ID, flashcard);
 

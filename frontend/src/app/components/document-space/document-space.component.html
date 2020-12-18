@@ -1,7 +1,7 @@
 <!-- Error messages should have use the same principle -->
 <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
   <strong>{{successMessage}}</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishSuccessMessage()" class="close" data-dismiss="alert" aria-label="Close">
+  <button (click)="vanishSuccessMessage()" aria-label="Close" class="close" data-dismiss="alert" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -12,34 +12,34 @@
 
 <div class="mt-4 container">
   <div class="row p-2 mb-4">
-    <button mat-raised-button class="btn btn-sm mr-4 button-light" data-toggle="modal"
-            data-target=".create-space-modal">
+    <button class="btn btn-sm mr-4 button-light" data-target=".create-space-modal" data-toggle="modal"
+            mat-raised-button>
       Create a space
     </button>
 
     <!--Create space modal-->
-    <div class="modal fade create-space-modal" tabindex="-1" role="dialog" aria-labelledby="Create space modal"
-         aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="Create space modal" class="modal fade create-space-modal" role="dialog"
+         tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title"></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form action="#!" class="text-center border border-light p-5" [formGroup]="spaceForm">
+            <form [formGroup]="spaceForm" action="#!" class="text-center border border-light p-5">
 
               <p class="h4 mb-4">New document space</p>
-              <input type="text" formControlName="name" class="form-control mb-4" placeholder="Name">
+              <input class="form-control mb-4" formControlName="name" placeholder="Name" type="text">
 
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info float-right" (click)="createSpace()" data-dismiss="modal">Save
+            <button (click)="createSpace()" class="btn btn-info float-right" data-dismiss="modal" type="button">Save
             </button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
           </div>
         </div>
       </div>
@@ -55,17 +55,20 @@
         <mat-card-content>
           <mat-card-title>
             <h5 class="space-name">Name: {{space.name}}</h5>
-            <span (click)="setCurrentSpace(space)" class="close" data-toggle="modal" data-target=".delete-space-modal">x</span>
-            <span (click)="setCurrentSpace(space)" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".edit-space-modal"><img
+            <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
+                  data-toggle="modal">x</span>
+            <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal" data-toggle="modal"
+                  style="margin-right:5%;"><img
               src="../../../assets/edit.png" width="15px;"></span>
-            <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" style="margin-right:5%;" data-toggle="modal" data-target=".upload-file-modal"><img
+            <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal"
+                  data-toggle="modal" style="margin-right:5%;"><img
               src="../../../assets/upload-logo.png" width="25px;"></span>
 
             <!-- file upload modal -->
-            <div *ngIf="currentSpace" data-backdrop="static" data-keyboard="false" class="modal fade upload-file-modal"
-                 tabindex="-1"
-                 role="dialog" aria-label="Upload Files"
-                 aria-hidden="true">
+            <div *ngIf="currentSpace" aria-hidden="true" aria-label="Upload Files" class="modal fade upload-file-modal"
+                 data-backdrop="static"
+                 data-keyboard="false" role="dialog"
+                 tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -73,15 +76,15 @@
                   </div>
 
                   <div class="modal-body">
-                    <div style="max-width: 100%" class="form-group">
+                    <div class="form-group" style="max-width: 100%">
                       <div *ngIf="fileUploadModuleError" class="alert alert-warning alert-dismissible fade show"
                            role="alert">
                         <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
                       </div>
                       <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
-                      <input [value]="filesToUploadNames" class="hide-text" type="file" id="files" value="name"
-                             (change)="handleFileInput($event.target.files)" accept=".pdf,.mp3,.mp4,.jpeg,.png"
-                             multiple>
+                      <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames" accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
+                             multiple type="file"
+                             value="name">
                       <!--<label for="files">Choose files </label>-->
                     </div>
                     <div *ngIf="filesToUpload.length>0">
@@ -89,20 +92,20 @@
                       <mat-card *ngFor="let file of getFilesToUpload(); let i = index"
                                 style="padding-bottom: 1em">
                         {{file.name}}
-                        <button mat-button (click)="removeFileFromList(i)" data-toggle="modal" aria-label="Remove">
+                        <button (click)="removeFileFromList(i)" aria-label="Remove" data-toggle="modal" mat-button>
                           <span aria-hidden="true">&times;</span>
                         </button>
-                         <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
+                        <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
                       </mat-card>
                     </div>
 
                   </div>
 
                   <div class="modal-footer">
-                    <button *ngIf="filesReadyForUpload()" type="button" class="btn btn-info" data-dismiss="modal"
-                            (click)="uploadFiles(currentSpace)">Submit
+                    <button (click)="uploadFiles(currentSpace)" *ngIf="filesReadyForUpload()" class="btn btn-info" data-dismiss="modal"
+                            type="button">Submit
                     </button>
-                    <button (click)="clearInputFiles()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button (click)="clearInputFiles()" class="btn btn-secondary" data-dismiss="modal" type="button">
                       Close
                     </button>
                   </div>
@@ -111,44 +114,44 @@
             </div>
 
             <!--Edit space modal-->
-            <div *ngIf="currentSpace" class="modal fade edit-space-modal" tabindex="-1" role="dialog"
-                 aria-labelledby="Edit space modal"
-                 aria-hidden="true">
+            <div *ngIf="currentSpace" aria-hidden="true" aria-labelledby="Edit space modal" class="modal fade edit-space-modal"
+                 role="dialog"
+                 tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form action="#!" class="text-center border border-light p-5" [formGroup]="nameEditForm">
+                    <form [formGroup]="nameEditForm" action="#!" class="text-center border border-light p-5">
 
                       <p class="h4 mb-4">New name:</p>
-                      <input type="text" formControlName="name" class="form-control mb-4" placeholder="Name">
+                      <input class="form-control mb-4" formControlName="name" type="text">
 
                     </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-info float-right" (click)="saveEdits(space)"
-                            data-dismiss="modal">Ok
+                    <button (click)="saveEdits(space)" class="btn btn-info float-right" data-dismiss="modal"
+                            type="button">Ok
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                   </div>
                 </div>
               </div>
             </div>
 
             <!--Delete space modal-->
-            <div *ngIf="currentSpace" class="modal fade delete-space-modal" tabindex="-1" role="dialog"
-                 aria-labelledby="Delete space modal"
-                 aria-hidden="true" [attr.space]="space">
+            <div *ngIf="currentSpace" [attr.space]="space" aria-hidden="true" aria-labelledby="Delete space modal"
+                 class="modal fade delete-space-modal"
+                 role="dialog" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -156,10 +159,10 @@
                     <h5>Are you sure you want to delete space {{getCurrentSpace().name}}?</h5>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-info float-right" (click)="deleteSpace(space.id)"
-                            data-dismiss="modal">Ok
+                    <button (click)="deleteSpace(space.id)" class="btn btn-info float-right" data-dismiss="modal"
+                            type="button">Ok
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                   </div>
                 </div>
               </div>
@@ -172,7 +175,7 @@
     </mat-list>
   </div>
 
-  <div class="col" [class.listOfSpaceDocuments]="selectSpace" [class.listOfSpaceDocumentsCollapsed]="!selectSpace">
+  <div [class.listOfSpaceDocumentsCollapsed]="!selectSpace" [class.listOfSpaceDocuments]="selectSpace" class="col">
     <!--Document component-->
     <app-document *ngIf="selectSpace" [space]=selectSpace></app-document>
   </div>
