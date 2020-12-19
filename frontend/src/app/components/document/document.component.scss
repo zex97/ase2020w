@@ -18,3 +18,11 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.warningMessageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40em;
+  color: grey;
+}
