@@ -1,11 +1,3 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Username or email already taken!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
-
 <div class="pt-5" id="registerWrapper">
   <div class="row">
     <div class="col-md-6 mx-auto" id="formRegisterWrapper">
@@ -23,21 +15,54 @@
         </div>
 
         <!-- Username -->
-        <div class="form-group">
-          <input type="text" name="username" formControlName="username" class="form-control mb-4" id="inputUsername"
-                 aria-describedby="usernameHelp" placeholder="Username">
+        <div class="form-group mb-4">
+          <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
+                 aria-describedby="usernameHelp" placeholder="Username *" [ngClass]="(f.username.errors && submitted ? 'input-field-invalid':'')">
+          <span class="control-label invalid-input-text" *ngIf="f.username.errors && submitted">
+              Username is required!
+          </span>
         </div>
 
         <!-- E-mail -->
-        <div class="form-group">
-          <input type="email" name="email" formControlName="email" class="form-control mb-4" id="inputEmail"
-                 aria-describedby="emailHelp" placeholder="E-mail">
+        <div class="form-group mb-4">
+          <input type="email" name="email" formControlName="email" class="form-control" id="inputEmail"
+                 aria-describedby="emailHelp" placeholder="E-mail *" [ngClass]="(f.email.errors && submitted ? 'input-field-invalid':'')">
+          <span class="control-label invalid-input-text" *ngIf="f.email.errors && f.email.errors.required && submitted">
+              Email is required!
+          </span>
+          <span class="control-label invalid-input-text" *ngIf="f.email.errors && !f.email.errors.required && submitted">
+              Invalid email form!
+          </span>
         </div>
 
         <!-- Password -->
-        <div class="form-group">
-          <input type="password" name="password" formControlName="password" class="form-control mb-4" id="inputPassword"
-                 aria-describedby="passwordHelp" placeholder="Password">
+        <div class="form-group mb-4">
+          <input type="password" name="password" formControlName="password" class="form-control" id="inputPassword"
+                 aria-describedby="passwordHelp" placeholder="Password *" (keyup)="registerForm.controls['passwordConfirm'].updateValueAndValidity()"
+                 [ngClass]="(f.password.errors && submitted ? 'input-field-invalid':'')">
+          <span class="input-text-help" *ngIf="!submitted">Use at least 8 characters and 1 digit.</span>
+          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.required && submitted">
+              Password is required!
+          </span>
+          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.minlength && submitted">
+              Password must be at least 8 characters long!
+          </span>
+          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.pattern && !f.password.errors.minlength && submitted">
+              Password must contain at least one digit!
+          </span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group mb-4">
+          <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control" id="passwordConfirm"
+                 aria-describedby="passwordConfirmHelp" placeholder="Confirm *"
+                 [ngClass]="(f.passwordConfirm.errors && submitted ? 'input-field-invalid':'')">
+          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.required && submitted">
+              Password confirmation is required!
+          </span>
+          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.passwordsDifferent && submitted">
+              Passwords must match!
+          </span>
         </div>
 
         <!-- Sign up button -->
@@ -45,10 +70,8 @@
 
         <hr>
 
-        <!-- Terms of service -->
-        <p>By clicking
-          <em>Sign up</em> you agree to our
-          <a  target="_blank">terms of service</a>
+        <!-- Required meaning -->
+        <p class="input-text-help help-left"><em>*  required field</em></p>
 
       </form>
       <!-- Default form register -->

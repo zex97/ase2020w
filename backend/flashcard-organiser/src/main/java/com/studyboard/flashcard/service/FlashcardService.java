@@ -90,7 +90,14 @@ public interface FlashcardService {
      */
     void deleteFlashcard(long deckId, long flashcardId);
 
-
+    /**
+     * Edit a single flashcard in the deck
+     *
+     * @param deckId id of the deck in which the flashcard is
+     * @param flashcard entity that needs to be edited
+     * @return flashcard object with the all the changes
+     * @throws FlashcardConstraintException when confidence level is outside 1-5 range of values
+     */
     Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException;
 
 }

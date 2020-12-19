@@ -92,7 +92,7 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
         String requestJsonUpdated = convertObjectToStringForJson(deckUpdatedName);
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders.put(FLASHCARD_ENDPOINT + '/' + deckUpdatedName.getId()).contentType(MediaType.APPLICATION_JSON).content(requestJsonUpdated))
+                .perform(MockMvcRequestBuilders.put(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJsonUpdated))
                 .andDo(print())
                 .andExpect(status().isOk());
         ResultActions resultActionsUpdated =

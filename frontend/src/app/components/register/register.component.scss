@@ -38,3 +38,29 @@ html, body {
   font-size: large;
 }
 
+.valid-input-text {
+  user-select: none;
+  visibility: hidden;
+}
+
+.invalid-input-text {
+  user-select: none;
+  color: #d93025;
+  display: block;
+  text-align: left;
+}
+
+.input-text-help {
+  user-select: none;
+  color: #5f6368;
+}
+
+.input-field-invalid {
+  border:1px solid #f00;
+}
+
+.help-left {
+  display: block;
+  text-align: left;
+}
+

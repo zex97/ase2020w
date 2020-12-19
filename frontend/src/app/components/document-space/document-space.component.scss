@@ -1,14 +1,9 @@
-.page-title {
-  font-size: 3em;
-  font-weight: lighter;
-}
-
 .flex-grid {
   display:flex;
 }
 
 .space-name {
-  color: #17a2b8;
+  color: #2B7A78;
   display: inline-block;
 }
 
@@ -20,6 +15,7 @@
   flex: 1 1 auto;
   max-width: 100%;
   min-width: 50%;
+  padding-right: 1px;
 }
 
 .listOfSpaceDocuments {
@@ -30,7 +26,32 @@
   padding-top: 1px;
 }
 
+#spacesListItem {
+  height: 100px !important; /** experiment with height **/
+  width: 100%;
+  background-color: #FEFFFF;
+}
 
-.mat-card {
+.mat-card-content {
+  width: 100%;
+}
+
+.highlighted {
+  background-color: lightgrey !important;
+}
+
+
+/* Copy to every page scss with a search bar*/
+::ng-deep.mat-form-field-underline {
+  /*change color of underline*/
+  background-color: #FEFFFF !important;
+}
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: #FEFFFF !important;
+}
+::ng-deep.mat-form-field-ripple {
+  /*change color of underline when focused*/
+  background-color: #FEFFFF !important;;
 }
 

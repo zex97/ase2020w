@@ -60,7 +60,6 @@ public class DeckRepositoryTest {
         userRepository.save(user);
 
         Deck deck = new Deck();
-        deck.setId(DECK_ID);
         deck.setName(DECK_NAME);
         deck.setSize(DECK_SIZE);
         deck.setCreationDate(DECK_CREATION_DATE);
@@ -68,10 +67,10 @@ public class DeckRepositoryTest {
         deck.setUser(user);
         deckRepository.save(deck);
 
-        Assertions.assertEquals(1, deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(USER_USERNAME).size());
+        List<Deck> decks = deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(USER_USERNAME);
+        Assertions.assertEquals(1, decks.size());
 
-        Deck storedDeck = deckRepository.findDeckById(DECK_ID);
-        Assertions.assertEquals(DECK_ID, storedDeck.getId());
+        Deck storedDeck = decks.get(0);
         Assertions.assertEquals(DECK_NAME, storedDeck.getName());
         Assertions.assertEquals(DECK_SIZE, storedDeck.getSize());
         Assertions.assertEquals(DECK_CREATION_DATE, storedDeck.getCreationDate());
@@ -110,7 +109,7 @@ public class DeckRepositoryTest {
         Assertions.assertEquals(2, deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(USER_USERNAME).size());
 
         List<Deck> decks = deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(USER_USERNAME);
-        Assertions.assertEquals(DECK_ID_2, decks.get(0).getId());
-        Assertions.assertEquals(DECK_ID, decks.get(1).getId());
+        Assertions.assertEquals(DECK_NAME_2, decks.get(0).getName());
+        Assertions.assertEquals(DECK_NAME, decks.get(1).getName());
     }
 }
