@@ -42,7 +42,10 @@ export class FlashcardManagerComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private snackBar: MatSnackBar) {
     this.deckForm = this.formBuilder.group({
-      title: ['']
+      title: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]]
     });
     this.deckEditForm = this.formBuilder.group({
       title: ['']
@@ -71,8 +74,15 @@ export class FlashcardManagerComponent implements OnInit {
       revisionSize: [0]
     });
     this.flashcardRateForm = this.formBuilder.group({
-      confidenceLevel: [0]
+      confidenceLevel: [1, [
+        Validators.min(1),
+        Validators.max(5)
+      ]]
     });
+  }
+
+  validateConfidenceLevelValue() {
+    return this.flashcardRateForm.value.confidenceLevel < 1 || this.flashcardRateForm.value.confidenceLevel > 5;
   }
 
   ngOnInit(): void {

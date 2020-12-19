@@ -31,11 +31,17 @@
           </button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="deckForm" action="#!" class="text-center border border-light p-5">
-
+          <form action="#!" class="text-center border border-light p-5">
             <p class="h4 mb-4">New flashcard deck</p>
-            <input class="form-control mb-4" formControlName="title" placeholder="Title" type="text">
-
+            <mat-form-field appearance="outline" class="mat-select" [formGroup]="deckForm">
+              <mat-label style="color: #5f6368; width: 100%;">Deck title</mat-label>
+              <input type="text" formControlName="title"
+                     formGroupName="title" matInput
+                     placeholder="Title" id="deckTitle" required>
+              <mat-hint *ngIf="deckForm.controls.title.errors" class="control-label invalid-input-text">
+                Can't be empty!
+              </mat-hint>
+            </mat-form-field>
           </form>
         </div>
         <div class="modal-footer">
@@ -64,33 +70,33 @@
             <p class="h4 mb-4">New flashcard</p>
 
             <!-- Question -->
-              <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardForm">
-                <mat-label style="color: #5f6368; width: 100%;">Question</mat-label>
-                <input type="text" formControlName="question"
-                       formGroupName="question" matInput
-                       placeholder="Your question" id="question" required>
-                <mat-hint *ngIf="flashcardForm.controls.question.errors" class="control-label invalid-input-text">
-                  Can't be empty!
-                </mat-hint>
-              </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardForm">
+              <mat-label style="color: #5f6368; width: 100%;">Question</mat-label>
+              <input type="text" formControlName="question"
+                     formGroupName="question" matInput
+                     placeholder="Your question" id="question" required>
+              <mat-hint *ngIf="flashcardForm.controls.question.errors" class="control-label invalid-input-text">
+                Can't be empty!
+              </mat-hint>
+            </mat-form-field>
             <!-- Answer -->
-              <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardForm">
-                <mat-label style="color: #5f6368; width: 100%;">Answer</mat-label>
-                <textarea title="Answer" formControlName="answer"
-                          formGroupName="answer" matInput
-                          placeholder="Your answer" id="answer" required></textarea>
-                <mat-hint *ngIf="flashcardForm.controls.answer.errors" class="control-label invalid-input-text">
-                  Can't be empty!
-                </mat-hint>
-              </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardForm">
+              <mat-label style="color: #5f6368; width: 100%;">Answer</mat-label>
+              <textarea title="Answer" formControlName="answer"
+                        formGroupName="answer" matInput
+                        placeholder="Your answer" id="answer" required></textarea>
+              <mat-hint *ngIf="flashcardForm.controls.answer.errors" class="control-label invalid-input-text">
+                Can't be empty!
+              </mat-hint>
+            </mat-form-field>
             <!-- Select deck -->
-              <mat-form-field appearance="outline" class="mat-select">
-                <mat-label>Select a deck</mat-label>
-                <mat-select [(value)]="this.selectedDeckId" class="select">
-                  <mat-option hidden value="null">Deck</mat-option>
-                  <mat-option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-select">
+              <mat-label>Select a deck</mat-label>
+              <mat-select [(value)]="this.selectedDeckId" class="select">
+                <mat-option hidden value="null">Deck</mat-option>
+                <mat-option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
           </form>
         </div>
         <div class="modal-footer">
@@ -189,10 +195,17 @@
             </button>
           </div>
           <div class="modal-body">
-            <form [formGroup]="deckEditForm" action="#!" class="text-center border border-light p-5">
-              <h4>New name for the deck:</h4>
-              <input class="form-control mb-4" formControlName="title" type="text">
-
+            <form action="#!" class="text-center border border-light p-5">
+              <p class="h4 mb-4">New deck Title:</p>
+              <mat-form-field appearance="outline" class="mat-select" [formGroup]="deckEditForm">
+                <mat-label style="color: #5f6368; width: 100%;">Title</mat-label>
+                <input type="text" formControlName="title"
+                       formGroupName="title" matInput
+                       placeholder="Title" id="editDeckTitle" required>
+                <mat-hint *ngIf="deckEditForm.controls.title.errors" class="control-label invalid-input-text">
+                  Can't be empty!
+                </mat-hint>
+              </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
@@ -291,10 +304,27 @@
           </div>
           <div class="modal-body">
             <form [formGroup]="flashcardEditForm" action="#!" class="text-center border border-light p-5">
-              <label>Question:</label>
-              <input class="form-control mb-4" formControlName="question" type="text">
-              <label>Answer:</label>
-              <input class="form-control mb-4" formControlName="answer" type="text">
+              <p class="h4 mb-4">Edit flashcard</p>
+
+              <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardEditForm">
+                <mat-label style="color: #5f6368; width: 100%;">Edit question</mat-label>
+                <input type="text" formControlName="question"
+                       formGroupName="question" matInput
+                       placeholder="Your question" id="editQuestion" required>
+                <mat-hint *ngIf="flashcardEditForm.controls.question.errors" class="control-label invalid-input-text">
+                  Can't be empty!
+                </mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardEditForm">
+                <mat-label style="color: #5f6368; width: 100%;">Edit answer</mat-label>
+                <textarea title="Answer" formControlName="answer"
+                          formGroupName="answer" matInput
+                          placeholder="Your answer" id="editAnsewer" required></textarea>
+                <mat-hint *ngIf="flashcardEditForm.controls.answer.errors" class="control-label invalid-input-text">
+                  Can't be empty!
+                </mat-hint>
+              </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
@@ -348,9 +378,17 @@
             </button>
           </div>
           <div class="modal-body">
-            <form [formGroup]="flashcardRateForm" action="#!" class="text-center border border-light p-5">
-              <label>Rate with personal confidence level from 1 to 5:</label>
-              <input class="form-control mb-4" formControlName="confidenceLevel" type="number" max="5" min="1">
+            <form action="#!" class="text-center border border-light p-5">
+              <p class="h4 mb-4">Rate with personal confidence level from 1 to 5:</p>
+              <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardRateForm">
+                <mat-label>Confidence level</mat-label>
+                <input matInput formControlName="confidenceLevel" type="number" minlength="1"
+                       maxlength="1" max="5" min="1">
+                <mat-hint *ngIf="validateConfidenceLevelValue()"
+                          class="control-label invalid-input-text">
+                  Confidence level must be between 1 and 5!
+                </mat-hint>
+              </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
