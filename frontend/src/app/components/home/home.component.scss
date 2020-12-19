@@ -4,6 +4,21 @@
   color: #3AAFA9;
 }
 
+span {
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  font-weight: lighter;
+  font-size: 1.5em;
+}
+
+.page-title {
+  font-size: 1em;
+  font-weight: lighter;
+  horiz-align: center;
+  vertical-align: center;
+}
+
 #wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
