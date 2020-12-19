@@ -29,6 +29,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {MatListModule} from '@angular/material/list';
         MatButtonToggleModule,
         MatExpansionModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        MatInputModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

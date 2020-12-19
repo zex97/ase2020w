@@ -6,14 +6,19 @@
   </button>
 </div>
 
-<div class="page-title-wrapper">
-  <h1 class="page-title">Spaces</h1>
-</div>
-
-<div class="mt-4 container">
+<div class="topPageDiv">
   <div class="row p-2 mb-4">
-    <button class="btn btn-sm mr-4 button-light" data-target=".create-space-modal" data-toggle="modal"
-            mat-raised-button>
+
+    <mat-form-field style="height: 50px !important;">
+      <mat-placeholder style="color: #FEFFFF">Search spaces</mat-placeholder>
+      <input matInput type="search" style="color: #FEFFFF">
+      <button mat-button matSuffix mat-stroked-button aria-label="search" style="border-color: #FEFFFF">
+        <mat-icon style="color: #FEFFFF">search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button data-target=".create-space-modal" data-toggle="modal"
+            mat-stroked-button style="height: fit-content; margin: 8px 20px; border-color: #FEFFFF;color: #FEFFFF">
       Create a space
     </button>
 
@@ -50,19 +55,17 @@
 <div class="flex-grid">
 
   <div class="col" id="listOfSpaces">
-    <mat-list *ngFor="let space of getSpaces()">
-      <mat-card (click)="loadSpaceDetails(space.id); setSelectSpace(space)">
+    <mat-nav-list *ngFor="let space of getSpaces()">
+      <mat-list-item id="spacesListItem" (click)="loadSpaceDetails(space.id); setSelectSpace(space)" [class.highlighted]="space==selectSpace">
         <mat-card-content>
           <mat-card-title>
-            <h5 class="space-name">Name: {{space.name}}</h5>
+            <h3 class="space-name">Name: {{space.name}}</h3>
             <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
-                  data-toggle="modal">x</span>
+                  data-toggle="modal"><mat-icon>delete</mat-icon></span>
             <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal" data-toggle="modal"
-                  style="margin-right:5%;"><img
-              src="../../../assets/edit.png" width="15px;"></span>
+                  style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
             <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal"
-                  data-toggle="modal" style="margin-right:5%;"><img
-              src="../../../assets/upload-logo.png" width="25px;"></span>
+                  data-toggle="modal" style="margin-right:5%;"><mat-icon> attach_file</mat-icon></span>
 
             <!-- file upload modal -->
             <div *ngIf="currentSpace" aria-hidden="true" aria-label="Upload Files" class="modal fade upload-file-modal"
@@ -168,11 +171,11 @@
               </div>
             </div>
           </mat-card-title>
-          <div class="card-text"> Lorem ipsum</div>
+          <div class="card-text">Add something about specific space!</div>
 
         </mat-card-content>
-      </mat-card>
-    </mat-list>
+      </mat-list-item>
+    </mat-nav-list>
   </div>
 
   <div [class.listOfSpaceDocumentsCollapsed]="!selectSpace" [class.listOfSpaceDocuments]="selectSpace" class="col">
