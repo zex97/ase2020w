@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class implements File processor
@@ -65,7 +66,10 @@ public class CliFilePreprocessor implements FilePreprocessor {
 
     private String prepareTargetDirectory(String sourceFilePath) throws IOException {
         File sourceFile = new File(sourceFilePath);
-        return Files.createTempDirectory(sourceFile.getParentFile().toPath(),sourceFile.getName()).toString();
+        Path parentDir = sourceFile.getParentFile().toPath();
+        String fileName = sourceFile.getName().replaceAll("\\W","");
+        String targetDirectory = Files.createTempDirectory(parentDir, fileName).toString() + File.separator;
+        return targetDirectory;
     }
 
     private void exec(String command) throws IOException, InterruptedException {
@@ -78,7 +82,7 @@ public class CliFilePreprocessor implements FilePreprocessor {
         String command = String.format(getCmdForFileType(sourceFile),
                 sourceFile,
                 CHUNK_LENGTH,
-                targetDirectory + File.separator + getFilePrefix(sourceFile));
+                targetDirectory + getFilePrefix(sourceFile));
         return command;
     }
 

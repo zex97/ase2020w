@@ -18,7 +18,7 @@ import java.io.File;
  */
 @Service
 public class SimpleTranscriptionService implements TranscriptionService {
-    private final Logger logger = LoggerFactory.getLogger(SpeechRecognitionService.class);
+    private final Logger logger = LoggerFactory.getLogger(SimpleTranscriptionService.class);
 
     @Autowired
     private FilePreprocessor filePreprocessor;
@@ -37,8 +37,7 @@ public class SimpleTranscriptionService implements TranscriptionService {
             String transcription = speechRecognitionService.transcribeFilesInDirectory(outputDirectory);
             logger.debug(transcription);
             cleanup(outputDirectory);
-            // TODO persist transcription
-            // Allow IllegalFormatException to the outside
+            // TODO Allow IllegalFormatException to pass
         } catch (Exception e){
             logger.error("Could not transcribe file {}", document.getFilePath(), e);
         }
