@@ -37,6 +37,7 @@ public class SimpleTranscriptionService implements TranscriptionService {
         try{
             String outputDirectory = filePreprocessor.cutIntoChunks(document.getFilePath());
             String transcription = speechRecognitionService.transcribeFilesInDirectory(outputDirectory);
+            document.setTranscription(transcription);
             logger.debug(transcription);
             cleanup(outputDirectory);
             // TODO Allow IllegalFormatException to pass

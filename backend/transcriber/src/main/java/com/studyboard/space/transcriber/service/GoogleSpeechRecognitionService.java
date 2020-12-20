@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,6 +39,7 @@ public class GoogleSpeechRecognitionService implements SpeechRecognitionService 
         if (fileNames == null){
             return transcriptionBuilder.toString();
         }
+        Arrays.sort(fileNames);
         for (String fileName : fileNames) {
             transcriptionBuilder.append(transcribeFile(directoryPath + fileName));
         }
