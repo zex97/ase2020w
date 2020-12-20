@@ -115,8 +115,7 @@ body {
   background-color: #2b7a78;
   color: white;
 }
-
-
-
+/* Display mat-select fields over the modal (depth adjustment) */
+.cdk-global-overlay-wrapper, .cdk-overlay-container { z-index: 9999!important; }
 
 

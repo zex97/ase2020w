@@ -11,7 +11,7 @@
 
     <mat-form-field style="height: 50px !important;">
       <mat-placeholder style="color: #FEFFFF">Search spaces</mat-placeholder>
-      <input matInput type="search" style="color: #FEFFFF">
+      <input title="search" matInput type="search" style="color: #FEFFFF">
       <button mat-button matSuffix mat-stroked-button aria-label="search" style="border-color: #FEFFFF">
         <mat-icon style="color: #FEFFFF">search</mat-icon>
       </button>
@@ -25,18 +25,24 @@
          tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title"></h5>
+          <div class="modal-header" style="text-align: center">
+            <h2 class="modal-title"> New document space</h2>
             <button aria-label="Close" class="close" data-dismiss="modal" type="button">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form [formGroup]="spaceForm" action="#!" class="text-center border border-light p-5">
+            <form class="modal-input-form">
 
-              <p class="h4 mb-4">New document space</p>
-              <input class="form-control mb-4" formControlName="name" placeholder="Name" type="text">
-
+              <mat-form-field appearance="outline" class="modal-input-full-width" [formGroup]="spaceForm">
+                <mat-label style="color: #5f6368">Space Name</mat-label>
+                <input [value]="spaceForm.value.name" title="name" type="text" formControlName="name"
+                       formGroupName="name" matInput
+                       placeholder="eg. MathSpace" id="name" required>
+                <mat-hint *ngIf="spaceForm.controls.name.errors" class="control-label invalid-input-text">Can't be
+                  empty!
+                </mat-hint>
+              </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
@@ -54,7 +60,8 @@
 
   <div class="col" id="listOfSpaces">
     <mat-nav-list *ngFor="let space of getSpaces()">
-      <mat-list-item id="spacesListItem" (click)="loadSpaceDetails(space.id); setSelectSpace(space)" [class.highlighted]="space==selectSpace">
+      <mat-list-item id="spacesListItem" (click)="loadSpaceDetails(space.id); setSelectSpace(space)"
+                     [class.highlighted]="space==selectSpace">
         <mat-card-content>
           <mat-card-title>
             <h3 class="space-name">Name: {{space.name}}</h3>
@@ -83,18 +90,18 @@
                         <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
                       </div>
                       <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
-                      <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames" accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
+                      <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames"
+                             accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
                              multiple type="file"
                              value="name">
                       <!--<label for="files">Choose files </label>-->
                     </div>
                     <div *ngIf="filesToUpload.length>0">
                       <label for="files">Names of files to upload: </label>
-                      <mat-card *ngFor="let file of getFilesToUpload(); let i = index"
-                                style="padding-bottom: 1em">
+                      <mat-card *ngFor="let file of getFilesToUpload(); let i = index">
                         {{file.name}}
-                        <button (click)="removeFileFromList(i)" aria-label="Remove" data-toggle="modal" mat-button>
-                          <span aria-hidden="true">&times;</span>
+                        <button (click)="removeFileFromList(i)" style="float: right" aria-label="Remove" data-toggle="modal" mat-button>
+                          &times;
                         </button>
                         <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
                       </mat-card>
@@ -103,7 +110,8 @@
                   </div>
 
                   <div class="modal-footer">
-                    <button (click)="uploadFiles(currentSpace)" *ngIf="filesReadyForUpload()" class="btn btn-info" data-dismiss="modal"
+                    <button (click)="uploadFiles(currentSpace)" *ngIf="filesReadyForUpload()" class="btn btn-info"
+                            data-dismiss="modal"
                             type="button">Submit
                     </button>
                     <button (click)="clearInputFiles()" class="btn btn-secondary" data-dismiss="modal" type="button">
@@ -115,30 +123,36 @@
             </div>
 
             <!--Edit space modal-->
-            <div *ngIf="currentSpace" aria-hidden="true" aria-labelledby="Edit space modal" class="modal fade edit-space-modal"
+            <div *ngIf="currentSpace" aria-hidden="true" aria-labelledby="Edit space modal"
+                 class="modal fade edit-space-modal"
                  role="dialog"
                  tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title"></h5>
+                    <h5 class="modal-title">Change name of the space</h5>
                     <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form [formGroup]="nameEditForm" action="#!" class="text-center border border-light p-5">
-
-                      <p class="h4 mb-4">New name:</p>
-                      <input class="form-control mb-4" formControlName="name" type="text">
-
+                    <form class="modal-input-form">
+                      <mat-form-field appearance="outline" class="modal-input-full-width" [formGroup]="nameEditForm">
+                        <mat-label style="color: #5f6368">Edit name</mat-label>
+                        <input [value]="currentSpace.name" type="text" formControlName="name"
+                               formGroupName="name" matInput
+                               placeholder="eg. MathSpace" id="newName" required>
+                        <mat-hint *ngIf="nameEditForm.controls.name.errors" class="control-label invalid-input-text">
+                          Can't be empty!
+                        </mat-hint>
+                      </mat-form-field>
                     </form>
                   </div>
                   <div class="modal-footer">
                     <button (click)="saveEdits(space)" class="btn btn-info float-right" data-dismiss="modal"
                             type="button">Ok
                     </button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <button (click)="nameEditForm.reset()" class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                   </div>
                 </div>
               </div>
@@ -157,10 +171,10 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <h5>Are you sure you want to delete space {{getCurrentSpace().name}}?</h5>
+                    <h3>Are you sure you want to delete space {{getCurrentSpace().name}}?</h3>
                   </div>
                   <div class="modal-footer">
-                    <button (click)="deleteSpace(space.id)" class="btn btn-info float-right" data-dismiss="modal"
+                    <button (click)="deleteSpace(currentSpace.id)" class="btn btn-info float-right" data-dismiss="modal"
                             type="button">Ok
                     </button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
