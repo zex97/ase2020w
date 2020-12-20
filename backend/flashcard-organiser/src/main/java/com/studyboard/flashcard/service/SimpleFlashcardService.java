@@ -60,6 +60,8 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public List<Flashcard> getAllFlashcardsOfDeck(long deckId) {
+        Deck deck = findDeckById(deckId);
+        logger.info("Getting all flashcards belonging to the deck with name " + deck.getName());
         return flashcardRepository.findByDeckId(deckId);
     }
 
@@ -93,6 +95,7 @@ public class SimpleFlashcardService implements FlashcardService {
         if (flashcard.getDeck() != deck) {
             //create a Not Allowed exception
         }
+        logger.info("Getting flashcard with question " + flashcard.getQuestion());
         return flashcard;
     }
 
@@ -104,18 +107,26 @@ public class SimpleFlashcardService implements FlashcardService {
         flashcardRepository.save(flashcard);
         deck.setSize(deck.getSize() + 1);
         deckRepository.save(deck);
+        logger.info("Created new flashcard with question "
+                + flashcard.getQuestion() +
+                " for deck with name "
+                + deck.getName());
     }
 
     @Override
     public void deleteDeck(long deckId) {
+        Deck deck = findDeckById(deckId);
         deckRepository.deleteById(deckId);
+        logger.info("Delete deck with name " + deck.getName());
     }
 
     @Override
     public void deleteFlashcard(long deckId, long flashcardId) {
         Deck deck = findDeckById(deckId);
         deck.setSize(deck.getSize() - 1);
+        Flashcard flashcard = flashcardRepository.findFlashcardById(flashcardId);
         flashcardRepository.deleteById(flashcardId);
+        logger.info("Delete flashcard with question " + flashcard.getQuestion());
     }
 
     @Override
@@ -125,6 +136,7 @@ public class SimpleFlashcardService implements FlashcardService {
             storedFlashcard.setQuestion(flashcard.getQuestion());
             storedFlashcard.setAnswer(flashcard.getAnswer());
             storedFlashcard.setConfidenceLevel(flashcard.getConfidenceLevel());
+            logger.info("Edited or rated the flashcard with question " + storedFlashcard.getQuestion());
             return flashcardRepository.save(storedFlashcard);
         } catch (ConstraintViolationException e) {
             throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");
@@ -144,6 +156,7 @@ public class SimpleFlashcardService implements FlashcardService {
     private User findUserById(long userId) {
         User user = userRepository.findUserById(userId);
         if (user == null) {
+            logger.warn("User does not exist");
             throw new UserDoesNotExist();
         }
         return user;
