@@ -5,6 +5,7 @@ services:
     build: ..
     environment:
       - DB_HOST=postgres
+      - GOOGLE_APPLICATION_CREDENTIALS=/opt/config/credentials.json
     ports:
       - "8080:8080"
     depends_on:
