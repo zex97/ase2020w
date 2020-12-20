@@ -20,3 +20,7 @@
   </mat-list-item>
 </mat-nav-list>
 
+<div class="warningMessageContainer" *ngIf="isEmpty()">
+  <h3 class="warningMessage">There are no documents in this space!</h3>
+</div>
+
