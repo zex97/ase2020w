@@ -99,6 +99,10 @@ export class DocumentSpaceComponent implements OnInit {
     this.selectSpace = space;
   }
 
+  resetSpaceFrom() {
+    this.spaceForm.reset();
+  }
+
   /**
    * Save uploaded files into a global variable and check if any
    * of them exceed the upload limit.

@@ -115,7 +115,33 @@ body {
   background-color: #2b7a78;
   color: white;
 }
+
+.pageTopBarButton {
+  height: fit-content !important;
+  margin: 8px 20px !important;
+  border-color: #FEFFFF !important;
+  color: #FEFFFF !important;
+}
+
+.pageTopBarSearchField {
+  height: 50px !important;
+}
+
 /* Display mat-select fields over the modal (depth adjustment) */
 .cdk-global-overlay-wrapper, .cdk-overlay-container { z-index: 9999!important; }
+
+
+
+/* Modal windows */
+.mat-hint {
+  color: grey !important;
+}
+.modal-header {
+  text-align: center !important;
+}
+.modal-title {
+  margin: 0 !important;
+  font-weight: normal !important;
+}
 
 
