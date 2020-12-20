@@ -7,6 +7,7 @@ import com.studyboard.space.transcriber.service.interafaces.TranscriptionService
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.File;
  *
  */
 @Service
+@Profile("!local")
 public class SimpleTranscriptionService implements TranscriptionService {
     private final Logger logger = LoggerFactory.getLogger(SimpleTranscriptionService.class);
 
