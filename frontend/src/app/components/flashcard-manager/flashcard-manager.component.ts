@@ -135,23 +135,24 @@ export class FlashcardManagerComponent implements OnInit {
     //this.deckForm.reset({'title':''});
   }
 
+  /**
+   * Save changes to deck dto and sends an edition request.
+   */
   saveEdits(deck: Deck) {
-    //send edits to backend
-    this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      deck.name = this.deckEditForm.controls.title.value;
-      this.flashcardService.editDeck(deck).subscribe(
-        (editedDeck: Deck) => {
-          this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
-          this.selectedDeck = editedDeck;
-        },
-        error => {
-          this.error = true;
-          this.errorMessage = 'Could not edit the deck!';
-          this.openSnackbar(this.errorMessage, 'warning-snackbar');
-        }
-      );
-    });
-    //this.deckForm.reset({'title':''});
+      this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
+             deck.name = this.deckEditForm.controls.title.value;
+                 this.flashcardService.editDeck(deck).subscribe(
+                      (editedDeck: Deck) => {
+                             this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
+                             this.selectedDeck = editedDeck;
+                             },
+                             error => {
+                               this.error = true;
+                               this.errorMessage = 'Could not edit the deck!';
+                               this.openSnackbar(this.errorMessage, 'warning-snackbar');
+                             }
+                           );
+       });
   }
 
 
@@ -176,10 +177,16 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardForm.reset();
   }
 
+  /**
+   * @return all flashcards belonging to the logged-in user
+   */
   getFlashcards() {
     return this.flashcards;
   }
 
+  /**
+   * Builds a flashcard dto and sends a creation request.
+   */
   createFlashcard() {
     this.flashcardService.getDeckById(this.selectedDeckId).subscribe(res => {
       console.log(res);
@@ -200,62 +207,67 @@ export class FlashcardManagerComponent implements OnInit {
     });
   }
 
+  /**
+   * Save changes to flashcard dto and sends an edition request.
+   */
   saveFlashcardEdits(flashcard: Flashcard) {
-    //send edits to backend
-    console.log(flashcard);
-    this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
-      let question = this.flashcardEditForm.controls.question.value;
-      let answer = this.flashcardEditForm.controls.answer.value;
-      if (question != null && question != '') {
-        flashcard.question = question;
-      }
-      if (answer != null && answer != '') {
-        flashcard.answer = answer;
-      }
-      this.flashcardService.editFlashcard(flashcard, this.selectedDeck.id).subscribe(
-        () => {
-          this.openSnackbar('You successfully edited a flashcard!', 'success-snackbar');
-          this.loadFlashcards(this.selectedDeck);
-        },
-        error => {
-          this.error = true;
-          this.errorMessage = 'Could not edit the flashcard!';
-          this.openSnackbar(this.errorMessage, 'warning-snackbar');
-        }
-      );
-    });
+        console.log(flashcard);
+         this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
+                let question = this.flashcardEditForm.controls.question.value;
+                let answer = this.flashcardEditForm.controls.answer.value;
+               if (question != null && question !== '') {
+                flashcard.question = question;
+               }
+               if (answer != null && answer !== '') {
+                flashcard.answer = answer;
+              }
+              this.flashcardService.editFlashcard(flashcard, this.selectedDeck.id).subscribe(
+                    () => {
+                           this.openSnackbar('You successfully edited a flashcard!', 'success-snackbar');
+                           this.loadFlashcards(this.selectedDeck);
+                           },
+                           error => {
+                             this.error = true;
+                             this.errorMessage = 'Could not edit the flashcard!';
+                             this.openSnackbar(this.errorMessage, 'warning-snackbar');
+                           });
+         });
   }
 
-
+  /**
+   * Sends a revision request based on chosen revision size.
+   */
   revise() {
-    this.sizeError = false;
-    let size = this.revisionSizeForm.controls.revisionSize.value;
-    if (size < 0 || size > this.selectedDeck.size) {
-      this.sizeError = true;
-      //this.openSnackbar('Number of chosen cards not corresponding to the size of the deck', 'warning-snackbar');
-    } else {
-      this.chooseSize = false;
-      this.revisionCounter = 0;
-      this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
-        (flashcards: Flashcard[]) => {
-          this.revisionFlashcards = flashcards;
-          this.getRevisionFlashcard();
-        },
-        error => {
-          this.defaultErrorHandling(error);
-        }
-      );
-    }
+      this.sizeError = false;
+      let size = this.revisionSizeForm.controls.revisionSize.value;
+      if (size < 0 || size > this.selectedDeck.size) {
+          this.sizeError = true;
+      } else {
+            this.chooseSize = false;
+            this.revisionCounter = 0;
+            this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
+                (flashcards: Flashcard[]) => {
+                             this.revisionFlashcards = flashcards;
+                             this.getRevisionFlashcard();
+                             },
+                             error => {
+                                   this.defaultErrorHandling(error);
+                             }
+                         );
+      }
 
   }
 
-  getRevisionFlashcard() {
-    this.showAnswer = false;
-    this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
-    if (this.revisionCounter < this.revisionFlashcards.length) {
-      this.revisionCounter = this.revisionCounter + 1;
-    }
-  }
+  /**
+   * @return next flashcard for the revision
+   */
+   getRevisionFlashcard() {
+     this.showAnswer = false;
+     this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
+     if (this.revisionCounter < this.revisionFlashcards.length) {
+        this.revisionCounter = this.revisionCounter + 1;
+     }
+   }
 
 
   /**
@@ -288,6 +300,9 @@ export class FlashcardManagerComponent implements OnInit {
       });
   }
 
+  /**
+   * Sends a request to rate a specific flashcard.
+   */
   rateFlashcard(flashcard: Flashcard) {
     console.log(flashcard);
     this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
@@ -317,16 +332,16 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   flashcardClicked(select: Flashcard, del: boolean) {
-    console.log(select);
-    this.selectedFlashcard = select;
-    this.showFlashcardId = select.id;
-    this.deleteFlash = del;
-    console.log(this.showFlashcardId);
-    this.flashcardEditForm.patchValue({
-      question: select.question,
-      answer: select.answer
-    });
-  }
+     console.log(select);
+     this.selectedFlashcard = select;
+     this.showFlashcardId = select.id;
+     this.deleteFlash = del;
+     console.log(this.showFlashcardId);
+     this.flashcardEditForm.patchValue({
+        question: select.question,
+        answer: select.answer
+     });
+   }
 
   openSnackbar(message: string, type: string) {
     this.snackBar.open(message, 'close', {
