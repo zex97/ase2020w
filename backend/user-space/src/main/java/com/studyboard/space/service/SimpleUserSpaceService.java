@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleUserSpaceService implements UserSpaceService {
@@ -57,7 +58,8 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public void removeDocumentFromSpace(long spaceId, long documentId) {
         Space space = findSpaceById(spaceId);
-        space.getDocuments().removeIf(d -> d.getId() == documentId);
+        List<Document> documents = space.getDocuments().stream().filter(d -> d.getId() != documentId).collect(Collectors.toList());
+        space.setDocuments(documents);
         spaceRepository.save(space);
     }
 
