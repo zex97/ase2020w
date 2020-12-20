@@ -1,6 +1,9 @@
 package com.studyboard.space.transcriber.service;
 
 import com.studyboard.model.Document;
+import com.studyboard.space.transcriber.service.interafaces.FilePreprocessor;
+import com.studyboard.space.transcriber.service.interafaces.SpeechRecognitionService;
+import com.studyboard.space.transcriber.service.interafaces.TranscriptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

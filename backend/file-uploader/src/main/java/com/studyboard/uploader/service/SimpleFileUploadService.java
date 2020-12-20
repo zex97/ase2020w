@@ -5,7 +5,7 @@ import com.studyboard.model.Space;
 import com.studyboard.model.User;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
-import com.studyboard.space.transcriber.service.TranscriptionService;
+import com.studyboard.space.transcriber.service.interafaces.TranscriptionService;
 import com.studyboard.uploader.FileStorageProperties;
 import com.studyboard.uploader.exception.FileStorageException;
 import com.studyboard.uploader.exception.StorageFileNotFoundException;

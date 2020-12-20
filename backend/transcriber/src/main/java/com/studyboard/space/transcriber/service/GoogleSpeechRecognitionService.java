@@ -2,6 +2,7 @@ package com.studyboard.space.transcriber.service;
 
 import com.google.cloud.speech.v1.*;
 import com.google.protobuf.ByteString;
+import com.studyboard.space.transcriber.service.interafaces.SpeechRecognitionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Service
-public class SpeechRecognitionService {
-    private final Logger logger = LoggerFactory.getLogger(SpeechRecognitionService.class);
+public class GoogleSpeechRecognitionService implements SpeechRecognitionService {
+    private final Logger logger = LoggerFactory.getLogger(GoogleSpeechRecognitionService.class);
 
     private final RecognitionConfig config =
             RecognitionConfig.newBuilder()
@@ -30,6 +31,7 @@ public class SpeechRecognitionService {
      * @return string with transcription
      */
     public String transcribeFilesInDirectory(String directoryPath){
+        logger.info("Starting speech recognition");
         File dirWithChunks = new File(directoryPath);
         String[] fileNames = dirWithChunks.list();
         StringBuilder transcriptionBuilder = new StringBuilder();
@@ -39,6 +41,7 @@ public class SpeechRecognitionService {
         for (String fileName : fileNames) {
             transcriptionBuilder.append(transcribeFile(directoryPath + fileName));
         }
+        logger.info("Speech recognition complete");
         return transcriptionBuilder.toString();
     }
 
@@ -49,6 +52,7 @@ public class SpeechRecognitionService {
      * @return string with transcription
      */
     public String transcribeFile(String filePath){
+        logger.info("Processing next file.");
         String transcription = "";
         try (SpeechClient speech = SpeechClient.create()) {
             RecognitionAudio requestBody = RecognitionAudio.newBuilder().setContent(getBytes(filePath)).build();

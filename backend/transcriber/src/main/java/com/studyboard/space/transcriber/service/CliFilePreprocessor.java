@@ -3,6 +3,7 @@ package com.studyboard.space.transcriber.service;
 import com.studyboard.space.transcriber.config.TranscriberConfig;
 import com.studyboard.space.transcriber.exception.FfmpegException;
 import com.studyboard.space.transcriber.exception.FfmpegIllegalFormatException;
+import com.studyboard.space.transcriber.service.interafaces.FilePreprocessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

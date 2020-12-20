@@ -1,4 +1,4 @@
-package com.studyboard.space.transcriber.service;
+package com.studyboard.space.transcriber.service.interafaces;
 
 import com.studyboard.model.Document;
 
