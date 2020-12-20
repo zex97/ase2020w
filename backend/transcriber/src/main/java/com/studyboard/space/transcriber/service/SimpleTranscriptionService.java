@@ -40,7 +40,6 @@ public class SimpleTranscriptionService implements TranscriptionService {
             document.setTranscription(transcription);
             logger.debug(transcription);
             cleanup(outputDirectory);
-            // TODO Allow IllegalFormatException to pass
         } catch (Exception e){
             logger.error("Could not transcribe file {}", document.getFilePath(), e);
         }
