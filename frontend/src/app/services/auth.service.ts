@@ -22,10 +22,11 @@ export class AuthService {
   }
 
   /**
-   * Login in the user. If it was successful, a valid JWT token will be stored
+   * Login of the user. If it was successful, a valid JWT token will be stored
    * @param authRequest User data
    */
   loginUser(authRequest: AuthRequest): Observable<AuthResponse> {
+    console.log('Log in');
     return this.httpClient.post<AuthResponse>(this.authBaseUri, authRequest)
       .pipe(
         tap((authResponse: AuthResponse) => this.setToken(authResponse))
@@ -40,8 +41,11 @@ export class AuthService {
     return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
   }
 
+  /**
+   * Logout of the user. If it was successful, a valid JWT token will be removed
+   */
   logoutUser() {
-    console.log('Logout');
+    console.log('Log out');
     localStorage.removeItem('currentToken');
     localStorage.removeItem('futureToken');
     localStorage.removeItem('currentUser');

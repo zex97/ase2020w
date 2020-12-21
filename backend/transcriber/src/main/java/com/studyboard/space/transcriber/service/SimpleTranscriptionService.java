@@ -27,11 +27,6 @@ public class SimpleTranscriptionService implements TranscriptionService {
     @Autowired
     private SpeechRecognitionService speechRecognitionService;
 
-    /**
-     * This method is used to transcribe given file and store information in the DB.
-     * If the service could not transcribe the file empty transcription will be saved.
-     * @param document document representation of the file to be transcribed
-     */
     @Override
     public void transcribe(Document document) {
         try{

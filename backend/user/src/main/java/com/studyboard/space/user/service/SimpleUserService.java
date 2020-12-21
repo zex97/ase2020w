@@ -6,6 +6,8 @@ import com.studyboard.model.Authorities;
 import com.studyboard.model.User;
 import com.studyboard.repository.AuthoritiesRepository;
 import com.studyboard.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,8 +17,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/** Service used to manage users. Performs user creation, getting, and update of user password */
 @Service
 public class SimpleUserService implements UserService {
+
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -33,6 +38,7 @@ public class SimpleUserService implements UserService {
         if (user == null) {
             throw new UserDoesNotExist();
         }
+        logger.info("Getting user with id " + id);
         return user;
     }
 
@@ -42,11 +48,13 @@ public class SimpleUserService implements UserService {
         if (user == null) {
             throw new UserDoesNotExist();
         }
+        logger.info("Getting user with username " + username);
         return user;
     }
 
     @Override
     public List<User> getAllUsers() {
+        logger.info("Getting all users.");
         return userRepository.findAll();
     }
 
@@ -58,6 +66,7 @@ public class SimpleUserService implements UserService {
             user.setRole("USER");
             user.setEnabled(true);
             user.setPassword(hashedPassword);
+            logger.info("Created new user with username " + user.getUsername());
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             if (((Collection<?>) authoritiesRepository.findAll()).size() != userRepository.findAll().size()) {
@@ -76,6 +85,7 @@ public class SimpleUserService implements UserService {
         }
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         storedUser.setPassword(hashedPassword);
+        logger.info("Password of user with username" + user.getUsername() + " was updated");
         return userRepository.save(storedUser);
     }
 
@@ -86,6 +96,7 @@ public class SimpleUserService implements UserService {
             throw new UserDoesNotExist();
         }
         user.setLoginAttempts(0);
+        logger.info("Login attempts of user with username " + user.getUsername() + " were reset");
         return userRepository.save(user);
     }
 }
