@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** Service used to manage token authentication. */
 @Service
 public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthenticationService {
 

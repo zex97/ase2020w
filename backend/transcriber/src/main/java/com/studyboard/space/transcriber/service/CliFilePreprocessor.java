@@ -42,13 +42,6 @@ public class CliFilePreprocessor implements FilePreprocessor {
         this.audioCmd = ffmpegLocation + " -i %s -f segment -segment_time %s -ac 1 %s%%03d.wav";
     }
 
-    /**
-     * Cuts the given audio or video file into chunks with length CHUNK_LENGTH seconds
-     *
-     * @param sourceFilePath absolute path to the source file
-     * @return new directory with chunks
-     * Attention! creates an additional folder in system path.
-     * */
     @Override
     public String cutIntoChunks(String sourceFilePath) {
         logger.info("Request to FFMPEG: processing");

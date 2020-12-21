@@ -15,6 +15,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Service used to manage transcription.
+ * Performs transcribing files (via Google speech recognition) and extracting results
+ */
 @Service
 public class GoogleSpeechRecognitionService implements SpeechRecognitionService {
     private final Logger logger = LoggerFactory.getLogger(GoogleSpeechRecognitionService.class);
@@ -25,12 +29,7 @@ public class GoogleSpeechRecognitionService implements SpeechRecognitionService 
                     .setLanguageCode("en-US")
                     .build();
 
-    /**
-     * This method is used to retrieve the transcription from Google Speech-to-Text API.
-     * The result is one combined transcription for all audio and video files in the directory.
-     * @param directoryPath absolute path to the source directory
-     * @return string with transcription
-     */
+
     public String transcribeFilesInDirectory(String directoryPath){
         logger.info("Starting speech recognition");
         File dirWithChunks = new File(directoryPath);
@@ -47,12 +46,6 @@ public class GoogleSpeechRecognitionService implements SpeechRecognitionService 
         return transcriptionBuilder.toString();
     }
 
-    /**
-     * This method is used to retrieve the transcription from Google Speech-to-Text API.
-     * The result is a transcription for the given audio or video file.
-     * @param filePath absolute path to the source file
-     * @return string with transcription
-     */
     public String transcribeFile(String filePath){
         logger.info("Processing next file.");
         String transcription = "";

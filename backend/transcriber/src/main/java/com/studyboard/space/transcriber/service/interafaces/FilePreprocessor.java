@@ -1,10 +1,13 @@
 package com.studyboard.space.transcriber.service.interafaces;
 
 public interface FilePreprocessor {
+
     /**
-     * cuts the file given file into chunks
-     * @param sourceFilePath string path to the source file
-     * @return string with a path to the target directory
-     */
+     * Cuts the given audio or video file into chunks with length CHUNK_LENGTH seconds
+     *
+     * @param sourceFilePath absolute path to the source file
+     * @return new directory with chunks
+     * Attention! creates an additional folder in system path.
+     * */
     String cutIntoChunks(String sourceFilePath);
 }

@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Service used to manage decks and flashcards. Performs decks and flashcards creation, getting, edit and deletion */
 @Service
 public class SimpleFlashcardService implements FlashcardService {
 
