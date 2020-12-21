@@ -37,6 +37,9 @@ export class RegisterComponent implements OnInit {
       });
   }
 
+  /**
+   * Sends user registration request
+   */
   registerUser() {
     this.submitted = true;
     if (this.registerForm.valid && (this.registerForm.controls.username.value !== 'user')) {

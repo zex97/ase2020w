@@ -14,17 +14,19 @@ import java.util.List;
 public interface FlashcardRepository extends CrudRepository<Flashcard, Long> {
 
     /**
+     * Find all flashcards of one deck by deck id.
      *
      * @param deckId of the deck containing flashcards
      * @return all flashcards belonging to specified deck
      */
     @Query(value = "SELECT f.f_id, f.question, f.answer, f.confidence_level FROM flashcard f JOIN flashcards_assignment f_a ON f.f_id=f_a.flashcard_id WHERE f_a.deck_id = :deckId", nativeQuery = true)
-    List<Flashcard> findByDeck(@Param("deckId") long deckId);
+    List<Flashcard> findByDeckId(@Param("deckId") long deckId);
 
     /**
+     * Find a single flashcard by id.
      *
-     * @param id of the flashcard
-     * @return the flashcard with the specified id
+     * @param id is of the flashcard entry
+     * @return flashcard object with specified id
      */
     Flashcard findFlashcardById(long id);
 

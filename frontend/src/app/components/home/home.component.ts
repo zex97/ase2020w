@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
   constructor(public authService: AuthService) { }
 
   toggled = false;
+  selectedPage: string = 'Spaces';
 
   isToggled() {
     return this.toggled;

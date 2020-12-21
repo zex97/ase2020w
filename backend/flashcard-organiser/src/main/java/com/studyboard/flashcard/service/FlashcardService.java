@@ -79,7 +79,7 @@ public interface FlashcardService {
      * @param flashcardId of the card that was created
      * @param decks       with the id's of decks flashcard is assigned to
      */
-    void assignFlaschard(long flashcardId, String decks);
+    void assignFlashcard(long flashcardId, String decks);
 
     /**
      * Delete a single deck with all of its flashcards

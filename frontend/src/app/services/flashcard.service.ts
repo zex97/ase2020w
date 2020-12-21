@@ -81,17 +81,28 @@ export class FlashcardService {
       return this.httpClient.get<any>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks' + decksString);
   }
 
-  editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
+  /**
+   * Change flashcard question, answer or rating in the backend
+   * @param flashcard to make changes to
+   */
+  editFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
         console.log('Edit flashcard - question ' + flashcard.question);
         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id, flashcard);
   }
 
+  /**
+   * Sends a revision method call to the backend
+   * @param size of question set for the revision
+   * @param deckId of the deck whose flashcards are going to be revised
+   */
   revise(size: number, deckId: number): Observable<Flashcard[]> {
         console.log('Getting flashcards for revision.');
         return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/flashcards/' + size);
   }
 
-
+  /**
+   * Loads all users from the backend
+   */
   getUsers(): Observable<User[]> {
       console.log('Searching for users.');
       return this.httpClient.get<User[]>(this.globals.backendUri + '/api/user');

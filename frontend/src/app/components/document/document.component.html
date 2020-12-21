@@ -1,14 +1,26 @@
-<h3 style="margin-left: 45%; color: #17a2b8">Documents of space {{space.id}}</h3>
 <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
   <strong>{{successMessage}}</strong> {{ errorMessage }}
   <button type="button" (click)="vanishSuccessMessage()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<mat-list *ngFor="let doc of getAllDocuments()">
-  <mat-card>
-    {{doc.name}}
-    <button mat-button style="float: right" class="btn btn-outline-secondary" (click)="deleteDocument(doc)">Delete
-    </button>
-  </mat-card>
-</mat-list>
+
+<mat-nav-list *ngFor="let doc of getAllDocuments()">
+  <mat-list-item>
+    <mat-card-content style="height: 25px; width: 100%">
+      <mat-card-title>
+        <h3 class="document-name">
+          {{doc.name}}
+        </h3>
+        <span class="close" (click)="deleteDocument(doc)" style="float: right">
+        <mat-icon>delete</mat-icon>
+     </span>
+      </mat-card-title>
+    </mat-card-content>
+  </mat-list-item>
+</mat-nav-list>
+
+<div class="warningMessageContainer" *ngIf="isEmpty()">
+  <h3 class="warningMessage">There are no documents in this space!</h3>
+</div>
+

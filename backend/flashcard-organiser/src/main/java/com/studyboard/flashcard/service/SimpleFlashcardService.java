@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Service used to manage decks and flashcards. Performs decks and flashcards creation, getting, edit and deletion */
 @Service
 public class SimpleFlashcardService implements FlashcardService {
 
@@ -61,8 +62,8 @@ public class SimpleFlashcardService implements FlashcardService {
     @Override
     public List<Flashcard> getAllFlashcardsOfDeck(long deckId) {
         Deck deck = findDeckById(deckId);
-        System.out.println(flashcardRepository.findByDeck(deck.getId()).size());
-        return flashcardRepository.findByDeck(deck.getId());
+        logger.info("Getting all flashcards belonging to the deck with name " + deck.getName());
+        return flashcardRepository.findByDeckId(deckId);
     }
 
     @Override
@@ -91,24 +92,19 @@ public class SimpleFlashcardService implements FlashcardService {
         if (flashcard == null) {
             throw new FlashcardDoesNotExist();
         }
+        logger.info("Getting flashcard with question " + flashcard.getQuestion());
         return flashcard;
     }
 
     @Override
     public Flashcard createFlashcard(Flashcard flashcard) {
         flashcard.setConfidenceLevel(0);
+        logger.info("Created new flashcard with question " + flashcard.getQuestion());
         return flashcardRepository.save(flashcard);
-        /*for(Deck deck : flashcard.getDecks()) {
-            System.out.println("DECK: " + deck.getId());
-            deck.setSize(deck.getSize() + 1);
-            deckRepository.save(deck);
-            System.out.println("Deck: " + deck.getId());
-            System.out.println("Card: " + flashcard.getId());
-        }*/
     }
 
     @Override
-    public void assignFlaschard(long flashcardId, String decks) {
+    public void assignFlashcard(long flashcardId, String decks) {
         String[] deckIds = decks.split("-");
         for (int i = 0; i < deckIds.length; i++) {
             if (!deckIds[i].equals("")) {
@@ -121,9 +117,12 @@ public class SimpleFlashcardService implements FlashcardService {
         }
     }
 
+
     @Override
     public void deleteDeck(long deckId) {
+        Deck deck = findDeckById(deckId);
         deckRepository.deleteById(deckId);
+        logger.info("Delete deck with name " + deck.getName());
     }
 
     @Override
@@ -148,6 +147,7 @@ public class SimpleFlashcardService implements FlashcardService {
             storedFlashcard.setQuestion(flashcard.getQuestion());
             storedFlashcard.setAnswer(flashcard.getAnswer());
             storedFlashcard.setConfidenceLevel(flashcard.getConfidenceLevel());
+            logger.info("Edited or rated the flashcard with question " + storedFlashcard.getQuestion());
             return flashcardRepository.save(storedFlashcard);
         } catch (ConstraintViolationException e) {
             throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");
@@ -176,6 +176,7 @@ public class SimpleFlashcardService implements FlashcardService {
     private User findUserById(long userId) {
         User user = userRepository.findUserById(userId);
         if (user == null) {
+            logger.warn("User does not exist");
             throw new UserDoesNotExist();
         }
         return user;

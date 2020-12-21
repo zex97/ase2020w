@@ -124,7 +124,7 @@ public class FlashcardController {
             @PathVariable(name = "flashcardId") long flashcardId,
             @PathVariable(name = "deckIds") String deckIds) {
         System.out.println("Assigning flashcard: " + flashcardId);
-        flashcardService.assignFlaschard(flashcardId, deckIds);
+        flashcardService.assignFlashcard(flashcardId, deckIds);
         return ResponseEntity.ok().build();
     }
 
