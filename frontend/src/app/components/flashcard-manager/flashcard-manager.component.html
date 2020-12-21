@@ -74,7 +74,7 @@
             <span class="example-list-section">
                 <ul>
                   <li *ngFor="let deck of getDecks()">
-                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id">
+                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id" [checked]="deck.id==this.selectedDeckId">
                       {{deck.name}}
                     </mat-checkbox>
                   </li>

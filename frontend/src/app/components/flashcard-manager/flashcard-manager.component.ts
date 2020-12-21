@@ -139,6 +139,7 @@ export class FlashcardManagerComponent implements OnInit {
   */
   loadFlashcards(deck: Deck) {
     this.selectedDeck = deck;
+    this.selectedDeckId = deck.id;
     this.flashcardService.getFlashcards(deck.id).subscribe(
         (flashcards : Flashcard[]) => {
                      this.flashcards = flashcards;

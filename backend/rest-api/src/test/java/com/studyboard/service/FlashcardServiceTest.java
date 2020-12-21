@@ -99,8 +99,8 @@ public class FlashcardServiceTest {
         });
     }
 
-    /*@Test
-    public void addingFlashcardIncreasesDeckSize() {
+    @Test
+    public void addingAndAssigningFlashcardIncreasesDeckSize() {
         User user = new User();
         user.setId(USER_ID);
         user.setUsername(USER_USERNAME);
@@ -117,7 +117,6 @@ public class FlashcardServiceTest {
         deck.setCreationDate(DECK_CREATION_DATE);
         deck.setLastTimeUsed(DECK_LAST_TIME_USED);
         deck.setUser(user);
-        deck.setFlashcards(null);
 
         List<Deck> decks = new ArrayList<>();
         decks.add(deck);
@@ -135,9 +134,10 @@ public class FlashcardServiceTest {
         flashcard.setConfidenceLevel(CONFIDENCE_LEVEL);
         flashcard.setDecks(decks);
         flashcardService.createFlashcard(flashcard);
+        flashcardService.assignFlaschard(flashcard.getId(), response.getId()+"-");
 
         response = flashcardService.findDeckById(DECK_ID);
 
         Assertions.assertEquals(1, response.getSize());
-    }*/
+    }
 }
