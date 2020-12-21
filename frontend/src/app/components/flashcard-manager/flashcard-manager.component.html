@@ -11,7 +11,8 @@
             data-toggle="modal" mat-raised-button>
       Create a deck
     </button>
-    <button class="btn btn-sm mr-4 button-light" data-target=".create-flashcard-modal" data-toggle="modal"
+    <button (click)="resetDecks();" class="btn btn-sm mr-4 button-light" data-target=".create-flashcard-modal"
+            data-toggle="modal"
             mat-raised-button>
       Create a flashcard
     </button>
@@ -48,7 +49,8 @@
   </div>
 
   <!--Create a flashcard-->
-  <div aria-hidden="true" aria-labelledby="Create flashcard modal" class="modal fade create-flashcard-modal" role="dialog"
+  <div aria-hidden="true" aria-labelledby="Create flashcard modal" class="modal fade create-flashcard-modal"
+       role="dialog"
        tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -64,19 +66,20 @@
             <p class="h4 mb-4">New flashcard</p>
             <input class="form-control mb-4" formControlName="question" placeholder="Question" type="text">
             <input class="form-control mb-4" formControlName="answer" placeholder="Answer" type="text">
-            <!--mat-form-field appearance="fill">
-              <mat-label>Assigned deck</mat-label>
-              <mat-select>
-                <mat-option *ngFor="let deck of getDecks()" [value]="deck.name">
-                  {{deck.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field-->
             <label>Choose a deck:</label>
-            <select (change)="deckClicked($event.target.value)" class="form-control select">
+            <!--select (change)="deckClicked($event.target.value)" class="form-control select">
               <option hidden value="null">Deck</option>
               <option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</option>
-            </select>
+            </select-->
+            <span class="example-list-section">
+                <ul>
+                  <li *ngFor="let deck of getDecks()">
+                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id">
+                      {{deck.name}}
+                    </mat-checkbox>
+                  </li>
+                </ul>
+              </span>
           </form>
         </div>
         <div class="modal-footer">
@@ -118,7 +121,8 @@
       <div class="flex-container-space-between">
         <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
         <div id="deck-buttons">
-          <button (click)="this.sizeError=false;" class="btn btn-sm button-light" data-target=".revise-deck" data-toggle="modal"
+          <button (click)="this.sizeError=false;" class="btn btn-sm button-light" data-target=".revise-deck"
+                  data-toggle="modal"
                   mat-button>Revise
           </button>
           <button class="btn btn-sm button-light" data-target=".edit-deck-modal" data-toggle="modal" mat-button>Edit
@@ -144,13 +148,16 @@
             </mat-expansion-panel>
           </mat-accordion>
           <div class="flex-container-space-between">
-            <button (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".rate-flashcard-modal" data-toggle="modal"
+            <button (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".rate-flashcard-modal"
+                    data-toggle="modal"
                     mat-button>Rate
             </button>
-            <button (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".edit-flashcard-modal" data-toggle="modal"
+            <button (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".edit-flashcard-modal"
+                    data-toggle="modal"
                     mat-button>Edit
             </button>
-            <button (click)="flashcardClicked(flashcard, true)" class="btn btn-sm" data-target=".delete-flashcard-modal" data-toggle="modal"
+            <button (click)="flashcardClicked(flashcard, true)" class="btn btn-sm" data-target=".delete-flashcard-modal"
+                    data-toggle="modal"
                     mat-button>Delete
             </button>
           </div>
@@ -242,7 +249,8 @@
                   <h4>A: {{this.currentlyRevisedCard.answer}}</h4>
                 </mat-card>
                 <button (click)="this.showAnswer=true" class="btn button-light" mat-button>Show answer</button>
-                <button (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length" class="btn button-light"
+                <button (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length"
+                        class="btn button-light"
                         mat-button>Next
                 </button>
               </div>
@@ -258,7 +266,8 @@
     </div>
 
     <!--Edit a flashcard-->
-    <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="Edit flashcard modal" class="modal fade edit-flashcard-modal"
+    <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="Edit flashcard modal"
+         class="modal fade edit-flashcard-modal"
          role="dialog"
          tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -289,7 +298,8 @@
 
 
     <!--Delete a flashcard-->
-    <div *ngIf="this.deleteFlash" aria-hidden="true" aria-labelledby="Delete flashcard modal" class="modal fade delete-flashcard-modal"
+    <div *ngIf="this.deleteFlash" aria-hidden="true" aria-labelledby="Delete flashcard modal"
+         class="modal fade delete-flashcard-modal"
          role="dialog"
          tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -304,7 +314,8 @@
             <h4>Do you really want to delete this flashcard? </h4>
           </div>
           <div class="modal-footer">
-            <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedFlashcard.deckDTO.id)" class="btn btn-middle" data-dismiss="modal"
+            <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedFlashcard.deckDTO.id)"
+                    class="btn btn-middle" data-dismiss="modal"
                     mat-button>Delete
             </button>
             <button class="btn btn-secondary" data-dismiss="modal" mat-button>Close</button>
@@ -328,7 +339,7 @@
           <div class="modal-body">
             <form [formGroup]="flashcardRateForm" action="#!" class="text-center border border-light p-5">
               <label>Rate with personal confidence level from 1 to 5:</label>
-              <input class="form-control mb-4" formControlName="confidenceLevel" type="number" max="5" min="1">
+              <input class="form-control mb-4" formControlName="confidenceLevel" max="5" min="1" type="number">
             </form>
           </div>
           <div class="modal-footer">

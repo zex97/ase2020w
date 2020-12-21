@@ -10,6 +10,7 @@ public class Flashcard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "f_id")
     private long id;
 
     @Column(nullable = false, name = "question")
@@ -23,7 +24,7 @@ public class Flashcard {
     @Max(5)
     private int confidenceLevel;
 
-    @ManyToMany(mappedBy = "flashcards", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "flashcards")
     private List<Deck> decks;
 
     public long getId() {

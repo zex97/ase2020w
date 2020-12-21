@@ -71,7 +71,15 @@ public interface FlashcardService {
      *
      * @param flashcard entity with all the necessary information
      */
-    void createFlashcard(Flashcard flashcard);
+    Flashcard createFlashcard(Flashcard flashcard);
+
+    /**
+     * Assign the flashcard to decks it belongs to
+     *
+     * @param flashcardId of the card that was created
+     * @param decks       with the id's of decks flashcard is assigned to
+     */
+    void assignFlaschard(long flashcardId, String decks);
 
     /**
      * Delete a single deck with all of its flashcards

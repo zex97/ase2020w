@@ -66,14 +66,24 @@ export class FlashcardService {
     * Persists flashcard to the backend
     * @param flashcard to persist
     */
-  createFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  createFlashcard(flashcard: Flashcard): Observable<Flashcard> {
       console.log('Create flashcard with question ' + flashcard.question);
-      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/' + deckId, flashcard);
+      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard', flashcard);
   }
 
-  editFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  assignFlashcard(flashcardId: number, decks : number[]) {
+      console.log('Assigning flashcard ' + flashcardId + ' to deck(s).');
+      let decksString = "";
+      for(let i=0; i<decks.length; i++){
+          decksString+=decks[i] + "-"
+      }
+      console.log(decksString);
+      return this.httpClient.get<any>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks' + decksString);
+  }
+
+  editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
         console.log('Edit flashcard - question ' + flashcard.question);
-        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/flashcard' + flashcard.id, flashcard);
+        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id, flashcard);
   }
 
   revise(size: number, deckId: number): Observable<Flashcard[]> {

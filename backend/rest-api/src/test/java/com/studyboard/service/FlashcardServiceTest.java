@@ -99,7 +99,7 @@ public class FlashcardServiceTest {
         });
     }
 
-    @Test
+    /*@Test
     public void addingFlashcardIncreasesDeckSize() {
         User user = new User();
         user.setId(USER_ID);
@@ -139,5 +139,5 @@ public class FlashcardServiceTest {
         response = flashcardService.findDeckById(DECK_ID);
 
         Assertions.assertEquals(1, response.getSize());
-    }
+    }*/
 }

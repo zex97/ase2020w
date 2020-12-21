@@ -30,7 +30,7 @@ public class Deck {
     private User user;
 
     @ManyToMany
-    @JoinTable(name = "flashcards",
+    @JoinTable(name = "flashcards_assignment",
             joinColumns = @JoinColumn(name = "deck_id"),
             inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
     private List<Flashcard> flashcards;

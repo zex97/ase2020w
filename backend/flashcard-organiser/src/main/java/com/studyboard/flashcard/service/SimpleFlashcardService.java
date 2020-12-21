@@ -61,7 +61,8 @@ public class SimpleFlashcardService implements FlashcardService {
     @Override
     public List<Flashcard> getAllFlashcardsOfDeck(long deckId) {
         Deck deck = findDeckById(deckId);
-        return flashcardRepository.findByDeck(deck);
+        System.out.println(flashcardRepository.findByDeck(deck.getId()).size());
+        return flashcardRepository.findByDeck(deck.getId());
     }
 
     @Override
@@ -94,12 +95,29 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public void createFlashcard(Flashcard flashcard) {
+    public Flashcard createFlashcard(Flashcard flashcard) {
         flashcard.setConfidenceLevel(0);
-        flashcardRepository.save(flashcard);
-        for(Deck deck : flashcard.getDecks()) {
+        return flashcardRepository.save(flashcard);
+        /*for(Deck deck : flashcard.getDecks()) {
+            System.out.println("DECK: " + deck.getId());
             deck.setSize(deck.getSize() + 1);
             deckRepository.save(deck);
+            System.out.println("Deck: " + deck.getId());
+            System.out.println("Card: " + flashcard.getId());
+        }*/
+    }
+
+    @Override
+    public void assignFlaschard(long flashcardId, String decks) {
+        String[] deckIds = decks.split("-");
+        for (int i = 0; i < deckIds.length; i++) {
+            if (!deckIds[i].equals("")) {
+                long id = Long.parseLong(deckIds[i]);
+                flashcardRepository.assignFlashcard(id, flashcardId);
+                Deck deck = findDeckById(id);
+                deck.setSize(deck.getSize() + 1);
+                deckRepository.save(deck);
+            }
         }
     }
 
@@ -113,7 +131,7 @@ public class SimpleFlashcardService implements FlashcardService {
         Deck deck = findDeckById(deckId);
         deck.setSize(deck.getSize() - 1);
         Flashcard flashcard = findFlashcardById(flashcardId);
-        if(flashcard.getDecks().size() == 1) {
+        if (flashcard.getDecks().size() == 1) {
             flashcardRepository.deleteById(flashcardId);
         } else {
             List<Deck> decks = flashcard.getDecks();

@@ -1,11 +1,9 @@
 package com.studyboard.dto;
 
 
-import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FlashcardDTO {
 
@@ -61,10 +59,9 @@ public class FlashcardDTO {
         flashcard.setQuestion(this.question);
         flashcard.setAnswer(this.answer);
         flashcard.setConfidenceLevel(this.confidenceLevel);
-        flashcard.setDecks(this.deckDTOs.stream()
+        /*flashcard.setDecks(this.deckDTOs.stream()
                     .map(DeckDTO::toDeck)
-                    .collect(Collectors.toList()));
-
+                    .collect(Collectors.toList()));*/
         return flashcard;
     }
 
@@ -74,9 +71,9 @@ public class FlashcardDTO {
         flashcardDTO.setQuestion(flashcard.getQuestion());
         flashcardDTO.setAnswer(flashcard.getAnswer());
         flashcardDTO.setConfidenceLevel(flashcard.getConfidenceLevel());
-        flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
+        /*flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
                 .map(DeckDTO::of)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList()));*/
         return flashcardDTO;
     }
 
