@@ -29,6 +29,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 
@@ -64,6 +65,7 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatExpansionModule,
         MatDividerModule,
         MatListModule,
+        MatCheckboxModule,
         MatInputModule,
         MatDialogModule
     ],

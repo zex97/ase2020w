@@ -11,7 +11,8 @@
             data-toggle="modal" mat-raised-button>
       Create a deck
     </button>
-    <button class="btn btn-sm mr-4 button-light" data-target=".create-flashcard-modal" data-toggle="modal"
+    <button (click)="resetDecks();" class="btn btn-sm mr-4 button-light" data-target=".create-flashcard-modal"
+            data-toggle="modal"
             mat-raised-button>
       Create a flashcard
     </button>
@@ -68,7 +69,6 @@
         <div class="modal-body flashcardModalBody">
           <form action="#!" class="modal-input-form text-center border border-light p-5">
             <p class="h4 mb-4">New flashcard</p>
-
             <!-- Question -->
             <mat-form-field appearance="outline" class="mat-select" [formGroup]="flashcardForm">
               <mat-label style="color: #5f6368; width: 100%;">Question</mat-label>
@@ -89,14 +89,15 @@
                 Can't be empty!
               </mat-hint>
             </mat-form-field>
-            <!-- Select deck -->
-            <mat-form-field appearance="outline" class="mat-select">
-              <mat-label>Select a deck</mat-label>
-              <mat-select [(value)]="this.selectedDeckId" class="select">
-                <mat-option hidden value="null">Deck</mat-option>
-                <mat-option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <span class="example-list-section">
+                <ul>
+                  <li *ngFor="let deck of getDecks()">
+                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id">
+                      {{deck.name}}
+                    </mat-checkbox>
+                  </li>
+                </ul>
+              </span>
           </form>
         </div>
         <div class="modal-footer">
@@ -355,7 +356,7 @@
             <h4>Do you really want to delete this flashcard? </h4>
           </div>
           <div class="modal-footer">
-            <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedFlashcard.deckDTO.id)"
+            <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedDeck.id)"
                     class="btn btn-middle" data-dismiss="modal"
                     mat-button>Delete
             </button>

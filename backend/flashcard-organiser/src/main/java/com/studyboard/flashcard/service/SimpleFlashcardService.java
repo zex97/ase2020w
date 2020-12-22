@@ -87,32 +87,36 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public Flashcard getOneFlashcard(long deckId, long flashcardId) {
+    public Flashcard getOneFlashcard(long flashcardId) {
         Flashcard flashcard = flashcardRepository.findFlashcardById(flashcardId);
-        Deck deck = findDeckById(deckId);
         if (flashcard == null) {
             throw new FlashcardDoesNotExist();
-        }
-        if (flashcard.getDeck() != deck) {
-            //create a Not Allowed exception
         }
         logger.info("Getting flashcard with question " + flashcard.getQuestion());
         return flashcard;
     }
 
     @Override
-    public void createFlashcard(long deckId, Flashcard flashcard) {
-        Deck deck = findDeckById(deckId);
-        flashcard.setDeck(deck);
+    public Flashcard createFlashcard(Flashcard flashcard) {
         flashcard.setConfidenceLevel(0);
-        flashcardRepository.save(flashcard);
-        deck.setSize(deck.getSize() + 1);
-        deckRepository.save(deck);
-        logger.info("Created new flashcard with question "
-                + flashcard.getQuestion() +
-                " for deck with name "
-                + deck.getName());
+        logger.info("Created new flashcard with question " + flashcard.getQuestion());
+        return flashcardRepository.save(flashcard);
     }
+
+    @Override
+    public void assignFlashcard(long flashcardId, String decks) {
+        String[] deckIds = decks.split("-");
+        for (int i = 0; i < deckIds.length; i++) {
+            if (!deckIds[i].equals("")) {
+                long id = Long.parseLong(deckIds[i]);
+                flashcardRepository.assignFlashcard(id, flashcardId);
+                Deck deck = findDeckById(id);
+                deck.setSize(deck.getSize() + 1);
+                deckRepository.save(deck);
+            }
+        }
+    }
+
 
     @Override
     public void deleteDeck(long deckId) {
@@ -123,16 +127,15 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public void deleteFlashcard(long deckId, long flashcardId) {
+        flashcardRepository.removeAssignment(deckId, flashcardId);
         Deck deck = findDeckById(deckId);
         deck.setSize(deck.getSize() - 1);
-        Flashcard flashcard = flashcardRepository.findFlashcardById(flashcardId);
-        flashcardRepository.deleteById(flashcardId);
-        logger.info("Delete flashcard with question " + flashcard.getQuestion());
+        deckRepository.save(deck);
     }
 
     @Override
-    public Flashcard editFlashcard(long deckId, Flashcard flashcard) throws FlashcardConstraintException {
-        Flashcard storedFlashcard = getOneFlashcard(deckId, flashcard.getId());
+    public Flashcard editFlashcard(Flashcard flashcard) throws FlashcardConstraintException {
+        Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         try {
             storedFlashcard.setQuestion(flashcard.getQuestion());
             storedFlashcard.setAnswer(flashcard.getAnswer());
@@ -152,6 +155,15 @@ public class SimpleFlashcardService implements FlashcardService {
             throw new DeckDoesNotExist();
         }
         return deck;
+    }
+
+    public Flashcard findFlashcardById(Long flashcardId) {
+        Flashcard flashcard = flashcardRepository.findFlashcardById(flashcardId);
+        if (flashcard == null) {
+            logger.warn("Flashcard does not exist");
+            //throw new DeckDoesNotExist();
+        }
+        return flashcard;
     }
 
     private User findUserById(long userId) {

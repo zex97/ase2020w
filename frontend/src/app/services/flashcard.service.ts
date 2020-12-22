@@ -66,18 +66,33 @@ export class FlashcardService {
     * Persists flashcard to the backend
     * @param flashcard to persist
     */
-  createFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  createFlashcard(flashcard: Flashcard): Observable<Flashcard> {
       console.log('Create flashcard with question ' + flashcard.question);
-      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/' + deckId, flashcard);
+      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard', flashcard);
+  }
+
+  /**
+  * Connect flashcard to belonging decks
+  * @param flashcardId of the flashcard
+  * @param decks of all the decks it belongs to
+  */
+  assignFlashcard(flashcardId: number, decks : number[]) {
+      console.log('Assigning flashcard ' + flashcardId + ' to deck(s).');
+      let decksString = "";
+      for(let i=0; i<decks.length; i++){
+          decksString+=decks[i] + "-"
+      }
+      console.log(decksString);
+      return this.httpClient.get<any>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks' + decksString);
   }
 
   /**
    * Change flashcard question, answer or rating in the backend
    * @param flashcard to make changes to
    */
-  editFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
         console.log('Edit flashcard - question ' + flashcard.question);
-        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/flashcard' + flashcard.id, flashcard);
+        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id, flashcard);
   }
 
   /**

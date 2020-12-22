@@ -95,24 +95,36 @@ public class FlashcardController {
             value = "Get flashcard with specific flashcard, user and deck id.",
             authorizations = {@Authorization(value = "apiKey")})
     public FlashcardDTO getOneFlashcard(
-            @PathVariable(name = "deckId") long deckId,
             @PathVariable(name = "flashcardId") long flashcardId) {
         return FlashcardDTO.FlashcardDTOFromFlashcard(
-                flashcardService.getOneFlashcard(deckId, flashcardId));
+                flashcardService.getOneFlashcard(flashcardId));
     }
 
     @RequestMapping(
-            value = "/{deckId}",
+            value = "/flashcard",
             method = RequestMethod.POST,
             produces = "application/json")
     @ApiOperation(
             value = "Create a flashcard.",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity createFlashcard(
-            @PathVariable(name = "deckId") long deckId,
+    public FlashcardDTO createFlashcard(
             @RequestBody FlashcardDTO flashcardDTO) {
         System.out.println(flashcardDTO.toString());
-        flashcardService.createFlashcard(deckId, flashcardDTO.FlashcardFromFlashcardDTO());
+        return FlashcardDTO.FlashcardDTOFromFlashcard(flashcardService.createFlashcard(flashcardDTO.FlashcardFromFlashcardDTO()));
+    }
+
+    @RequestMapping(
+            value = "/flashcard{flashcardId}/decks{deckIds}",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    @ApiOperation(
+            value = "Assign a flashcard.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity assingFlashcard(
+            @PathVariable(name = "flashcardId") long flashcardId,
+            @PathVariable(name = "deckIds") String deckIds) {
+        System.out.println("Assigning flashcard: " + flashcardId);
+        flashcardService.assignFlashcard(flashcardId, deckIds);
         return ResponseEntity.ok().build();
     }
 
@@ -144,7 +156,7 @@ public class FlashcardController {
     }
 
     @RequestMapping(
-            value = "/{deckId}/flashcard{flashcardId}",
+            value = "/flashcard{flashcardId}",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
@@ -152,10 +164,9 @@ public class FlashcardController {
                     "Edit or rate the flashcard based on personal confidence level with the value between 1 and 5.",
             authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity editFlashcard(
-            @PathVariable(name = "deckId") long deckId,
             @RequestBody FlashcardDTO flashcardDTO)
             throws FlashcardConstraintException {
-        flashcardService.editFlashcard(deckId, flashcardDTO.FlashcardFromFlashcardDTO());
+        flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO());
         return ResponseEntity.ok().build();
     }
 }
