@@ -9,7 +9,7 @@
       </button>
     </mat-form-field>
 
-    <button (click)="this.viewAll=true;" *ngIf="!this.viewAll" class="pageTopBarButton" mat-stroked-button>
+    <button (click)="this.viewAll=true;this.deckForm.reset();" *ngIf="!this.viewAll" class="pageTopBarButton" mat-stroked-button>
       Back to all
     </button>
     <button *ngIf="this.viewAll" class="pageTopBarButton" data-target=".create-deck-modal" data-toggle="modal"
@@ -46,7 +46,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="createDeck()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+        <button [disabled]="deckForm.controls.title.errors" (click)="createDeck()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
         <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
@@ -90,21 +90,9 @@
             </mat-hint>
           </mat-form-field>
           <!--Select deck-->
-          <!--div style="display: flex; align-items: center; justify-content: flex-start;">
-            <h5>Choose decks:</h5>
-            <span style="display:flex; justify-content: flex-start">
-                <ul>
-                  <li *ngFor="let deck of getDecks()">
-                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id">
-                      {{deck.name}}
-                    </mat-checkbox>
-                  </li>
-                </ul>
-                </span>
-          </div-->
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select a deck</mat-label>
-            <mat-select class="select" multiple>
+            <mat-select [(value)]="this.selectedDecksIds" class="select" multiple>
               <mat-option *ngFor="let deck of getDecks()" value="{{deck.id}}" (onSelectionChange)="updateDeckList($event.source.value)">
                 {{deck.name}}
               </mat-option>
@@ -114,7 +102,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="createFlashcard()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+        <button [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" (click)="createFlashcard()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
         <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
@@ -208,19 +196,19 @@
           <div class="modal-body">
             <form class="modal-input-form text-center border border-light p-5">
 
-              <mat-form-field [formGroup]="deckEditForm" appearance="outline" class="modal-input-full-width">
+              <mat-form-field [formGroup]="deckForm" appearance="outline" class="modal-input-full-width">
                 <mat-label style="color: #5f6368; width: 100%;">New deck title</mat-label>
                 <input formControlName="title" formGroupName="title"
                        id="editDeckTitle" matInput
                        placeholder="Title" required type="text">
-                <mat-hint *ngIf="deckEditForm.controls.title.errors" class="control-label invalid-input-text">
+                <mat-hint *ngIf="deckForm.controls.title.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
-            <button (click)="saveEdits(this.selectedDeck)" data-dismiss="modal" mat-button mat-dialog-actions
+            <button [disabled]="deckForm.controls.title.errors" (click)="saveEdits(this.selectedDeck)" data-dismiss="modal" mat-button mat-dialog-actions
                     type="button">Save
             </button>
             <button data-dismiss="modal" mat-button mat-dialog-actions type="button">Close</button>
@@ -316,7 +304,7 @@
             <h2 class="modal-title">Edit a flashcard</h2>
           </div>
           <div class="modal-body flashcardModalBody">
-            <form [formGroup]="flashcardEditForm" class="modal-input-form text-center border border-light p-5">
+            <form class="modal-input-form text-center border border-light p-5">
 
               <!-- Question -->
               <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
@@ -324,7 +312,7 @@
                 <input formControlName="question" formGroupName="question"
                        id="editQuestion" matInput
                        placeholder="Your question" required type="text">
-                <mat-hint *ngIf="flashcardEditForm.controls.question.errors" class="control-label invalid-input-text">
+                <mat-hint *ngIf="flashcardForm.controls.question.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
@@ -335,14 +323,14 @@
                 <textarea formControlName="answer" formGroupName="answer"
                           id="editAnsewer" matInput
                           placeholder="Your answer" required title="Answer"></textarea>
-                <mat-hint *ngIf="flashcardEditForm.controls.answer.errors" class="control-label invalid-input-text">
+                <mat-hint *ngIf="flashcardForm.controls.answer.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
-            <button (click)="saveFlashcardEdits(this.selectedFlashcard)" data-dismiss="modal" mat-button
+            <button [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" (click)="saveFlashcardEdits(this.selectedFlashcard)" data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Save
             </button>

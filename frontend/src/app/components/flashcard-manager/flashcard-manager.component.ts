@@ -15,9 +15,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class FlashcardManagerComponent implements OnInit {
 
   deckForm: FormGroup;
-  deckEditForm: FormGroup;
   flashcardForm: FormGroup;
-  flashcardEditForm: FormGroup;
   revisionSizeForm: FormGroup;
   flashcardRateForm: FormGroup;
   error: boolean = false;
@@ -48,20 +46,7 @@ export class FlashcardManagerComponent implements OnInit {
         Validators.minLength(1)
       ]]
     });
-    this.deckEditForm = this.formBuilder.group({
-      title: ['']
-    });
     this.flashcardForm = this.formBuilder.group({
-      question: ['', [
-        Validators.required,
-        Validators.minLength(1)
-      ]],
-      answer: ['', [
-        Validators.required,
-        Validators.minLength(1)
-      ]]
-    });
-    this.flashcardEditForm = this.formBuilder.group({
       question: ['', [
         Validators.required,
         Validators.minLength(1)
@@ -94,6 +79,10 @@ export class FlashcardManagerComponent implements OnInit {
    * Get a list of all decks belonging to the logged-in user from backend
    */
   loadAllDecks() {
+     this.deckForm.patchValue({
+            title: ""
+      });
+      this.flashcardForm.reset();
     this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
       (decksList: Deck[]) => {
         this.decks = decksList;
@@ -102,7 +91,6 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
-    this.deckForm.reset();
   }
 
   /**
@@ -140,7 +128,7 @@ export class FlashcardManagerComponent implements OnInit {
    */
   saveEdits(deck: Deck) {
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-             deck.name = this.deckEditForm.controls.title.value;
+             deck.name = this.deckForm.controls.title.value;
                  this.flashcardService.editDeck(deck).subscribe(
                       () => {
                              this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
@@ -171,8 +159,7 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
-    //this.deckEditForm.reset();
-    this.deckEditForm.patchValue({
+    this.deckForm.patchValue({
       title: deck.name
     });
     this.flashcardForm.reset();
@@ -219,8 +206,8 @@ export class FlashcardManagerComponent implements OnInit {
    * Save changes to flashcard dto and sends an edition request.
    */
   saveFlashcardEdits(flashcard: Flashcard) {
-              let question = this.flashcardEditForm.controls.question.value;
-              let answer = this.flashcardEditForm.controls.answer.value;
+              let question = this.flashcardForm.controls.question.value;
+              let answer = this.flashcardForm.controls.answer.value;
               if(question != null && question != "") {
                 flashcard.question = question;
               }
@@ -360,7 +347,7 @@ export class FlashcardManagerComponent implements OnInit {
      this.showFlashcardId = select.id;
      this.deleteFlash = del;
      console.log(this.showFlashcardId);
-     this.flashcardEditForm.patchValue({
+     this.flashcardForm.patchValue({
         question: select.question,
         answer: select.answer
      });
