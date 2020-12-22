@@ -36,6 +36,12 @@
   background-color: #def2f1;
 }
 
+.flex-container-space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+
 .flashcard {
   background-color: #3aafa9;
   color: #ffffff;
@@ -63,5 +69,12 @@
 ::ng-deep .mat-expansion-panel-body > h4 {
   margin-top: 20px;
 }
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+  text-align:left;
+}
+
 
 
