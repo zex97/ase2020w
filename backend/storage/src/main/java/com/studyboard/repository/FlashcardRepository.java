@@ -40,4 +40,15 @@ public interface FlashcardRepository extends CrudRepository<Flashcard, Long> {
     @Query(value = "INSERT INTO flashcards_assignment VALUES(:deckId, :cardId)", nativeQuery = true)
     @Transactional
     void assignFlashcard(long deckId, long cardId);
+
+    /**
+     * Unassign a flashcard from a deck
+     *
+     * @param deckId of the deck flashcard belongs to
+     * @param cardId - id of the flashcard
+     */
+    @Modifying
+    @Query(value = "DELETE FROM flashcards_assignment fa WHERE fa.flashcard_id=:cardId AND fa.deck_id=:deckId", nativeQuery = true)
+    @Transactional
+    void removeAssignment(long deckId, long cardId);
 }

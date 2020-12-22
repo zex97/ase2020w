@@ -127,17 +127,10 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public void deleteFlashcard(long deckId, long flashcardId) {
+        flashcardRepository.removeAssignment(deckId, flashcardId);
         Deck deck = findDeckById(deckId);
         deck.setSize(deck.getSize() - 1);
-        Flashcard flashcard = findFlashcardById(flashcardId);
-        if (flashcard.getDecks().size() == 1) {
-            flashcardRepository.deleteById(flashcardId);
-        } else {
-            List<Deck> decks = flashcard.getDecks();
-            decks.remove(deck);
-            flashcard.setDecks(decks);
-            flashcardRepository.save(flashcard);
-        }
+        deckRepository.save(deck);
     }
 
     @Override

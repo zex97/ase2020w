@@ -89,15 +89,10 @@
                 Can't be empty!
               </mat-hint>
             </mat-form-field>
-            <!--select (change)="deckClicked($event.target.value)" class="form-control select">
-              <option hidden value="null">Deck</option>
-              <option *ngFor="let deck of getDecks()" value="{{deck.id}}">{{deck.name}}</option>
-            </select-->
-            <!--Select deck-->
             <span class="example-list-section">
                 <ul>
                   <li *ngFor="let deck of getDecks()">
-                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id" [checked]="deck.id==this.selectedDeckId">
+                    <mat-checkbox (change)="updateDeckList($event.source.value)" [value]="deck.id">
                       {{deck.name}}
                     </mat-checkbox>
                   </li>
@@ -361,7 +356,7 @@
             <h4>Do you really want to delete this flashcard? </h4>
           </div>
           <div class="modal-footer">
-            <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedFlashcard.deckDTO.id)"
+            <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedDeck.id)"
                     class="btn btn-middle" data-dismiss="modal"
                     mat-button>Delete
             </button>

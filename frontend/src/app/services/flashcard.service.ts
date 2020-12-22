@@ -71,6 +71,11 @@ export class FlashcardService {
       return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard', flashcard);
   }
 
+  /**
+  * Connect flashcard to belonging decks
+  * @param flashcardId of the flashcard
+  * @param decks of all the decks it belongs to
+  */
   assignFlashcard(flashcardId: number, decks : number[]) {
       console.log('Assigning flashcard ' + flashcardId + ' to deck(s).');
       let decksString = "";
@@ -85,7 +90,7 @@ export class FlashcardService {
    * Change flashcard question, answer or rating in the backend
    * @param flashcard to make changes to
    */
-  editFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
         console.log('Edit flashcard - question ' + flashcard.question);
         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id, flashcard);
   }

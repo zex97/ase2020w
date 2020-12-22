@@ -133,7 +133,6 @@ export class FlashcardManagerComponent implements OnInit {
         }
       );
     });
-    //this.deckForm.reset({'title':''});
   }
 
   /**
@@ -143,9 +142,8 @@ export class FlashcardManagerComponent implements OnInit {
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
              deck.name = this.deckEditForm.controls.title.value;
                  this.flashcardService.editDeck(deck).subscribe(
-                      (editedDeck: Deck) => {
+                      () => {
                              this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
-                             this.selectedDeck = editedDeck;
                              },
                              error => {
                                this.error = true;
@@ -192,10 +190,13 @@ export class FlashcardManagerComponent implements OnInit {
   createFlashcard() {
        const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0);
        this.flashcardService.createFlashcard(flashcard).subscribe(
-                       (flashcard_created: Flashcard) => {
+                       (flashcardCreated: Flashcard) => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
-                              this.flashcardService.assignFlashcard(flashcard_created.id, this.selectedDecks).subscribe(
-                                                         () => { this.loadFlashcards(this.selectedDeck);
+                              this.flashcardService.assignFlashcard(flashcardCreated.id, this.selectedDecks).subscribe(
+                                                         () => {
+                                                                  if(this.selectedDeck != undefined) {
+                                                                    this.loadFlashcards(this.selectedDeck);
+                                                                  }
                                                                   this.loadAllDecks();
                                                                },
                                                                error => {
