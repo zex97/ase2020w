@@ -25,7 +25,7 @@ export class FlashcardManagerComponent implements OnInit {
   viewAll: boolean = true;
   showAnswer: boolean = false;
   selectedDeck: Deck;
-  selectedDeckId: number;
+  selectedDecksIds: number[];
   selectedFlashcard: Flashcard;
   showFlashcardId: number;
   chooseSize: boolean = true;
@@ -160,7 +160,8 @@ export class FlashcardManagerComponent implements OnInit {
    */
   loadFlashcards(deck: Deck) {
     this.selectedDeck = deck;
-    this.selectedDeckId = deck.id;
+    this.selectedDecksIds = [deck.id];
+    console.log(this.selectedDecksIds);
     this.flashcardService.getFlashcards(deck.id).subscribe(
       (flashcards: Flashcard[]) => {
         this.flashcards = flashcards;
@@ -331,15 +332,8 @@ export class FlashcardManagerComponent implements OnInit {
     });
   }
 
-
-  deckClicked(select: number) {
-    console.log(select);
-    this.selectedDeckId = select;
-  }
-
   updateDeckList(select : number){
     console.log("deck: " + select);
-    this.selectedDeckId  = select;
     if(this.selectedDecks != undefined) {
       let index = this.selectedDecks.indexOf(select);
       if(index > -1) {

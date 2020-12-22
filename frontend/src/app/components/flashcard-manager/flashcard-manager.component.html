@@ -67,10 +67,10 @@
         <h2 class="modal-title">Create a new flashcard</h2>
       </div>
       <div class="modal-body flashcardModalBody">
-        <form class="modal-input-form text-center border border-light p-5">
+        <form class="modal-input-form">
 
           <!-- Question -->
-          <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
+          <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width" style=""width:100%>
             <mat-label style="color: #5f6368; width: 100%;">Question</mat-label>
             <input formControlName="question" formGroupName="question"
                    id="question" matInput
@@ -89,8 +89,8 @@
               Can't be empty!
             </mat-hint>
           </mat-form-field>
-          <!--Decks-->
-          <div style="display: flex; align-items: center; justify-content: flex-start;">
+          <!--Select deck-->
+          <!--div style="display: flex; align-items: center; justify-content: flex-start;">
             <h5>Choose decks:</h5>
             <span style="display:flex; justify-content: flex-start">
                 <ul>
@@ -101,7 +101,16 @@
                   </li>
                 </ul>
                 </span>
-          </div>
+          </div-->
+          <mat-form-field appearance="outline" class="mat-select">
+            <mat-label>Select a deck</mat-label>
+            <mat-select class="select" multiple>
+              <mat-option *ngFor="let deck of getDecks()" value="{{deck.id}}" (onSelectionChange)="updateDeckList($event.source.value)">
+                {{deck.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
         </form>
       </div>
       <div class="modal-footer">
@@ -116,7 +125,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container" style="padding-top: 10px;">
   <!-- View all decks -->
   <div *ngIf="viewAll; else elseBlockDetails">
     <div class="row" id="allDiv">
@@ -146,16 +155,15 @@
     <div class="flex-container-space-between">
       <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
       <div id="deck-buttons">
-          <span (click)="this.sizeError=false;" class="btn btn-sm button-light" data-target=".revise-deck"
-                data-toggle="modal" mat-button>
-            <mat-icon>repeat</mat-icon>
-          </span>
-        <span class="btn btn-sm button-light" data-target=".edit-deck-modal" data-toggle="modal" mat-button>
-            <mat-icon>edit</mat-icon>
-          </span>
-        <span class="btn btn-sm button-light" data-target=".delete-deck-modal" data-toggle="modal" mat-button>
-            <mat-icon>delete</mat-icon>
-          </span>
+        <span data-target=".delete-deck-modal" data-toggle="modal" class="close">
+          <mat-icon>delete</mat-icon>
+        </span>
+        <span data-target=".edit-deck-modal" data-toggle="modal" class="close">
+          <mat-icon>edit</mat-icon>
+        </span>
+        <span (click)="this.sizeError=false;" data-target=".revise-deck" data-toggle="modal" class="close">
+          <mat-icon>repeat</mat-icon>
+        </span>
       </div>
     </div>
     <div>
@@ -175,21 +183,15 @@
           </mat-expansion-panel>
         </mat-accordion>
         <div class="flex-container-space-between">
-            <span (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".rate-flashcard-modal"
-                  data-toggle="modal"
-                  mat-button>
-                     <mat-icon>grade</mat-icon>
-            </span>
-          <span (click)="flashcardClicked(flashcard, false)" class="btn btn-sm" data-target=".edit-flashcard-modal"
-                data-toggle="modal"
-                mat-button>
-                    <mat-icon>edit</mat-icon>
-            </span>
-          <span (click)="flashcardClicked(flashcard, true)" class="btn btn-sm" data-target=".delete-flashcard-modal"
-                data-toggle="modal"
-                mat-button>
-                    <mat-icon>delete</mat-icon>
-            </span>
+          <span (click)="flashcardClicked(flashcard, false)" data-target=".rate-flashcard-modal" data-toggle="modal" class="close">
+            <mat-icon>grade</mat-icon>
+          </span>
+          <span (click)="flashcardClicked(flashcard, false)" data-target=".edit-flashcard-modal" data-toggle="modal" class="close">
+            <mat-icon>edit</mat-icon>
+          </span>
+          <span (click)="flashcardClicked(flashcard, true)" data-target=".delete-flashcard-modal"  data-toggle="modal" class="close">
+            <mat-icon>delete</mat-icon>
+          </span>
         </div>
       </div>
     </div>

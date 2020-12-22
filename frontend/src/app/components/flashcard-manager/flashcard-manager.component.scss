@@ -13,8 +13,8 @@
   color: #ffffff;
 }
 
-#deck-buttons > button {
-  margin-left: 5px;
+#deck-buttons > span {
+  margin-left: 10px;
 }
 
 .wrapper{
@@ -30,10 +30,9 @@
   justify-content: space-between;
 }
 
-.flex-container-space-between > button {
+.flex-container-space-between > span {
   margin-left: 5%;
   margin-right: 5%;
-  background-color: #def2f1;
 }
 
 .flex-container-space-around {
