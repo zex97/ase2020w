@@ -134,7 +134,7 @@ public class FlashcardServiceTest {
         flashcard.setConfidenceLevel(CONFIDENCE_LEVEL);
         flashcard.setDecks(decks);
         flashcardService.createFlashcard(flashcard);
-        flashcardService.assignFlaschard(flashcard.getId(), response.getId()+"-");
+        flashcardService.assignFlashcard(flashcard.getId(), response.getId()+"-");
 
         response = flashcardService.findDeckById(DECK_ID);
 
