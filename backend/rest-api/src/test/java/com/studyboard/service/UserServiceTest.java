@@ -6,7 +6,7 @@ import com.studyboard.model.Authorities;
 import com.studyboard.model.User;
 import com.studyboard.repository.AuthoritiesRepository;
 import com.studyboard.repository.UserRepository;
-import com.studyboard.space.user.service.SimpleUserService;
+import com.studyboard.service.implementation.SimpleUserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

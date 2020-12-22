@@ -19,33 +19,14 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>com.studyboard</groupId>
-            <artifactId>studyboard-user-space</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.studyboard</groupId>
-            <artifactId>studyboard-file-uploader</artifactId>
+            <artifactId>studyboard-service</artifactId>
             <version>0.1.0</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.studyboard</groupId>
-            <artifactId>studyboard-user</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.studyboard</groupId>
-            <artifactId>studyboard-flashcard-organiser</artifactId>
-            <version>0.1.0</version>
-        </dependency>
 
-        <!-- Spring Framework -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

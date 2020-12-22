@@ -29,12 +29,8 @@
     </properties>
 
     <modules>
-        <module>file-uploader</module>
-        <module>flashcard-organiser</module>
+        <module>service</module>
         <module>rest-api</module>
-        <module>user</module>
-        <module>transcriber</module>
-        <module>user-space</module>
         <module>storage</module>
     </modules>
 

@@ -1,7 +1,7 @@
 package com.studyboard.integration;
 
 import com.studyboard.dto.DeckDTO;
-import com.studyboard.flashcard.exception.DeckDoesNotExist;
+import com.studyboard.exception.DeckDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.User;
 import org.junit.jupiter.api.*;

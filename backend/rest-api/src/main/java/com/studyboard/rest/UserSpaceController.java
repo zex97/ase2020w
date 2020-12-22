@@ -2,7 +2,7 @@ package com.studyboard.rest;
 
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.model.Document;
-import com.studyboard.space.service.SimpleUserSpaceService;
+import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;

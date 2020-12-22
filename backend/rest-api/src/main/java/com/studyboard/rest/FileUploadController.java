@@ -1,9 +1,9 @@
 package com.studyboard.rest;
 
 import com.studyboard.dto.SpaceDTO;
-import com.studyboard.uploader.FileStorageProperties;
-import com.studyboard.uploader.exception.StorageFileNotFoundException;
-import com.studyboard.uploader.service.SimpleFileUploadService;
+import com.studyboard.FileStorageProperties;
+import com.studyboard.exception.StorageFileNotFoundException;
+import com.studyboard.service.implementation.SimpleFileUploadService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;

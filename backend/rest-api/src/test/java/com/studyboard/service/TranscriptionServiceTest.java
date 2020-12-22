@@ -1,10 +1,8 @@
 package com.studyboard.service;
 
 import com.studyboard.model.Document;
-import com.studyboard.space.transcriber.exception.FfmpegException;
-import com.studyboard.space.transcriber.service.SimpleTranscriptionService;
-import com.studyboard.space.transcriber.service.interafaces.FilePreprocessor;
-import com.studyboard.space.transcriber.service.interafaces.SpeechRecognitionService;
+import com.studyboard.exception.FfmpegException;
+import com.studyboard.service.implementation.SimpleTranscriptionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

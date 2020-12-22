@@ -1,7 +1,7 @@
 package com.studyboard.service;
 
-import com.studyboard.flashcard.exception.DeckDoesNotExist;
-import com.studyboard.flashcard.service.SimpleFlashcardService;
+import com.studyboard.exception.DeckDoesNotExist;
+import com.studyboard.service.implementation.SimpleFlashcardService;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;

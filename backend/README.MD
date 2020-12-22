@@ -11,7 +11,7 @@ mvn clean install
 ```bash
 docker-compose -f local/docker-compose-db.yml up
 ```
-4.2  Run StudyboardApplication. Use the`-Dspring.profiles.active=local` profile. This mode will not produce any transcription.
+4.2  Run StudyboardApplication. Use the`-Dspring.profiles.active=local` profile (in VM Options). This mode will not produce any transcription.
 
 To test whole functionality in the IDE:
 * Create [Google Credentials](https://cloud.google.com/docs/authentication/getting-started).  
