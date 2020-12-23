@@ -13,8 +13,8 @@
   color: #ffffff;
 }
 
-#deck-buttons > button {
-  margin-left: 5px;
+#deck-buttons > span {
+  margin-left: 10px;
 }
 
 .wrapper{
@@ -30,11 +30,16 @@
   justify-content: space-between;
 }
 
-.flex-container-space-between > button {
+.flex-container-space-between > span {
   margin-left: 5%;
   margin-right: 5%;
-  background-color: #def2f1;
 }
+
+.flex-container-space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
 
 .flashcard {
   background-color: #3aafa9;
@@ -63,5 +68,12 @@
 ::ng-deep .mat-expansion-panel-body > h4 {
   margin-top: 20px;
 }
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+  text-align:left;
+}
+
 
 

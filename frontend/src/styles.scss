@@ -118,13 +118,14 @@ body {
 
 .pageTopBarButton {
   height: fit-content !important;
-  margin: 8px 20px !important;
+  margin: 8px 10px !important;
   border-color: #FEFFFF !important;
   color: #FEFFFF !important;
 }
 
 .pageTopBarSearchField {
   height: 50px !important;
+  margin: 0px 10px !important;
 }
 
 /* Display mat-select fields over the modal (depth adjustment) */
@@ -143,5 +144,14 @@ body {
   margin: 0 !important;
   font-weight: normal !important;
 }
+.modal-input-full-width {
+  width: 100%;
+}
+.modal-input-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
 
 
