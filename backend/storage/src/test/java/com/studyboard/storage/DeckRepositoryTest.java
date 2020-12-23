@@ -1,5 +1,6 @@
 package com.studyboard.storage;
 
+import com.studyboard.StudyboardApplication;
 import com.studyboard.model.Deck;
 import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
@@ -11,16 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+//@ExtendWith(SpringExtension.class)
+//@DataJpaTest
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@SpringBootTest(classes = DeckRepository.class)
 @ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes= StudyboardApplication.class)
 @DataJpaTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(classes = DeckRepository.class)
 public class DeckRepositoryTest {
 
   private static final long USER_ID = 1L;

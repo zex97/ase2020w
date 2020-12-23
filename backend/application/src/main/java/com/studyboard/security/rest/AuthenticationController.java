@@ -1,4 +1,4 @@
-package com.studyboard.rest;
+package com.studyboard.security.rest;
 
 import com.studyboard.security.dto.AuthenticationRequest;
 import com.studyboard.security.dto.AuthenticationToken;
