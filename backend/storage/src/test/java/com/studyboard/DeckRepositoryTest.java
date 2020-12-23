@@ -1,6 +1,5 @@
-package com.studyboard.storage;
+package com.studyboard;
 
-import com.studyboard.StudyboardApplication;
 import com.studyboard.model.Deck;
 import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,10 +19,10 @@ import java.util.List;
 
 //@ExtendWith(SpringExtension.class)
 //@DataJpaTest
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 //@SpringBootTest(classes = DeckRepository.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes= StudyboardApplication.class)
+//@ContextConfiguration(classes= StudyboardApplication.class)
 @DataJpaTest
 public class DeckRepositoryTest {
 
