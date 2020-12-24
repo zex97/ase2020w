@@ -271,7 +271,7 @@ export class FlashcardManagerComponent implements OnInit {
       () => {
         this.openSnackbar('You successfully deleted the deck!', 'success-snackbar');
         this.loadAllDecks();
-        location.reload();
+        this.viewAll = true;
       },
       error => {
         this.defaultErrorHandling(error);
