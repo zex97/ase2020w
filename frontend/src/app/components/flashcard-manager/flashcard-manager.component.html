@@ -1,7 +1,7 @@
 <div class="topPageDiv">
   <div class="row p-2 mb-4">
 
-    <mat-form-field class="pageTopBarSearchField">
+    <mat-form-field *ngIf="this.viewAll" class="pageTopBarSearchField">
       <mat-placeholder style="color: #FEFFFF">Search decks</mat-placeholder>
       <input matInput style="color: #FEFFFF" title="search" type="search">
       <button aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF;">
@@ -123,7 +123,7 @@
         <div class="card">
 
           <div class="card-body">
-            <h5 class="card-title wrapper txt-clr-dark">Title: {{deck.name}}</h5>
+            <h3 class="card-title wrapper txt-clr-dark">{{deck.name}}</h3>
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
