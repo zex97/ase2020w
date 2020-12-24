@@ -25,7 +25,7 @@ To test whole functionality in the IDE:
 
 4.1. Create [Google Credentials](https://cloud.google.com/docs/authentication/getting-started)
 
-4.2. Move the .json file to `./transcriber/src/main/resources`
+4.2. Move the .json file to `./service/src/main/resources`
 
 4.3. Run the command below to start both, database and application, containers.
 
