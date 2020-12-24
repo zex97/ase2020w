@@ -32,6 +32,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     FlashcardManagerComponent,
     DocumentSpaceComponent,
     DocumentComponent,
+    SpaceDocumentSlidePanelComponent,
   ],
     imports: [
         BrowserModule,

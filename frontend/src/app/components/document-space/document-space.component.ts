@@ -29,6 +29,7 @@ export class DocumentSpaceComponent implements OnInit {
   private spaces: Space[];
   currentSpace: Space;
   selectSpace: Space;
+  isLeftVisible = true;
 
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
@@ -103,6 +104,13 @@ export class DocumentSpaceComponent implements OnInit {
     this.spaceForm.reset();
   }
 
+  toggleSlide() {
+    this.isLeftVisible = !this.isLeftVisible;
+  }
+
+  parentEventHandlerFunction(value) {
+    this.toggleSlide();
+  }
   /**
    * Save uploaded files into a global variable and check if any
    * of them exceed the upload limit.
@@ -252,7 +260,6 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
-          //location.reload();
         },
         error => {
           this.defaultErrorHandling(error);
