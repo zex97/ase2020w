@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {UserService} from '../../services/user.service';
-import {SpaceService} from '../../services/space.service';
-import {Space} from '../../dtos/space';
-import {FileUploadService} from '../../services/file-upload.service';
+import {UserService} from '../../../services/user.service';
+import {SpaceService} from '../../../services/space.service';
+import {Space} from '../../../dtos/space';
+import {FileUploadService} from '../../../services/file-upload.service';
 
 @Component({
   selector: 'app-document-space',

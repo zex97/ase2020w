@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, OnInit, EventEmitter, Output} from '@angular/core';
-import {SpaceService} from '../../services/space.service';
-import {Document} from '../../dtos/document';
-import {Space} from '../../dtos/space';
-import {FileUploadService} from '../../services/file-upload.service';
+import {SpaceService} from '../../../services/space.service';
+import {Document} from '../../../dtos/document';
+import {Space} from '../../../dtos/space';
+import {FileUploadService} from '../../../services/file-upload.service';
 
 @Component({
   selector: 'app-document',
