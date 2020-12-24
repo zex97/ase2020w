@@ -4,6 +4,11 @@
   background-color: #2b7a78;
 }
 
+.modal-label {
+  color: #5f6368;
+  width: 100%;
+}
+
 .txt-clr-dark {
   color: #2b7a78;
 }
@@ -25,6 +30,11 @@
   overflow-y:inherit !important;
 }
 
+#deck-info {
+  background-color:#ffffff;
+  padding: 5px 10px 10px 10px;
+}
+
 .flex-container-space-between {
   display: flex;
   justify-content: space-between;
@@ -40,6 +50,10 @@
   justify-content: space-around;
 }
 
+#flashcard-title {
+  margin-top:10px;
+  color: #17252A;
+}
 
 .flashcard {
   background-color: #3aafa9;
@@ -67,12 +81,6 @@
 
 ::ng-deep .mat-expansion-panel-body > h4 {
   margin-top: 20px;
-}
-
-ul {
-  list-style-type: none;
-  margin-top: 4px;
-  text-align:left;
 }
 
 

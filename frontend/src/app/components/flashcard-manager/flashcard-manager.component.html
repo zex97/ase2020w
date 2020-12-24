@@ -9,14 +9,14 @@
       </button>
     </mat-form-field>
 
-    <button (click)="this.viewAll=true;this.deckForm.reset();" *ngIf="!this.viewAll" class="pageTopBarButton" mat-stroked-button>
+    <button (click)="this.viewAll=true;this.resetDeckForm();" *ngIf="!this.viewAll" class="pageTopBarButton" mat-stroked-button>
       Back to all
     </button>
-    <button *ngIf="this.viewAll" class="pageTopBarButton" data-target=".create-deck-modal" data-toggle="modal"
+    <button *ngIf="this.viewAll" (click)="this.resetDeckForm()" class="pageTopBarButton" data-target=".create-deck-modal" data-toggle="modal"
             mat-stroked-button>
       Create a deck
     </button>
-    <button (click)="resetDecks();" class="pageTopBarButton" data-target=".create-flashcard-modal" data-toggle="modal"
+    <button (click)="this.resetDecks();" class="pageTopBarButton" data-target=".create-flashcard-modal" data-toggle="modal"
             mat-stroked-button>
       Create a flashcard
     </button>
@@ -35,7 +35,7 @@
         <form class="modal-input-form">
 
           <mat-form-field [formGroup]="deckForm" appearance="outline" class="modal-input-full-width">
-            <mat-label style="color: #5f6368; width: 100%;">Deck Title</mat-label>
+            <mat-label class="modal-label">Deck Title</mat-label>
             <input formControlName="title" formGroupName="title"
                    id="deckTitle" matInput
                    placeholder="eg. Math" required type="text">
@@ -70,8 +70,8 @@
         <form class="modal-input-form">
 
           <!-- Question -->
-          <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width" style=""width:100%>
-            <mat-label style="color: #5f6368; width: 100%;">Question</mat-label>
+          <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
+            <mat-label class="modal-label">Question</mat-label>
             <input formControlName="question" formGroupName="question"
                    id="question" matInput
                    placeholder="Your question" required type="text">
@@ -81,7 +81,7 @@
           </mat-form-field>
           <!-- Answer -->
           <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
-            <mat-label style="color: #5f6368; width: 100%;">Answer</mat-label>
+            <mat-label class="modal-label">Answer</mat-label>
             <textarea formControlName="answer" formGroupName="answer"
                       id="answer" matInput
                       placeholder="Your answer" required title="Answer"></textarea>
@@ -140,6 +140,7 @@
 
   <!--View details of a deck-->
   <ng-template #elseBlockDetails>
+    <div id="deck-info">
     <div class="flex-container-space-between">
       <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
       <div id="deck-buttons">
@@ -154,12 +155,13 @@
         </span>
       </div>
     </div>
-    <div>
+    <mat-card>
       <h5>Created: {{this.selectedDeck.creationDate}}</h5>
-      <h5>Last time revised: {{this.selectedDeck.lastTimeUsed.substring(0, 10)}}</h5>
-      <h3 class="my-title">Flashcards:</h3>
+      <h5>Last revision: {{this.selectedDeck.lastTimeUsed.substring(0, 10)}}</h5>
+    </mat-card>
     </div>
-    <div class="row">
+    <h3 id="flashcard-title">Flashcards:</h3>
+    <div class="row" style="margin-left:-4%;">
       <div *ngFor="let flashcard of getFlashcards()" class="col-xl-3 col-4 p-2">
         <mat-accordion>
           <mat-expansion-panel (closed)="this.showAnswer = false" (opened)="this.showAnswer = true" class="flashcard"
@@ -170,7 +172,7 @@
             <h4>A: {{flashcard.answer}}</h4>
           </mat-expansion-panel>
         </mat-accordion>
-        <div class="flex-container-space-between">
+        <div class="flex-container-space-between" style="background-color:#ffffff">
           <span (click)="flashcardClicked(flashcard, false)" data-target=".rate-flashcard-modal" data-toggle="modal" class="close">
             <mat-icon>grade</mat-icon>
           </span>
@@ -197,7 +199,7 @@
             <form class="modal-input-form text-center border border-light p-5">
 
               <mat-form-field [formGroup]="deckForm" appearance="outline" class="modal-input-full-width">
-                <mat-label style="color: #5f6368; width: 100%;">New deck title</mat-label>
+                <mat-label class="modal-label">New deck title</mat-label>
                 <input formControlName="title" formGroupName="title"
                        id="editDeckTitle" matInput
                        placeholder="Title" required type="text">
@@ -270,14 +272,16 @@
                 <mat-card *ngIf="this.showAnswer" class="flashcard-answer">
                   <h4>A: {{this.currentlyRevisedCard.answer}}</h4>
                 </mat-card>
+                <div class="flex-container-space-between">
 
-                <button (click)="this.showAnswer=true" class="btn button-light" mat-button>
-                  Show answer
-                </button>
-                <button (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length"
-                        class="btn button-light" mat-button>
-                  Next
-                </button>
+                  <span (click)="this.showAnswer=true" class="close">
+                   <mat-icon>preview</mat-icon>
+                  </span>
+                  <span (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length" class="close">
+                   <mat-icon>arrow_forward_ios</mat-icon>
+                  </span>
+
+                </div>
               </div>
             </ng-template>
           </div>
@@ -308,7 +312,7 @@
 
               <!-- Question -->
               <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
-                <mat-label style="color: #5f6368; width: 100%;">Edit question</mat-label>
+                <mat-label class="modal-label">Edit question</mat-label>
                 <input formControlName="question" formGroupName="question"
                        id="editQuestion" matInput
                        placeholder="Your question" required type="text">
@@ -319,9 +323,9 @@
 
               <!--Answer-->
               <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
-                <mat-label style="color: #5f6368; width: 100%;">Edit answer</mat-label>
+                <mat-label class="modal-label">Edit answer</mat-label>
                 <textarea formControlName="answer" formGroupName="answer"
-                          id="editAnsewer" matInput
+                          id="editAnswer" matInput
                           placeholder="Your answer" required title="Answer"></textarea>
                 <mat-hint *ngIf="flashcardForm.controls.answer.errors" class="control-label invalid-input-text">
                   Can't be empty!

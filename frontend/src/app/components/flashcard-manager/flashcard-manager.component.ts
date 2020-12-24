@@ -79,10 +79,10 @@ export class FlashcardManagerComponent implements OnInit {
    * Get a list of all decks belonging to the logged-in user from backend
    */
   loadAllDecks() {
-     this.deckForm.patchValue({
-            title: ""
-      });
-      this.flashcardForm.reset();
+    this.deckForm.patchValue({
+           title: ""
+    });
+    this.resetFlashcardForm();
     this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
       (decksList: Deck[]) => {
         this.decks = decksList;
@@ -162,7 +162,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.deckForm.patchValue({
       title: deck.name
     });
-    this.flashcardForm.reset();
+    this.resetFlashcardForm();
   }
 
   /**
@@ -335,10 +335,7 @@ export class FlashcardManagerComponent implements OnInit {
 
   resetDecks() {
     this.selectedDecks = [];
-    this.flashcardForm.patchValue({
-     question: "",
-     answer: ""
-    })
+    this.resetFlashcardForm();
   }
 
   flashcardClicked(select: Flashcard, del: boolean) {
@@ -351,6 +348,14 @@ export class FlashcardManagerComponent implements OnInit {
         question: select.question,
         answer: select.answer
      });
+   }
+
+   resetDeckForm() {
+    this.deckForm.reset();
+   }
+
+   resetFlashcardForm() {
+    this.flashcardForm.reset();
    }
 
   openSnackbar(message: string, type: string) {
