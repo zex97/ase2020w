@@ -256,9 +256,12 @@
 
             <form *ngIf="this.chooseSize; else reviseBlock" [formGroup]="revisionSizeForm">
 
-              <mat-radio-button value="1" (change)="this.chosenOption=1" style="padding-bottom: 15px;">All cards which are due today</mat-radio-button>
+              <div style="display:flex;">
+                <mat-radio-button *ngIf="this.dueDateFlashcards" [disabled]="this.dueDateFlashcards.length==0" value="1" (change)="this.chosenOption=1" style="padding-bottom: 15px;">Revise all cards that are due today:  <strong>{{this.dueDateFlashcards.length}}</strong></mat-radio-button>
+                <button class="close" style="margin: -15px 0px 0px 10px;" matTooltip="Our app is using SM-2 algorithm to schedule flashcard revision." matTooltipPosition="above"><mat-icon>help</mat-icon></button>
+              </div>
               <div style="display:flex">
-                <mat-radio-button value="2" (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;">Choose a number of flashcards for revision: </mat-radio-button>
+                <mat-radio-button value="2" (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;">Choose a different number of flashcards for revision: </mat-radio-button>
                 <input class="form-control mb-4" formControlName="revisionSize" max="{{this.selectedDeck.size}}" min="0"
                      type="number" style="width:15%;">
               </div>
@@ -269,6 +272,7 @@
 
             <ng-template #reviseBlock>
               <div *ngIf="this.currentlyRevisedCard">
+                <h4 style="text-align:center">Flashcard <strong>{{this.revisionCounter}}/{{this.revisionFlashcards.length}}</strong></h4>
                 <mat-card class="flashcard">
                   <h4> Q: {{this.currentlyRevisedCard.question}}</h4>
                 </mat-card>
@@ -289,7 +293,7 @@
             </ng-template>
           </div>
           <div class="modal-footer">
-            <button (click)="revise()" mat-button mat-dialog-actions type="button">
+            <button [hidden]="!this.chooseSize" (click)="revise()" mat-button mat-dialog-actions type="button">
               Revise
             </button>
             <button (click)="this.chooseSize=true;" data-dismiss="modal" mat-button mat-dialog-actions type="button">

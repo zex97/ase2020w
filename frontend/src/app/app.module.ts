@@ -33,6 +33,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import {MatRadioModule} from '@angular/material/radio';
         MatCheckboxModule,
         MatInputModule,
         MatDialogModule,
-        MatRadioModule
+        MatRadioModule,
+        MatTooltipModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

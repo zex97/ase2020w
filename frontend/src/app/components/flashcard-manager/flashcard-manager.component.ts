@@ -35,6 +35,7 @@ export class FlashcardManagerComponent implements OnInit {
   private flashcards: Flashcard[];
   private selectedDecks: number[];
   revisionFlashcards: Flashcard[];
+  dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
   confidenceError: boolean = false;
   optionError: boolean = false;
@@ -150,8 +151,15 @@ export class FlashcardManagerComponent implements OnInit {
    */
   loadFlashcards(deck: Deck) {
     this.selectedDeck = deck;
+    this.flashcardService.getDeckById(deck.id).subscribe(
+        (deckRefreshed: Deck) => {
+            this.selectedDeck = deckRefreshed;
+          },
+          error => {
+            this.defaultErrorHandling(error);
+          }
+    )
     this.selectedDecksIds = [deck.id];
-    console.log(this.selectedDecksIds);
     this.flashcardService.getFlashcards(deck.id).subscribe(
       (flashcards: Flashcard[]) => {
         this.flashcards = flashcards;
@@ -161,10 +169,18 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
+    this.flashcardService.revise(1, deck.id, 1).subscribe(
+      (flashcards: Flashcard[]) => {
+         this.dueDateFlashcards = flashcards;
+       },
+       error => {
+         this.defaultErrorHandling(error);
+    });
     this.deckForm.patchValue({
       title: deck.name
     });
     this.resetFlashcardForm();
+
   }
 
   /**
@@ -235,6 +251,7 @@ export class FlashcardManagerComponent implements OnInit {
   revise() {
       console.log("Option: " + this.chosenOption)
       this.sizeError = false;
+      this.optionError = false;
       let size = this.revisionSizeForm.controls.revisionSize.value;
       if (size <= 0 || size > this.selectedDeck.size) {
           this.sizeError = true;
@@ -252,6 +269,7 @@ export class FlashcardManagerComponent implements OnInit {
                                    this.defaultErrorHandling(error);
                              }
                          );
+
       }
 
   }

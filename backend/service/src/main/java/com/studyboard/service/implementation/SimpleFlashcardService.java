@@ -184,12 +184,6 @@ public class SimpleFlashcardService implements FlashcardService {
             storedFlashcard.setCorrectnessStreak(0);
         }
         storedFlashcard.setNextDueDate(LocalDateTime.now().plusDays(storedFlashcard.getInterval()));
-
-        System.out.println("streak: " + storedFlashcard.getCorrectnessStreak());
-        System.out.println("interval: " + storedFlashcard.getInterval());
-        System.out.println("easiness: " + storedFlashcard.getEasiness());
-        System.out.println("date: " + storedFlashcard.getNextDueDate());
-
         logger.info("Rated the flashcard with question " + storedFlashcard.getQuestion());
         flashcardRepository.save(storedFlashcard);
     }

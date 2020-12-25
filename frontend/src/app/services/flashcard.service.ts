@@ -99,10 +99,10 @@ export class FlashcardService {
      * Send flashcard rating to backend
      * @param flashcard to make changes to
      */
-    rateFlashcard(flashcard: Flashcard, confidence: number) {
-          console.log('Rate flashcard - question ' + flashcard.question);
-          return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/confidence' + confidence, flashcard);
-    }
+   rateFlashcard(flashcard: Flashcard, confidence: number) {
+         console.log('Rate flashcard - question ' + flashcard.question);
+         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/confidence' + confidence, flashcard);
+   }
 
   /**
    * Sends a revision method call to the backend
