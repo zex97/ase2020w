@@ -29,8 +29,7 @@
 
     <div class="col" id="listOfSpaces">
       <mat-nav-list *ngFor="let space of getSpaces()">
-        <mat-list-item (click)="loadSpaceDetails(space.id); setSelectSpace(space);toggleSlide()" [class.highlighted]="space==selectSpace"
-                       id="spacesListItem">
+        <mat-list-item (click)="loadSpaceDetails(space.id); setSelectSpace(space);toggleSlide()" id="spacesListItem">
           <mat-card-content>
             <mat-card-title>
               <h3 class="space-name">{{space.name}}</h3>
