@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {UserService} from '../../services/user.service';
-import {SpaceService} from '../../services/space.service';
-import {Space} from '../../dtos/space';
-import {FileUploadService} from '../../services/file-upload.service';
+import {UserService} from '../../../services/user.service';
+import {SpaceService} from '../../../services/space.service';
+import {Space} from '../../../dtos/space';
+import {FileUploadService} from '../../../services/file-upload.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-document-space',
@@ -29,10 +30,11 @@ export class DocumentSpaceComponent implements OnInit {
   private spaces: Space[];
   currentSpace: Space;
   selectSpace: Space;
+  isLeftVisible = true;
 
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
-              private fileUploadService: FileUploadService) {
+              private fileUploadService: FileUploadService, private snackBar: MatSnackBar) {
     this.spaceForm = this.formBuilder.group({
       name: ['', [
         Validators.required,
@@ -101,6 +103,14 @@ export class DocumentSpaceComponent implements OnInit {
 
   resetSpaceFrom() {
     this.spaceForm.reset();
+  }
+
+  toggleSlide() {
+    this.isLeftVisible = !this.isLeftVisible;
+  }
+
+  parentEventHandlerFunction(value) {
+    this.toggleSlide();
   }
 
   /**
@@ -220,6 +230,7 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
+          this.openSnackbar('Space ' + space.name + 'successfuly created!', 'success-snackbar');
         },
         error => {
           this.defaultErrorHandling(error);
@@ -252,7 +263,6 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
-          //location.reload();
         },
         error => {
           this.defaultErrorHandling(error);
@@ -275,6 +285,18 @@ export class DocumentSpaceComponent implements OnInit {
     this.error = true;
     this.errorMessage = '';
     this.errorMessage = error.error.message;
+  }
+
+
+  isEmpty() {
+    return this.spaces?.length === 0;
+  }
+
+  openSnackbar(message: string, type: string) {
+    this.snackBar.open(message, 'close', {
+      duration: 4000,
+      panelClass: [type]
+    });
   }
 
 }

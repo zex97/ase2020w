@@ -1,8 +1,8 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {SpaceService} from '../../services/space.service';
-import {Document} from '../../dtos/document';
-import {Space} from '../../dtos/space';
-import {FileUploadService} from '../../services/file-upload.service';
+import {Component, Input, OnChanges, OnInit, EventEmitter, Output} from '@angular/core';
+import {SpaceService} from '../../../services/space.service';
+import {Document} from '../../../dtos/document';
+import {Space} from '../../../dtos/space';
+import {FileUploadService} from '../../../services/file-upload.service';
 
 @Component({
   selector: 'app-document',
@@ -21,6 +21,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
   @Input() space: Space;
+  @Output() toggleSlideEvent = new EventEmitter();
 
   ngOnInit() {
     // this.loadAllDocuments(this.spaceId);

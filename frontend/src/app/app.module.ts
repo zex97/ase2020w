@@ -15,8 +15,8 @@ import {Globals} from './global/globals';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
 import {RegisterComponent} from './components/register/register.component';
 import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
-import {DocumentSpaceComponent} from './components/document-space/document-space.component';
-import {DocumentComponent} from './components/document/document.component';
+import {DocumentSpaceComponent} from './components/space-document-slide-panel/document-space/document-space.component';
+import {DocumentComponent} from './components/space-document-slide-panel/document/document.component';
 import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -32,6 +32,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     FlashcardManagerComponent,
     DocumentSpaceComponent,
     DocumentComponent,
+    SpaceDocumentSlidePanelComponent,
   ],
     imports: [
         BrowserModule,

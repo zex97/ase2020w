@@ -51,7 +51,7 @@ body {
 }
 
 
-/* Page title wrapper */
+/* Page title */
 .page-title {  // aditional css properties required in component scss files
   text-align: center;
   color: white;
@@ -60,6 +60,13 @@ body {
 }
 .page-title-wrapper{
   height: 4em;
+}
+
+.page-title-small {
+  color: #FEFFFF !important;
+  font-weight: lighter !important;
+  margin-bottom: 0 !important;
+  padding-left: 25px !important;
 }
 
 /* Top of every component page */
@@ -96,8 +103,20 @@ body {
 }
 
 
+/* Empty content message */
+.warningMessageContainer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 40em !important;
+  color: grey !important;
+}
+.warningMessage {
+  font-weight: lighter !important;
+}
 
-/* Buttons*/
+
+/* Buttons */
 .mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus, {
   outline: none;
 }
