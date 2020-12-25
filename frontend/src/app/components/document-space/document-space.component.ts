@@ -167,7 +167,6 @@ export class DocumentSpaceComponent implements OnInit {
     let successUploadCount: number = 0;
     // tslint:disable-next-line:forin
     for (let i = 0; i < this.filesToUpload.length; i++) {
-      // TODO: should file types be validated in frontend???
       const file = this.filesToUpload[i];
       this.fileUploadService.uploadFile(file, spaceId).subscribe((res) => {
         if (res) {

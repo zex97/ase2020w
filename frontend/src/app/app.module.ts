@@ -34,6 +34,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {PdfViewerModule} from 'ng2-pdf-viewer';
 import {VimeModule} from '@vime/angular';
+import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {VimeModule} from '@vime/angular';
     FlashcardManagerComponent,
     DocumentSpaceComponent,
     DocumentComponent,
+    ConfirmDialogComponent,
   ],
     imports: [
         BrowserModule,
