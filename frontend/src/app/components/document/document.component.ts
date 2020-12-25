@@ -8,6 +8,7 @@ import {Player} from '@vime/angular';
 import {saveAs} from 'file-saver';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-document',
@@ -27,7 +28,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   blobUrl: any;
 
   constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService, private sanitizer: DomSanitizer,
-              private dialog: MatDialog) {
+              private dialog: MatDialog, private snackBar: MatSnackBar) {
   }
 
   @Input() space: Space;
@@ -81,7 +82,7 @@ export class DocumentComponent implements OnInit, OnChanges {
           () => {
             // update frontend display if the delete is successful, no need for another GET
             this.documentsOfSpace = this.documentsOfSpace.filter(document => document.id !== doc.id);
-            this.defaultSuccessHandling('You successfully deleted document ' + doc.name);
+            this.openSnackbar('Successfully deleted ' + doc.name + '!', 'success-snackbar');
 
             // if document is deleted, then delete the file related to it as well
             this.fileUploadService.deleteFile(this.space, doc.name).subscribe(
@@ -97,21 +98,6 @@ export class DocumentComponent implements OnInit, OnChanges {
           });
       }
     });
-  }
-  viewDocument(doc: Document) {
-    console.log('view document ' + doc.id);
-  }
-
-  setCurrentDocument(document: Document) {
-    this.currentDocument = document;
-    console.log(this.currentDocument);
-    // this.nameEditForm.patchValue({
-    //   name: space.name
-    // });
-  }
-
-  getCurrentDocument() {
-    return this.currentDocument;
   }
 
   /**
@@ -161,6 +147,13 @@ export class DocumentComponent implements OnInit, OnChanges {
         this.defaultErrorHandling(error);
       }
     );
+  }
+
+  openSnackbar(message: string, type: string) {
+    this.snackBar.open(message, 'close', {
+      duration: 4000,
+      panelClass: [type]
+    });
   }
 
   private defaultSuccessHandling(message: string) {

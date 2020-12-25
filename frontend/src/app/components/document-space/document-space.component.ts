@@ -4,6 +4,7 @@ import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
 import {Space} from '../../dtos/space';
 import {FileUploadService} from '../../services/file-upload.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-document-space',
@@ -33,7 +34,7 @@ export class DocumentSpaceComponent implements OnInit {
   @ViewChild('documentComponent') documentComponent;
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
-              private fileUploadService: FileUploadService) {
+              private fileUploadService: FileUploadService, private snackBar: MatSnackBar) {
     this.spaceForm = this.formBuilder.group({
       name: ['', [
         Validators.required,
@@ -180,7 +181,7 @@ export class DocumentSpaceComponent implements OnInit {
         }
         // create success message if all files successfully uploaded
         if (this.filesToUpload.length > 0 && this.filesToUpload.length === successUploadCount) {
-          this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
+          this.openSnackbar('You successfully uploaded ' + this.filesToUpload.length + ' file(s).', 'success-snackbar');
           this.success = true;
           this.documentComponent.ngOnChanges();
         }
@@ -259,6 +260,13 @@ export class DocumentSpaceComponent implements OnInit {
           this.defaultErrorHandling(error);
         }
       );
+    });
+  }
+
+  openSnackbar(message: string, type: string) {
+    this.snackBar.open(message, 'close', {
+      duration: 4000,
+      panelClass: [type]
     });
   }
 
