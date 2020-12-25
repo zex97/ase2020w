@@ -1,23 +1,17 @@
-package com.studyboard;
+package com.studyboard.repository;
 
 
 import com.studyboard.model.User;
-import com.studyboard.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-//@ExtendWith(SpringExtension.class)
-//@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-//@EnableJpaRepositories(basePackages = {"com.studyboard.repository"})
 @ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes= com.studyboard.StudyboardApplication.class)
 @DataJpaTest
 public class UserRepositoryTest {
 

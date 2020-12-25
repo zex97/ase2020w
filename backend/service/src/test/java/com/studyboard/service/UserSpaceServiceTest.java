@@ -1,12 +1,14 @@
 package com.studyboard.service;
 
+import com.studyboard.exception.SpaceDoesNotExist;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
 import com.studyboard.model.User;
 import com.studyboard.repository.SpaceRepository;
-import com.studyboard.exception.SpaceDoesNotExist;
 import com.studyboard.service.implementation.SimpleUserSpaceService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

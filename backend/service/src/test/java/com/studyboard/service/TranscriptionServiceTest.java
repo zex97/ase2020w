@@ -1,7 +1,7 @@
 package com.studyboard.service;
 
-import com.studyboard.model.Document;
 import com.studyboard.exception.FfmpegException;
+import com.studyboard.model.Document;
 import com.studyboard.service.implementation.SimpleTranscriptionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ public class TranscriptionServiceTest {
 
 
     @Test
-    public void transcribeForAnUnknownFileReturnsEmptyTranscription(){
+    public void transcribeForAnUnknownFileReturnsEmptyTranscription() {
         Document document = new Document();
         document.setFilePath(FILE_PATH);
 
@@ -45,7 +45,7 @@ public class TranscriptionServiceTest {
     }
 
     @Test
-    public void transcribeForAnExistingFileReturnsTranscription(){
+    public void transcribeForAnExistingFileReturnsTranscription() {
         Document document = new Document();
         document.setFilePath(FILE_PATH);
 

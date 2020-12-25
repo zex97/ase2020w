@@ -57,7 +57,9 @@ public class UserSpaceController {
         return ResponseEntity.ok().build();
     }
 
-    /**Change after file upload is done*/
+    /**
+     * Change after file upload is done
+     */
     @RequestMapping(
             value = "/{username}/{spaceId}",
             method = RequestMethod.GET,

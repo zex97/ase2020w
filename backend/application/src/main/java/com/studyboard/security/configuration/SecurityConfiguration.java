@@ -23,7 +23,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -48,18 +47,13 @@ public class SecurityConfiguration {
         this.dataSource = dataSource;
     }
 
-    @Bean
-    public static PasswordEncoder configureDefaultPasswordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {
         new InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
-            .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
-            .passwordEncoder(passwordEncoder)
-            .configure(auth);
+                .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
+                .passwordEncoder(passwordEncoder)
+                .configure(auth);
 
         auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder)
                 .usersByUsernameQuery("select username,password, enabled from sb_user where username=?")
@@ -67,6 +61,19 @@ public class SecurityConfiguration {
                 .configure(auth);
 
         providerList.forEach(auth::authenticationProvider);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("PUT", "POST", "OPTION", "GET");
+            }
+        };
     }
 
     @Configuration
@@ -97,31 +104,32 @@ public class SecurityConfiguration {
         @Autowired
         private AuthenticationManager authenticationManager;
 
-        public WebSecurityConfiguration() {}
+        public WebSecurityConfiguration() {
+        }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
-                .csrf().disable()
-                .headers().frameOptions().sameOrigin().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers(HttpMethod.POST, "/authentication").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/user").permitAll()
-                .antMatchers(HttpMethod.GET,
-                    "/v2/api-docs",
-                    "/swagger-resources/**",
-                    "/webjars/springfox-swagger-ui/**",
-                    "/swagger-ui.html")
-                .permitAll()
+                    .csrf().disable()
+                    .headers().frameOptions().sameOrigin().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
+                    .authorizeRequests()
+                    .antMatchers(HttpMethod.OPTIONS).permitAll()
+                    .antMatchers(HttpMethod.POST, "/authentication").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/user").permitAll()
+                    .antMatchers(HttpMethod.GET,
+                            "/v2/api-docs",
+                            "/swagger-resources/**",
+                            "/webjars/springfox-swagger-ui/**",
+                            "/swagger-ui.html")
+                    .permitAll()
             ;
             http
-                .authorizeRequests()
-                .anyRequest().fullyAuthenticated()
-                .and()
-                .addFilterBefore(new HeaderTokenAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+                    .authorizeRequests()
+                    .anyRequest().fullyAuthenticated()
+                    .and()
+                    .addFilterBefore(new HeaderTokenAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
         }
 
         @Bean
@@ -130,19 +138,6 @@ public class SecurityConfiguration {
             return super.authenticationManagerBean();
         }
 
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry
-                    .addMapping("/**")
-                    .allowedOrigins("*")
-                    .allowedMethods("PUT","POST","OPTION","GET");
-            }
-        };
     }
 
 }

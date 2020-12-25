@@ -1,12 +1,12 @@
 package com.studyboard.service;
 
 import com.studyboard.exception.DeckDoesNotExist;
-import com.studyboard.service.implementation.SimpleFlashcardService;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
 import com.studyboard.repository.FlashcardRepository;
+import com.studyboard.service.implementation.SimpleFlashcardService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -134,7 +134,7 @@ public class FlashcardServiceTest {
         flashcard.setConfidenceLevel(CONFIDENCE_LEVEL);
         flashcard.setDecks(decks);
         flashcardService.createFlashcard(flashcard);
-        flashcardService.assignFlashcard(flashcard.getId(), response.getId()+"-");
+        flashcardService.assignFlashcard(flashcard.getId(), response.getId() + "-");
 
         response = flashcardService.findDeckById(DECK_ID);
 
