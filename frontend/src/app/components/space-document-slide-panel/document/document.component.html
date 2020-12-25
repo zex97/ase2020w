@@ -21,10 +21,6 @@
             mat-stroked-button>
       Back to all
     </button>
-    <button class="pageTopBarButton"
-            mat-stroked-button>
-      Add document
-    </button>
   </div>
 </div>
 
@@ -44,6 +40,6 @@
 </mat-nav-list>
 
 <div class="warningMessageContainer" *ngIf="isEmpty()">
-  <h3 class="warningMessage">There are no documents in this space!</h3>
+  <h2 class="warningMessage">No documents added to space {{space.name}}!</h2>
 </div>
 

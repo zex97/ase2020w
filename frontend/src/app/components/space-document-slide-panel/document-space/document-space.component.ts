@@ -284,4 +284,9 @@ export class DocumentSpaceComponent implements OnInit {
     this.errorMessage = error.error.message;
   }
 
+
+  isEmpty() {
+    return this.spaces?.length === 0;
+  }
+
 }

@@ -103,8 +103,20 @@ body {
 }
 
 
+/* Empty content message */
+.warningMessageContainer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 40em !important;
+  color: grey !important;
+}
+.warningMessage {
+  font-weight: lighter !important;
+}
 
-/* Buttons*/
+
+/* Buttons */
 .mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus, {
   outline: none;
 }

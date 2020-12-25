@@ -46,6 +46,9 @@
         </mat-list-item>
       </mat-nav-list>
     </div>
+    <div class="warningMessageContainer" *ngIf="isEmpty()">
+      <h2 class="warningMessage">No spaces were created!</h2>
+    </div>
   </div>
   <div rightPane>
     <app-document *ngIf="selectSpace" [space]=selectSpace (toggleSlideEvent)="parentEventHandlerFunction($event)"></app-document>
