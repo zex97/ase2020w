@@ -1,8 +1,12 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {SpaceService} from '../../services/space.service';
 import {Document} from '../../dtos/document';
 import {Space} from '../../dtos/space';
 import {FileUploadService} from '../../services/file-upload.service';
+import {PdfViewerComponent} from 'ng2-pdf-viewer';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {DomSanitizer} from '@angular/platform-browser';
+import {Player, VimeComponent, VimeModule, Vimeo} from '@vime/angular';
 
 @Component({
   selector: 'app-document',
@@ -16,11 +20,16 @@ export class DocumentComponent implements OnInit, OnChanges {
   errorMessage: string = '';
   success: boolean = false;
   successMessage: string = '';
+  currentDocument: Document;
+  fileObject: Blob;
+  blobUrl: any;
 
-  constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService) {
+  constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService, private sanitizer: DomSanitizer) {
   }
 
   @Input() space: Space;
+  @ViewChild('player') player: Player;
+  @ViewChild('audioPlayer') audioPlayer: Player;
 
   ngOnInit() {
     // this.loadAllDocuments(this.spaceId);
@@ -76,6 +85,58 @@ export class DocumentComponent implements OnInit, OnChanges {
         this.defaultErrorHandling(error);
       });
 
+  }
+  viewDocument(doc: Document) {
+    console.log('view document ' + doc.id);
+  }
+
+  setCurrentDocument(document: Document) {
+    this.currentDocument = document;
+    console.log(this.currentDocument);
+    // this.nameEditForm.patchValue({
+    //   name: space.name
+    // });
+  }
+
+  getCurrentDocument() {
+    return this.currentDocument;
+  }
+
+  /**
+   * Fetches a file as resource from the backend
+   * */
+  loadFile(space: Space, document: Document) {
+    this.fileUploadService.getFile(space, document.name).subscribe(
+      (res) => {
+        if (document.name.includes('.mp3') || document.name.includes('.mp4')) {
+          this.fileObject = res;
+          this.blobUrl = URL.createObjectURL(this.fileObject);
+          console.log(this.blobUrl);
+        } else if (document.name.includes('.pdf')) {
+          this.fileObject = new Blob([res], {type: 'application/pdf'});
+          this.blobUrl = URL.createObjectURL(this.fileObject);
+        } else {
+          this.fileObject = res;
+          this.blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(this.fileObject));
+          console.log(this.blobUrl);
+        }
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      }
+    );
+    this.currentDocument = document;
+  }
+
+  modalCloseCleanUp() {
+    // let element: Element;
+    // element = #player;
+    if (this.player) {
+      this.player.paused = true;
+    } else {
+      this.audioPlayer.paused = true;
+    }
+    URL.revokeObjectURL(this.blobUrl);
   }
 
   private defaultSuccessHandling(message: string) {

@@ -47,7 +47,7 @@ public class FileUploadController {
             value = "Fetch a specific file.",
             authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity<Resource> getFile(
-            @RequestParam(name = "fileName") SpaceDTO spaceDTO, @PathVariable String fileName) {
+            @RequestBody SpaceDTO spaceDTO, @PathVariable String fileName) {
         Resource file = fileUploaderService.loadAsResource(spaceDTO.toSpace(), fileName);
         return ResponseEntity.ok()
                 .header(

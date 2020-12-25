@@ -32,6 +32,8 @@ import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {VimeModule} from '@vime/angular';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatListModule,
         MatCheckboxModule,
         MatInputModule,
-        MatDialogModule
+        MatDialogModule,
+        PdfViewerModule,
+        VimeModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]
