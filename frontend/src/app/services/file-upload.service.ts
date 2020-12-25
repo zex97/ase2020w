@@ -42,6 +42,11 @@ export class FileUploadService {
       );
   }
 
+  /**
+   * Delete a file from space
+   * @param space for which we are deleting a file
+   * @param fileName of the file we want to delete
+   */
   deleteFile(space: Space, fileName: string) {
     console.log('Deleting file ' + fileName + ' from space' + space.name);
     return this.httpClient.delete(this.userBaseUri + '/delete-file/' + space.id + '/' + fileName);

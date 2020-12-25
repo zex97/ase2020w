@@ -1,6 +1,7 @@
 package com.studyboard.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -40,6 +41,8 @@ public class Document {
         this.name = name;
     }
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     public String getTranscription() {
         return transcription;
     }

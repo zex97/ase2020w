@@ -66,22 +66,48 @@ export class FlashcardService {
     * Persists flashcard to the backend
     * @param flashcard to persist
     */
-  createFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  createFlashcard(flashcard: Flashcard): Observable<Flashcard> {
       console.log('Create flashcard with question ' + flashcard.question);
-      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/' + deckId, flashcard);
+      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard', flashcard);
   }
 
-  editFlashcard(flashcard: Flashcard, deckId: number): Observable<Flashcard> {
+  /**
+  * Connect flashcard to belonging decks
+  * @param flashcardId of the flashcard
+  * @param decks of all the decks it belongs to
+  */
+  assignFlashcard(flashcardId: number, decks : number[]) {
+      console.log('Assigning flashcard ' + flashcardId + ' to deck(s).');
+      let decksString = "";
+      for(let i=0; i<decks.length; i++){
+          decksString+=decks[i] + "-"
+      }
+      console.log(decksString);
+      return this.httpClient.get<any>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks' + decksString);
+  }
+
+  /**
+   * Change flashcard question, answer or rating in the backend
+   * @param flashcard to make changes to
+   */
+  editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
         console.log('Edit flashcard - question ' + flashcard.question);
-        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/flashcard' + flashcard.id, flashcard);
+        return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id, flashcard);
   }
 
+  /**
+   * Sends a revision method call to the backend
+   * @param size of question set for the revision
+   * @param deckId of the deck whose flashcards are going to be revised
+   */
   revise(size: number, deckId: number): Observable<Flashcard[]> {
         console.log('Getting flashcards for revision.');
         return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/flashcards/' + size);
   }
 
-
+  /**
+   * Loads all users from the backend
+   */
   getUsers(): Observable<User[]> {
       console.log('Searching for users.');
       return this.httpClient.get<User[]>(this.globals.backendUri + '/api/user');

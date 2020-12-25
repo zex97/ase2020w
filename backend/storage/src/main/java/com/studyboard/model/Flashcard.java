@@ -3,12 +3,14 @@ package com.studyboard.model;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 @Entity
 public class Flashcard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "f_id")
     private long id;
 
     @Column(nullable = false, name = "question")
@@ -22,9 +24,8 @@ public class Flashcard {
     @Max(5)
     private int confidenceLevel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deck_id")
-    private Deck deck;
+    @ManyToMany(mappedBy = "flashcards")
+    private List<Deck> decks;
 
     public long getId() {
         return id;
@@ -58,11 +59,12 @@ public class Flashcard {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Deck getDeck() {
-        return deck;
+
+    public List<Deck> getDecks() {
+        return decks;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
     }
 }

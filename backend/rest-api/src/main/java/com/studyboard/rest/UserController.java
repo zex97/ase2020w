@@ -2,7 +2,7 @@ package com.studyboard.rest;
 
 import com.studyboard.dto.UserDTO;
 import com.studyboard.exception.UniqueConstraintException;
-import com.studyboard.space.user.service.UserService;
+import com.studyboard.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
 import {Space} from '../../dtos/space';
@@ -34,10 +34,16 @@ export class DocumentSpaceComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
               private fileUploadService: FileUploadService) {
     this.spaceForm = this.formBuilder.group({
-      name: ['']
+      name: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]],
     });
     this.fileUploadForm = this.formBuilder.group({
-      name: ['']
+      name: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]]
     });
     this.nameEditForm = this.formBuilder.group({
       name: ['']
@@ -81,7 +87,7 @@ export class DocumentSpaceComponent implements OnInit {
     this.currentSpace = space;
     console.log(this.currentSpace);
     this.nameEditForm.patchValue({
-       name: space.name
+      name: space.name
     });
   }
 
@@ -91,6 +97,10 @@ export class DocumentSpaceComponent implements OnInit {
 
   setSelectSpace(space: Space) {
     this.selectSpace = space;
+  }
+
+  resetSpaceFrom() {
+    this.spaceForm.reset();
   }
 
   /**
@@ -224,6 +234,8 @@ export class DocumentSpaceComponent implements OnInit {
   deleteSpace(id: number) {
     this.spaceService.deleteSpace(id).subscribe(
       () => {
+        // set chosen space as unselected
+        this.selectSpace = null;
         this.loadAllSpaces();
       },
       error => {
