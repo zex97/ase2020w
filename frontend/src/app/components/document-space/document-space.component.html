@@ -197,6 +197,6 @@
 
   <div [class.listOfSpaceDocumentsCollapsed]="!selectSpace" [class.listOfSpaceDocuments]="selectSpace" class="col">
     <!--Document component-->
-    <app-document *ngIf="selectSpace" [space]=selectSpace></app-document>
+    <app-document *ngIf="selectSpace" [space]=selectSpace #documentComponent></app-document>
   </div>
 </div>

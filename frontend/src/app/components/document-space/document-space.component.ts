@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
@@ -30,6 +30,7 @@ export class DocumentSpaceComponent implements OnInit {
   currentSpace: Space;
   selectSpace: Space;
 
+  @ViewChild('documentComponent') documentComponent;
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
               private fileUploadService: FileUploadService) {
@@ -182,6 +183,7 @@ export class DocumentSpaceComponent implements OnInit {
         if (this.filesToUpload.length > 0 && this.filesToUpload.length === successUploadCount) {
           this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
           this.success = true;
+          this.documentComponent.ngOnChanges();
         }
       });
     }
