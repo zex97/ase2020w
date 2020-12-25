@@ -2,8 +2,8 @@ package com.studyboard.rest;
 
 import com.studyboard.dto.DeckDTO;
 import com.studyboard.dto.FlashcardDTO;
-import com.studyboard.flashcard.exception.FlashcardConstraintException;
-import com.studyboard.flashcard.service.FlashcardService;
+import com.studyboard.exception.FlashcardConstraintException;
+import com.studyboard.service.FlashcardService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;

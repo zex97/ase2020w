@@ -1,10 +1,13 @@
 package com.studyboard.integration;
 
 import com.studyboard.dto.DeckDTO;
-import com.studyboard.flashcard.exception.DeckDoesNotExist;
+import com.studyboard.exception.DeckDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
