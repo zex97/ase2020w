@@ -3,10 +3,9 @@ import {SpaceService} from '../../services/space.service';
 import {Document} from '../../dtos/document';
 import {Space} from '../../dtos/space';
 import {FileUploadService} from '../../services/file-upload.service';
-import {PdfViewerComponent} from 'ng2-pdf-viewer';
-import {PdfViewerModule} from 'ng2-pdf-viewer';
 import {DomSanitizer} from '@angular/platform-browser';
-import {Player, VimeComponent, VimeModule, Vimeo} from '@vime/angular';
+import {Player} from '@vime/angular';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-document',
@@ -105,21 +104,10 @@ export class DocumentComponent implements OnInit, OnChanges {
   /**
    * Fetches a file as resource from the backend
    * */
-  loadFile(space: Space, document: Document) {
-    this.fileUploadService.getFile(space, document.name).subscribe(
+  loadFile(document: Document) {
+    this.fileUploadService.getFile(this.space, document.name).subscribe(
       (res) => {
-        if (document.name.includes('.mp3') || document.name.includes('.mp4')) {
-          this.fileObject = res;
-          this.blobUrl = URL.createObjectURL(this.fileObject);
-          console.log(this.blobUrl);
-        } else if (document.name.includes('.pdf')) {
-          this.fileObject = new Blob([res], {type: 'application/pdf'});
-          this.blobUrl = URL.createObjectURL(this.fileObject);
-        } else {
-          this.fileObject = res;
-          this.blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(this.fileObject));
-          console.log(this.blobUrl);
-        }
+        this.handleFileExtensions(document, res);
       },
       error => {
         this.defaultErrorHandling(error);
@@ -128,15 +116,38 @@ export class DocumentComponent implements OnInit, OnChanges {
     this.currentDocument = document;
   }
 
+  handleFileExtensions(document: Document, res) {
+    if (document.name.includes('.mp3') || document.name.includes('.mp4')) {
+      this.fileObject = res;
+      this.blobUrl = URL.createObjectURL(this.fileObject);
+    } else if (document.name.includes('.pdf')) {
+      this.fileObject = new Blob([res], {type: 'application/pdf'});
+      this.blobUrl = URL.createObjectURL(this.fileObject);
+    } else {
+      this.fileObject = res;
+      this.blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(this.fileObject));
+    }
+  }
+
   modalCloseCleanUp() {
-    // let element: Element;
-    // element = #player;
     if (this.player) {
       this.player.paused = true;
     } else {
       this.audioPlayer.paused = true;
     }
     URL.revokeObjectURL(this.blobUrl);
+  }
+
+  downloadFileFromList(document: Document) {
+    this.fileUploadService.getFile(this.space, document.name).subscribe(
+      (res) => {
+        this.handleFileExtensions(document, res);
+        saveAs(this.fileObject, document.name);
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      }
+    );
   }
 
   private defaultSuccessHandling(message: string) {
