@@ -6,6 +6,7 @@ import com.studyboard.exception.StorageFileNotFoundException;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
 import com.studyboard.model.User;
+import com.studyboard.repository.DocumentRepository;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.service.FileUploadService;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class SimpleFileUploadService implements FileUploadService {
   private final Logger logger = LoggerFactory.getLogger(SimpleFileUploadService.class);
   private final Path rootLocation;
   private final SpaceRepository spaceRepository;
+  private final DocumentRepository documentRepository;
   private final TranscriptionService transcriptionService;
 
   @Autowired
@@ -42,9 +45,11 @@ public class SimpleFileUploadService implements FileUploadService {
           FileStorageProperties fileStorageProperties,
           UserRepository userRepository,
           SpaceRepository spaceRepository,
+          DocumentRepository documentRepository,
           TranscriptionService transcriptionService) {
     this.rootLocation = Paths.get(fileStorageProperties.getLocation());
     this.spaceRepository = spaceRepository;
+    this.documentRepository = documentRepository;
     this.transcriptionService = transcriptionService;
   }
 
@@ -192,34 +197,20 @@ public class SimpleFileUploadService implements FileUploadService {
   @Override
   public void deleteUserFile(String fileName, long spaceId) {
     Space space = spaceRepository.findSpaceById(spaceId);
+    List<Document> list = space.getDocuments();
     Path filePath = load(fileName, space.getUser().getUsername());
 
-    // if some other space also needs this document skip deletion of the file
-    if (checkAllOtherSpaces(space, fileName)) {
-      logger.debug(
-          "File '" + fileName + "' not deleted because it is used by at least one other space.");
-      return;
+    for (Document document: list) {
+      if (document.getName().equals(fileName)) {
+        documentRepository.delete(document);
+        break;
+      }
     }
 
-    List<Document> list = space.getDocuments();
-
-    // see if document is deleted, if not
-    // skip deletion of file to avoid inconsistency
-    if (list.stream().anyMatch(document -> document.getFilePath().equals(fileName))) {
-      throw new FileStorageException(
-          "Trying to delete a file '" + fileName + "' whose document still exists");
-    }
     try {
       Files.delete(filePath);
-      logger.info(
-          "File '"
-              + fileName
-              + "' has been successfully deleted by user("
-              + space.getUser().getUsername()
-              + ") in space("
-              + space.getName()
-              + ").");
-
+      logger.info("File '" + fileName + "' has been successfully deleted by user(" +
+              space.getUser().getUsername() + ") in space(" + space.getName() + ").");
     } catch (NoSuchFileException e) {
       logger.debug("File '" + fileName + "' not in the directory");
       throw new StorageFileNotFoundException("File '" + fileName + "' not in the directory");
@@ -231,22 +222,5 @@ public class SimpleFileUploadService implements FileUploadService {
   @Override
   public void deleteUserFolder(String userName) {
     FileSystemUtils.deleteRecursively(rootLocation.resolve(userName).toFile());
-  }
-
-  /**
-   * Iterates through all other user spaces to see if they use this document as well.
-   *
-   * @return true if any other space has a document based on this file
-   */
-  private boolean checkAllOtherSpaces(Space space, String fileName) {
-    for (Space help : space.getUser().getSpaces()) {
-      if (help.getId() != space.getId())
-        for (Document document : help.getDocuments()) {
-          if (document.getName().equals(fileName)) {
-            return true;
-          }
-        }
-    }
-    return false;
   }
 }
