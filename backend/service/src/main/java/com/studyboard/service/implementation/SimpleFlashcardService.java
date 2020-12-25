@@ -68,15 +68,19 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public List<Flashcard> getFlashcardsForRevision(long deckId, int size) {
+    public List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version) {
         Deck deck = findDeckById(deckId);
         if (deck.getSize() < size) {
             throw new IllegalArgumentException("Deck size too large!");
         }
         deck.setLastTimeUsed(LocalDateTime.now());
         deckRepository.save(deck);
-        //get random flashcards - later: implement an algorithm
-        List<Flashcard> all = getAllFlashcardsOfDeck(deckId);
+        if(version == 1) {
+            return flashcardRepository.findAllDueToday(deckId, LocalDateTime.now());
+        } else {
+            return flashcardRepository.findByDeckIdOrderByDueDate(deckId, size);
+        }
+        /*List<Flashcard> all = getAllFlashcardsOfDeck(deckId);
         List<Flashcard> copy = new ArrayList<>(all);
         List<Flashcard> random = new ArrayList<>();
         SecureRandom rand = new SecureRandom();
@@ -84,7 +88,7 @@ public class SimpleFlashcardService implements FlashcardService {
             random.add(copy.remove(rand.nextInt(copy.size())));
         }
         logger.info("Getting " + size + " flashcards of the deck named " + deck.getName() + " for revision");
-        return random;
+        return random;*/
     }
 
     @Override
@@ -99,7 +103,9 @@ public class SimpleFlashcardService implements FlashcardService {
 
     @Override
     public Flashcard createFlashcard(Flashcard flashcard) {
-        flashcard.setConfidenceLevel(0);
+        flashcard.setEasiness(2.5);
+        flashcard.setCorrectnessStreak(0);
+        flashcard.setNextDueDate(LocalDateTime.now());
         logger.info("Created new flashcard with question " + flashcard.getQuestion());
         return flashcardRepository.save(flashcard);
     }
@@ -135,17 +141,40 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public Flashcard editFlashcard(Flashcard flashcard) throws FlashcardConstraintException {
+    public Flashcard editFlashcard(Flashcard flashcard) {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
-        try {
-            storedFlashcard.setQuestion(flashcard.getQuestion());
-            storedFlashcard.setAnswer(flashcard.getAnswer());
-            storedFlashcard.setConfidenceLevel(flashcard.getConfidenceLevel());
-            logger.info("Edited or rated the flashcard with question " + storedFlashcard.getQuestion());
-            return flashcardRepository.save(storedFlashcard);
-        } catch (ConstraintViolationException e) {
+        storedFlashcard.setQuestion(flashcard.getQuestion());
+        storedFlashcard.setAnswer(flashcard.getAnswer());
+        logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
+        return flashcardRepository.save(storedFlashcard);
+    }
+
+    @Override
+    public void rateFlashcard(Flashcard flashcard, int confidence_level) throws FlashcardConstraintException {
+        if (confidence_level < 0 || confidence_level > 5) {
             throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");
         }
+        Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
+
+        //SM-2 Algorithm Calculations
+        if(confidence_level >= 3) {
+            storedFlashcard.setEasiness(Math.min(1.3, storedFlashcard.getEasiness()-0.8+0.28*confidence_level-0.02*Math.pow(confidence_level, 2)));
+            if(storedFlashcard.getCorrectnessStreak() == 0) {
+               storedFlashcard.setInterval(1);
+            } else if(storedFlashcard.getCorrectnessStreak() == 1) {
+                storedFlashcard.setInterval(6);
+            } else {
+                storedFlashcard.setInterval((int) Math.ceil(storedFlashcard.getInterval()*storedFlashcard.getEasiness()));
+            }
+            storedFlashcard.setCorrectnessStreak(storedFlashcard.getCorrectnessStreak()+1);
+        } else {
+            storedFlashcard.setInterval(1);
+            storedFlashcard.setCorrectnessStreak(0);
+        }
+        storedFlashcard.setNextDueDate(LocalDateTime.now().plusDays(storedFlashcard.getInterval()));
+
+        logger.info("Rated the flashcard with question " + storedFlashcard.getQuestion());
+        flashcardRepository.save(storedFlashcard);
     }
 
     @Override
