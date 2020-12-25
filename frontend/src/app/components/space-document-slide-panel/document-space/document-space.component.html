@@ -103,7 +103,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">File Upload {{getCurrentSpace().name}}</h2>
+        <h2 class="modal-title">Upload Files to {{getCurrentSpace().name}}</h2>
       </div>
 
       <div class="modal-body">
@@ -121,11 +121,11 @@
         </div>
         <div *ngIf="filesToUpload.length>0">
           <label for="files">Names of files to upload: </label>
-          <mat-card *ngFor="let file of getFilesToUpload(); let i = index">
+          <mat-card *ngFor="let file of getFilesToUpload(); let i = index" style="padding-right: 0;">
             {{file.name}}
             <button (click)="removeFileFromList(i)" aria-label="Remove" data-toggle="modal"
-                    mat-button style="float: right">
-              &times;
+                    mat-button style="float: right;">
+              <mat-icon style="height: 35px">close</mat-icon>
             </button>
             <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
           </mat-card>
@@ -134,11 +134,10 @@
       </div>
 
       <div class="modal-footer">
-        <button (click)="uploadFiles(currentSpace)" *ngIf="filesReadyForUpload()" class="btn btn-info"
-                data-dismiss="modal"
-                type="button">Submit
+        <button (click)="uploadFiles(currentSpace)" *ngIf="filesReadyForUpload()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+          Submit
         </button>
-        <button (click)="clearInputFiles()" class="btn btn-secondary" data-dismiss="modal" type="button">
+        <button (click)="clearInputFiles();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>
@@ -154,10 +153,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Change name of the space</h5>
-        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h2 class="modal-title">Edit space {{getCurrentSpace().name}}</h2>
       </div>
       <div class="modal-body">
         <form class="modal-input-form">
@@ -173,10 +169,10 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="saveEdits(currentSpace)" class="btn btn-info float-right" data-dismiss="modal"
-                type="button">Ok
+        <button (click)="saveEdits(currentSpace)" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+          Submit
         </button>
-        <button (click)="nameEditForm.reset()" class="btn btn-secondary" data-dismiss="modal" type="button">
+        <button (click)="nameEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>
@@ -191,19 +187,18 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"></h5>
-        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h2 class="modal-title">Delete space {{getCurrentSpace().name}}</h2>
       </div>
       <div class="modal-body">
         <h3>Are you sure you want to delete space {{getCurrentSpace().name}}?</h3>
       </div>
       <div class="modal-footer">
-        <button (click)="deleteSpace(currentSpace.id);toggleSlide()" class="btn btn-info float-right" data-dismiss="modal"
-                type="button">Ok
+        <button (click)="deleteSpace(currentSpace.id);toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+          Submit
         </button>
-        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+        <button (click)="nameEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+          Close
+        </button>
       </div>
     </div>
   </div>
