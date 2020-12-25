@@ -30,12 +30,14 @@ export class FlashcardManagerComponent implements OnInit {
   revisionCounter: number = 0;
   currentlyRevisedCard: Flashcard;
   sizeError: boolean = false;
+  chosenOption: number;
   private decks: Deck[];
   private flashcards: Flashcard[];
   private selectedDecks: number[];
   revisionFlashcards: Flashcard[];
   deleteFlash: boolean = false;
   confidenceError: boolean = false;
+  optionError: boolean = false;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
@@ -57,7 +59,7 @@ export class FlashcardManagerComponent implements OnInit {
       ]]
     });
     this.revisionSizeForm = this.formBuilder.group({
-      revisionSize: [0]
+      revisionSize: [1]
     });
     this.flashcardRateForm = this.formBuilder.group({
       confidenceLevel: [1, [
@@ -176,7 +178,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Builds a flashcard dto and sends a creation request.
    */
   createFlashcard() {
-       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0);
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value);
        this.flashcardService.createFlashcard(flashcard).subscribe(
                        (flashcardCreated: Flashcard) => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
@@ -231,14 +233,17 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a revision request based on chosen revision size.
    */
   revise() {
+      console.log("Option: " + this.chosenOption)
       this.sizeError = false;
       let size = this.revisionSizeForm.controls.revisionSize.value;
-      if (size < 0 || size > this.selectedDeck.size) {
+      if (size <= 0 || size > this.selectedDeck.size) {
           this.sizeError = true;
+      } else if(this.chosenOption == undefined) {
+          this.optionError = true;
       } else {
             this.chooseSize = false;
             this.revisionCounter = 0;
-            this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
+            this.flashcardService.revise(size, this.selectedDeck.id, this.chosenOption).subscribe(
                 (flashcards: Flashcard[]) => {
                              this.revisionFlashcards = flashcards;
                              this.getRevisionFlashcard();
@@ -298,25 +303,20 @@ export class FlashcardManagerComponent implements OnInit {
    */
   rateFlashcard(flashcard: Flashcard) {
     console.log(flashcard);
-    this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
       let confidence = this.flashcardRateForm.controls.confidenceLevel.value;
       if (confidence != null) {
-        flashcard.confidenceLevel = confidence;
+        this.flashcardService.rateFlashcard(flashcard, confidence).subscribe(
+          () => {
+            this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
+            this.loadFlashcards(this.selectedDeck);
+          },
+          error => {
+            this.confidenceError = true;
+            this.error = true;
+            this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+            this.openSnackbar(this.errorMessage, 'warning-snackbar');
+          });
       }
-      let decks : Deck[] = [res];
-      this.flashcardService.editFlashcard(flashcard).subscribe(
-        () => {
-          this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
-          this.loadFlashcards(this.selectedDeck);
-        },
-        error => {
-          this.confidenceError = true;
-          this.error = true;
-          this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
-          this.openSnackbar(this.errorMessage, 'warning-snackbar');
-        }
-      );
-    });
   }
 
   updateDeckList(select : number){
@@ -356,6 +356,14 @@ export class FlashcardManagerComponent implements OnInit {
 
    resetFlashcardForm() {
     this.flashcardForm.reset();
+   }
+
+   resetRevisionSizeForm() {
+    this.revisionSizeForm.patchValue({
+      revisionSize: 1
+    });
+    this.chosenOption = undefined;
+    this.optionError = false;
    }
 
   openSnackbar(message: string, type: string) {

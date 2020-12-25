@@ -75,11 +75,18 @@ public class SimpleFlashcardService implements FlashcardService {
         }
         deck.setLastTimeUsed(LocalDateTime.now());
         deckRepository.save(deck);
+
+        for(Flashcard f : flashcardRepository.findAllDueToday(deckId, LocalDateTime.now())) {
+            System.out.println("->" + f.getId() + ":" + f.getNextDueDate());
+        }
+
         if(version == 1) {
             return flashcardRepository.findAllDueToday(deckId, LocalDateTime.now());
         } else {
             return flashcardRepository.findByDeckIdOrderByDueDate(deckId, size);
         }
+
+
         /*List<Flashcard> all = getAllFlashcardsOfDeck(deckId);
         List<Flashcard> copy = new ArrayList<>(all);
         List<Flashcard> random = new ArrayList<>();
@@ -158,7 +165,12 @@ public class SimpleFlashcardService implements FlashcardService {
 
         //SM-2 Algorithm Calculations
         if(confidence_level >= 3) {
-            storedFlashcard.setEasiness(Math.min(1.3, storedFlashcard.getEasiness()-0.8+0.28*confidence_level-0.02*Math.pow(confidence_level, 2)));
+            double easiness = storedFlashcard.getEasiness()-0.8+0.28*confidence_level-0.02*Math.pow(confidence_level, 2);
+            if(easiness < 1.3) {
+                storedFlashcard.setEasiness(1.3);
+            } else {
+                storedFlashcard.setEasiness(easiness);
+            }
             if(storedFlashcard.getCorrectnessStreak() == 0) {
                storedFlashcard.setInterval(1);
             } else if(storedFlashcard.getCorrectnessStreak() == 1) {
@@ -172,6 +184,11 @@ public class SimpleFlashcardService implements FlashcardService {
             storedFlashcard.setCorrectnessStreak(0);
         }
         storedFlashcard.setNextDueDate(LocalDateTime.now().plusDays(storedFlashcard.getInterval()));
+
+        System.out.println("streak: " + storedFlashcard.getCorrectnessStreak());
+        System.out.println("interval: " + storedFlashcard.getInterval());
+        System.out.println("easiness: " + storedFlashcard.getEasiness());
+        System.out.println("date: " + storedFlashcard.getNextDueDate());
 
         logger.info("Rated the flashcard with question " + storedFlashcard.getQuestion());
         flashcardRepository.save(storedFlashcard);

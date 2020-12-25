@@ -150,7 +150,7 @@
         <span data-target=".edit-deck-modal" data-toggle="modal" class="close">
           <mat-icon>edit</mat-icon>
         </span>
-        <span (click)="this.sizeError=false;" data-target=".revise-deck" data-toggle="modal" class="close">
+        <span (click)="this.sizeError=false; this.resetRevisionSizeForm();" data-target=".revise-deck" data-toggle="modal" class="close">
           <mat-icon>repeat</mat-icon>
         </span>
       </div>
@@ -252,17 +252,20 @@
           <div class="modal-header">
             <h2 class="modal-title">Deck {{this.selectedDeck.name}} revision</h2>
           </div>
-          <div class="modal-body">
-            <form *ngIf="this.chooseSize; else reviseBlock" [formGroup]="revisionSizeForm"
-                  class="border border-light p-5">
+          <div class="modal-body border border-light p-5">
 
-              <h4>Choose number of flashcards for revision:</h4>
-              <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not corresponding to the size of
-                the deck!</h5>
-              <input class="form-control mb-4" formControlName="revisionSize" max="{{this.selectedDeck.size}}" min="0"
-                     type="number">
+            <form *ngIf="this.chooseSize; else reviseBlock" [formGroup]="revisionSizeForm">
 
+              <mat-radio-button value="1" (change)="this.chosenOption=1" style="padding-bottom: 15px;">All cards which are due today</mat-radio-button>
+              <div style="display:flex">
+                <mat-radio-button value="2" (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;">Choose a number of flashcards for revision: </mat-radio-button>
+                <input class="form-control mb-4" formControlName="revisionSize" max="{{this.selectedDeck.size}}" min="0"
+                     type="number" style="width:15%;">
+              </div>
             </form>
+            <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not corresponding to the size of
+              the deck or 0!</h5>
+            <h5 *ngIf="this.optionError" class="text-warning">You must choose an option!</h5>
 
             <ng-template #reviseBlock>
               <div *ngIf="this.currentlyRevisedCard">
