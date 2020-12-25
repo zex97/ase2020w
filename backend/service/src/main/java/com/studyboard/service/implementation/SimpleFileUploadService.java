@@ -71,7 +71,7 @@ public class SimpleFileUploadService implements FileUploadService {
     // create folder path for each individual user
     User user = space.getUser();
     Path completeUserPath =
-        rootLocation.resolve(Paths.get(user.getUsername())).normalize().toAbsolutePath();
+            rootLocation.resolve(Paths.get(user.getUsername())).resolve(Paths.get(space.getName())).normalize().toAbsolutePath();
 
     // check if folder already exists
     if (!Files.exists(completeUserPath)) {
@@ -79,7 +79,7 @@ public class SimpleFileUploadService implements FileUploadService {
         Files.createDirectories(completeUserPath);
       } catch (IOException e) {
         throw new FileStorageException(
-            "Failed to create separate folder for user: " + user.getUsername());
+                "Failed to create separate folder for user: " + user.getUsername());
       }
     }
 
@@ -89,7 +89,7 @@ public class SimpleFileUploadService implements FileUploadService {
 
     if (file.getOriginalFilename() != null) {
       if (StringUtils.uriDecode(file.getOriginalFilename(), StandardCharsets.UTF_8)
-          .contains("../")) {
+              .contains("../")) {
         throw new FileStorageException("File name contains illegal char sequence \"../\"");
       }
     } else {
@@ -98,11 +98,12 @@ public class SimpleFileUploadService implements FileUploadService {
     }
 
     Path uploadFilePath =
-        this.rootLocation
-            .resolve(user.getUsername())
-            .resolve(Paths.get(file.getOriginalFilename()))
-            .normalize()
-            .toAbsolutePath();
+            this.rootLocation
+                    .resolve(user.getUsername())
+                    .resolve(space.getName())
+                    .resolve(Paths.get(file.getOriginalFilename()))
+                    .normalize()
+                    .toAbsolutePath();
 
     try {
       Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -144,40 +145,29 @@ public class SimpleFileUploadService implements FileUploadService {
       document.setTranscription(null);
 
       // TODO: add transcriber trigger
-        if (document.isNeedsTranscription()){
-            transcriptionService.transcribe(document);
-        }
-      List<Document> docList = space.getDocuments();
-      docList.add(document);
-      space.setDocuments(docList);
-      spaceRepository.save(space);
+      if (document.isNeedsTranscription()){
+        transcriptionService.transcribe(document);
+      }
+      documentRepository.save(document);
 
       logger.info(
-          "Created new document for file '"
-              + path.getFileName().toString()
-              + "' in space("
-              + space.getName()
-              + ") of user ("
-              + space.getUser().getUsername()
-              + ")");
+              "Created new document for file '" + path.getFileName().toString() + "' in space(" + space.getName()
+                      + ") of user (" + space.getUser().getUsername() + ")");
     } else {
-
       logger.info(
-          "File '"
-              + path.getFileName().toString()
-              + "' already exists, overriding the file content.");
+              "File '" + path.getFileName().toString() + "' already exists, overriding the file content.");
     }
   }
 
   @Override
-  public Path load(String filename, String userName) {
-    return rootLocation.resolve(userName).resolve(filename).normalize().toAbsolutePath();
+  public Path load(String filename, String spaceName, String userName) {
+    return rootLocation.resolve(userName).resolve(spaceName).resolve(filename).normalize().toAbsolutePath();
   }
 
   @Override
   public Resource loadAsResource(Space space, String fileName) {
     String userName = space.getUser().getUsername();
-    Path filePath = load(fileName, userName);
+    Path filePath = load(fileName, space.getName(), userName);
     try {
       Resource resource = new UrlResource(filePath.toUri());
       if (resource.exists() || resource.isReadable()) {
@@ -185,7 +175,7 @@ public class SimpleFileUploadService implements FileUploadService {
       } else {
         logger.debug("Reading of file '" + fileName + "' stored on path " + filePath + " failed");
         throw new StorageFileNotFoundException(
-            "File '" + fileName + "' could not be read, or doesn't exist");
+                "File '" + fileName + "' could not be read, or doesn't exist");
       }
 
     } catch (MalformedURLException e) {
@@ -198,7 +188,7 @@ public class SimpleFileUploadService implements FileUploadService {
   public void deleteUserFile(String fileName, long spaceId) {
     Space space = spaceRepository.findSpaceById(spaceId);
     List<Document> list = space.getDocuments();
-    Path filePath = load(fileName, space.getUser().getUsername());
+    Path filePath = load(fileName, space.getName(), space.getUser().getUsername());
 
     for (Document document: list) {
       if (document.getName().equals(fileName)) {
