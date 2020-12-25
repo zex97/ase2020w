@@ -35,7 +35,7 @@ public class Space {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL)
     public List<Document> getDocuments() {
         if (documents == null) {
             documents = new ArrayList<>();
