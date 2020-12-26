@@ -171,7 +171,7 @@ public class FlashcardController {
     }
 
     @RequestMapping(
-            value = "/flashcard{flashcardId}/confidence{confidenceLevel}",
+            value = "/rate{flashcardId}",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
@@ -179,9 +179,8 @@ public class FlashcardController {
                     "Rate the flashcard based on personal confidence level with the value between 0 and 5.",
             authorizations = {@Authorization(value = "apiKey")})
     public void rateFlashcard(
-            @PathVariable(name = "confidenceLevel") int confidenceLevel,
             @RequestBody FlashcardDTO flashcardDTO)
             throws FlashcardConstraintException {
-        flashcardService.rateFlashcard(flashcardDTO.FlashcardFromFlashcardDTO(), confidenceLevel);
+        flashcardService.rateFlashcard(flashcardDTO.FlashcardFromFlashcardDTO());
     }
 }

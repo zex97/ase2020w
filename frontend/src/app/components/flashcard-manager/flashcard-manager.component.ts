@@ -184,7 +184,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Builds a flashcard dto and sends a creation request.
    */
   createFlashcard() {
-       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value);
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0);
        this.flashcardService.createFlashcard(flashcard).subscribe(
                        (flashcardCreated: Flashcard) => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
@@ -311,12 +311,14 @@ export class FlashcardManagerComponent implements OnInit {
    */
   rateFlashcard(flashcard: Flashcard, rate: number) {
     console.log(flashcard);
-    if (rate != null && (rate < 1 || rate > 5)){
-      this.error = true;
+    if (rate != null) {
+      flashcard.confidenceLevel = rate;
+    }
+    if (this.currentRate < 1 || this.currentRate > 5){      this.error = true;
       this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
       this.openSnackbar(this.errorMessage, 'warning-snackbar');
     } else {
-      this.flashcardService.rateFlashcard(flashcard, rate).subscribe(
+      this.flashcardService.rateFlashcard(flashcard).subscribe(
           () => {
             this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
             this.loadFlashcards(this.selectedDeck);
@@ -355,7 +357,7 @@ export class FlashcardManagerComponent implements OnInit {
      this.selectedFlashcard = select;
      this.showFlashcardId = select.id;
      this.deleteFlash = del;
-     //this.currentRate = this.selectedFlashcard.confidenceLevel;
+     this.currentRate = this.selectedFlashcard.confidenceLevel;
      console.log(this.showFlashcardId);
      this.flashcardForm.patchValue({
         question: select.question,

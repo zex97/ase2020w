@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class SimpleFlashcardService implements FlashcardService {
     @Override
     public List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version) {
         Deck deck = findDeckById(deckId);
-        if (deck.getSize() < size) {
+        if (version == 2 && deck.getSize() < size) {
             throw new IllegalArgumentException("Deck size too large!");
         }
         deck.setLastTimeUsed(LocalDateTime.now());
@@ -154,35 +155,36 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public void rateFlashcard(Flashcard flashcard, int confidence_level) throws FlashcardConstraintException {
-        if (confidence_level < 0 || confidence_level > 5) {
+    public void rateFlashcard(Flashcard flashcard) throws FlashcardConstraintException {
+        Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
+        try {
+            //SM-2 Algorithm Calculations
+            if (storedFlashcard.getConfidenceLevel() >= 3) {
+                double easiness = storedFlashcard.getEasiness() - 0.8 + 0.28 * storedFlashcard.getConfidenceLevel() - 0.02 * Math.pow(storedFlashcard.getConfidenceLevel(), 2);
+                if (easiness < 1.3) {
+                    storedFlashcard.setEasiness(1.3);
+                } else {
+                    storedFlashcard.setEasiness(easiness);
+                }
+                if (storedFlashcard.getCorrectnessStreak() == 0) {
+                    storedFlashcard.setInterval(1);
+                } else if (storedFlashcard.getCorrectnessStreak() == 1) {
+                    storedFlashcard.setInterval(6);
+                } else {
+                    storedFlashcard.setInterval((int) Math.ceil(storedFlashcard.getInterval() * storedFlashcard.getEasiness()));
+                }
+                storedFlashcard.setCorrectnessStreak(storedFlashcard.getCorrectnessStreak() + 1);
+            } else {
+                storedFlashcard.setInterval(1);
+                storedFlashcard.setCorrectnessStreak(0);
+            }
+            storedFlashcard.setNextDueDate(LocalDateTime.now().plusDays(storedFlashcard.getInterval()));
+            logger.info("Rated the flashcard with question " + storedFlashcard.getQuestion());
+            flashcardRepository.save(storedFlashcard);
+        } catch (ConstraintViolationException e) {
             throw new FlashcardConstraintException("Flashcard confidence level must be between 1 and 5!");
         }
-        Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
 
-        //SM-2 Algorithm Calculations
-        if (confidence_level >= 3) {
-            double easiness = storedFlashcard.getEasiness() - 0.8 + 0.28 * confidence_level - 0.02 * Math.pow(confidence_level, 2);
-            if (easiness < 1.3) {
-                storedFlashcard.setEasiness(1.3);
-            } else {
-                storedFlashcard.setEasiness(easiness);
-            }
-            if (storedFlashcard.getCorrectnessStreak() == 0) {
-                storedFlashcard.setInterval(1);
-            } else if (storedFlashcard.getCorrectnessStreak() == 1) {
-                storedFlashcard.setInterval(6);
-            } else {
-                storedFlashcard.setInterval((int) Math.ceil(storedFlashcard.getInterval() * storedFlashcard.getEasiness()));
-            }
-            storedFlashcard.setCorrectnessStreak(storedFlashcard.getCorrectnessStreak() + 1);
-        } else {
-            storedFlashcard.setInterval(1);
-            storedFlashcard.setCorrectnessStreak(0);
-        }
-        storedFlashcard.setNextDueDate(LocalDateTime.now().plusDays(storedFlashcard.getInterval()));
-        logger.info("Rated the flashcard with question " + storedFlashcard.getQuestion());
-        flashcardRepository.save(storedFlashcard);
     }
 
     @Override

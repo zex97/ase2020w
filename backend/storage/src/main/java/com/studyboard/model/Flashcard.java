@@ -20,6 +20,11 @@ public class Flashcard {
     @Column(nullable = false, name = "answer")
     private String answer;
 
+    @Column(nullable = true, name = "confidenceLevel")
+    @Min(0)
+    @Max(5)
+    private int confidenceLevel;
+
     @Column(nullable = true, name = "easiness")
     private double easiness;
 
@@ -67,6 +72,14 @@ public class Flashcard {
         this.decks = decks;
     }
 
+    public int getConfidenceLevel() {
+        return confidenceLevel;
+    }
+
+    public void setConfidenceLevel(int confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
+    }
+
     public double getEasiness() {
         return easiness;
     }
@@ -98,4 +111,5 @@ public class Flashcard {
     public void setNextDueDate(LocalDateTime nextDueDate) {
         this.nextDueDate = nextDueDate;
     }
+
 }
