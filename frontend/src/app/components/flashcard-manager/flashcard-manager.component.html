@@ -9,14 +9,17 @@
       </button>
     </mat-form-field>
 
-    <button (click)="this.viewAll=true;this.resetDeckForm();" *ngIf="!this.viewAll" class="pageTopBarButton" mat-stroked-button>
+    <button (click)="this.viewAll=true;this.resetDeckForm();" *ngIf="!this.viewAll" class="pageTopBarButton"
+            mat-stroked-button>
       Back to all
     </button>
-    <button *ngIf="this.viewAll" (click)="this.resetDeckForm()" class="pageTopBarButton" data-target=".create-deck-modal" data-toggle="modal"
+    <button (click)="this.resetDeckForm()" *ngIf="this.viewAll" class="pageTopBarButton"
+            data-target=".create-deck-modal" data-toggle="modal"
             mat-stroked-button>
       Create a deck
     </button>
-    <button (click)="this.resetDecks();" class="pageTopBarButton" data-target=".create-flashcard-modal" data-toggle="modal"
+    <button (click)="this.resetDecks();" class="pageTopBarButton" data-target=".create-flashcard-modal"
+            data-toggle="modal"
             mat-stroked-button>
       Create a flashcard
     </button>
@@ -46,7 +49,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button [disabled]="deckForm.controls.title.errors" (click)="createDeck()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+        <button (click)="createDeck()" [disabled]="deckForm.controls.title.errors" data-dismiss="modal" mat-button
+                mat-dialog-actions type="button">
           Save
         </button>
         <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
@@ -93,7 +97,8 @@
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select a deck</mat-label>
             <mat-select [(value)]="this.selectedDecksIds" class="select" multiple>
-              <mat-option *ngFor="let deck of getDecks()" value="{{deck.id}}" (onSelectionChange)="updateDeckList($event.source.value)">
+              <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
+                          value="{{deck.id}}">
                 {{deck.name}}
               </mat-option>
             </mat-select>
@@ -102,7 +107,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" (click)="createFlashcard()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+        <button (click)="createFlashcard()"
+                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
         <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
@@ -141,24 +147,25 @@
   <!--View details of a deck-->
   <ng-template #elseBlockDetails>
     <div id="deck-info">
-    <div class="flex-container-space-between">
-      <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
-      <div id="deck-buttons">
-        <span data-target=".delete-deck-modal" data-toggle="modal" class="close">
+      <div class="flex-container-space-between">
+        <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
+        <div id="deck-buttons">
+        <span class="close" data-target=".delete-deck-modal" data-toggle="modal" matTooltip="Delete deck">
           <mat-icon>delete</mat-icon>
         </span>
-        <span data-target=".edit-deck-modal" data-toggle="modal" class="close">
+          <span class="close" data-target=".edit-deck-modal" data-toggle="modal" matTooltip="Edit deck">
           <mat-icon>edit</mat-icon>
         </span>
-        <span (click)="this.sizeError=false; this.resetRevisionSizeForm();" data-target=".revise-deck" data-toggle="modal" class="close">
+          <span (click)="this.sizeError=false; this.resetRevisionSizeForm();" class="close"
+                data-target=".revise-deck" data-toggle="modal" matTooltip="Revise flashcards">
           <mat-icon>repeat</mat-icon>
         </span>
+        </div>
       </div>
-    </div>
-    <mat-card>
-      <h5>Created: {{this.selectedDeck.creationDate}}</h5>
-      <h5>Last revision: {{this.selectedDeck.lastTimeUsed.substring(0, 10)}}</h5>
-    </mat-card>
+      <mat-card>
+        <h5>Created: {{this.selectedDeck.creationDate}}</h5>
+        <h5>Last revision: {{this.selectedDeck.lastTimeUsed.substring(0, 10)}}</h5>
+      </mat-card>
     </div>
     <h3 id="flashcard-title">Flashcards:</h3>
     <div class="row" style="margin-left:-4%;">
@@ -173,13 +180,16 @@
           </mat-expansion-panel>
         </mat-accordion>
         <div class="flex-container-space-between" style="background-color:#ffffff">
-          <span (click)="flashcardClicked(flashcard, false)" data-target=".rate-flashcard-modal" data-toggle="modal" class="close">
+          <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".rate-flashcard-modal"
+                data-toggle="modal" matTooltip="Rate flashcard">
             <mat-icon>grade</mat-icon>
           </span>
-          <span (click)="flashcardClicked(flashcard, false)" data-target=".edit-flashcard-modal" data-toggle="modal" class="close">
+          <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".edit-flashcard-modal"
+                data-toggle="modal" matTooltip="Edit flaschcard">
             <mat-icon>edit</mat-icon>
           </span>
-          <span (click)="flashcardClicked(flashcard, true)" data-target=".delete-flashcard-modal"  data-toggle="modal" class="close">
+          <span (click)="flashcardClicked(flashcard, true)" class="close" data-target=".delete-flashcard-modal"
+                data-toggle="modal" matTooltip="Delete flashcard">
             <mat-icon>delete</mat-icon>
           </span>
         </div>
@@ -210,7 +220,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button [disabled]="deckForm.controls.title.errors" (click)="saveEdits(this.selectedDeck)" data-dismiss="modal" mat-button mat-dialog-actions
+            <button (click)="saveEdits(this.selectedDeck)" [disabled]="deckForm.controls.title.errors"
+                    data-dismiss="modal" mat-button mat-dialog-actions
                     type="button">Save
             </button>
             <button data-dismiss="modal" mat-button mat-dialog-actions type="button">Close</button>
@@ -256,14 +267,23 @@
 
             <form *ngIf="this.chooseSize; else reviseBlock" [formGroup]="revisionSizeForm">
 
-              <div style="display:flex;">
-                <mat-radio-button *ngIf="this.dueDateFlashcards" [disabled]="this.dueDateFlashcards.length==0" value="1" (change)="this.chosenOption=1" style="padding-bottom: 15px;">Revise all cards that are due today:  <strong>{{this.dueDateFlashcards.length}}</strong></mat-radio-button>
-                <button class="close" style="margin: -15px 0px 0px 10px;" matTooltip="Our app is using SM-2 algorithm to schedule flashcard revision." matTooltipPosition="above"><mat-icon>help</mat-icon></button>
+              <div class="flex-grid">
+                <mat-radio-button (change)="this.chosenOption=1" *ngIf="this.dueDateFlashcards" [disabled]="this.dueDateFlashcards.length==0"
+                                  style="padding-bottom: 15px;" value="1">Revise all cards that are
+                  due today: <strong>{{this.dueDateFlashcards.length}}</strong></mat-radio-button>
+                <button class="close" matTooltip="Our app is using SM-2 algorithm to schedule flashcard revision."
+                        matTooltipPosition="above"
+                        style="margin: -15px 0px 0px 10px;">
+                  <mat-icon>help</mat-icon>
+                </button>
               </div>
-              <div style="display:flex">
-                <mat-radio-button value="2" (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;">Choose a different number of flashcards for revision: </mat-radio-button>
+              <div class="flex-grid">
+                <mat-radio-button (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;"
+                                  value="2">Choose a different number of flashcards
+                  for revision:
+                </mat-radio-button>
                 <input class="form-control mb-4" formControlName="revisionSize" max="{{this.selectedDeck.size}}" min="0"
-                     type="number" style="width:15%;">
+                       style="width:15%;" type="number">
               </div>
             </form>
             <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not corresponding to the size of
@@ -272,7 +292,8 @@
 
             <ng-template #reviseBlock>
               <div *ngIf="this.currentlyRevisedCard">
-                <h4 style="text-align:center">Flashcard <strong>{{this.revisionCounter}}/{{this.revisionFlashcards.length}}</strong></h4>
+                <h4 style="text-align:center">Flashcard <strong>{{this.revisionCounter}}/{{this.revisionFlashcards.length}}</strong>
+                </h4>
                 <mat-card class="flashcard">
                   <h4> Q: {{this.currentlyRevisedCard.question}}</h4>
                 </mat-card>
@@ -281,10 +302,14 @@
                 </mat-card>
                 <div class="flex-container-space-between">
 
-                  <span (click)="this.showAnswer=true" class="close">
-                   <mat-icon>preview</mat-icon>
+                  <span (click)="this.showAnswer=true" *ngIf="!this.showAnswer" class="close" matTooltip="Show answer">
+                   <mat-icon>visibility</mat-icon>
                   </span>
-                  <span (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length" class="close">
+                  <span (click)="this.showAnswer=false" *ngIf="this.showAnswer" class="close" matTooltip="Hide answer">
+                   <mat-icon>visibility_off</mat-icon>
+                  </span>
+                  <span (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length"
+                        class="close" matTooltip="Next flashcard">
                    <mat-icon>arrow_forward_ios</mat-icon>
                   </span>
 
@@ -293,7 +318,7 @@
             </ng-template>
           </div>
           <div class="modal-footer">
-            <button [hidden]="!this.chooseSize" (click)="revise()" mat-button mat-dialog-actions type="button">
+            <button (click)="revise()" [hidden]="!this.chooseSize" mat-button mat-dialog-actions type="button">
               Revise
             </button>
             <button (click)="this.chooseSize=true;" data-dismiss="modal" mat-button mat-dialog-actions type="button">
@@ -341,7 +366,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" (click)="saveFlashcardEdits(this.selectedFlashcard)" data-dismiss="modal" mat-button
+            <button (click)="saveFlashcardEdits(this.selectedFlashcard)"
+                    [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Save
             </button>

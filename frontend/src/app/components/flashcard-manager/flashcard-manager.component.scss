@@ -35,6 +35,10 @@
   padding: 5px 10px 10px 10px;
 }
 
+.flex-grid {
+  display:flex;
+}
+
 .flex-container-space-between {
   display: flex;
   justify-content: space-between;
@@ -82,11 +86,6 @@
 ::ng-deep .mat-expansion-panel-body > h4 {
   margin-top: 20px;
 }
-
-//::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
-//      opacity: 0.5 !important;     /*click effect color change*/
-      //background-color: blue !important;
-//}
 
 ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
       background-color: #3aafa9 !important;   /*inner circle color change*/
