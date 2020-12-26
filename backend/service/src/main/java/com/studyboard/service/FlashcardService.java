@@ -83,6 +83,14 @@ public interface FlashcardService {
     void assignFlashcard(long flashcardId, String decks);
 
     /**
+     * Get all decks a flashcard belongs to
+     *
+     * @param flashcardId of the card
+     * @return ids of decks card is assigned to
+     */
+    List<Long> getAssignments(long flashcardId);
+
+    /**
      * Delete a single deck with all of its flashcards
      *
      * @param deckId of the deck that should be deleted

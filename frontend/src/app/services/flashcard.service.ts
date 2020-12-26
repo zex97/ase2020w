@@ -76,14 +76,23 @@ export class FlashcardService {
   * @param flashcardId of the flashcard
   * @param decks of all the decks it belongs to
   */
-  assignFlashcard(flashcardId: number, decks : number[]) {
-      console.log('Assigning flashcard ' + flashcardId + ' to deck(s).');
+  assignFlashcard(flashcard: Flashcard, decks : number[]) {
+      console.log('Assigning flashcard ' + flashcard.id + ' to deck(s).');
       let decksString = "";
       for(let i=0; i<decks.length; i++){
           decksString+=decks[i] + "-"
       }
       console.log(decksString);
-      return this.httpClient.get<any>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks' + decksString);
+      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/decks' + decksString, flashcard);
+  }
+
+ /**
+  * Get all decks a flashcard belongs to
+  * @param flashcardId of the flashcard
+  */
+  getFlashcardAssignments(flashcardId: number): Observable<number[]> {
+    console.log('Getting flashcard ' + flashcardId + ' assignments to decks.')
+    return this.httpClient.get<number[]>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks')
   }
 
   /**

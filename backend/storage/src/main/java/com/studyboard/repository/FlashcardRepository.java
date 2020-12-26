@@ -70,4 +70,12 @@ public interface FlashcardRepository extends CrudRepository<Flashcard, Long> {
     @Query(value = "DELETE FROM flashcards_assignment fa WHERE fa.flashcard_id=:cardId AND fa.deck_id=:deckId", nativeQuery = true)
     @Transactional
     void removeAssignment(long deckId, long cardId);
+
+    /**
+     * Get all decks a flashcard is assigned to
+     *
+     * @param cardId - id of the flashcard
+     */
+    @Query(value = "SELECT fa.deck_id FROM flashcards_assignment fa WHERE fa.flashcard_id=:cardId", nativeQuery = true)
+    List<Long> getAssignments(long cardId);
 }

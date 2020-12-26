@@ -108,7 +108,8 @@
       </div>
       <div class="modal-footer">
         <button (click)="createFlashcard()"
-                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors"
+                data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
         <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
@@ -188,8 +189,12 @@
                 data-toggle="modal" matTooltip="Edit flaschcard">
             <mat-icon>edit</mat-icon>
           </span>
+          <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".move-flashcard-modal"
+                data-toggle="modal" matTooltip="Move or copy to another deck">
+            <mat-icon>move_to_inbox</mat-icon>
+          </span>
           <span (click)="flashcardClicked(flashcard, true)" class="close" data-target=".delete-flashcard-modal"
-                data-toggle="modal" matTooltip="Delete flashcard">
+                data-toggle="modal" matTooltip="Remove flashcard">
             <mat-icon>delete</mat-icon>
           </span>
         </div>
@@ -240,7 +245,7 @@
           </div>
           <div class="modal-body">
             <h4>Do you really want to delete deck "{{this.selectedDeck.name}}"? </h4>
-            <h4> All flashcard within the deck are also going to be deleted. </h4>
+            <h4> All flashcard within the deck that don't belong to another deck will be lost. </h4>
           </div>
           <div class="modal-footer">
             <button (click)="deleteDeck(this.selectedDeck.id)" data-dismiss="modal" mat-button mat-dialog-actions
@@ -268,7 +273,8 @@
             <form *ngIf="this.chooseSize; else reviseBlock" [formGroup]="revisionSizeForm">
 
               <div class="flex-grid">
-                <mat-radio-button (change)="this.chosenOption=1" *ngIf="this.dueDateFlashcards" [disabled]="this.dueDateFlashcards.length==0"
+                <mat-radio-button (change)="this.chosenOption=1" *ngIf="this.dueDateFlashcards"
+                                  [disabled]="this.dueDateFlashcards.length==0"
                                   style="padding-bottom: 15px;" value="1">Revise all cards that are
                   due today: <strong>{{this.dueDateFlashcards.length}}</strong></mat-radio-button>
                 <button class="close" matTooltip="Our app is using SM-2 algorithm to schedule flashcard revision."
@@ -367,7 +373,8 @@
           </div>
           <div class="modal-footer">
             <button (click)="saveFlashcardEdits(this.selectedFlashcard)"
-                    [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors" data-dismiss="modal" mat-button
+                    [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors"
+                    data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Save
             </button>
@@ -391,7 +398,7 @@
             <h2 class="modal-title">Flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
-            <h4>Do you really want to delete this flashcard? </h4>
+            <h4>Do you really want to remove this flashcard from the deck? </h4>
           </div>
           <div class="modal-footer">
             <button (click)="deleteFlashcard(this.selectedFlashcard.id, this.selectedDeck.id)" data-dismiss="modal"
@@ -418,14 +425,57 @@
           </div>
           <div class="modal-body">
             <form class="border border-light p-5">
-              <ngb-rating [max]="5" [(rate)]="currentRate" [readonly]="false"></ngb-rating>
+              <ngb-rating [(rate)]="currentRate" [max]="5" [readonly]="false"></ngb-rating>
               <h4>Rate personal confidence level from 1 to 5 by choosing the appropriate number of stars!</h4>
             </form>
           </div>
           <div class="modal-footer">
-            <button (click)="rateFlashcard(this.selectedFlashcard, currentRate)" data-dismiss="modal" mat-button mat-dialog-actions
+            <button (click)="rateFlashcard(this.selectedFlashcard, currentRate)" data-dismiss="modal" mat-button
+                    mat-dialog-actions
                     type="button">
               Rate
+            </button>
+            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Delete a flashcard-->
+    <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="Move/copy flashcard modal"
+         class="modal fade move-flashcard-modal"
+         role="dialog"
+         tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Flashcard "{{this.selectedFlashcard.question}}"</h2>
+          </div>
+          <div class="modal-body">
+
+            <mat-form-field appearance="outline" class="mat-select">
+              <mat-label>Select a deck</mat-label>
+              <mat-select [(value)]="this.selectedDecksIds" class="select" multiple>
+                <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
+                            value="{{deck.id}}">
+                  {{deck.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+          <div class="modal-footer">
+            <button data-dismiss="modal"
+                    mat-button
+                    mat-dialog-actions type="button">
+              Move
+            </button>
+            <button data-dismiss="modal"
+                    mat-button
+                    mat-dialog-actions type="button">
+              Copy
             </button>
             <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close

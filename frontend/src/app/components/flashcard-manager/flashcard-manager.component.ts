@@ -188,7 +188,7 @@ export class FlashcardManagerComponent implements OnInit {
        this.flashcardService.createFlashcard(flashcard).subscribe(
                        (flashcardCreated: Flashcard) => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
-                              this.flashcardService.assignFlashcard(flashcardCreated.id, this.selectedDecks).subscribe(
+                              this.flashcardService.assignFlashcard(flashcardCreated, this.selectedDecks).subscribe(
                                                          () => {
                                                                   if(this.selectedDeck != undefined) {
                                                                     this.loadFlashcards(this.selectedDeck);

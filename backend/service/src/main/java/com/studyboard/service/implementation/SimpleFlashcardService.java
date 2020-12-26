@@ -127,7 +127,10 @@ public class SimpleFlashcardService implements FlashcardService {
             }
         }
     }
-
+    @Override
+    public List<Long> getAssignments(long flashcardId) {
+        return flashcardRepository.getAssignments(flashcardId);
+    }
 
     @Override
     public void deleteDeck(long deckId) {
