@@ -59,12 +59,13 @@ public class UserControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(USER_ENDPOINT + USER_USERNAME_PATH, TEST_USER_1.getUsername()).accept(MediaType.APPLICATION_JSON))
-                .andDo(print()).andExpect(status().isOk())
+//                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(TEST_USER_1.getUsername()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(TEST_USER_1.getEmail()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.loginAttempts").value(TEST_USER_1.getLoginAttempts()));
@@ -77,13 +78,14 @@ public class UserControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActions =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value(TEST_USER_1.getUsername()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value(TEST_USER_1.getEmail()))
@@ -122,13 +124,14 @@ public class UserControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActionsUser =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value(TEST_USER_1.getUsername()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value(TEST_USER_1.getEmail()))
@@ -144,13 +147,14 @@ public class UserControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJsonUpdated))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActionsUpdated =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value(TEST_USER_1.getUsername()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value(TEST_USER_1.getEmail()))
@@ -170,13 +174,14 @@ public class UserControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActionsUser =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].loginAttempts").value(TEST_USER_1.getLoginAttempts()));
 
@@ -185,13 +190,14 @@ public class UserControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(USER_ENDPOINT + USER_ID_PATH, responseArray[0].getId()))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActionsUpdated =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(responseArray[0].getId()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].loginAttempts").value(0));

@@ -87,13 +87,18 @@
   margin-top: 20px;
 }
 
-::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+ngb-rating {
+  font-size: 90px;
+  color: #2b7a78;
+  background: #ffffff;
+}
+
+sudo::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
       background-color: #3aafa9 !important;   /*inner circle color change*/
 }
 
 ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
      border-color: #3aafa9 !important; /*outer ring color change*/
 }
-
 
 

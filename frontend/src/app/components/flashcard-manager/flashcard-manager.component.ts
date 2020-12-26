@@ -17,7 +17,6 @@ export class FlashcardManagerComponent implements OnInit {
   deckForm: FormGroup;
   flashcardForm: FormGroup;
   revisionSizeForm: FormGroup;
-  flashcardRateForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
   viewAll: boolean = true;
@@ -39,6 +38,7 @@ export class FlashcardManagerComponent implements OnInit {
   deleteFlash: boolean = false;
   confidenceError: boolean = false;
   optionError: boolean = false;
+  currentRate = 0;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
@@ -62,16 +62,6 @@ export class FlashcardManagerComponent implements OnInit {
     this.revisionSizeForm = this.formBuilder.group({
       revisionSize: [1]
     });
-    this.flashcardRateForm = this.formBuilder.group({
-      confidenceLevel: [1, [
-        Validators.min(1),
-        Validators.max(5)
-      ]]
-    });
-  }
-
-  validateConfidenceLevelValue() {
-    return this.flashcardRateForm.value.confidenceLevel < 1 || this.flashcardRateForm.value.confidenceLevel > 5;
   }
 
   ngOnInit(): void {
@@ -319,11 +309,14 @@ export class FlashcardManagerComponent implements OnInit {
   /**
    * Sends a request to rate a specific flashcard.
    */
-  rateFlashcard(flashcard: Flashcard) {
+  rateFlashcard(flashcard: Flashcard, rate: number) {
     console.log(flashcard);
-      let confidence = this.flashcardRateForm.controls.confidenceLevel.value;
-      if (confidence != null) {
-        this.flashcardService.rateFlashcard(flashcard, confidence).subscribe(
+    if (rate != null && (rate < 1 || rate > 5)){
+      this.error = true;
+      this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+      this.openSnackbar(this.errorMessage, 'warning-snackbar');
+    } else {
+      this.flashcardService.rateFlashcard(flashcard, rate).subscribe(
           () => {
             this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
             this.loadFlashcards(this.selectedDeck);
@@ -336,6 +329,7 @@ export class FlashcardManagerComponent implements OnInit {
           });
       }
   }
+
 
   updateDeckList(select : number){
     console.log("deck: " + select);
@@ -361,6 +355,7 @@ export class FlashcardManagerComponent implements OnInit {
      this.selectedFlashcard = select;
      this.showFlashcardId = select.id;
      this.deleteFlash = del;
+     //this.currentRate = this.selectedFlashcard.confidenceLevel;
      console.log(this.showFlashcardId);
      this.flashcardForm.patchValue({
         question: select.question,

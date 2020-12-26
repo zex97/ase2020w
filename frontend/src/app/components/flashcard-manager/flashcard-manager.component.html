@@ -414,26 +414,16 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Flashcard</h2>
+            <h2 class="modal-title">Rate a flashcard</h2>
           </div>
           <div class="modal-body">
             <form class="border border-light p-5">
-
-              <h4>Rate with personal confidence level from 1 to 5:</h4>
-              <mat-form-field [formGroup]="flashcardRateForm" appearance="outline" class="modal-input-full-width">
-                <mat-label>Confidence level</mat-label>
-                <input formControlName="confidenceLevel" matInput max="5" maxlength="1"
-                       min="1" minlength="1" type="number">
-                <mat-hint *ngIf="validateConfidenceLevelValue()"
-                          class="control-label invalid-input-text">
-                  Confidence level must be between 1 and 5!
-                </mat-hint>
-              </mat-form-field>
-
+              <ngb-rating [max]="5" [(rate)]="currentRate" [readonly]="false"></ngb-rating>
+              <h4>Rate personal confidence level from 1 to 5 by choosing the appropriate number of stars!</h4>
             </form>
           </div>
           <div class="modal-footer">
-            <button (click)="rateFlashcard(this.selectedFlashcard)" data-dismiss="modal" mat-button mat-dialog-actions
+            <button (click)="rateFlashcard(this.selectedFlashcard, currentRate)" data-dismiss="modal" mat-button mat-dialog-actions
                     type="button">
               Rate
             </button>

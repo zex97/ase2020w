@@ -15,8 +15,8 @@ import {Globals} from './global/globals';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
 import {RegisterComponent} from './components/register/register.component';
 import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
-import {DocumentSpaceComponent} from './components/document-space/document-space.component';
-import {DocumentComponent} from './components/document/document.component';
+import {DocumentSpaceComponent} from './components/space-document-slide-panel/document-space/document-space.component';
+import {DocumentComponent} from './components/space-document-slide-panel/document/document.component';
 import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -34,6 +34,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {VimeModule} from '@vime/angular';
+import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
+import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
+import {DocumentDialogComponent} from './components/document-dialog/document-dialog.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +52,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     FlashcardManagerComponent,
     DocumentSpaceComponent,
     DocumentComponent,
+    ConfirmDialogComponent,
+    SpaceDocumentSlidePanelComponent,
+    DocumentDialogComponent,
   ],
     imports: [
         BrowserModule,
@@ -71,7 +79,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatInputModule,
         MatDialogModule,
         MatRadioModule,
-        MatTooltipModule
+        MatTooltipModule,
+        PdfViewerModule,
+        VimeModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

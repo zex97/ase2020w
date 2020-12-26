@@ -28,10 +28,11 @@ public interface FileUploadService {
    * Generates a path where the file is saved
    *
    * @param fileName name of the file that is requested
-   * @param userId id of the user requesting the file
+   * @param spaceName name of the space in which the file is
+   * @param username name of the user requesting the file
    * @return Path object for the @param fileName file
    */
-  Path load(String fileName, String userId);
+  Path load(String fileName, String spaceName, String username);
 
   /**
    * Loads the file as resource for a space

@@ -9,6 +9,12 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
+/* Default theme for video player. */
+@import '~@vime/core/themes/default.css';
+
+/* Extended default theme for video player. */
+@import '~@vime/core/themes/light.css';
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
@@ -51,7 +57,7 @@ body {
 }
 
 
-/* Page title wrapper */
+/* Page title */
 .page-title {  // aditional css properties required in component scss files
   text-align: center;
   color: white;
@@ -60,6 +66,13 @@ body {
 }
 .page-title-wrapper{
   height: 4em;
+}
+
+.page-title-small {
+  color: #FEFFFF !important;
+  font-weight: lighter !important;
+  margin-bottom: 0 !important;
+  padding-left: 25px !important;
 }
 
 /* Top of every component page */
@@ -96,18 +109,29 @@ body {
 }
 
 
+/* Empty content message */
+.warningMessageContainer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 40em !important;
+  color: grey !important;
+}
+.warningMessage {
+  font-weight: lighter !important;
+}
 
-/* Buttons*/
-.mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus, {
+/* Buttons */
+.mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus {
   outline: none;
 }
-.mat-button, .mat-button:active, .mat-button:focus, {
+.mat-button, .mat-button:active, .mat-button:focus {
   outline: none;
 }
-.mat-stroked-button, .mat-stroked-button:active, .mat-stroked-button:focus, {
+.mat-stroked-button, .mat-stroked-button:active, .mat-stroked-button:focus {
   outline: none;
 }
-.mat-raised-button, .mat-raised-button:active, .mat-raised-button:focus, {
+.mat-raised-button, .mat-raised-button:active, .mat-raised-button:focus {
   outline: none;
 }
 
