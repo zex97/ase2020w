@@ -15,8 +15,8 @@ import {Globals} from './global/globals';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
 import {RegisterComponent} from './components/register/register.component';
 import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
-import {DocumentSpaceComponent} from './components/document-space/document-space.component';
-import {DocumentComponent} from './components/document/document.component';
+import {DocumentSpaceComponent} from './components/space-document-slide-panel/document-space/document-space.component';
+import {DocumentComponent} from './components/space-document-slide-panel/document/document.component';
 import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -35,6 +35,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {PdfViewerModule} from 'ng2-pdf-viewer';
 import {VimeModule} from '@vime/angular';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
+import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog
     DocumentSpaceComponent,
     DocumentComponent,
     ConfirmDialogComponent,
+    SpaceDocumentSlidePanelComponent,
   ],
     imports: [
         BrowserModule,

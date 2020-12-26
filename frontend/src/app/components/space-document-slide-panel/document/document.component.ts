@@ -1,14 +1,15 @@
-import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
-import {SpaceService} from '../../services/space.service';
-import {Document} from '../../dtos/document';
-import {Space} from '../../dtos/space';
-import {FileUploadService} from '../../services/file-upload.service';
+import {Component, Input, OnChanges, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
+import {SpaceService} from '../../../services/space.service';
+import {Document} from '../../../dtos/document';
+import {Space} from '../../../dtos/space';
+import {FileUploadService} from '../../../services/file-upload.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Player} from '@vime/angular';
 import {saveAs} from 'file-saver';
 import {MatDialog} from '@angular/material/dialog';
-import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-document',
@@ -34,6 +35,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   @Input() space: Space;
   @ViewChild('player') player: Player;
   @ViewChild('audioPlayer') audioPlayer: Player;
+  @Output() toggleSlideEvent = new EventEmitter();
 
   ngOnInit() {
     // this.loadAllDocuments(this.spaceId);
