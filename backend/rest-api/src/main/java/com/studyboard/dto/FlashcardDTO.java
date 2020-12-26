@@ -11,6 +11,7 @@ public class FlashcardDTO {
     private Long id;
     private String question;
     private String answer;
+    private int confidenceLevel;
     private List<DeckDTO> deckDTOs;
 
     public Long getId() {
@@ -37,6 +38,14 @@ public class FlashcardDTO {
         this.answer = answer;
     }
 
+    public int getConfidenceLevel() {
+        return confidenceLevel;
+    }
+
+    public void setConfidenceLevel(int confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
+    }
+
     public List<DeckDTO> getDeckDTOs() {
         return deckDTOs;
     }
@@ -50,6 +59,7 @@ public class FlashcardDTO {
         flashcard.setId(this.id);
         flashcard.setQuestion(this.question);
         flashcard.setAnswer(this.answer);
+        flashcard.setConfidenceLevel(this.confidenceLevel);
         /*flashcard.setDecks(this.deckDTOs.stream()
                     .map(DeckDTO::toDeck)
                     .collect(Collectors.toList()));*/
@@ -61,6 +71,7 @@ public class FlashcardDTO {
         flashcardDTO.setId(flashcard.getId());
         flashcardDTO.setQuestion(flashcard.getQuestion());
         flashcardDTO.setAnswer(flashcard.getAnswer());
+        flashcardDTO.setConfidenceLevel(flashcard.getConfidenceLevel());
         /*flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
                 .map(DeckDTO::of)
                 .collect(Collectors.toList()));*/
@@ -73,6 +84,7 @@ public class FlashcardDTO {
                 "id=" + id +
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
+                ", confidenceLevel=" + confidenceLevel +
                 '}';
     }
 

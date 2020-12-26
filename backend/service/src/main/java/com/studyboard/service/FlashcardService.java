@@ -109,9 +109,8 @@ public interface FlashcardService {
      * Rate a single flashcard in the deck
      *
      * @param flashcard entity that needs to be edited
-     * @param confidence_level the user chose for the card
      * @throws FlashcardConstraintException when confidence level is outside 1-5 range of values
      */
-    void rateFlashcard(Flashcard flashcard, int confidence_level) throws FlashcardConstraintException;
+    void rateFlashcard(Flashcard flashcard) throws FlashcardConstraintException;
 
 }
