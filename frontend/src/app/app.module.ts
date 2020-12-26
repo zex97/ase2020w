@@ -32,7 +32,11 @@ import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {VimeModule} from '@vime/angular';
+import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
+import { DocumentDialogComponent } from './components/document-dialog/document-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +50,9 @@ import {SpaceDocumentSlidePanelComponent} from './components/space-document-slid
     FlashcardManagerComponent,
     DocumentSpaceComponent,
     DocumentComponent,
+    ConfirmDialogComponent,
     SpaceDocumentSlidePanelComponent,
+    DocumentDialogComponent,
   ],
     imports: [
         BrowserModule,
@@ -69,7 +75,9 @@ import {SpaceDocumentSlidePanelComponent} from './components/space-document-slid
         MatListModule,
         MatCheckboxModule,
         MatInputModule,
-        MatDialogModule
+        MatDialogModule,
+        PdfViewerModule,
+        VimeModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

@@ -68,4 +68,9 @@ public class Document {
     public void setNeedsTranscription(boolean needsTranscription) {
         this.needsTranscription = needsTranscription;
     }
+
+    @PreRemove
+    private void removeDocumentFromSpaces() {
+        this.space.removeDocument(this);
+    }
 }
