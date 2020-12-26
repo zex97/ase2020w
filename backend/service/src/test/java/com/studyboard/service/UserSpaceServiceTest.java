@@ -28,6 +28,9 @@ public class UserSpaceServiceTest {
     @Mock
     private SpaceRepository spaceRepository;
 
+    @Mock
+    DocumentRepository documentRepository;
+
     @InjectMocks
     private SimpleUserSpaceService userSpaceService;
 
@@ -74,9 +77,9 @@ public class UserSpaceServiceTest {
         doc2.setId(DOCUMENT_2_ID);
         space.setDocuments(Arrays.asList(new Document[]{doc1, doc2}));
 
-        Mockito.when(spaceRepository.findSpaceById(SPACE_ID)).thenReturn(space);
+        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
 
-        List<Document> response = userSpaceService.geAllDocumentsFromSpace(SPACE_ID);
+        List<Document> response = userSpaceService.getAllDocumentsFromSpace(SPACE_ID);
         Document document1 = response.get(0);
         Document document2 = response.get(1);
 
@@ -91,20 +94,20 @@ public class UserSpaceServiceTest {
         final long SPACE_ID = 1;
 
         Assertions.assertThrows(SpaceDoesNotExist.class, () -> {
-            userSpaceService.geAllDocumentsFromSpace(SPACE_ID);
+            userSpaceService.getAllDocumentsFromSpace(SPACE_ID);
         });
     }
 
     @Test
     public void updateSpaceNameSuccessfully() {
-        final int SPACE_ID = 1;
+        final long SPACE_ID = 1;
         final String SPACE_NAME = "Space Name";
         final String NEW_SPACE_NAME = "New Space Name";
         Space space = new Space();
         space.setId(SPACE_ID);
         space.setName(SPACE_NAME);
 
-        Mockito.when(spaceRepository.findSpaceById(SPACE_ID)).thenReturn(space);
+        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         space.setName(NEW_SPACE_NAME);
@@ -128,13 +131,13 @@ public class UserSpaceServiceTest {
 
     @Test
     public void addDocumentToSpaceSuccessfully() {
-        final int SPACE_ID = 1;
+        final long SPACE_ID = 1;
         Document document = new Document();
         document.setId(SPACE_ID);
         Space space = new Space();
         space.setId(SPACE_ID);
 
-        Mockito.when(spaceRepository.findSpaceById(SPACE_ID)).thenReturn(space);
+        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         userSpaceService.addDocumentToSpace(SPACE_ID, document);
@@ -155,7 +158,7 @@ public class UserSpaceServiceTest {
 
     @Test
     public void removeDocumentFromSpaceSuccessfully() {
-        final int SPACE_ID = 1;
+        final long SPACE_ID = 1;
         final int DOCUMENT_ID = 1;
         Document document = new Document();
         document.setId(DOCUMENT_ID);
@@ -163,7 +166,7 @@ public class UserSpaceServiceTest {
         space.setId(SPACE_ID);
         space.setDocuments(Arrays.asList(new Document[]{document}));
 
-        Mockito.when(spaceRepository.findSpaceById(SPACE_ID)).thenReturn(space);
+        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         userSpaceService.removeDocumentFromSpace(SPACE_ID, DOCUMENT_ID);
