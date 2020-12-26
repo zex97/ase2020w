@@ -75,8 +75,10 @@ public class SimpleFlashcardService implements FlashcardService {
         deck.setLastTimeUsed(LocalDateTime.now());
         deckRepository.save(deck);
         if (version == 1) {
+            logger.info("Getting all flashcards that are scheduled for revision now, belonging to the deck with name " + deck.getName());
             return flashcardRepository.findAllDueToday(deckId, LocalDateTime.now());
         } else {
+            logger.info("Getting " + size + " flashcards belonging to the deck with name " + deck.getName());
             return flashcardRepository.findByDeckIdOrderByDueDateLimitSize(deckId, size);
         }
         /*List<Flashcard> all = getAllFlashcardsOfDeck(deckId);
@@ -117,6 +119,7 @@ public class SimpleFlashcardService implements FlashcardService {
             if (!deckIds[i].equals("")) {
                 long id = Long.parseLong(deckIds[i]);
                 flashcardRepository.assignFlashcard(id, flashcardId);
+                logger.info("Assigning flashcard " + flashcardId + " to deck" + id);
                 Deck deck = findDeckById(id);
                 deck.setSize(deck.getSize() + 1);
                 deckRepository.save(deck);
@@ -135,6 +138,7 @@ public class SimpleFlashcardService implements FlashcardService {
     @Override
     public void deleteFlashcard(long deckId, long flashcardId) {
         flashcardRepository.removeAssignment(deckId, flashcardId);
+        logger.info("Removing assignment for flashcard " + flashcardId + " from deck" + deckId);
         Deck deck = findDeckById(deckId);
         deck.setSize(deck.getSize() - 1);
         deckRepository.save(deck);
@@ -188,6 +192,7 @@ public class SimpleFlashcardService implements FlashcardService {
             logger.warn("Deck does not exist");
             throw new DeckDoesNotExist();
         }
+        logger.info("Searching for the deck with the name " + deck.getName());
         return deck;
     }
 
