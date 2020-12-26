@@ -1,6 +1,7 @@
 package com.studyboard.service.implementation;
 
 import com.studyboard.exception.DocumentDoesNotExistException;
+import com.studyboard.exception.IllegalTagException;
 import com.studyboard.exception.TagDoesNotExistException;
 import com.studyboard.repository.DocumentRepository;
 import com.studyboard.service.UserSpaceService;
@@ -8,7 +9,6 @@ import com.studyboard.exception.SpaceDoesNotExist;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
 import com.studyboard.repository.SpaceRepository;
-import com.studyboard.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,6 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Autowired
     private SpaceRepository spaceRepository;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private DocumentRepository documentRepository;
 
@@ -86,6 +84,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public void addTagToDocument(long documentId, String tag) {
         Document document = findDocumentById(documentId);
+        checkNewTag(tag, document);
         document.getTags().add(tag);
         logger.info("Add tag [{}] to document with name {}.", tag, document.getName());
         documentRepository.save(document);
@@ -94,11 +93,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public void removeTagFromDocument(long documentId, String tag) {
         Document document = findDocumentById(documentId);
-
-        if(!document.getTags().contains(tag)){
-            throw new TagDoesNotExistException();
-        }
-
+        checkExistingTag(tag, document);
         document.getTags().remove(tag);
         logger.info("Remove tag [{}] from document with name {}.", tag, document.getName());
         documentRepository.save(document);
@@ -112,5 +107,23 @@ public class SimpleUserSpaceService implements UserSpaceService {
     private Document findDocumentById(long documentId) {
         Document document = documentRepository.findById(documentId).orElseThrow(DocumentDoesNotExistException::new);
         return document;
+    }
+
+    private void checkNewTag(String tag, Document document){
+        if (tag == null) {
+            throw new IllegalTagException("Tag should not be NULL.");
+        }
+        if (tag.matches("\\s*")){
+            throw new IllegalTagException("Tag should not be empty.");
+        }
+        if (document.getTags().contains(tag)){
+            throw new IllegalTagException("Document already contains the tag.");
+        }
+    }
+
+    private void checkExistingTag(String tag, Document document){
+        if(!document.getTags().contains(tag)){
+            throw new TagDoesNotExistException();
+        }
     }
 }
