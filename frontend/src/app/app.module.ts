@@ -36,6 +36,7 @@ import {PdfViewerModule} from 'ng2-pdf-viewer';
 import {VimeModule} from '@vime/angular';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
+import { DocumentDialogComponent } from './components/document-dialog/document-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {SpaceDocumentSlidePanelComponent} from './components/space-document-slid
     DocumentComponent,
     ConfirmDialogComponent,
     SpaceDocumentSlidePanelComponent,
+    DocumentDialogComponent,
   ],
     imports: [
         BrowserModule,

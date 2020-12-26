@@ -9,6 +9,7 @@ import {saveAs} from 'file-saver';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {DocumentDialogComponent} from '../../document-dialog/document-dialog.component';
 
 
 @Component({
@@ -33,8 +34,6 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
   @Input() space: Space;
-  @ViewChild('player') player: Player;
-  @ViewChild('audioPlayer') audioPlayer: Player;
   @Output() toggleSlideEvent = new EventEmitter();
 
   ngOnInit() {
@@ -109,6 +108,12 @@ export class DocumentComponent implements OnInit, OnChanges {
     this.fileUploadService.getFile(this.space, document.name).subscribe(
       (res) => {
         this.handleFileExtensions(document, res);
+        this.dialog.open(DocumentDialogComponent, {
+          data: {
+            currentDocument: document,
+            blobUrl: this.blobUrl
+          }
+        });
       },
       error => {
         this.defaultErrorHandling(error);
@@ -128,15 +133,6 @@ export class DocumentComponent implements OnInit, OnChanges {
       this.fileObject = res;
       this.blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(this.fileObject));
     }
-  }
-
-  modalCloseCleanUp() {
-    if (this.player) {
-      this.player.paused = true;
-    } else {
-      this.audioPlayer.paused = true;
-    }
-    URL.revokeObjectURL(this.blobUrl);
   }
 
   downloadFileFromList(document: Document) {
