@@ -1,15 +1,21 @@
 package com.studyboard.service;
 
+import com.studyboard.exception.DocumentDoesNotExistException;
+import com.studyboard.exception.IllegalTagException;
 import com.studyboard.exception.SpaceDoesNotExist;
+import com.studyboard.exception.TagDoesNotExistException;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
 import com.studyboard.model.User;
+import com.studyboard.repository.DocumentRepository;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -19,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class UserSpaceServiceTest {
@@ -184,4 +191,88 @@ public class UserSpaceServiceTest {
             userSpaceService.removeDocumentFromSpace(SPACE_ID, DOCUMENT_ID);
         });
     }
+
+    @Test
+    public void addValidTagToExistingDocumentSuccessfully(){
+        final String TAG = "test-tag";
+        final long DOCUMENT_ID = 1;
+        Document document = new Document();
+        document.setId(DOCUMENT_ID);
+
+        Mockito.when(documentRepository.findById(DOCUMENT_ID)).thenReturn(Optional.of(document));
+        Mockito.when(documentRepository.save(document)).thenReturn(document);
+
+        userSpaceService.addTagToDocument(DOCUMENT_ID, TAG);
+
+        Assertions.assertTrue(document.getTags().contains(TAG));
+    }
+
+    @Test
+    public void addValidTagToUnknownDocument_throwsDocumentDoesNotExistException(){
+        final String TAG = "test-tag";
+        final long DOCUMENT_ID = 1;
+
+        Mockito.when(documentRepository.findById(DOCUMENT_ID)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(DocumentDoesNotExistException.class, () -> {
+            userSpaceService.addTagToDocument(DOCUMENT_ID, TAG);
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "\n"})
+    public void addInvalidTagToExistingDocument_throwsIllegalTagException(final String TAG){
+        final long DOCUMENT_ID = 1;
+        Document document = new Document();
+        document.setId(DOCUMENT_ID);
+
+        Mockito.when(documentRepository.findById(DOCUMENT_ID)).thenReturn(Optional.of(document));
+
+        Assertions.assertThrows(IllegalTagException.class, () -> {
+            userSpaceService.addTagToDocument(DOCUMENT_ID, TAG);
+        });
+    }
+    @Test
+    public void removeExistingTagFromExistingDocumentSuccessfully(){
+        final String TAG = "test-tag";
+        final long DOCUMENT_ID = 1;
+        Document document = new Document();
+        document.setId(DOCUMENT_ID);
+        document.getTags().add(TAG);
+
+        Mockito.when(documentRepository.findById(DOCUMENT_ID)).thenReturn(Optional.of(document));
+        Mockito.when(documentRepository.save(document)).thenReturn(document);
+
+        userSpaceService.removeTagFromDocument(DOCUMENT_ID, TAG);
+
+        Assertions.assertTrue(document.getTags().isEmpty());
+    }
+
+    @Test
+    public void removeUnknownTagFromValidDocument_throwsTagDoesNotExistException(){
+        final String TAG = "tag";
+        final long DOCUMENT_ID = 1;
+        Document document = new Document();
+        document.setId(DOCUMENT_ID);
+
+        Mockito.when(documentRepository.findById(DOCUMENT_ID)).thenReturn(Optional.of(document));
+
+        Assertions.assertThrows(TagDoesNotExistException.class, () -> {
+            userSpaceService.removeTagFromDocument(DOCUMENT_ID, TAG);
+        });
+    }
+
+    @Test
+    public void removeAnyTagFromUnknownDocument_throwsDocumentDoesNotExistException(){
+        final String TAG = "test-tag";
+        final long DOCUMENT_ID = 1;
+
+        Mockito.when(documentRepository.findById(DOCUMENT_ID)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(DocumentDoesNotExistException.class, () -> {
+            userSpaceService.removeTagFromDocument(DOCUMENT_ID, TAG);
+        });
+    }
+
+
 }
