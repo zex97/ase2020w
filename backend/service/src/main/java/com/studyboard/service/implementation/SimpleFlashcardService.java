@@ -1,9 +1,9 @@
 package com.studyboard.service.implementation;
 
-import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.exception.DeckDoesNotExist;
 import com.studyboard.exception.FlashcardConstraintException;
 import com.studyboard.exception.FlashcardDoesNotExist;
+import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
@@ -16,13 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolationException;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-/** Service used to manage decks and flashcards. Performs decks and flashcards creation, getting, edit and deletion */
+/**
+ * Service used to manage decks and flashcards. Performs decks and flashcards creation, getting, edit and deletion
+ */
 @Service
 public class SimpleFlashcardService implements FlashcardService {
 
@@ -75,18 +74,11 @@ public class SimpleFlashcardService implements FlashcardService {
         }
         deck.setLastTimeUsed(LocalDateTime.now());
         deckRepository.save(deck);
-
-        for(Flashcard f : flashcardRepository.findAllDueToday(deckId, LocalDateTime.now())) {
-            System.out.println("->" + f.getId() + ":" + f.getNextDueDate());
-        }
-
-        if(version == 1) {
+        if (version == 1) {
             return flashcardRepository.findAllDueToday(deckId, LocalDateTime.now());
         } else {
-            return flashcardRepository.findByDeckIdOrderByDueDate(deckId, size);
+            return flashcardRepository.findByDeckIdOrderByDueDateLimitSize(deckId, size);
         }
-
-
         /*List<Flashcard> all = getAllFlashcardsOfDeck(deckId);
         List<Flashcard> copy = new ArrayList<>(all);
         List<Flashcard> random = new ArrayList<>();
@@ -112,6 +104,7 @@ public class SimpleFlashcardService implements FlashcardService {
     public Flashcard createFlashcard(Flashcard flashcard) {
         flashcard.setEasiness(2.5);
         flashcard.setCorrectnessStreak(0);
+        flashcard.setInterval(0);
         flashcard.setNextDueDate(LocalDateTime.now());
         logger.info("Created new flashcard with question " + flashcard.getQuestion());
         return flashcardRepository.save(flashcard);
@@ -164,21 +157,21 @@ public class SimpleFlashcardService implements FlashcardService {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
 
         //SM-2 Algorithm Calculations
-        if(confidence_level >= 3) {
-            double easiness = storedFlashcard.getEasiness()-0.8+0.28*confidence_level-0.02*Math.pow(confidence_level, 2);
-            if(easiness < 1.3) {
+        if (confidence_level >= 3) {
+            double easiness = storedFlashcard.getEasiness() - 0.8 + 0.28 * confidence_level - 0.02 * Math.pow(confidence_level, 2);
+            if (easiness < 1.3) {
                 storedFlashcard.setEasiness(1.3);
             } else {
                 storedFlashcard.setEasiness(easiness);
             }
-            if(storedFlashcard.getCorrectnessStreak() == 0) {
-               storedFlashcard.setInterval(1);
-            } else if(storedFlashcard.getCorrectnessStreak() == 1) {
+            if (storedFlashcard.getCorrectnessStreak() == 0) {
+                storedFlashcard.setInterval(1);
+            } else if (storedFlashcard.getCorrectnessStreak() == 1) {
                 storedFlashcard.setInterval(6);
             } else {
-                storedFlashcard.setInterval((int) Math.ceil(storedFlashcard.getInterval()*storedFlashcard.getEasiness()));
+                storedFlashcard.setInterval((int) Math.ceil(storedFlashcard.getInterval() * storedFlashcard.getEasiness()));
             }
-            storedFlashcard.setCorrectnessStreak(storedFlashcard.getCorrectnessStreak()+1);
+            storedFlashcard.setCorrectnessStreak(storedFlashcard.getCorrectnessStreak() + 1);
         } else {
             storedFlashcard.setInterval(1);
             storedFlashcard.setCorrectnessStreak(0);
