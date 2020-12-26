@@ -32,11 +32,13 @@ import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {PdfViewerModule} from 'ng2-pdf-viewer';
 import {VimeModule} from '@vime/angular';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
-import { DocumentDialogComponent } from './components/document-dialog/document-dialog.component';
+import {DocumentDialogComponent} from './components/document-dialog/document-dialog.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +78,8 @@ import { DocumentDialogComponent } from './components/document-dialog/document-d
         MatCheckboxModule,
         MatInputModule,
         MatDialogModule,
+        MatRadioModule,
+        MatTooltipModule,
         PdfViewerModule,
         VimeModule
     ],

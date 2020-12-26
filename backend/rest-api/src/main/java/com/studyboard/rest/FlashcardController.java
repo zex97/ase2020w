@@ -76,13 +76,14 @@ public class FlashcardController {
     }
 
     @RequestMapping(
-            value = "/{deckId}/flashcards/{size}",
+            value = "/{deckId}/size{size}/version{version}",
             method = RequestMethod.GET,
             produces = "application/json")
     public List<FlashcardDTO> getFlashcardsForRevision(
             @PathVariable(name = "deckId") long deckId,
-            @PathVariable(name = "size") int size) {
-        return flashcardService.getFlashcardsForRevision(deckId, size).stream()
+            @PathVariable(name = "size") int size,
+            @PathVariable(name = "version") int version) {
+        return flashcardService.getFlashcardsForRevision(deckId, size, version).stream()
                 .map(FlashcardDTO::FlashcardDTOFromFlashcard)
                 .collect(Collectors.toList());
     }
@@ -161,12 +162,26 @@ public class FlashcardController {
             produces = "application/json")
     @ApiOperation(
             value =
-                    "Edit or rate the flashcard based on personal confidence level with the value between 1 and 5.",
+                    "Edit a flashcard's question or answer.",
             authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity editFlashcard(
-            @RequestBody FlashcardDTO flashcardDTO)
-            throws FlashcardConstraintException {
+            @RequestBody FlashcardDTO flashcardDTO) {
         flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO());
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/flashcard{flashcardId}/confidence{confidenceLevel}",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    @ApiOperation(
+            value =
+                    "Rate the flashcard based on personal confidence level with the value between 0 and 5.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public void rateFlashcard(
+            @PathVariable(name = "confidenceLevel") int confidenceLevel,
+            @RequestBody FlashcardDTO flashcardDTO)
+            throws FlashcardConstraintException {
+        flashcardService.rateFlashcard(flashcardDTO.FlashcardFromFlashcardDTO(), confidenceLevel);
     }
 }

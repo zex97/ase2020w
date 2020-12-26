@@ -29,12 +29,15 @@ export class FlashcardManagerComponent implements OnInit {
   revisionCounter: number = 0;
   currentlyRevisedCard: Flashcard;
   sizeError: boolean = false;
+  chosenOption: number;
   private decks: Deck[];
   private flashcards: Flashcard[];
   private selectedDecks: number[];
   revisionFlashcards: Flashcard[];
+  dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
   confidenceError: boolean = false;
+  optionError: boolean = false;
   currentRate = 0;
 
 
@@ -57,7 +60,7 @@ export class FlashcardManagerComponent implements OnInit {
       ]]
     });
     this.revisionSizeForm = this.formBuilder.group({
-      revisionSize: [0]
+      revisionSize: [1]
     });
   }
 
@@ -138,8 +141,15 @@ export class FlashcardManagerComponent implements OnInit {
    */
   loadFlashcards(deck: Deck) {
     this.selectedDeck = deck;
+    this.flashcardService.getDeckById(deck.id).subscribe(
+        (deckRefreshed: Deck) => {
+            this.selectedDeck = deckRefreshed;
+          },
+          error => {
+            this.defaultErrorHandling(error);
+          }
+    )
     this.selectedDecksIds = [deck.id];
-    console.log(this.selectedDecksIds);
     this.flashcardService.getFlashcards(deck.id).subscribe(
       (flashcards: Flashcard[]) => {
         this.flashcards = flashcards;
@@ -149,10 +159,18 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
+    this.flashcardService.revise(1, deck.id, 1).subscribe(
+      (flashcards: Flashcard[]) => {
+         this.dueDateFlashcards = flashcards;
+       },
+       error => {
+         this.defaultErrorHandling(error);
+    });
     this.deckForm.patchValue({
       title: deck.name
     });
     this.resetFlashcardForm();
+
   }
 
   /**
@@ -166,7 +184,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Builds a flashcard dto and sends a creation request.
    */
   createFlashcard() {
-       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0);
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value);
        this.flashcardService.createFlashcard(flashcard).subscribe(
                        (flashcardCreated: Flashcard) => {
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
@@ -221,14 +239,18 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a revision request based on chosen revision size.
    */
   revise() {
+      console.log("Option: " + this.chosenOption)
       this.sizeError = false;
+      this.optionError = false;
       let size = this.revisionSizeForm.controls.revisionSize.value;
-      if (size < 0 || size > this.selectedDeck.size) {
+      if (size <= 0 || size > this.selectedDeck.size) {
           this.sizeError = true;
+      } else if(this.chosenOption == undefined) {
+          this.optionError = true;
       } else {
             this.chooseSize = false;
             this.revisionCounter = 0;
-            this.flashcardService.revise(size, this.selectedDeck.id).subscribe(
+            this.flashcardService.revise(size, this.selectedDeck.id, this.chosenOption).subscribe(
                 (flashcards: Flashcard[]) => {
                              this.revisionFlashcards = flashcards;
                              this.getRevisionFlashcard();
@@ -237,6 +259,7 @@ export class FlashcardManagerComponent implements OnInit {
                                    this.defaultErrorHandling(error);
                              }
                          );
+
       }
 
   }
@@ -288,17 +311,12 @@ export class FlashcardManagerComponent implements OnInit {
    */
   rateFlashcard(flashcard: Flashcard, rate: number) {
     console.log(flashcard);
-    this.flashcardService.getDeckById(this.selectedDeck.id).subscribe(res => {
-      if (rate != null) {
-        flashcard.confidenceLevel = rate;
-      }
-      if (this.currentRate < 1 || this.currentRate > 5){
-        this.error = true;
-        this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
-        this.openSnackbar(this.errorMessage, 'warning-snackbar');
-      } else {
-        let decks: Deck[] = [res];
-        this.flashcardService.editFlashcard(flashcard).subscribe(
+    if (rate != null && (rate < 1 || rate > 5)){
+      this.error = true;
+      this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+      this.openSnackbar(this.errorMessage, 'warning-snackbar');
+    } else {
+      this.flashcardService.rateFlashcard(flashcard, rate).subscribe(
           () => {
             this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
             this.loadFlashcards(this.selectedDeck);
@@ -308,11 +326,10 @@ export class FlashcardManagerComponent implements OnInit {
             this.error = true;
             this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
             this.openSnackbar(this.errorMessage, 'warning-snackbar');
-          }
-        );
+          });
       }
-    });
   }
+
 
   updateDeckList(select : number){
     console.log("deck: " + select);
@@ -338,7 +355,7 @@ export class FlashcardManagerComponent implements OnInit {
      this.selectedFlashcard = select;
      this.showFlashcardId = select.id;
      this.deleteFlash = del;
-     this.currentRate = this.selectedFlashcard.confidenceLevel;
+     //this.currentRate = this.selectedFlashcard.confidenceLevel;
      console.log(this.showFlashcardId);
      this.flashcardForm.patchValue({
         question: select.question,
@@ -352,6 +369,14 @@ export class FlashcardManagerComponent implements OnInit {
 
    resetFlashcardForm() {
     this.flashcardForm.reset();
+   }
+
+   resetRevisionSizeForm() {
+    this.revisionSizeForm.patchValue({
+      revisionSize: 1
+    });
+    this.chosenOption = undefined;
+    this.optionError = false;
    }
 
   openSnackbar(message: string, type: string) {
