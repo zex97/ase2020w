@@ -1,11 +1,12 @@
 package com.studyboard.service.implementation;
 
+import com.studyboard.exception.DocumentDoesNotExistException;
+import com.studyboard.exception.TagDoesNotExistException;
+import com.studyboard.repository.DocumentRepository;
 import com.studyboard.service.UserSpaceService;
 import com.studyboard.exception.SpaceDoesNotExist;
-import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
-import com.studyboard.model.User;
 import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public class SimpleUserSpaceService implements UserSpaceService {
     private SpaceRepository spaceRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @Override
     public List<Space> getUserSpaces(String username) {
@@ -41,7 +44,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Override
     public void removeSpace(long spaceId) {
-        Space space = spaceRepository.findSpaceById(spaceId);
+        Space space = findSpaceById(spaceId);
         logger.info("Delete space with name " + space.getName());
         spaceRepository.deleteById(spaceId);
     }
@@ -57,7 +60,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     @Override
-    public List<Document> geAllDocumentsFromSpace(long spaceId) {
+    public List<Document> getAllDocumentsFromSpace(long spaceId) {
         Space space = findSpaceById(spaceId);
         logger.info("Getting all documents of space with name " + space.getName());
         return space.getDocuments();
@@ -80,19 +83,34 @@ public class SimpleUserSpaceService implements UserSpaceService {
         spaceRepository.save(space);
     }
 
-    private Space findSpaceById(long spaceId) {
-        Space space = spaceRepository.findSpaceById(spaceId);
-        if (space == null) {
-            throw new SpaceDoesNotExist();
+    @Override
+    public void addTagToDocument(long documentId, String tag) {
+        Document document = findDocumentById(documentId);
+        document.getTags().add(tag);
+        logger.info("Add tag [{}] to document with name {}.", tag, document.getName());
+        documentRepository.save(document);
+    }
+
+    @Override
+    public void removeTagFromDocument(long documentId, String tag) {
+        Document document = findDocumentById(documentId);
+
+        if(!document.getTags().contains(tag)){
+            throw new TagDoesNotExistException();
         }
+
+        document.getTags().remove(tag);
+        logger.info("Remove tag [{}] from document with name {}.", tag, document.getName());
+        documentRepository.save(document);
+    }
+
+    private Space findSpaceById(long spaceId) {
+        Space space = spaceRepository.findById(spaceId).orElseThrow(SpaceDoesNotExist::new);
         return space;
     }
 
-    private User findUserByUsername(String username) {
-        User user = userRepository.findOneByUsername(username);
-        if (user == null) {
-            throw new UserDoesNotExist();
-        }
-        return user;
+    private Document findDocumentById(long documentId) {
+        Document document = documentRepository.findById(documentId).orElseThrow(DocumentDoesNotExistException::new);
+        return document;
     }
 }

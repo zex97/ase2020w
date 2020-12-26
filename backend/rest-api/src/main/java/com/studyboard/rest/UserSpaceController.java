@@ -1,6 +1,7 @@
 package com.studyboard.rest;
 
 import com.studyboard.dto.SpaceDTO;
+import com.studyboard.dto.TagDTO;
 import com.studyboard.model.Document;
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
@@ -67,7 +68,7 @@ public class UserSpaceController {
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
     public List<Document> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        return service.geAllDocumentsFromSpace(spaceId);
+        return service.getAllDocumentsFromSpace(spaceId);
     }
 
     @RequestMapping(
@@ -79,6 +80,28 @@ public class UserSpaceController {
             @PathVariable(name = "spaceId") long spaceId,
             @PathVariable(name = "documentId") long documentId) {
         service.removeDocumentFromSpace(spaceId, documentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/{documentId}",
+            method = RequestMethod.POST,
+            produces = "application/json")
+    @ApiOperation(value = "Add new tag to a document.", authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity addTagToDocument(@PathVariable(name = "documentId") long documentId,
+                                           @RequestBody TagDTO tagDTO) {
+         service.addTagToDocument(documentId, tagDTO.toTag());
+         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/{documentId}",
+            method = RequestMethod.DELETE,
+            produces = "application/json")
+    @ApiOperation(value = "Delete a tag from a document.", authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity deleteTagFromDocument(@PathVariable(name = "documentId") long documentId,
+                                           @RequestBody TagDTO tagDTO) {
+        service.removeTagFromDocument(documentId, tagDTO.toTag());
         return ResponseEntity.ok().build();
     }
 }

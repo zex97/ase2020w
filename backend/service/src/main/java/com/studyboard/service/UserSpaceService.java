@@ -43,7 +43,7 @@ public interface UserSpaceService {
      * @param spaceId id of the space
      * @return list of documents that belong to space with id @param spaceId
      */
-    List<Document> geAllDocumentsFromSpace(long spaceId);
+    List<Document> getAllDocumentsFromSpace(long spaceId);
 
     /**
      * Adds a single document to a space
@@ -60,4 +60,21 @@ public interface UserSpaceService {
      * @param documentId id of the document that is deleted
      */
     void removeDocumentFromSpace(long spaceId, long documentId);
+
+    /**
+     * Adds a tag to a document
+     *
+     * @param documentId id of the document
+     * @param tag new tag to be added
+     */
+    void addTagToDocument(long documentId, String tag);
+
+    /**
+     * Removes a tag from a document.
+     * Throws an exception if either document or tag does not exist.
+     *
+     * @param documentId id of the document
+     * @param tag new tag to be added
+     */
+    void removeTagFromDocument(long documentId, String tag);
 }

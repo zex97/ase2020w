@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 // @Inheritance(strategy = InheritanceType.JOINED)
@@ -14,6 +16,7 @@ public class Document {
     private String name;
     private Space space;
     private String filePath;
+    private Set<String> tags;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -67,6 +70,18 @@ public class Document {
 
     public void setNeedsTranscription(boolean needsTranscription) {
         this.needsTranscription = needsTranscription;
+    }
+
+    @ElementCollection
+    public Set<String> getTags() {
+        if (tags == null){
+            this.tags = new HashSet<>();
+        }
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     @PreRemove
