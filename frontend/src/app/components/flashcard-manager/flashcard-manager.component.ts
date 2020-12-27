@@ -315,7 +315,8 @@ export class FlashcardManagerComponent implements OnInit {
     if (rate != null) {
       flashcard.confidenceLevel = rate;
     }
-    if (this.currentRate < 1 || this.currentRate > 5){      this.error = true;
+    if (this.currentRate < 1 || this.currentRate > 5) {
+      this.error = true;
       this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
       this.openSnackbar(this.errorMessage, 'warning-snackbar');
     } else {
@@ -354,6 +355,33 @@ export class FlashcardManagerComponent implements OnInit {
     this.deleteFlashcard(flashcard.id, this.selectedDeck.id);
     this.copyFlashcard(flashcard);
   }
+
+  /**
+   * Sends a request to rate a specific flashcard while in revision mode.
+   */
+  rateFlashcardInRevision(flashcard: Flashcard, rate: number) {
+    console.log(flashcard);
+    if (rate != null) {
+      flashcard.confidenceLevel = rate;
+    }
+    if (this.currentRate < 1 || this.currentRate > 5) {
+      this.error = true;
+      this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+      this.openSnackbar(this.errorMessage, 'warning-snackbar');
+    } else {
+      this.flashcardService.rateFlashcard(flashcard).subscribe(
+        () => {
+          this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
+        },
+        error => {
+          this.confidenceError = true;
+          this.error = true;
+          this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+          this.openSnackbar(this.errorMessage, 'warning-snackbar');
+        });
+    }
+  }
+
 
   updateDeckList(select : number){
     console.log("deck: " + select);

@@ -161,6 +161,7 @@ public class SimpleFlashcardService implements FlashcardService {
     public void rateFlashcard(Flashcard flashcard) throws FlashcardConstraintException {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         try {
+            storedFlashcard.setConfidenceLevel(flashcard.getConfidenceLevel());
             //SM-2 Algorithm Calculations
             if (storedFlashcard.getConfidenceLevel() >= 3) {
                 double easiness = storedFlashcard.getEasiness() - 0.8 + 0.28 * storedFlashcard.getConfidenceLevel() - 0.02 * Math.pow(storedFlashcard.getConfidenceLevel(), 2);

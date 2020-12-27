@@ -186,7 +186,7 @@
             <mat-icon>grade</mat-icon>
           </span>
           <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".edit-flashcard-modal"
-                data-toggle="modal" matTooltip="Edit flaschcard">
+                data-toggle="modal" matTooltip="Edit flashcard">
             <mat-icon>edit</mat-icon>
           </span>
           <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".move-flashcard-modal"
@@ -314,6 +314,7 @@
                   <span (click)="this.showAnswer=false" *ngIf="this.showAnswer" class="close" matTooltip="Hide answer">
                    <mat-icon>visibility_off</mat-icon>
                   </span>
+                  <ngb-rating style="margin-top:20px; font-size:40px" [max]="5" [(rate)]="this.currentlyRevisedCard.confidenceLevel" [readonly]="false" matTooltip="Change confidence level"></ngb-rating>
                   <span (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length"
                         class="close" matTooltip="Next flashcard">
                    <mat-icon>arrow_forward_ios</mat-icon>
@@ -327,7 +328,11 @@
             <button (click)="revise()" [hidden]="!this.chooseSize" mat-button mat-dialog-actions type="button">
               Revise
             </button>
-            <button (click)="this.chooseSize=true;" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+            <button (click)="rateFlashcardInRevision(this.currentlyRevisedCard, this.currentlyRevisedCard.confidenceLevel)"
+                    [hidden]="this.chooseSize" mat-button mat-dialog-actions type="button">
+              Rate
+            </button>
+            <button (click)="this.chooseSize=true; loadFlashcards(this.selectedDeck)" data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close
             </button>
           </div>
@@ -415,18 +420,18 @@
     </div>
 
     <!--Rate a flashcard-->
-    <div aria-hidden="true" aria-labelledby="Rate flashcard modal" class="modal fade rate-flashcard-modal"
+    <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="Rate flashcard modal" class="modal fade rate-flashcard-modal"
          role="dialog"
          tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Rate a flashcard</h2>
+            <h2 class="modal-title">Rate a flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
             <form class="border border-light p-5">
-              <ngb-rating [(rate)]="currentRate" [max]="5" [readonly]="false"></ngb-rating>
-              <h4>Rate personal confidence level from 1 to 5 by choosing the appropriate number of stars!</h4>
+              <ngb-rating [max]="5" [(rate)]="currentRate" [readonly]="false"></ngb-rating>
+              <h3 style="margin-top: 20px"> Rate personal confidence level from 1 to 5 by choosing the appropriate number of stars!</h3>
             </form>
           </div>
           <div class="modal-footer">
