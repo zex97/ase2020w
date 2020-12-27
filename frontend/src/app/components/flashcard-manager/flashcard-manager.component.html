@@ -9,7 +9,7 @@
       </button>
     </mat-form-field>
 
-    <button (click)="this.viewAll=true;this.resetDeckForm();" *ngIf="!this.viewAll" class="pageTopBarButton"
+    <button (click)="backToAll()" *ngIf="!this.viewAll" class="pageTopBarButton"
             mat-stroked-button>
       Back to all
     </button>
@@ -134,7 +134,7 @@
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
-              <button (click)=" this.viewAll=false; loadFlashcards(deck);" class="btn btn-middle"
+              <button (click)=" this.viewAll=false; loadDeckDetails(deck);" class="btn btn-middle"
                       mat-button>
                 Details
               </button>
@@ -443,7 +443,7 @@
       </div>
     </div>
 
-    <!--Delete a flashcard-->
+    <!--Move or copy a flashcard-->
     <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="Move/copy flashcard modal"
          class="modal fade move-flashcard-modal"
          role="dialog"
@@ -455,24 +455,26 @@
           </div>
           <div class="modal-body">
 
-            <mat-form-field appearance="outline" class="mat-select">
-              <mat-label>Select a deck</mat-label>
-              <mat-select [(value)]="this.selectedDecksIds" class="select" multiple>
-                <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
-                            value="{{deck.id}}">
-                  {{deck.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div *ngIf="this.unassignedDecks">
+              <mat-form-field appearance="outline" class="mat-select">
+                <mat-label>Select a deck</mat-label>
+                <mat-select class="select" multiple>
+                  <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getUnassignedDecks()"
+                              value="{{deck.id}}">
+                    {{deck.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
           </div>
           <div class="modal-footer">
-            <button data-dismiss="modal"
+            <button (click)="moveFlashcard(this.selectedFlashcard)"  data-dismiss="modal"
                     mat-button
                     mat-dialog-actions type="button">
               Move
             </button>
-            <button data-dismiss="modal"
+            <button (click)="copyFlashcard(this.selectedFlashcard)" data-dismiss="modal"
                     mat-button
                     mat-dialog-actions type="button">
               Copy

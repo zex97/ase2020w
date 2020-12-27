@@ -33,6 +33,7 @@ export class FlashcardManagerComponent implements OnInit {
   private decks: Deck[];
   private flashcards: Flashcard[];
   private selectedDecks: number[];
+  private unassignedDecks: Deck[] = [];
   revisionFlashcards: Flashcard[];
   dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
@@ -139,7 +140,7 @@ export class FlashcardManagerComponent implements OnInit {
   /**
    * Get a list of all flashcards belonging to a deck from backend
    */
-  loadFlashcards(deck: Deck) {
+  loadDeckDetails(deck: Deck) {
     this.selectedDeck = deck;
     this.flashcardService.getDeckById(deck.id).subscribe(
         (deckRefreshed: Deck) => {
@@ -191,7 +192,7 @@ export class FlashcardManagerComponent implements OnInit {
                               this.flashcardService.assignFlashcard(flashcardCreated, this.selectedDecks).subscribe(
                                                          () => {
                                                                   if(this.selectedDeck != undefined) {
-                                                                    this.loadFlashcards(this.selectedDeck);
+                                                                    this.loadDeckDetails(this.selectedDeck);
                                                                   }
                                                                   this.loadAllDecks();
                                                                },
@@ -225,7 +226,7 @@ export class FlashcardManagerComponent implements OnInit {
               this.flashcardService.editFlashcard(flashcard).subscribe(
                     () => {
                            this.openSnackbar('You successfully edited a flashcard!', 'success-snackbar');
-                           this.loadFlashcards(this.selectedDeck);
+                           this.loadDeckDetails(this.selectedDeck);
                            },
                            error => {
                              this.error = true;
@@ -297,9 +298,9 @@ export class FlashcardManagerComponent implements OnInit {
   deleteFlashcard(flashcardId: number, deckId: number) {
     this.flashcardService.deleteFlashcard(flashcardId, deckId).subscribe(
       () => {
-        this.openSnackbar('You successfully deleted the flashcard!', 'success-snackbar');
+        this.openSnackbar('You successfully removed the flashcard!', 'success-snackbar');
         this.loadAllDecks();
-        this.loadFlashcards(this.selectedDeck);
+        this.loadDeckDetails(this.selectedDeck);
       },
       error => {
         this.defaultErrorHandling(error);
@@ -321,7 +322,7 @@ export class FlashcardManagerComponent implements OnInit {
       this.flashcardService.rateFlashcard(flashcard).subscribe(
           () => {
             this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
-            this.loadFlashcards(this.selectedDeck);
+            this.loadDeckDetails(this.selectedDeck);
           },
           error => {
             this.confidenceError = true;
@@ -332,6 +333,27 @@ export class FlashcardManagerComponent implements OnInit {
       }
   }
 
+  getUnassignedDecks() {
+    return this.unassignedDecks;
+  }
+
+  copyFlashcard(flashcard: Flashcard) {
+    this.flashcardService.assignFlashcard(flashcard, this.selectedDecks).subscribe(
+          () => {
+                this.openSnackbar('Flashcard successfully copied or moved', 'success-snackbar');
+                this.loadDeckDetails(this.selectedDeck);
+          },
+          error => {
+                  this.error = true;
+                  this.errorMessage = 'Could not copy the flashcard!';
+                  this.openSnackbar(this.errorMessage, 'warning-snackbar');
+          });
+  }
+
+  moveFlashcard(flashcard: Flashcard) {
+    this.deleteFlashcard(flashcard.id, this.selectedDeck.id);
+    this.copyFlashcard(flashcard);
+  }
 
   updateDeckList(select : number){
     console.log("deck: " + select);
@@ -359,6 +381,28 @@ export class FlashcardManagerComponent implements OnInit {
      this.deleteFlash = del;
      this.currentRate = this.selectedFlashcard.confidenceLevel;
      console.log(this.showFlashcardId);
+     //get all decks a flashcard belongs to
+     this.flashcardService.getFlashcardAssignments(select.id).subscribe(
+         (assignedDecks: number[]) => {
+                this.loadAllDecks();
+                this.unassignedDecks = [];
+                this.decks.forEach(val => this.unassignedDecks.push(Object.assign({}, val)));
+                for(let i=0; i< this.decks.length; i++) {
+                    let index = assignedDecks.indexOf(this.decks[i].id);
+                    if(index > -1) {
+                      for(let j=0; j< this.unassignedDecks.length; j++) {
+                        if(this.unassignedDecks[j].id==this.decks[i].id) {
+                          this.unassignedDecks.splice(j, 1);
+                        }
+                      }
+                    }
+                }
+         },
+         error => {
+             this.defaultErrorHandling(error);
+          }
+     );
+     this.selectedDecks = undefined;
      this.flashcardForm.patchValue({
         question: select.question,
         answer: select.answer
@@ -379,6 +423,12 @@ export class FlashcardManagerComponent implements OnInit {
     });
     this.chosenOption = undefined;
     this.optionError = false;
+   }
+
+   backToAll() {
+     this.viewAll=true;
+     this.resetDeckForm();
+     this.loadAllDecks();
    }
 
   openSnackbar(message: string, type: string) {
