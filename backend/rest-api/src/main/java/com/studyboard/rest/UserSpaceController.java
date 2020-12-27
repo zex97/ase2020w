@@ -1,5 +1,7 @@
 package com.studyboard.rest;
 
+import com.studyboard.dto.DocumentDTO;
+import com.studyboard.dto.FlashcardDTO;
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.model.Document;
 import com.studyboard.service.implementation.SimpleUserSpaceService;
@@ -79,6 +81,19 @@ public class UserSpaceController {
             @PathVariable(name = "spaceId") long spaceId,
             @PathVariable(name = "documentId") long documentId) {
         service.removeDocumentFromSpace(spaceId, documentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/{spaceId}/{documentId}",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    @ApiOperation(
+            value = "Edit a transcription of a particular document.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity editTranscription(
+            @RequestBody DocumentDTO documentDTO) {
+        service.editTranscription(documentDTO.DocumentFromDocumentDTO());
         return ResponseEntity.ok().build();
     }
 }
