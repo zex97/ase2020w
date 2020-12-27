@@ -1,8 +1,10 @@
 package com.studyboard.dto;
 
 
+import com.studyboard.model.Document;
 import com.studyboard.model.Flashcard;
 
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class FlashcardDTO {
     private String answer;
     private int confidenceLevel;
     private List<DeckDTO> deckDTOs;
+    private List<Document> documentReferences;
 
     public Long getId() {
         return id;
@@ -54,6 +57,14 @@ public class FlashcardDTO {
         this.deckDTOs = deckDTOs;
     }
 
+    public List<Document> getDocumentReferences() {
+        return documentReferences;
+    }
+
+    public void setDocumentReferences(List<Document> documentReferences) {
+        this.documentReferences = documentReferences;
+    }
+
     public Flashcard FlashcardFromFlashcardDTO() {
         Flashcard flashcard = new Flashcard();
         flashcard.setId(this.id);
@@ -63,6 +74,7 @@ public class FlashcardDTO {
         /*flashcard.setDecks(this.deckDTOs.stream()
                     .map(DeckDTO::toDeck)
                     .collect(Collectors.toList()));*/
+        flashcard.setDocumentReferences(this.documentReferences);
         return flashcard;
     }
 
@@ -75,6 +87,7 @@ public class FlashcardDTO {
         /*flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
                 .map(DeckDTO::of)
                 .collect(Collectors.toList()));*/
+        flashcard.setDocumentReferences(flashcard.getDocumentReferences());
         return flashcardDTO;
     }
 
@@ -85,7 +98,7 @@ public class FlashcardDTO {
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 ", confidenceLevel=" + confidenceLevel +
+                ", documentReference size=" + documentReferences.size() +
                 '}';
     }
-
 }

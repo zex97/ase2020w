@@ -91,6 +91,30 @@ public interface FlashcardService {
     List<Long> getAssignments(long flashcardId);
 
     /**
+     * Adding document references to a flashcard
+     *
+     * @param flashcardId of the flashcard
+     * @param documentId of the documents to be referenced
+     */
+    public void addReference(long flashcardId, long documentId);
+
+    /**
+     * Removing document references from a flashcard
+     *
+     * @param flashcardId of the flashcard
+     * @param documentId of the reference to be removed
+     */
+    public void removeReference(long flashcardId, long documentId);
+
+    /**
+     * Getting all document references of flashcard
+     *
+     * @param flashcardId of the flashcard
+     * @return ids of all documents a flashcard is referencing
+     */
+    public List<Long> getReferences(long flashcardId);
+
+    /**
      * Delete a single deck with all of its flashcards
      *
      * @param deckId of the deck that should be deleted

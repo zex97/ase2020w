@@ -39,6 +39,7 @@ import {VimeModule} from '@vime/angular';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 import {DocumentDialogComponent} from './components/document-dialog/document-dialog.component';
+import {MatTreeModule} from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import {DocumentDialogComponent} from './components/document-dialog/document-dia
         MatRadioModule,
         MatTooltipModule,
         PdfViewerModule,
-        VimeModule
+        VimeModule,
+        MatTreeModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

@@ -5,6 +5,7 @@ import com.studyboard.exception.FlashcardConstraintException;
 import com.studyboard.exception.FlashcardDoesNotExist;
 import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.model.Deck;
+import com.studyboard.model.Document;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
@@ -109,8 +110,15 @@ public class SimpleFlashcardService implements FlashcardService {
         flashcard.setCorrectnessStreak(0);
         flashcard.setInterval(0);
         flashcard.setNextDueDate(LocalDateTime.now());
+        List<Document> documents = flashcard.getDocumentReferences();
         logger.info("Created new flashcard with question " + flashcard.getQuestion());
-        return flashcardRepository.save(flashcard);
+        Flashcard created = flashcardRepository.save(flashcard);
+        for(Document document : documents) {
+            logger.info("F: " + created.getId() + ", D:" + document.getId());
+            this.addReference(created.getId(), document.getId());
+        }
+        created.setDocumentReferences(flashcard.getDocumentReferences());
+        return created;
     }
 
     @Override
@@ -129,7 +137,26 @@ public class SimpleFlashcardService implements FlashcardService {
     }
     @Override
     public List<Long> getAssignments(long flashcardId) {
-        return flashcardRepository.getAssignments(flashcardId);
+        logger.info("Getting all decks flashcard " + flashcardId + "is assigned to.");
+        return flashcardRepository.getAllAssignments(flashcardId);
+    }
+
+    @Override
+    public void addReference(long flashcardId, long documentId) {
+        flashcardRepository.addReference(flashcardId, documentId);
+        logger.info("Adding a reference to document " + documentId + " to flashcard " + flashcardId);
+    }
+
+    @Override
+    public void removeReference(long flashcardId, long documentId) {
+        flashcardRepository.removeReference(flashcardId, documentId);
+        logger.info("Removing a reference to document " + documentId + "from flashcard " + flashcardId);
+    }
+
+    @Override
+    public List<Long> getReferences(long flashcardId) {
+        logger.info("Getting all document references of flashcard " + flashcardId);
+        return flashcardRepository.getAllReferences(flashcardId);
     }
 
     @Override

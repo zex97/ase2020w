@@ -2,8 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
+import {SpaceService} from '../../services/space.service';
 import {Deck} from '../../dtos/deck';
 import {Flashcard} from '../../dtos/flashcard';
+import {Space} from '../../dtos/space';
+import {Document} from '../../dtos/document';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
@@ -34,6 +37,9 @@ export class FlashcardManagerComponent implements OnInit {
   private flashcards: Flashcard[];
   private selectedDecks: number[];
   private unassignedDecks: Deck[] = [];
+  private spaces: Space[];
+  documents: Map<number, Document[]> = new Map<number, Document[]>();
+  private selectedDocuments: number[];
   revisionFlashcards: Flashcard[];
   dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
@@ -43,7 +49,8 @@ export class FlashcardManagerComponent implements OnInit {
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
-              private userService: UserService, private snackBar: MatSnackBar) {
+              private userService: UserService, private spaceService: SpaceService,
+              private snackBar: MatSnackBar) {
     this.deckForm = this.formBuilder.group({
       title: ['', [
         Validators.required,
@@ -161,17 +168,16 @@ export class FlashcardManagerComponent implements OnInit {
       }
     );
     this.flashcardService.revise(1, deck.id, 1).subscribe(
-      (flashcards: Flashcard[]) => {
-         this.dueDateFlashcards = flashcards;
-       },
-       error => {
-         this.defaultErrorHandling(error);
-    });
+              (flashcards: Flashcard[]) => {
+                 this.dueDateFlashcards = flashcards;
+               },
+               error => {
+                 this.defaultErrorHandling(error);
+               }
+       );
     this.deckForm.patchValue({
       title: deck.name
     });
-    this.resetFlashcardForm();
-
   }
 
   /**
@@ -181,13 +187,52 @@ export class FlashcardManagerComponent implements OnInit {
     return this.flashcards;
   }
 
+
+  prepareFlashcardCreation() {
+    this.resetDecks();
+    this.loadAllSpaces();
+    this.resetFlashcardForm();
+  }
+
+  loadAllSpaces() {
+      this.spaceService.getSpaces(localStorage.getItem('currentUser')).subscribe(
+        (spaceList: Space[]) => {
+          this.spaces = spaceList;
+          for(let i=0; i<this.spaces.length; i++) {
+            this.loadDocuments(this.spaces[i].id);
+          }
+        },
+        error => {
+          this.defaultErrorHandling(error);
+        }
+      );
+    }
+
+    getSpaces() {
+      return this.spaces;
+    }
+
+    loadDocuments(spaceId: number) {
+      this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), spaceId).subscribe(
+            (documentList: Document[]) => {
+              this.documents.set(spaceId, documentList);
+            },
+            error => {
+              this.defaultErrorHandling(error);
+            }
+          );
+    }
+
   /**
    * Builds a flashcard dto and sends a creation request.
    */
   createFlashcard() {
-       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0);
+       let documentReferences = this.getReferences();
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, documentReferences);
+       console.log(flashcard);
        this.flashcardService.createFlashcard(flashcard).subscribe(
                        (flashcardCreated: Flashcard) => {
+                              console.log(flashcardCreated);
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
                               this.flashcardService.assignFlashcard(flashcardCreated, this.selectedDecks).subscribe(
                                                          () => {
@@ -210,6 +255,22 @@ export class FlashcardManagerComponent implements OnInit {
 
                               });
   }
+
+  getReferences() {
+     let documentReferences = [];
+     console.log("L: " + this.selectedDocuments.length);
+     for(let i=0; i< this.spaces.length; i++) {
+        let documentObjects = this.documents.get(this.spaces[i].id);
+        for(let j=0; j< documentObjects.length; j++) {
+          for(let k=0; k < this.selectedDocuments.length; k++) {
+            if(documentObjects[j].id == this.selectedDocuments[k]) {
+              documentReferences.push(documentObjects[j]);
+            }
+          }
+        }
+     }
+     return documentReferences;
+    }
 
   /**
    * Save changes to flashcard dto and sends an edition request.
@@ -396,6 +457,20 @@ export class FlashcardManagerComponent implements OnInit {
       this.selectedDecks = [select];
     }
   }
+
+  updateReferenceList(select : number){
+      console.log("document: " + select);
+      if(this.selectedDocuments != undefined) {
+        let index = this.selectedDocuments.indexOf(select);
+        if(index > -1) {
+            this.selectedDocuments.splice(index, 1)
+        } else {
+            this.selectedDocuments.push(select);
+        }
+      } else {
+        this.selectedDocuments = [select];
+      }
+    }
 
   resetDecks() {
     this.selectedDecks = [];

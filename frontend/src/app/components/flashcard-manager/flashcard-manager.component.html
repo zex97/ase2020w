@@ -18,7 +18,7 @@
             mat-stroked-button>
       Create a deck
     </button>
-    <button (click)="this.resetDecks();" class="pageTopBarButton" data-target=".create-flashcard-modal"
+    <button (click)="prepareFlashcardCreation();" class="pageTopBarButton" data-target=".create-flashcard-modal"
             data-toggle="modal"
             mat-stroked-button>
       Create a flashcard
@@ -95,12 +95,25 @@
           </mat-form-field>
           <!--Select deck-->
           <mat-form-field appearance="outline" class="mat-select">
-            <mat-label>Select a deck</mat-label>
+            <mat-label>Select at least one deck</mat-label>
             <mat-select [(value)]="this.selectedDecksIds" class="select" multiple>
               <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
                           value="{{deck.id}}">
                 {{deck.name}}
               </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--Add document references-->
+          <mat-form-field appearance="outline" class="mat-select">
+            <mat-label>Select document references</mat-label>
+            <mat-select class="select" multiple>
+              <span *ngFor="let space of getSpaces()">
+                <p style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</p>
+                <mat-option (onSelectionChange)="updateReferenceList($event.source.value)" *ngFor="let document of this.documents.get(space.id)"
+                          value="{{document.id}}">
+                 {{document.name}}
+                </mat-option>
+              </span>
             </mat-select>
           </mat-form-field>
 
@@ -180,6 +193,10 @@
             <h4>A: {{flashcard.answer}}</h4>
           </mat-expansion-panel>
         </mat-accordion>
+        <p>L: {{flashcard.documents}}</p>
+        <ul *ngFor="let document of flashcard.documents">
+          <li>{{document.name}}</li>
+        </ul>
         <div class="flex-container-space-between" style="background-color:#ffffff">
           <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".rate-flashcard-modal"
                 data-toggle="modal" matTooltip="Rate flashcard">
