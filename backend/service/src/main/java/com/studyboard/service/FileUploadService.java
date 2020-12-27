@@ -2,9 +2,11 @@ package com.studyboard.service;
 
 import com.studyboard.model.Space;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 public interface FileUploadService {
 
@@ -23,6 +25,17 @@ public interface FileUploadService {
    */
   String store(MultipartFile file, long spaceId);
 
+  /**
+   * Thread safe version of the store function
+   * Separates file into name and content and saves them in-memory to
+   * avoid loss of multipart-file resources
+   *
+   * @param fileName name of the file to be uploaded
+   * @param content of the file in byte array format
+   * @param spaceId id of the space to which it belongs
+   * @return name of the file that was saved
+   */
+  CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId);
 
   /**
    * Generates a path where the file is saved

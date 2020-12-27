@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
@@ -26,9 +27,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /** Service used to manage user files. Performs file saving, loading, and deletion */
 @Service
@@ -42,11 +43,11 @@ public class SimpleFileUploadService implements FileUploadService {
 
   @Autowired
   public SimpleFileUploadService(
-          FileStorageProperties fileStorageProperties,
-          UserRepository userRepository,
-          SpaceRepository spaceRepository,
-          DocumentRepository documentRepository,
-          TranscriptionService transcriptionService) {
+      FileStorageProperties fileStorageProperties,
+      UserRepository userRepository,
+      SpaceRepository spaceRepository,
+      DocumentRepository documentRepository,
+      TranscriptionService transcriptionService) {
     this.rootLocation = Paths.get(fileStorageProperties.getLocation());
     this.spaceRepository = spaceRepository;
     this.documentRepository = documentRepository;
@@ -71,7 +72,11 @@ public class SimpleFileUploadService implements FileUploadService {
     // create folder path for each individual user
     User user = space.getUser();
     Path completeUserPath =
-            rootLocation.resolve(Paths.get(user.getUsername())).resolve(Paths.get(space.getName())).normalize().toAbsolutePath();
+        rootLocation
+            .resolve(Paths.get(user.getUsername()))
+            .resolve(Paths.get(space.getName()))
+            .normalize()
+            .toAbsolutePath();
 
     // check if folder already exists
     if (!Files.exists(completeUserPath)) {
@@ -79,7 +84,7 @@ public class SimpleFileUploadService implements FileUploadService {
         Files.createDirectories(completeUserPath);
       } catch (IOException e) {
         throw new FileStorageException(
-                "Failed to create separate folder for user: " + user.getUsername());
+            "Failed to create separate folder for user: " + user.getUsername());
       }
     }
 
@@ -89,7 +94,7 @@ public class SimpleFileUploadService implements FileUploadService {
 
     if (file.getOriginalFilename() != null) {
       if (StringUtils.uriDecode(file.getOriginalFilename(), StandardCharsets.UTF_8)
-              .contains("../")) {
+          .contains("../")) {
         throw new FileStorageException("File name contains illegal char sequence \"../\"");
       }
     } else {
@@ -98,12 +103,12 @@ public class SimpleFileUploadService implements FileUploadService {
     }
 
     Path uploadFilePath =
-            this.rootLocation
-                    .resolve(user.getUsername())
-                    .resolve(space.getName())
-                    .resolve(Paths.get(file.getOriginalFilename()))
-                    .normalize()
-                    .toAbsolutePath();
+        this.rootLocation
+            .resolve(user.getUsername())
+            .resolve(space.getName())
+            .resolve(Paths.get(file.getOriginalFilename()))
+            .normalize()
+            .toAbsolutePath();
 
     try {
       Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -115,6 +120,56 @@ public class SimpleFileUploadService implements FileUploadService {
     storeRefToNewDocument(space, uploadFilePath);
 
     return fileName;
+  }
+
+  @Override
+  @Async
+  public CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId) {
+    Space space = spaceRepository.findSpaceById(spaceId);
+
+    User user = space.getUser();
+    for (int i = 0; i < 10; i++) {
+      System.out.println(i + " " + content.length);
+    }
+
+    Path completeUserPath =
+        rootLocation.resolve(Paths.get(user.getUsername())).normalize().toAbsolutePath();
+
+    // check if folder already exists
+    if (!Files.exists(completeUserPath)) {
+      try {
+        Files.createDirectories(completeUserPath);
+      } catch (IOException e) {
+        throw new FileStorageException(
+            "Failed to create separate folder for user: " + user.getUsername());
+      }
+    }
+
+    if (content.length == 0) {
+      throw new FileStorageException("Uploaded file (" + fileName + ") is empty!");
+    }
+
+    if (StringUtils.uriDecode(fileName, StandardCharsets.UTF_8).contains("../")) {
+      throw new FileStorageException("File name contains illegal char sequence \"../\"");
+    }
+
+    Path uploadFilePath =
+        this.rootLocation
+            .resolve(user.getUsername())
+            .resolve(Paths.get(fileName))
+            .normalize()
+            .toAbsolutePath();
+    try {
+      // Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
+      Files.write(uploadFilePath, content);
+
+    } catch (IOException e) {
+      throw new FileStorageException("Failed to store file (" + fileName + ")!", e);
+    }
+
+    storeRefToNewDocument(space, uploadFilePath);
+
+    return CompletableFuture.completedFuture(fileName);
   }
 
   /** Checks if the file type requires transcription. */
@@ -145,23 +200,35 @@ public class SimpleFileUploadService implements FileUploadService {
       document.setTranscription(null);
 
       // TODO: add transcriber trigger
-      if (document.isNeedsTranscription()){
+      if (document.isNeedsTranscription()) {
         transcriptionService.transcribe(document);
       }
       documentRepository.save(document);
 
       logger.info(
-              "Created new document for file '" + path.getFileName().toString() + "' in space(" + space.getName()
-                      + ") of user (" + space.getUser().getUsername() + ")");
+          "Created new document for file '"
+              + path.getFileName().toString()
+              + "' in space("
+              + space.getName()
+              + ") of user ("
+              + space.getUser().getUsername()
+              + ")");
     } else {
       logger.info(
-              "File '" + path.getFileName().toString() + "' already exists, overriding the file content.");
+          "File '"
+              + path.getFileName().toString()
+              + "' already exists, overriding the file content.");
     }
   }
 
   @Override
   public Path load(String filename, String spaceName, String userName) {
-    return rootLocation.resolve(userName).resolve(spaceName).resolve(filename).normalize().toAbsolutePath();
+    return rootLocation
+        .resolve(userName)
+        .resolve(spaceName)
+        .resolve(filename)
+        .normalize()
+        .toAbsolutePath();
   }
 
   @Override
@@ -175,7 +242,7 @@ public class SimpleFileUploadService implements FileUploadService {
       } else {
         logger.debug("Reading of file '" + fileName + "' stored on path " + filePath + " failed");
         throw new StorageFileNotFoundException(
-                "File '" + fileName + "' could not be read, or doesn't exist");
+            "File '" + fileName + "' could not be read, or doesn't exist");
       }
 
     } catch (MalformedURLException e) {
@@ -190,7 +257,7 @@ public class SimpleFileUploadService implements FileUploadService {
     List<Document> list = space.getDocuments();
     Path filePath = load(fileName, space.getName(), space.getUser().getUsername());
 
-    for (Document document: list) {
+    for (Document document : list) {
       if (document.getName().equals(fileName)) {
         documentRepository.delete(document);
         break;
@@ -199,8 +266,14 @@ public class SimpleFileUploadService implements FileUploadService {
 
     try {
       Files.delete(filePath);
-      logger.info("File '" + fileName + "' has been successfully deleted by user(" +
-              space.getUser().getUsername() + ") in space(" + space.getName() + ").");
+      logger.info(
+          "File '"
+              + fileName
+              + "' has been successfully deleted by user("
+              + space.getUser().getUsername()
+              + ") in space("
+              + space.getName()
+              + ").");
     } catch (NoSuchFileException e) {
       logger.debug("File '" + fileName + "' not in the directory");
       throw new StorageFileNotFoundException("File '" + fileName + "' not in the directory");

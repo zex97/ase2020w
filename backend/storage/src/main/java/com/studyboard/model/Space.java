@@ -35,7 +35,7 @@ public class Space {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<Document> getDocuments() {
         if (documents == null) {
             documents = new ArrayList<>();
@@ -47,7 +47,7 @@ public class Space {
         this.documents = documents;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sb_user_id")
     public User getUser() {
         return user;
