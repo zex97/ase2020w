@@ -1,5 +1,7 @@
 package com.studyboard.service.implementation;
 
+import com.studyboard.model.Flashcard;
+import com.studyboard.repository.DocumentRepository;
 import com.studyboard.service.UserSpaceService;
 import com.studyboard.exception.SpaceDoesNotExist;
 import com.studyboard.exception.UserDoesNotExist;
@@ -26,6 +28,8 @@ public class SimpleUserSpaceService implements UserSpaceService {
     private SpaceRepository spaceRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @Override
     public List<Space> getUserSpaces(String username) {
@@ -78,6 +82,14 @@ public class SimpleUserSpaceService implements UserSpaceService {
         space.setDocuments(documents);
         logger.info("Remove document from space with name " + space.getName());
         spaceRepository.save(space);
+    }
+
+    @Override
+    public void editTranscription(Document document) {
+        Document storedDocument = documentRepository.findDocumentById(document.getId());
+        storedDocument.setTranscription(document.getTranscription());
+        logger.info("Edited the transcription of document " + storedDocument.getName());
+        documentRepository.save(storedDocument);
     }
 
     private Space findSpaceById(long spaceId) {
