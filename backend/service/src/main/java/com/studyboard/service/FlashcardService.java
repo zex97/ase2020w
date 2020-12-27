@@ -53,9 +53,10 @@ public interface FlashcardService {
      *
      * @param deckId of the deck flashcards belong to
      * @param size   - amount of flashcards to revise
+     * @param version determines whether to take all due cards or a custom size
      * @return chosen number of flashcards from a specified deck
      */
-    List<Flashcard> getFlashcardsForRevision(long deckId, int size);
+    List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version);
 
 
     /**
@@ -101,8 +102,15 @@ public interface FlashcardService {
      *
      * @param flashcard entity that needs to be edited
      * @return flashcard object with the all the changes
+     */
+    Flashcard editFlashcard(Flashcard flashcard);
+
+    /**
+     * Rate a single flashcard in the deck
+     *
+     * @param flashcard entity that needs to be edited
      * @throws FlashcardConstraintException when confidence level is outside 1-5 range of values
      */
-    Flashcard editFlashcard(Flashcard flashcard) throws FlashcardConstraintException;
+    void rateFlashcard(Flashcard flashcard) throws FlashcardConstraintException;
 
 }

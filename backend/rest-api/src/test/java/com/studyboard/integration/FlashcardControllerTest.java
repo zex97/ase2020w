@@ -36,13 +36,14 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActionsUser =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].loginAttempts").value(TEST_USER.getLoginAttempts()));
 
@@ -75,13 +76,14 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
 
         ResultActions resultActionsDeck =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/testUsername").accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(TEST_DECK.getName()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].size").value(TEST_DECK.getSize()));
@@ -96,12 +98,13 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJsonUpdated))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk());
         ResultActions resultActionsUpdated =
                 this.mockMvc
                         .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/testUsername").accept(MediaType.APPLICATION_JSON))
-                        .andDo(print()).andExpect(status().isOk())
+//                        .andDo(print())
+                        .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(deckUpdatedName.getName()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].size").value(TEST_DECK.getSize()));

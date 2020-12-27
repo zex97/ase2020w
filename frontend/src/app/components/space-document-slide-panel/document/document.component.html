@@ -1,0 +1,48 @@
+<div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{{successMessage}}</strong> {{ errorMessage }}
+  <button type="button" (click)="vanishSuccessMessage()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="topPageDiv">
+  <h2 class="page-title-small">{{space.name}}</h2>
+  <div class="row p-2 mb-4" style="padding-top: 0">
+
+    <mat-form-field class="pageTopBarSearchField">
+      <mat-placeholder style="color: #FEFFFF">Search space {{space.name}}</mat-placeholder>
+      <input matInput style="color: #FEFFFF" title="search" type="search">
+      <button aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
+        <mat-icon style="color: #FEFFFF">search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button class="pageTopBarButton" (click)="toggleSlideEvent.emit('backToSpaces')"
+            mat-stroked-button>
+      Back to all
+    </button>
+  </div>
+</div>
+
+<mat-nav-list *ngFor="let doc of getAllDocuments()">
+  <mat-list-item (click)="loadFile(doc)">
+    <mat-card-content style="height: 25px; width: 100%">
+      <mat-card-title>
+        <h3 class="document-name">
+          {{doc.name}}
+        </h3>
+        <span class="close" (click)="deleteDocument(doc); $event.stopPropagation();" style="float: right">
+          <mat-icon>delete</mat-icon>
+        </span>
+        <span class="close" (click)="downloadFileFromList(doc); $event.stopPropagation();" style="float: right; margin-right:5%;">
+          <mat-icon>save_alt</mat-icon>
+        </span>
+      </mat-card-title>
+    </mat-card-content>
+  </mat-list-item>
+</mat-nav-list>
+
+<div class="warningMessageContainer" *ngIf="isEmpty()">
+  <h2 class="warningMessage">No documents added to space {{space.name}}!</h2>
+</div>
+

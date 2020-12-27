@@ -3,6 +3,7 @@ package com.studyboard.model;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,18 @@ public class Flashcard {
     @Min(0)
     @Max(5)
     private int confidenceLevel;
+
+    @Column(nullable = true, name = "easiness")
+    private double easiness;
+
+    @Column(nullable = true, name = "interval")
+    private int interval;
+
+    @Column(nullable = true, name = "correctness_streak")
+    private int correctnessStreak;
+
+    @Column(nullable = true, name = "next_due_date")
+    private LocalDateTime nextDueDate;
 
     @ManyToMany(mappedBy = "flashcards")
     private List<Deck> decks;
@@ -51,6 +64,14 @@ public class Flashcard {
         this.answer = answer;
     }
 
+    public List<Deck> getDecks() {
+        return decks;
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
+    }
+
     public int getConfidenceLevel() {
         return confidenceLevel;
     }
@@ -59,12 +80,36 @@ public class Flashcard {
         this.confidenceLevel = confidenceLevel;
     }
 
-
-    public List<Deck> getDecks() {
-        return decks;
+    public double getEasiness() {
+        return easiness;
     }
 
-    public void setDecks(List<Deck> decks) {
-        this.decks = decks;
+    public void setEasiness(double easiness) {
+        this.easiness = easiness;
     }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public int getCorrectnessStreak() {
+        return correctnessStreak;
+    }
+
+    public void setCorrectnessStreak(int correctnessStreak) {
+        this.correctnessStreak = correctnessStreak;
+    }
+
+    public LocalDateTime getNextDueDate() {
+        return nextDueDate;
+    }
+
+    public void setNextDueDate(LocalDateTime nextDueDate) {
+        this.nextDueDate = nextDueDate;
+    }
+
 }

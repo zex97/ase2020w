@@ -3,6 +3,7 @@ package com.studyboard.dto;
 
 import com.studyboard.model.Flashcard;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FlashcardDTO {

@@ -33,13 +33,8 @@ export class FileUploadService {
    * @param space for which we are fetching the file
    * @param filename name of the file we want to fetch
    * */
-  getFile(space: Space, filename: string) {
-
-    return this.httpClient.post(`${this.userBaseUri}/single-file/` + filename, space, {observe: 'response'})
-      .subscribe((res) => {
-          console.log(res.headers);
-        }
-      );
+  getFile(space: Space, filename: string): Observable<Blob> {
+    return this.httpClient.post(`${this.userBaseUri}/file/` + filename, space, {responseType: 'blob'});
   }
 
   /**

@@ -87,7 +87,7 @@ export class FlashcardService {
   }
 
   /**
-   * Change flashcard question, answer or rating in the backend
+   * Change flashcard question or answer in the backend
    * @param flashcard to make changes to
    */
   editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
@@ -95,14 +95,23 @@ export class FlashcardService {
         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id, flashcard);
   }
 
+   /**
+     * Send flashcard rating to backend
+     * @param flashcard to make changes to
+     */
+   rateFlashcard(flashcard: Flashcard) {
+         console.log('Rate flashcard - question ' + flashcard.question);
+         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/rate' + flashcard.id, flashcard);
+   }
+
   /**
    * Sends a revision method call to the backend
    * @param size of question set for the revision
    * @param deckId of the deck whose flashcards are going to be revised
    */
-  revise(size: number, deckId: number): Observable<Flashcard[]> {
+  revise(size: number, deckId: number, version: number): Observable<Flashcard[]> {
         console.log('Getting flashcards for revision.');
-        return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/flashcards/' + size);
+        return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/size' + size + '/version' + version);
   }
 
   /**

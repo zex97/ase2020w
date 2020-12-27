@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {UserService} from '../../services/user.service';
-import {SpaceService} from '../../services/space.service';
-import {Space} from '../../dtos/space';
-import {FileUploadService} from '../../services/file-upload.service';
+import {UserService} from '../../../services/user.service';
+import {SpaceService} from '../../../services/space.service';
+import {Space} from '../../../dtos/space';
+import {FileUploadService} from '../../../services/file-upload.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-document-space',
@@ -29,10 +30,12 @@ export class DocumentSpaceComponent implements OnInit {
   private spaces: Space[];
   currentSpace: Space;
   selectSpace: Space;
+  isLeftVisible = true;
 
+  @ViewChild('documentComponent') documentComponent;
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
-              private fileUploadService: FileUploadService) {
+              private fileUploadService: FileUploadService, private snackBar: MatSnackBar) {
     this.spaceForm = this.formBuilder.group({
       name: ['', [
         Validators.required,
@@ -103,6 +106,14 @@ export class DocumentSpaceComponent implements OnInit {
     this.spaceForm.reset();
   }
 
+  toggleSlide() {
+    this.isLeftVisible = !this.isLeftVisible;
+  }
+
+  parentEventHandlerFunction(value) {
+    this.toggleSlide();
+  }
+
   /**
    * Save uploaded files into a global variable and check if any
    * of them exceed the upload limit.
@@ -166,7 +177,6 @@ export class DocumentSpaceComponent implements OnInit {
     let successUploadCount: number = 0;
     // tslint:disable-next-line:forin
     for (let i = 0; i < this.filesToUpload.length; i++) {
-      // TODO: should file types be validated in frontend???
       const file = this.filesToUpload[i];
       this.fileUploadService.uploadFile(file, spaceId).subscribe((res) => {
         if (res) {
@@ -180,8 +190,9 @@ export class DocumentSpaceComponent implements OnInit {
         }
         // create success message if all files successfully uploaded
         if (this.filesToUpload.length > 0 && this.filesToUpload.length === successUploadCount) {
-          this.successMessage = 'You successfully uploaded ' + this.filesToUpload.length + ' file(s).';
+          this.openSnackbar('You successfully uploaded ' + this.filesToUpload.length + ' file(s).', 'success-snackbar');
           this.success = true;
+          this.documentComponent.ngOnChanges();
         }
       });
     }
@@ -220,6 +231,7 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
+          this.openSnackbar('Space ' + space.name + 'successfuly created!', 'success-snackbar');
         },
         error => {
           this.defaultErrorHandling(error);
@@ -252,12 +264,18 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
-          //location.reload();
         },
         error => {
           this.defaultErrorHandling(error);
         }
       );
+    });
+  }
+
+  openSnackbar(message: string, type: string) {
+    this.snackBar.open(message, 'close', {
+      duration: 4000,
+      panelClass: [type]
     });
   }
 
@@ -275,6 +293,11 @@ export class DocumentSpaceComponent implements OnInit {
     this.error = true;
     this.errorMessage = '';
     this.errorMessage = error.error.message;
+  }
+
+
+  isEmpty() {
+    return this.spaces?.length === 0;
   }
 
 }

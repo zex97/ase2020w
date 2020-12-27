@@ -1,6 +1,7 @@
 package com.studyboard.service;
 
 import com.studyboard.exception.DeckDoesNotExist;
+import com.studyboard.exception.FlashcardConstraintException;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
@@ -39,10 +40,16 @@ public class FlashcardServiceTest {
     private static final LocalDateTime DECK_LAST_TIME_USED = LocalDateTime.of(2020, 12, 02, 15, 17);
     private static final LocalDate DECK_CREATION_DATE = LocalDate.of(2020, 12, 2);
 
+    private static final Long DECK_ID_2 = 2L;
+    private static final String DECK_NAME_2 = "Test2";
+    private static final Integer DECK_SIZE_2 = 0;
+    private static final LocalDateTime DECK_LAST_TIME_USED_2 = LocalDateTime.of(2020, 12, 26, 15, 17);
+    private static final LocalDate DECK_CREATION_DATE_2 = LocalDate.of(2020, 12, 26);
+
+
     private static final Long FLASHCARD_ID = 1L;
     private static final String FLASHCARD_QUESTION = "Question";
     private static final String FLASHCARD_ANSWER = "Answer";
-    private static final int CONFIDENCE_LEVEL = 0;
 
 
     @Mock
@@ -131,7 +138,6 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
-        flashcard.setConfidenceLevel(CONFIDENCE_LEVEL);
         flashcard.setDecks(decks);
         flashcardService.createFlashcard(flashcard);
         flashcardService.assignFlashcard(flashcard.getId(), response.getId() + "-");
@@ -139,5 +145,224 @@ public class FlashcardServiceTest {
         response = flashcardService.findDeckById(DECK_ID);
 
         Assertions.assertEquals(1, response.getSize());
+    }
+
+    @Test
+    public void revisionSizeGreaterThanDeckSize_ThrowsException() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUsername(USER_USERNAME);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
+        user.setLoginAttempts(USER_LOGIN_ATTEMPTS);
+        user.setRole(USER_ROLE);
+        user.setEnabled(USER_ENABLED);
+
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
+        deck.setName(DECK_NAME);
+        deck.setSize(DECK_SIZE);
+        deck.setCreationDate(DECK_CREATION_DATE);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED);
+        deck.setUser(user);
+
+        Mockito.when(deckRepository.findDeckById(DECK_ID)).thenReturn(deck);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            flashcardService.getFlashcardsForRevision(DECK_ID, 1, 2);
+        });
+    }
+
+    /*@Test
+    public void assignSameFlashcardToTwoDecksAndDeleteFromOne_FlashcardStaysInOther() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUsername(USER_USERNAME);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
+        user.setLoginAttempts(USER_LOGIN_ATTEMPTS);
+        user.setRole(USER_ROLE);
+        user.setEnabled(USER_ENABLED);
+
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
+        deck.setName(DECK_NAME);
+        deck.setSize(DECK_SIZE);
+        deck.setCreationDate(DECK_CREATION_DATE);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED);
+        deck.setUser(user);
+
+        Deck deck2 = new Deck();
+        deck.setId(DECK_ID_2);
+        deck.setName(DECK_NAME_2);
+        deck.setSize(DECK_SIZE_2);
+        deck.setCreationDate(DECK_CREATION_DATE_2);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED_2);
+        deck.setUser(user);
+
+        List<Deck> decks = new ArrayList<>();
+        decks.add(deck);
+        decks.add(deck2);
+
+        //Mockito.when(deckRepository.findDeckById()).thenReturn(deck, deck2);
+        //Mockito.when(deckRepository.findDeckById(any(Long.class))).thenReturn(deck, deck2);
+
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(decks);
+        flashcardService.createFlashcard(flashcard);
+        flashcardService.assignFlashcard(FLASHCARD_ID, DECK_ID + "-" + DECK_ID_2 + "-");
+
+        Deck response1 = flashcardService.findDeckById(DECK_ID);
+        Deck response2 = flashcardService.findDeckById(DECK_ID_2);
+
+        Assertions.assertEquals(1, response1.getSize());
+        Assertions.assertEquals(1, response2.getSize());
+
+        //flashcardService.deleteFlashcard(DECK_ID, FLASHCARD_ID);
+
+        //response1 = flashcardService.findDeckById(DECK_ID);
+        //response2 = flashcardService.findDeckById(DECK_ID_2);
+
+        //Assertions.assertEquals(0, response1.getSize());
+        //Assertions.assertEquals(1, response2.getSize());
+    }*/
+
+    @Test
+    public void creatingFlashcardSetsInitialValuesCorrectly() {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        Assertions.assertEquals(2.5, response.getEasiness());
+        Assertions.assertEquals(0, response.getCorrectnessStreak());
+        Assertions.assertEquals(0, response.getInterval());
+        Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now()));
+    }
+
+    @Test
+    public void ratingFlashcardAsCorrectChangesValuesAccordinglyOnFirstReview() throws FlashcardConstraintException {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+
+        flashcardService.rateFlashcard(flashcard);
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        double expectedEasiness = 2.5 - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2);
+        Assertions.assertEquals(expectedEasiness, response.getEasiness());
+        Assertions.assertEquals(1, response.getCorrectnessStreak());
+        Assertions.assertEquals(1, response.getInterval());
+        Assertions.assertTrue(response.getNextDueDate().isAfter(LocalDateTime.now()));
+        Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now().plusDays(1)));
+    }
+
+    @Test
+    public void ratingFlashcardAsIncorrectChangesValuesAccordinglyOnFirstReview() throws FlashcardConstraintException {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setConfidenceLevel(1);
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+
+        flashcardService.rateFlashcard(flashcard);
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        Assertions.assertEquals(2.5, response.getEasiness());
+        Assertions.assertEquals(0, response.getCorrectnessStreak());
+        Assertions.assertEquals(1, response.getInterval());
+        Assertions.assertTrue(response.getNextDueDate().isAfter(LocalDateTime.now()));
+        Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now().plusDays(1)));
+    }
+
+    @Test
+    public void ratingFlashcardAsCorrectTwoTimesChangesValuesAccordinglyOnSecondReview() throws FlashcardConstraintException {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+
+        flashcard.setConfidenceLevel(4);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.rateFlashcard(flashcard);
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        double expectedEasiness = 2.5 - 0.8 + 0.28 * 4 - 0.02 * Math.pow(4, 2) - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2);
+        Assertions.assertEquals(expectedEasiness, response.getEasiness());
+        Assertions.assertEquals(2, response.getCorrectnessStreak());
+        Assertions.assertEquals(6, response.getInterval());
+        Assertions.assertTrue(response.getNextDueDate().isAfter(LocalDateTime.now()));
+        Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now().plusDays(6)));
+    }
+
+    @Test
+    public void ratingFlashcardAsCorrectThenIncorrectChangesValuesAccordinglyOnSecondReview() throws FlashcardConstraintException {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+
+        flashcard.setConfidenceLevel(4);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(2);
+        flashcardService.rateFlashcard(flashcard);
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        double expectedEasiness = 2.5 - 0.8 + 0.28 * 4 - 0.02 * Math.pow(4, 2);
+        Assertions.assertEquals(expectedEasiness, response.getEasiness());
+        Assertions.assertEquals(0, response.getCorrectnessStreak());
+        Assertions.assertEquals(1, response.getInterval());
+        Assertions.assertTrue(response.getNextDueDate().isAfter(LocalDateTime.now()));
+        Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now().plusDays(1)));
+    }
+
+    @Test
+    public void ratingFlashcardCorrectThreeTimesChangesValuesAccordingly() throws FlashcardConstraintException {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+
+        flashcard.setConfidenceLevel(4);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.rateFlashcard(flashcard);
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        double expectedEasiness = 2.5 - 0.8 + 0.28 * 4 - 0.02 * Math.pow(4, 2) - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2) - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2);
+        int expectedInterval = (int) Math.ceil(6 * expectedEasiness);
+        Assertions.assertEquals(expectedEasiness, response.getEasiness());
+        Assertions.assertEquals(3, response.getCorrectnessStreak());
+        Assertions.assertEquals(expectedInterval, response.getInterval());
+        Assertions.assertTrue(response.getNextDueDate().isAfter(LocalDateTime.now()));
+        Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now().plusDays(expectedInterval)));
     }
 }

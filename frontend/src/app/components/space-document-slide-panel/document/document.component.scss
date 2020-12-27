@@ -1,43 +1,31 @@
-.flex-grid {
-  display:flex;
-}
-
-.space-name {
-  color: #2B7A78;
-  display: inline-block;
-}
-
-.col {
-  padding: 0px;
-}
-
-#listOfSpaces {
-  flex: 1 1 auto;
-  max-width: 100%;
-  min-width: 50%;
-  padding-right: 1px;
-}
-
-.listOfSpaceDocuments {
-  min-width: 50%;
-}
-
 .mat-list-base {
   padding-top: 1px;
 }
 
-#spacesListItem {
-  height: 100px !important; /** experiment with height **/
-  width: 100%;
+.mat-list-item {
+  height: 49.5px;
   background-color: #FEFFFF;
 }
 
-.mat-card-content {
-  width: 100%;
+.mat-list-item:hover {
+  background-color: lightgrey !important;
 }
 
-.highlighted {
-  background-color: lightgrey !important;
+.document-name {
+  display: inline-block;
+  width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.unselectable {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 
@@ -52,7 +40,10 @@
 }
 ::ng-deep.mat-form-field-ripple {
   /*change color of underline when focused*/
-  background-color: #FEFFFF !important;;
+  background-color: #FEFFFF !important;
+}
+::ng-deep .mat-input-element::placeholder {
+  color: orange !important;
 }
 
 .invalid-input-text {
