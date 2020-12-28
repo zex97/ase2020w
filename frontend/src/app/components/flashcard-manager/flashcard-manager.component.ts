@@ -3,11 +3,16 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
+import {FileUploadService} from '../../services/file-upload.service';
 import {Deck} from '../../dtos/deck';
 import {Flashcard} from '../../dtos/flashcard';
 import {Space} from '../../dtos/space';
 import {Document} from '../../dtos/document';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {DocumentDialogComponent} from '../document-dialog/document-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {DomSanitizer} from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-flashcard-manager',
@@ -50,7 +55,8 @@ export class FlashcardManagerComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private spaceService: SpaceService,
-              private snackBar: MatSnackBar) {
+              private fileUploadService: FileUploadService, private snackBar: MatSnackBar,
+              private sanitizer: DomSanitizer, private dialog: MatDialog) {
     this.deckForm = this.formBuilder.group({
       title: ['', [
         Validators.required,
@@ -199,7 +205,7 @@ export class FlashcardManagerComponent implements OnInit {
         (spaceList: Space[]) => {
           this.spaces = spaceList;
           for(let i=0; i<this.spaces.length; i++) {
-            this.loadDocuments(this.spaces[i].id);
+            this.loadDocuments(this.spaces[i]);
           }
         },
         error => {
@@ -212,10 +218,13 @@ export class FlashcardManagerComponent implements OnInit {
       return this.spaces;
     }
 
-    loadDocuments(spaceId: number) {
-      this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), spaceId).subscribe(
+    loadDocuments(space: Space) {
+      this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), space.id).subscribe(
             (documentList: Document[]) => {
-              this.documents.set(spaceId, documentList);
+              /*for(let i=0; i<documentList.length; i++) {
+                documentList[i].space = space;
+              }*/
+              this.documents.set(space.id, documentList);
             },
             error => {
               this.defaultErrorHandling(error);
@@ -442,6 +451,34 @@ export class FlashcardManagerComponent implements OnInit {
         });
     }
   }
+
+   loadFile(document: Document) {
+      this.fileUploadService.getFile(document.space, document.name).subscribe(
+        (res) => {
+             let fileObject: Blob;
+             let blobUrl: any;
+             if (document.name.includes('.mp3') || document.name.includes('.mp4')) {
+               fileObject = res;
+               blobUrl = URL.createObjectURL(fileObject);
+             } else if (document.name.includes('.pdf')) {
+               fileObject = new Blob([res], {type: 'application/pdf'});
+               blobUrl = URL.createObjectURL(fileObject);
+             } else {
+               fileObject = res;
+               blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(fileObject));
+             }
+          this.dialog.open(DocumentDialogComponent, {
+            data: {
+              currentDocument: document,
+              blobUrl: blobUrl
+            }
+          });
+        },
+        error => {
+          this.defaultErrorHandling(error);
+        }
+      );
+    }
 
 
   updateDeckList(select : number){

@@ -327,7 +327,7 @@
                   <h4>References:</h4>
                   <div>
                     <ul *ngFor="let document of this.currentlyRevisedCard.documentReferences">
-                      <li>{{document.name}}</li>
+                      <li><button  mat-button type="button" (click)="this.loadFile(document);">{{document.name}}</button></li>
                     </ul>
                   </div>
                 </mat-card>
@@ -532,7 +532,7 @@
             <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
             <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
             <ul *ngFor="let document of this.selectedFlashcard.documentReferences">
-              <li>{{document.name}}</li>
+              <li> <button data-dismiss="modal" mat-button type="button" (click)="this.loadFile(document);">{{document.name}}</button></li>
             </ul>
 
           </div>

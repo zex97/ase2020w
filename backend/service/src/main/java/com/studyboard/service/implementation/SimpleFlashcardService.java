@@ -114,7 +114,6 @@ public class SimpleFlashcardService implements FlashcardService {
         logger.info("Created new flashcard with question " + flashcard.getQuestion());
         Flashcard created = flashcardRepository.save(flashcard);
         for(Document document : documents) {
-            logger.info("F: " + created.getId() + ", D:" + document.getId());
             this.addReference(created.getId(), document.getId());
         }
         created.setDocumentReferences(flashcard.getDocumentReferences());
