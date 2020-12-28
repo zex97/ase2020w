@@ -193,14 +193,14 @@
             <h4>A: {{flashcard.answer}}</h4>
           </mat-expansion-panel>
         </mat-accordion>
-        <p>L: {{flashcard.documents}}</p>
-        <ul *ngFor="let document of flashcard.documents">
-          <li>{{document.name}}</li>
-        </ul>
         <div class="flex-container-space-between" style="background-color:#ffffff">
           <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".rate-flashcard-modal"
                 data-toggle="modal" matTooltip="Rate flashcard">
             <mat-icon>grade</mat-icon>
+          </span>
+          <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".references-flashcard-modal"
+                data-toggle="modal" matTooltip="See references">
+            <mat-icon>attach_file</mat-icon>
           </span>
           <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".edit-flashcard-modal"
                 data-toggle="modal" matTooltip="Edit flashcard">
@@ -322,6 +322,14 @@
                 </mat-card>
                 <mat-card *ngIf="this.showAnswer" class="flashcard-answer">
                   <h4>A: {{this.currentlyRevisedCard.answer}}</h4>
+                </mat-card>
+                <mat-card *ngIf="this.showAnswer && this.currentlyRevisedCard.documentReferences.length!=0" class="flashcard-reference" style="display:flex; justify-content: space-around; align-items: center;">
+                  <h4>References:</h4>
+                  <div>
+                    <ul *ngFor="let document of this.currentlyRevisedCard.documentReferences">
+                      <li>{{document.name}}</li>
+                    </ul>
+                  </div>
                 </mat-card>
                 <div class="flex-container-space-between">
 
@@ -500,6 +508,37 @@
                     mat-button
                     mat-dialog-actions type="button">
               Copy
+            </button>
+            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--See references of a flashcard-->
+    <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="See references modal"
+         class="modal fade references-flashcard-modal"
+         role="dialog"
+         tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Flashcard "{{this.selectedFlashcard.question}}"</h2>
+          </div>
+          <div class="modal-body">
+
+            <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
+            <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
+            <ul *ngFor="let document of this.selectedFlashcard.documentReferences">
+              <li>{{document.name}}</li>
+            </ul>
+
+          </div>
+          <div class="modal-footer">
+            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
+              Edit
             </button>
             <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close

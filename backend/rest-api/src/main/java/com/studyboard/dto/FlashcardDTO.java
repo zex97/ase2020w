@@ -87,7 +87,7 @@ public class FlashcardDTO {
         /*flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
                 .map(DeckDTO::of)
                 .collect(Collectors.toList()));*/
-        flashcard.setDocumentReferences(flashcard.getDocumentReferences());
+        flashcardDTO.setDocumentReferences(flashcard.getDocumentReferences());
         return flashcardDTO;
     }
 

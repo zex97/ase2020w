@@ -45,8 +45,8 @@
 }
 
 .flex-container-space-between > span {
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 3%;
+  margin-right: 3%;
 }
 
 .flex-container-space-around {
@@ -68,6 +68,12 @@
 .flashcard-answer {
   background-color: #2b7a78;
   color: #ffffff;
+  text-align:center;
+}
+
+.flashcard-reference {
+  background-color:#def2f1;
+  color: #2b7a78;
   text-align:center;
 }
 
