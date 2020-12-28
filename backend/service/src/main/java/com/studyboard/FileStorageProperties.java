@@ -1,5 +1,6 @@
 package com.studyboard;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 public class FileStorageProperties {
 
   private String location;
+  @Value("${storage.file.types}")
+  private String[] fileTypes;
 
   public String getLocation() {
     return location;
@@ -15,5 +18,13 @@ public class FileStorageProperties {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String[] getFileTypes() {
+    return fileTypes;
+  }
+
+  public void setFileTypes(String[] fileTypes) {
+    this.fileTypes = fileTypes;
   }
 }

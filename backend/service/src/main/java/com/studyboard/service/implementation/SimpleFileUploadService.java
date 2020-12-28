@@ -11,6 +11,7 @@ import com.studyboard.repository.SpaceRepository;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.service.FileUploadService;
 import com.studyboard.service.TranscriptionService;
+import com.studyboard.validator.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class SimpleFileUploadService implements FileUploadService {
   private final SpaceRepository spaceRepository;
   private final DocumentRepository documentRepository;
   private final TranscriptionService transcriptionService;
+  private final FileValidator fileValidator;
 
   @Autowired
   public SimpleFileUploadService(
@@ -52,6 +54,7 @@ public class SimpleFileUploadService implements FileUploadService {
     this.spaceRepository = spaceRepository;
     this.documentRepository = documentRepository;
     this.transcriptionService = transcriptionService;
+    this.fileValidator = new FileValidator(fileStorageProperties);
   }
 
   @Override
@@ -69,6 +72,11 @@ public class SimpleFileUploadService implements FileUploadService {
     Space space = spaceRepository.findSpaceById(spaceId);
     String fileName = file.getOriginalFilename();
 
+    try {
+      fileValidator.validateFile(fileName, file.getBytes());
+    } catch (IOException e) {
+      throw new FileStorageException("Failed to read file '"+ fileName + "' content");
+    }
     // create folder path for each individual user
     User user = space.getUser();
     Path completeUserPath =
@@ -79,28 +87,7 @@ public class SimpleFileUploadService implements FileUploadService {
             .toAbsolutePath();
 
     // check if folder already exists
-    if (!Files.exists(completeUserPath)) {
-      try {
-        Files.createDirectories(completeUserPath);
-      } catch (IOException e) {
-        throw new FileStorageException(
-            "Failed to create separate folder for user: " + user.getUsername());
-      }
-    }
-
-    if (file.isEmpty()) {
-      throw new FileStorageException("Uploaded file (" + fileName + ") is empty!");
-    }
-
-    if (file.getOriginalFilename() != null) {
-      if (StringUtils.uriDecode(file.getOriginalFilename(), StandardCharsets.UTF_8)
-          .contains("../")) {
-        throw new FileStorageException("File name contains illegal char sequence \"../\"");
-      }
-    } else {
-      logger.error("File name is null!");
-      throw new FileStorageException("File name is null!");
-    }
+    fileValidator.validatePath(completeUserPath);
 
     Path uploadFilePath =
         this.rootLocation
@@ -111,56 +98,19 @@ public class SimpleFileUploadService implements FileUploadService {
             .toAbsolutePath();
 
     try {
-      Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
-
+      storeAsync(fileName, file.getBytes(), space, uploadFilePath);
     } catch (IOException e) {
-      throw new FileStorageException("Failed to store file (" + fileName + ")!", e);
+      e.printStackTrace();
     }
-
-    storeRefToNewDocument(space, uploadFilePath);
 
     return fileName;
   }
 
   @Override
   @Async
-  public CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId) {
-    Space space = spaceRepository.findSpaceById(spaceId);
+  public CompletableFuture<String> storeAsync(String fileName, byte[] content, Space space, Path uploadFilePath) throws FileStorageException {
 
-    User user = space.getUser();
-    for (int i = 0; i < 10; i++) {
-      System.out.println(i + " " + content.length);
-    }
-
-    Path completeUserPath =
-        rootLocation.resolve(Paths.get(user.getUsername())).normalize().toAbsolutePath();
-
-    // check if folder already exists
-    if (!Files.exists(completeUserPath)) {
-      try {
-        Files.createDirectories(completeUserPath);
-      } catch (IOException e) {
-        throw new FileStorageException(
-            "Failed to create separate folder for user: " + user.getUsername());
-      }
-    }
-
-    if (content.length == 0) {
-      throw new FileStorageException("Uploaded file (" + fileName + ") is empty!");
-    }
-
-    if (StringUtils.uriDecode(fileName, StandardCharsets.UTF_8).contains("../")) {
-      throw new FileStorageException("File name contains illegal char sequence \"../\"");
-    }
-
-    Path uploadFilePath =
-        this.rootLocation
-            .resolve(user.getUsername())
-            .resolve(Paths.get(fileName))
-            .normalize()
-            .toAbsolutePath();
     try {
-      // Files.copy(file.getInputStream(), uploadFilePath, StandardCopyOption.REPLACE_EXISTING);
       Files.write(uploadFilePath, content);
 
     } catch (IOException e) {
@@ -265,7 +215,14 @@ public class SimpleFileUploadService implements FileUploadService {
     }
 
     try {
-      Files.delete(filePath);
+      if (!Files.deleteIfExists(filePath)) {
+        throw new FileStorageException(
+            "File '"
+                + fileName
+                + "' on the path ("
+                + filePath.toAbsolutePath().toString()
+                + ") does not exist!");
+      }
       logger.info(
           "File '"
               + fileName

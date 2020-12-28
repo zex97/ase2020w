@@ -2,6 +2,7 @@ package com.studyboard.rest;
 
 import com.studyboard.FileStorageProperties;
 import com.studyboard.dto.SpaceDTO;
+import com.studyboard.exception.FileStorageException;
 import com.studyboard.exception.StorageFileNotFoundException;
 import com.studyboard.service.FileUploadService;
 import io.swagger.annotations.ApiOperation;
@@ -35,8 +36,8 @@ public class FileUploadController {
       authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity handleFileUpload(
       @RequestParam("file") MultipartFile file, @PathVariable long space) throws IOException {
-    //fileUploaderService.store(file, space);
-    fileUploaderService.storeAsync(file.getOriginalFilename(), file.getBytes(), space);
+    fileUploaderService.store(file, space);
+    // fileUploaderService.storeAsync(file.getOriginalFilename(), file.getBytes(), space);
     return ResponseEntity.ok().build();
   }
 
@@ -68,6 +69,7 @@ public class FileUploadController {
   public ResponseEntity deleteUserUpload(
       @PathVariable(value = "fileName") String fileName,
       @PathVariable(value = "spaceId") long spaceId) {
+    System.out.println("DELETE");
     fileUploaderService.deleteUserFile(fileName, spaceId);
     return ResponseEntity.ok().build();
   }
@@ -85,6 +87,11 @@ public class FileUploadController {
 
   @ExceptionHandler(StorageFileNotFoundException.class)
   public ResponseEntity handleStorageException(StorageFileNotFoundException e) {
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.notFound().build();
+  }
+
+  @ExceptionHandler(FileStorageException.class)
+  public ResponseEntity handleStorageException(FileStorageException e) {
+    return ResponseEntity.unprocessableEntity().body(e.getMessage());
   }
 }
