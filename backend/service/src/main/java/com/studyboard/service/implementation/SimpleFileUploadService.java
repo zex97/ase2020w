@@ -77,7 +77,7 @@ public class SimpleFileUploadService implements FileUploadService {
 
     // create folder path for each individual user
     User user = space.getUser();
-    Path completeUserPath =
+    /*Path completeUserPath =
         rootLocation
             .resolve(Paths.get(user.getUsername()))
             .resolve(Paths.get(space.getName()))
@@ -90,7 +90,7 @@ public class SimpleFileUploadService implements FileUploadService {
             .resolve(space.getName())
             .resolve(Paths.get(file.getOriginalFilename()))
             .normalize()
-            .toAbsolutePath();
+            .toAbsolutePath();*/
 
     /*try {
       //storeAsync(fileName, file.getBytes(), space, uploadFilePath);
@@ -103,8 +103,7 @@ public class SimpleFileUploadService implements FileUploadService {
 
   @Override
   @Async
-  public CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId) throws FileStorageException {
-    System.out.println(">>>" + Thread.currentThread().getName());
+  public CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId) {
     Space space = spaceRepository.findSpaceById(spaceId);
 
     Path uploadFilePath =
@@ -136,7 +135,6 @@ public class SimpleFileUploadService implements FileUploadService {
   }
 
   private void storeRefToNewDocument(Space space, Path path) {
-
     Document document = null;
     for (Document d : space.getDocuments()) {
       if (d.getFilePath().equals(path.toAbsolutePath().toString())) {

@@ -40,10 +40,8 @@ public class FileUploadController {
       authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity handleFileUpload(
       @RequestParam("file") MultipartFile file, @PathVariable long space) throws IOException {
-    System.out.println(">" + Thread.currentThread().getName());
     fileValidator.validateFile(file);
-    fileUploaderService.storeAsync(file.getName(), file.getBytes(), space);
-    // fileUploaderService.storeAsync(file.getOriginalFilename(), file.getBytes(), space);
+    fileUploaderService.storeAsync(file.getOriginalFilename(), file.getBytes(), space);
     return ResponseEntity.ok().build();
   }
 
