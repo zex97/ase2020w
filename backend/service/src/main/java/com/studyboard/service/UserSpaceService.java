@@ -43,7 +43,7 @@ public interface UserSpaceService {
      * @param spaceId id of the space
      * @return list of documents that belong to space with id @param spaceId
      */
-    List<Document> geAllDocumentsFromSpace(long spaceId);
+    List<Document> getAllDocumentsFromSpace(long spaceId);
 
     /**
      * Adds a single document to a space

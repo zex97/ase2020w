@@ -67,7 +67,7 @@ public class UserSpaceController {
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
     public List<DocumentDTO> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        return service.geAllDocumentsFromSpace(spaceId).stream()
+        return service.getAllDocumentsFromSpace(spaceId).stream()
                 .map(DocumentDTO::DocumentDTOFromDocument)
                 .collect(Collectors.toList());
     }
