@@ -31,6 +31,7 @@ export class DocumentSpaceComponent implements OnInit {
   currentSpace: Space;
   selectSpace: Space;
   isLeftVisible = true;
+  allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
 
   @ViewChild('documentComponent') documentComponent;
 
@@ -128,6 +129,13 @@ export class DocumentSpaceComponent implements OnInit {
         console.log(file.size);
         this.fileUploadModuleError = true;
         this.fileUploadModuleErrorMessage = 'File \'' + file.name + '\' size exceeds maximum size of 20MB';
+      }
+      console.log(file.name.substr(file.name.lastIndexOf('.')));
+      if (this.allowedFileTypes.indexOf(file.name.substr(file.name.lastIndexOf('.'))) === -1 && !this.fileUploadModuleError) {
+        this.fileUploadModuleError = true;
+        this.fileUploadModuleErrorMessage = 'File type ' +
+          file.name.substr(file.name.lastIndexOf('.')) + ' of file \'' +
+          file.name + '\' is not supported by the application';
       }
     }
   }
