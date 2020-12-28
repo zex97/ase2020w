@@ -179,8 +179,21 @@ public class SimpleFlashcardService implements FlashcardService {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         storedFlashcard.setQuestion(flashcard.getQuestion());
         storedFlashcard.setAnswer(flashcard.getAnswer());
+        List<Document> storedReferences = storedFlashcard.getDocumentReferences();
+        for(Document document : flashcard.getDocumentReferences()) {
+            if(!storedReferences.contains(document)) {
+                addReference(flashcard.getId(), document.getId());
+            }
+        }
+        for(Document document : storedFlashcard.getDocumentReferences()) {
+            if(!flashcard.getDocumentReferences().contains(document)) {
+                removeReference(flashcard.getId(), document.getId());
+            }
+        }
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
-        return flashcardRepository.save(storedFlashcard);
+        Flashcard editedFlashcard = flashcardRepository.save(storedFlashcard);
+        editedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
+        return editedFlashcard;
     }
 
     @Override

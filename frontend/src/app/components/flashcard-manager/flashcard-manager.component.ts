@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
@@ -23,7 +23,9 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class FlashcardManagerComponent implements OnInit {
 
   deckForm: FormGroup;
+  deckEditForm: FormGroup;
   flashcardForm: FormGroup;
+  flashcardEditForm: FormGroup;
   revisionSizeForm: FormGroup;
   error: boolean = false;
   errorMessage: string = '';
@@ -44,10 +46,11 @@ export class FlashcardManagerComponent implements OnInit {
   private unassignedDecks: Deck[] = [];
   private spaces: Space[];
   documents: Map<number, Document[]> = new Map<number, Document[]>();
-  private selectedDocuments: number[];
+  selectedDocuments: number[];
   revisionFlashcards: Flashcard[];
   dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
+  editRef: boolean = false;
   confidenceError: boolean = false;
   optionError: boolean = false;
   currentRate = 0;
@@ -63,6 +66,12 @@ export class FlashcardManagerComponent implements OnInit {
         Validators.minLength(1)
       ]]
     });
+    this.deckEditForm = this.formBuilder.group({
+          title: ['', [
+            Validators.required,
+            Validators.minLength(1)
+          ]]
+        });
     this.flashcardForm = this.formBuilder.group({
       question: ['', [
         Validators.required,
@@ -73,6 +82,16 @@ export class FlashcardManagerComponent implements OnInit {
         Validators.minLength(1)
       ]]
     });
+     this.flashcardEditForm = this.formBuilder.group({
+          question: ['', [
+            Validators.required,
+            Validators.minLength(1)
+          ]],
+          answer: ['', [
+            Validators.required,
+            Validators.minLength(1)
+          ]]
+        });
     this.revisionSizeForm = this.formBuilder.group({
       revisionSize: [1]
     });
@@ -86,9 +105,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Get a list of all decks belonging to the logged-in user from backend
    */
   loadAllDecks() {
-    this.deckForm.patchValue({
-           title: ""
-    });
+    this.resetDeckForm();
     this.resetFlashcardForm();
     this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
       (decksList: Deck[]) => {
@@ -181,7 +198,7 @@ export class FlashcardManagerComponent implements OnInit {
                  this.defaultErrorHandling(error);
                }
        );
-    this.deckForm.patchValue({
+    this.deckEditForm.patchValue({
       title: deck.name
     });
   }
@@ -198,6 +215,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.resetDecks();
     this.loadAllSpaces();
     this.resetFlashcardForm();
+    this.selectedDocuments = [];
   }
 
   loadAllSpaces() {
@@ -507,7 +525,22 @@ export class FlashcardManagerComponent implements OnInit {
       } else {
         this.selectedDocuments = [select];
       }
-    }
+   }
+
+   editReferences(flashcard: Flashcard) {
+      flashcard.documentReferences = this.getReferences();
+      console.log(flashcard.documentReferences);
+      this.flashcardService.editFlashcard(flashcard).subscribe(
+            () => {
+                   this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
+                   this.loadDeckDetails(this.selectedDeck);
+                   },
+                   error => {
+                     this.error = true;
+                     this.errorMessage = 'Could not edit the flashcard references!';
+                     this.openSnackbar(this.errorMessage, 'warning-snackbar');
+      });
+   }
 
   resetDecks() {
     this.selectedDecks = [];
@@ -516,9 +549,15 @@ export class FlashcardManagerComponent implements OnInit {
 
   flashcardClicked(select: Flashcard, del: boolean) {
      console.log(select);
+     this.flashcardEditForm.patchValue({
+             question: select.question,
+             answer: select.answer
+      });
      this.selectedFlashcard = select;
      this.showFlashcardId = select.id;
      this.deleteFlash = del;
+     this.editRef = false;
+     this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
      this.currentRate = this.selectedFlashcard.confidenceLevel;
      console.log(this.showFlashcardId);
      //get all decks a flashcard belongs to
@@ -543,10 +582,6 @@ export class FlashcardManagerComponent implements OnInit {
           }
      );
      this.selectedDecks = undefined;
-     this.flashcardForm.patchValue({
-        question: select.question,
-        answer: select.answer
-     });
    }
 
    resetDeckForm() {

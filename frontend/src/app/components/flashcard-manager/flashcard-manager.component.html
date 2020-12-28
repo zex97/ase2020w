@@ -96,9 +96,9 @@
           <!--Select deck-->
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select at least one deck</mat-label>
-            <mat-select [(value)]="this.selectedDecksIds" class="select" multiple>
+            <mat-select class="select" multiple [(ngModel)]="this.selectedDecksIds" name="assignments">
               <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
-                          value="{{deck.id}}">
+                          [value]="deck.id">
                 {{deck.name}}
               </mat-option>
             </mat-select>
@@ -230,19 +230,19 @@
           <div class="modal-body">
             <form class="modal-input-form text-center border border-light p-5">
 
-              <mat-form-field [formGroup]="deckForm" appearance="outline" class="modal-input-full-width">
+              <mat-form-field [formGroup]="deckEditForm" appearance="outline" class="modal-input-full-width">
                 <mat-label class="modal-label">New deck title</mat-label>
                 <input formControlName="title" formGroupName="title"
                        id="editDeckTitle" matInput
                        placeholder="Title" required type="text">
-                <mat-hint *ngIf="deckForm.controls.title.errors" class="control-label invalid-input-text">
+                <mat-hint *ngIf="deckEditForm.controls.title.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
             </form>
           </div>
           <div class="modal-footer">
-            <button (click)="saveEdits(this.selectedDeck)" [disabled]="deckForm.controls.title.errors"
+            <button (click)="saveEdits(this.selectedDeck)" [disabled]="deckEditForm.controls.title.errors"
                     data-dismiss="modal" mat-button mat-dialog-actions
                     type="button">Save
             </button>
@@ -379,23 +379,23 @@
             <form class="modal-input-form text-center border border-light p-5">
 
               <!-- Question -->
-              <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
+              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width">
                 <mat-label class="modal-label">Edit question</mat-label>
                 <input formControlName="question" formGroupName="question"
                        id="editQuestion" matInput
                        placeholder="Your question" required type="text">
-                <mat-hint *ngIf="flashcardForm.controls.question.errors" class="control-label invalid-input-text">
+                <mat-hint *ngIf="flashcardEditForm.controls.question.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
 
               <!--Answer-->
-              <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
+              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width">
                 <mat-label class="modal-label">Edit answer</mat-label>
                 <textarea formControlName="answer" formGroupName="answer"
                           id="editAnswer" matInput
                           placeholder="Your answer" required title="Answer"></textarea>
-                <mat-hint *ngIf="flashcardForm.controls.answer.errors" class="control-label invalid-input-text">
+                <mat-hint *ngIf="flashcardEditForm.controls.answer.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
@@ -403,7 +403,7 @@
           </div>
           <div class="modal-footer">
             <button (click)="saveFlashcardEdits(this.selectedFlashcard)"
-                    [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors"
+                    [disabled]="flashcardEditForm.controls.question.errors || flashcardEditForm.controls.answer.errors"
                     data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Save
@@ -529,16 +529,41 @@
           </div>
           <div class="modal-body">
 
-            <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
-            <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
+            <div class="flex-container-space-between">
+              <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
+              <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
+              <span *ngIf="!this.editRef" (click)="this.editRef=true; this.loadAllSpaces()" class="close" matTooltip="Edit references" style="margin-right:0px;"><mat-icon>edit</mat-icon></span>
+            </div>
             <ul *ngFor="let document of this.selectedFlashcard.documentReferences">
-              <li> <button data-dismiss="modal" mat-button type="button" (click)="this.loadFile(document);">{{document.name}}</button></li>
+              <li>
+                <button data-dismiss="modal" mat-button type="button" (click)="this.loadFile(document);">
+                  {{document.name}}
+                </button>
+              </li>
             </ul>
+
+            <form class="modal-input-form" *ngIf="this.editRef">
+
+              <h4>Edit references:</h4>
+            <mat-form-field appearance="outline" class="mat-select">
+              <mat-label>Select document references</mat-label>
+              <mat-select class="select" multiple  [(ngModel)]="this.selectedDocuments" name="refs">
+              <span *ngFor="let space of getSpaces()">
+                <p style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</p>
+                <mat-option (onSelectionChange)="updateReferenceList($event.source.value)" *ngFor="let document of this.documents.get(space.id)"
+                            [value]="document.id">
+                 {{document.name}}
+                </mat-option>
+              </span>
+              </mat-select>
+            </mat-form-field>
+
+            </form>
 
           </div>
           <div class="modal-footer">
-            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
-              Edit
+            <button *ngIf="this.editRef" (click)="editReferences(this.selectedFlashcard)" mat-button mat-dialog-actions type="button">
+              Save
             </button>
             <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close
