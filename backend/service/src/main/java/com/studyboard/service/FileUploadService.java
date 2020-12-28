@@ -32,11 +32,10 @@ public interface FileUploadService {
    *
    * @param fileName name of the file to be uploaded
    * @param content of the file in byte array format
-   * @param space to which file belongs
-   * @param uploadFilePath path on which the file is to be stored
+   * @param spaceId id of the space of the file
    * @return name of the file that was saved
    */
-  CompletableFuture<String> storeAsync(String fileName, byte[] content, Space space, Path uploadFilePath);
+  CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId);
 
   /**
    * Generates a path where the file is saved

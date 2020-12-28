@@ -67,16 +67,14 @@ public class SimpleFileUploadService implements FileUploadService {
     }
   }
 
+  /**
+   * Replaced with Async version below
+   */
   @Override
   public String store(MultipartFile file, long spaceId) {
     Space space = spaceRepository.findSpaceById(spaceId);
     String fileName = file.getOriginalFilename();
 
-    try {
-      fileValidator.validateFile(fileName, file.getBytes());
-    } catch (IOException e) {
-      throw new FileStorageException("Failed to read file '"+ fileName + "' content");
-    }
     // create folder path for each individual user
     User user = space.getUser();
     Path completeUserPath =
@@ -86,9 +84,6 @@ public class SimpleFileUploadService implements FileUploadService {
             .normalize()
             .toAbsolutePath();
 
-    // check if folder already exists
-    fileValidator.validatePath(completeUserPath);
-
     Path uploadFilePath =
         this.rootLocation
             .resolve(user.getUsername())
@@ -97,18 +92,28 @@ public class SimpleFileUploadService implements FileUploadService {
             .normalize()
             .toAbsolutePath();
 
-    try {
-      storeAsync(fileName, file.getBytes(), space, uploadFilePath);
+    /*try {
+      //storeAsync(fileName, file.getBytes(), space, uploadFilePath);
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
 
     return fileName;
   }
 
   @Override
   @Async
-  public CompletableFuture<String> storeAsync(String fileName, byte[] content, Space space, Path uploadFilePath) throws FileStorageException {
+  public CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId) throws FileStorageException {
+    System.out.println(">>>" + Thread.currentThread().getName());
+    Space space = spaceRepository.findSpaceById(spaceId);
+
+    Path uploadFilePath =
+            this.rootLocation
+                    .resolve(space.getUser().getUsername())
+                    .resolve(space.getName())
+                    .resolve(Paths.get(fileName))
+                    .normalize()
+                    .toAbsolutePath();
 
     try {
       Files.write(uploadFilePath, content);
@@ -117,6 +122,7 @@ public class SimpleFileUploadService implements FileUploadService {
       throw new FileStorageException("Failed to store file (" + fileName + ")!", e);
     }
 
+    // reference the document of the file
     storeRefToNewDocument(space, uploadFilePath);
 
     return CompletableFuture.completedFuture(fileName);

@@ -5,6 +5,7 @@ import com.studyboard.dto.SpaceDTO;
 import com.studyboard.exception.FileStorageException;
 import com.studyboard.exception.StorageFileNotFoundException;
 import com.studyboard.service.FileUploadService;
+import com.studyboard.validator.FileValidator;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class FileUploadController {
 
   @Autowired FileUploadService fileUploaderService;
 
+  @Autowired
+  FileValidator fileValidator;
+
   /** @param file accepts files up to 20MB (can be changed in application.properties) */
   @RequestMapping(
       value = "/single-file/{space}",
@@ -36,7 +40,9 @@ public class FileUploadController {
       authorizations = {@Authorization(value = "apiKey")})
   public ResponseEntity handleFileUpload(
       @RequestParam("file") MultipartFile file, @PathVariable long space) throws IOException {
-    fileUploaderService.store(file, space);
+    System.out.println(">" + Thread.currentThread().getName());
+    fileValidator.validateFile(file);
+    fileUploaderService.storeAsync(file.getName(), file.getBytes(), space);
     // fileUploaderService.storeAsync(file.getOriginalFilename(), file.getBytes(), space);
     return ResponseEntity.ok().build();
   }

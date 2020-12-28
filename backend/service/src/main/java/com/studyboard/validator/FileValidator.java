@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,14 @@ public class FileValidator {
   @Autowired
   public FileValidator(FileStorageProperties fileStorageProperties) {
     this.allowedTypes = fileStorageProperties.getFileTypes();
+  }
+
+  public void validateFile(MultipartFile file) {
+    try {
+      validateFile(file.getOriginalFilename(), file.getBytes());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void validateFile(String fileName, byte[] content) {
