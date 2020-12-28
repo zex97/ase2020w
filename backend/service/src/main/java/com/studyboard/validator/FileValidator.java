@@ -23,15 +23,16 @@ public class FileValidator {
   @Autowired
   public FileValidator(FileStorageProperties fileStorageProperties) {
     this.allowedTypes = fileStorageProperties.getFileTypes();
-    for (String s : allowedTypes) {
-      System.out.println("*************************************************************");
-      System.out.println("***************************** " + s + " ********************************");
-      System.out.println("*************************************************************");
-    }
   }
 
   public void validateFile(String fileName, byte[] content) {
+
+    if (fileName.isEmpty() || fileName.isBlank()) {
+      throw new FileStorageException("File name can't be empty");
+    }
+
     String type = fileName.substring(fileName.lastIndexOf('.'));
+
     if (!Arrays.asList(allowedTypes).contains(type)) {
       logger.warn("File type " + type + " not supported!");
       throw new FileStorageException(

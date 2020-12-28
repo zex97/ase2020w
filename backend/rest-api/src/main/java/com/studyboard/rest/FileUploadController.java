@@ -69,7 +69,6 @@ public class FileUploadController {
   public ResponseEntity deleteUserUpload(
       @PathVariable(value = "fileName") String fileName,
       @PathVariable(value = "spaceId") long spaceId) {
-    System.out.println("DELETE");
     fileUploaderService.deleteUserFile(fileName, spaceId);
     return ResponseEntity.ok().build();
   }
