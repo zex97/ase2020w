@@ -17,9 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service used to manage decks and flashcards. Performs decks and flashcards creation, getting, edit and deletion
@@ -116,7 +118,7 @@ public class SimpleFlashcardService implements FlashcardService {
         for(Document document : documents) {
             this.addReference(created.getId(), document.getId());
         }
-        created.setDocumentReferences(flashcard.getDocumentReferences());
+        //created.setDocumentReferences(flashcard.getDocumentReferences());
         return created;
     }
 
@@ -136,7 +138,7 @@ public class SimpleFlashcardService implements FlashcardService {
     }
     @Override
     public List<Long> getAssignments(long flashcardId) {
-        logger.info("Getting all decks flashcard " + flashcardId + "is assigned to.");
+        logger.info("Getting all decks flashcard " + flashcardId + " is assigned to.");
         return flashcardRepository.getAllAssignments(flashcardId);
     }
 
@@ -149,7 +151,7 @@ public class SimpleFlashcardService implements FlashcardService {
     @Override
     public void removeReference(long flashcardId, long documentId) {
         flashcardRepository.removeReference(flashcardId, documentId);
-        logger.info("Removing a reference to document " + documentId + "from flashcard " + flashcardId);
+        logger.info("Removing a reference to document " + documentId + " from flashcard " + flashcardId);
     }
 
     @Override
@@ -179,20 +181,20 @@ public class SimpleFlashcardService implements FlashcardService {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         storedFlashcard.setQuestion(flashcard.getQuestion());
         storedFlashcard.setAnswer(flashcard.getAnswer());
-        List<Document> storedReferences = storedFlashcard.getDocumentReferences();
-        for(Document document : flashcard.getDocumentReferences()) {
-            if(!storedReferences.contains(document)) {
-                addReference(flashcard.getId(), document.getId());
-            }
-        }
+        System.out.println("STORED REFSIZE: "+ storedFlashcard.getDocumentReferences().size());
         for(Document document : storedFlashcard.getDocumentReferences()) {
-            if(!flashcard.getDocumentReferences().contains(document)) {
-                removeReference(flashcard.getId(), document.getId());
-            }
+            System.out.println("REMOVING");
+            removeReference(storedFlashcard.getId(), document.getId());
         }
+        for(Document document : flashcard.getDocumentReferences()) {
+            System.out.println("ADDING");
+            addReference(storedFlashcard.getId(), document.getId());
+        }
+        storedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
         Flashcard editedFlashcard = flashcardRepository.save(storedFlashcard);
-        editedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
+        System.out.println("NEW SIZE:" + editedFlashcard.getDocumentReferences().size());
+        //editedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
         return editedFlashcard;
     }
 

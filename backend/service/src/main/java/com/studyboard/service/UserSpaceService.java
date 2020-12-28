@@ -1,6 +1,7 @@
 package com.studyboard.service;
 
 import com.studyboard.model.Document;
+import com.studyboard.model.Flashcard;
 import com.studyboard.model.Space;
 
 import java.util.List;
@@ -60,4 +61,11 @@ public interface UserSpaceService {
      * @param documentId id of the document that is deleted
      */
     void removeDocumentFromSpace(long spaceId, long documentId);
+
+    /**
+     * Edit a transcription as part of document entity
+     *
+     * @param document entity that needs to be edited
+     */
+    void editTranscription(Document document);
 }

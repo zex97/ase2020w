@@ -30,7 +30,6 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Autowired
     private DocumentRepository documentRepository;
 
-
     @Override
     public List<Space> getUserSpaces(String username) {
         logger.info("Getting all user spaces for user with username " + username);
@@ -87,6 +86,14 @@ public class SimpleUserSpaceService implements UserSpaceService {
         space.setDocuments(documents);
         logger.info("Remove document from space with name " + space.getName());
         spaceRepository.save(space);
+    }
+
+    @Override
+    public void editTranscription(Document document) {
+        Document storedDocument = documentRepository.findDocumentById(document.getId());
+        storedDocument.setTranscription(document.getTranscription());
+        logger.info("Edited the transcription of document " + storedDocument.getName());
+        documentRepository.save(storedDocument);
     }
 
     private Space findSpaceById(long spaceId) {

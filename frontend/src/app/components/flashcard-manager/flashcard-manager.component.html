@@ -96,7 +96,7 @@
           <!--Select deck-->
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select at least one deck</mat-label>
-            <mat-select class="select" multiple [(ngModel)]="this.selectedDecksIds" name="assignments">
+            <mat-select class="select" multiple>
               <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
                           [value]="deck.id">
                 {{deck.name}}
@@ -532,7 +532,7 @@
             <div class="flex-container-space-between">
               <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
               <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
-              <span *ngIf="!this.editRef" (click)="this.editRef=true; this.loadAllSpaces()" class="close" matTooltip="Edit references" style="margin-right:0px;"><mat-icon>edit</mat-icon></span>
+              <span *ngIf="!this.editRef" (click)="prepareEditRef()" class="close" matTooltip="Edit references" style="margin-right:0px;"><mat-icon>edit</mat-icon></span>
             </div>
             <ul *ngFor="let document of this.selectedFlashcard.documentReferences">
               <li>
@@ -547,7 +547,7 @@
               <h4>Edit references:</h4>
             <mat-form-field appearance="outline" class="mat-select">
               <mat-label>Select document references</mat-label>
-              <mat-select class="select" multiple  [(ngModel)]="this.selectedDocuments" name="refs">
+              <mat-select class="select" multiple>
               <span *ngFor="let space of getSpaces()">
                 <p style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</p>
                 <mat-option (onSelectionChange)="updateReferenceList($event.source.value)" *ngFor="let document of this.documents.get(space.id)"

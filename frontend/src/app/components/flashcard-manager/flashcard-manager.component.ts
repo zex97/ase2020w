@@ -47,6 +47,7 @@ export class FlashcardManagerComponent implements OnInit {
   private spaces: Space[];
   documents: Map<number, Document[]> = new Map<number, Document[]>();
   selectedDocuments: number[];
+  //docReferences: number[];
   revisionFlashcards: Flashcard[];
   dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
@@ -216,6 +217,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.loadAllSpaces();
     this.resetFlashcardForm();
     this.selectedDocuments = [];
+    this.selectedDecks = [];
   }
 
   loadAllSpaces() {
@@ -471,7 +473,7 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
    loadFile(document: Document) {
-      this.fileUploadService.getFile(document.space, document.name).subscribe(
+      this.fileUploadService.getFile(document.spaceDTO, document.name).subscribe(
         (res) => {
              let fileObject: Blob;
              let blobUrl: any;
@@ -527,12 +529,25 @@ export class FlashcardManagerComponent implements OnInit {
       }
    }
 
+   prepareEditRef() {
+      this.editRef=true;
+      this.loadAllSpaces();
+      //this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+      console.log("DOCUMENTS LIST")
+      console.log(this.selectedDocuments.length);
+   }
+
    editReferences(flashcard: Flashcard) {
       flashcard.documentReferences = this.getReferences();
+      console.log("EDIT!");
+      console.log(flashcard);
       console.log(flashcard.documentReferences);
       this.flashcardService.editFlashcard(flashcard).subscribe(
-            () => {
+            (updatedFlashcard: Flashcard) => {
                    this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
+                   this.selectedFlashcard = updatedFlashcard;
+                   this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+                   console.log("AFTER EDIT SIZE: " + this.selectedFlashcard.documentReferences.length);
                    this.loadDeckDetails(this.selectedDeck);
                    },
                    error => {
@@ -540,6 +555,7 @@ export class FlashcardManagerComponent implements OnInit {
                      this.errorMessage = 'Could not edit the flashcard references!';
                      this.openSnackbar(this.errorMessage, 'warning-snackbar');
       });
+      this.editRef = false;
    }
 
   resetDecks() {
@@ -557,7 +573,6 @@ export class FlashcardManagerComponent implements OnInit {
      this.showFlashcardId = select.id;
      this.deleteFlash = del;
      this.editRef = false;
-     this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
      this.currentRate = this.selectedFlashcard.confidenceLevel;
      console.log(this.showFlashcardId);
      //get all decks a flashcard belongs to

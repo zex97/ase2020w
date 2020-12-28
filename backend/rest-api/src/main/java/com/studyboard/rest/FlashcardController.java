@@ -178,10 +178,9 @@ public class FlashcardController {
             value =
                     "Edit a flashcard's question or answer.",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editFlashcard(
+    public FlashcardDTO editFlashcard(
             @RequestBody FlashcardDTO flashcardDTO) {
-        flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO());
-        return ResponseEntity.ok().build();
+        return FlashcardDTO.FlashcardDTOFromFlashcard(flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO()));
     }
 
     @RequestMapping(

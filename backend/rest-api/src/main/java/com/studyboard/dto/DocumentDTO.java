@@ -5,11 +5,12 @@ import com.studyboard.model.Document;
 import java.util.List;
 
 public class DocumentDTO {
+
     private long id;
     private boolean needsTranscription;
     private String transcription;
     private String name;
-    private SpaceDTO space;
+    private SpaceDTO spaceDTO;
     private String filePath;
     private List<FlashcardDTO> flashcards;
 
@@ -45,12 +46,12 @@ public class DocumentDTO {
         this.transcription = transcription;
     }
 
-    public SpaceDTO getSpace() {
-        return space;
+    public SpaceDTO getSpaceDTO() {
+        return spaceDTO;
     }
 
-    public void setSpace(SpaceDTO space) {
-        this.space = space;
+    public void setSpaceDTO(SpaceDTO spaceDTO) {
+        this.spaceDTO = spaceDTO;
     }
 
     public boolean isNeedsTranscription() {
@@ -75,7 +76,7 @@ public class DocumentDTO {
         document.setFilePath(this.filePath);
         document.setName(this.name);
         document.setTranscription(this.transcription);
-        document.setSpace(this.space.toSpace());
+        document.setSpace(this.spaceDTO.toSpace());
         return document;
     }
 
@@ -85,7 +86,7 @@ public class DocumentDTO {
         documentDTO.setFilePath(document.getFilePath());
         documentDTO.setName(document.getName());
         documentDTO.setTranscription(document.getTranscription());
-        documentDTO.setSpace(SpaceDTO.of(document.getSpace()));
+        documentDTO.setSpaceDTO(SpaceDTO.of(document.getSpace()));
         return documentDTO;
     }
 
@@ -95,8 +96,8 @@ public class DocumentDTO {
                 "id=" + id +
                 ", filePath='" + filePath + '\'' +
                 ", name='" + name + '\'' +
-                ", transcription=" + transcription +
-                ", space=" + space.toString() +
+                ", needsTranscription=" + transcription +
+                ", spaceDTO=" + spaceDTO.toString() +
                 '}';
     }
 }
