@@ -3,6 +3,7 @@ package com.studyboard.rest;
 import com.studyboard.dto.DeckDTO;
 import com.studyboard.dto.FlashcardDTO;
 import com.studyboard.exception.FlashcardConstraintException;
+import com.studyboard.model.Flashcard;
 import com.studyboard.service.FlashcardService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -116,17 +117,30 @@ public class FlashcardController {
 
     @RequestMapping(
             value = "/flashcard{flashcardId}/decks{deckIds}",
-            method = RequestMethod.GET,
+            method = RequestMethod.POST,
             produces = "application/json")
     @ApiOperation(
             value = "Assign a flashcard.",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity assingFlashcard(
-            @PathVariable(name = "flashcardId") long flashcardId,
-            @PathVariable(name = "deckIds") String deckIds) {
-        System.out.println("Assigning flashcard: " + flashcardId);
-        flashcardService.assignFlashcard(flashcardId, deckIds);
+    public ResponseEntity assignFlashcard(
+            @PathVariable(name = "deckIds") String deckIds,
+            @RequestBody FlashcardDTO flashcardDTO) {
+        System.out.println("Assigning flashcard: " + flashcardDTO.getId());
+        flashcardService.assignFlashcard(flashcardDTO.getId(), deckIds);
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/flashcard{flashcardId}/decks",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    @ApiOperation(
+            value = "Get all decks a flashcard belongs to.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<Long> getAssignments(
+            @PathVariable(name = "flashcardId") long flashcardId) {
+        System.out.println("Getting decks flashcard " + flashcardId + " is assigned to");
+        return flashcardService.getAssignments(flashcardId);
     }
 
     @RequestMapping(
@@ -164,10 +178,9 @@ public class FlashcardController {
             value =
                     "Edit a flashcard's question or answer.",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editFlashcard(
+    public FlashcardDTO editFlashcard(
             @RequestBody FlashcardDTO flashcardDTO) {
-        flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO());
-        return ResponseEntity.ok().build();
+        return FlashcardDTO.FlashcardDTOFromFlashcard(flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO()));
     }
 
     @RequestMapping(
