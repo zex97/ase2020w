@@ -118,7 +118,6 @@ public class SimpleFlashcardService implements FlashcardService {
         for(Document document : documents) {
             this.addReference(created.getId(), document.getId());
         }
-        //created.setDocumentReferences(flashcard.getDocumentReferences());
         return created;
     }
 
@@ -143,24 +142,6 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public void addReference(long flashcardId, long documentId) {
-        flashcardRepository.addReference(flashcardId, documentId);
-        logger.info("Adding a reference to document " + documentId + " to flashcard " + flashcardId);
-    }
-
-    @Override
-    public void removeReference(long flashcardId, long documentId) {
-        flashcardRepository.removeReference(flashcardId, documentId);
-        logger.info("Removing a reference to document " + documentId + " from flashcard " + flashcardId);
-    }
-
-    @Override
-    public List<Long> getReferences(long flashcardId) {
-        logger.info("Getting all document references of flashcard " + flashcardId);
-        return flashcardRepository.getAllReferences(flashcardId);
-    }
-
-    @Override
     public void deleteDeck(long deckId) {
         Deck deck = findDeckById(deckId);
         deckRepository.deleteById(deckId);
@@ -181,21 +162,25 @@ public class SimpleFlashcardService implements FlashcardService {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         storedFlashcard.setQuestion(flashcard.getQuestion());
         storedFlashcard.setAnswer(flashcard.getAnswer());
-        System.out.println("STORED REFSIZE: "+ storedFlashcard.getDocumentReferences().size());
         for(Document document : storedFlashcard.getDocumentReferences()) {
-            System.out.println("REMOVING");
             removeReference(storedFlashcard.getId(), document.getId());
         }
         for(Document document : flashcard.getDocumentReferences()) {
-            System.out.println("ADDING");
             addReference(storedFlashcard.getId(), document.getId());
         }
         storedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
-        Flashcard editedFlashcard = flashcardRepository.save(storedFlashcard);
-        System.out.println("NEW SIZE:" + editedFlashcard.getDocumentReferences().size());
-        //editedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
-        return editedFlashcard;
+        return flashcardRepository.save(storedFlashcard);
+    }
+
+    private void addReference(long flashcardId, long documentId) {
+        flashcardRepository.addReference(flashcardId, documentId);
+        logger.info("Adding a reference to document " + documentId + " to flashcard " + flashcardId);
+    }
+
+    private void removeReference(long flashcardId, long documentId) {
+        flashcardRepository.removeReference(flashcardId, documentId);
+        logger.info("Removing a reference to document " + documentId + " from flashcard " + flashcardId);
     }
 
     @Override

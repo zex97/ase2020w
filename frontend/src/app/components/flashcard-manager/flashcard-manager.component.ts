@@ -42,12 +42,12 @@ export class FlashcardManagerComponent implements OnInit {
   chosenOption: number;
   private decks: Deck[];
   private flashcards: Flashcard[];
-  private selectedDecks: number[];
+  selectedDecks: number[];
   private unassignedDecks: Deck[] = [];
   private spaces: Space[];
   documents: Map<number, Document[]> = new Map<number, Document[]>();
   selectedDocuments: number[];
-  //docReferences: number[];
+  existingRefs: number[];
   revisionFlashcards: Flashcard[];
   dueDateFlashcards: Flashcard[];
   deleteFlash: boolean = false;
@@ -81,7 +81,9 @@ export class FlashcardManagerComponent implements OnInit {
       answer: ['', [
         Validators.required,
         Validators.minLength(1)
-      ]]
+      ]],
+      selectDecks: [[]],
+      selectRefs: [[]]
     });
      this.flashcardEditForm = this.formBuilder.group({
           question: ['', [
@@ -153,7 +155,7 @@ export class FlashcardManagerComponent implements OnInit {
    */
   saveEdits(deck: Deck) {
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-             deck.name = this.deckForm.controls.title.value;
+             deck.name = this.deckEditForm.controls.title.value;
                  this.flashcardService.editDeck(deck).subscribe(
                       () => {
                              this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
@@ -211,15 +213,18 @@ export class FlashcardManagerComponent implements OnInit {
     return this.flashcards;
   }
 
-
+  /**
+  * Reset all values when creating a new flashcard
+  */
   prepareFlashcardCreation() {
     this.resetDecks();
     this.loadAllSpaces();
     this.resetFlashcardForm();
-    this.selectedDocuments = [];
-    this.selectedDecks = [];
   }
 
+  /**
+  * Get all spaces documents can be referenced from
+  */
   loadAllSpaces() {
       this.spaceService.getSpaces(localStorage.getItem('currentUser')).subscribe(
         (spaceList: Space[]) => {
@@ -234,22 +239,25 @@ export class FlashcardManagerComponent implements OnInit {
       );
     }
 
-    getSpaces() {
-      return this.spaces;
-    }
+  getSpaces() {
+    return this.spaces;
+  }
 
-    loadDocuments(space: Space) {
-      this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), space.id).subscribe(
-            (documentList: Document[]) => {
-              /*for(let i=0; i<documentList.length; i++) {
-                documentList[i].space = space;
-              }*/
-              this.documents.set(space.id, documentList);
-            },
-            error => {
-              this.defaultErrorHandling(error);
-            }
-          );
+ /**
+ * Load all documents from a space as possible references
+ */
+  loadDocuments(space: Space) {
+    this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), space.id).subscribe(
+          (documentList: Document[]) => {
+            /*for(let i=0; i<documentList.length; i++) {
+              documentList[i].space = space;
+            }*/
+            this.documents.set(space.id, documentList);
+          },
+          error => {
+            this.defaultErrorHandling(error);
+          }
+        );
     }
 
   /**
@@ -258,10 +266,8 @@ export class FlashcardManagerComponent implements OnInit {
   createFlashcard() {
        let documentReferences = this.getReferences();
        const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, documentReferences);
-       console.log(flashcard);
        this.flashcardService.createFlashcard(flashcard).subscribe(
                        (flashcardCreated: Flashcard) => {
-                              console.log(flashcardCreated);
                               this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
                               this.flashcardService.assignFlashcard(flashcardCreated, this.selectedDecks).subscribe(
                                                          () => {
@@ -285,9 +291,11 @@ export class FlashcardManagerComponent implements OnInit {
                               });
   }
 
+  /**
+  * Build a Document array, from options chosen in the dropdown menu
+  */
   getReferences() {
      let documentReferences = [];
-     console.log("L: " + this.selectedDocuments.length);
      for(let i=0; i< this.spaces.length; i++) {
         let documentObjects = this.documents.get(this.spaces[i].id);
         for(let j=0; j< documentObjects.length; j++) {
@@ -305,8 +313,8 @@ export class FlashcardManagerComponent implements OnInit {
    * Save changes to flashcard dto and sends an edition request.
    */
   saveFlashcardEdits(flashcard: Flashcard) {
-              let question = this.flashcardForm.controls.question.value;
-              let answer = this.flashcardForm.controls.answer.value;
+              let question = this.flashcardEditForm.controls.question.value;
+              let answer = this.flashcardEditForm.controls.answer.value;
               if(question != null && question != "") {
                 flashcard.question = question;
               }
@@ -401,7 +409,6 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a request to rate a specific flashcard.
    */
   rateFlashcard(flashcard: Flashcard, rate: number) {
-    console.log(flashcard);
     if (rate != null) {
       flashcard.confidenceLevel = rate;
     }
@@ -424,10 +431,16 @@ export class FlashcardManagerComponent implements OnInit {
       }
   }
 
+  /**
+  * Gets all decks a flashcard doesn't belongs to
+  */
   getUnassignedDecks() {
     return this.unassignedDecks;
   }
 
+  /**
+  * Assigns a flashcard to new decks
+  */
   copyFlashcard(flashcard: Flashcard) {
     this.flashcardService.assignFlashcard(flashcard, this.selectedDecks).subscribe(
           () => {
@@ -441,6 +454,9 @@ export class FlashcardManagerComponent implements OnInit {
           });
   }
 
+  /**
+    * Assigns a flashcard to new decks and removes the assignment from the current deck
+    */
   moveFlashcard(flashcard: Flashcard) {
     this.deleteFlashcard(flashcard.id, this.selectedDeck.id);
     this.copyFlashcard(flashcard);
@@ -450,7 +466,6 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a request to rate a specific flashcard while in revision mode.
    */
   rateFlashcardInRevision(flashcard: Flashcard, rate: number) {
-    console.log(flashcard);
     if (rate != null) {
       flashcard.confidenceLevel = rate;
     }
@@ -472,6 +487,9 @@ export class FlashcardManagerComponent implements OnInit {
     }
   }
 
+  /**
+  * Loads and opens the document that is referenced
+  */
    loadFile(document: Document) {
       this.fileUploadService.getFile(document.spaceDTO, document.name).subscribe(
         (res) => {
@@ -500,7 +518,9 @@ export class FlashcardManagerComponent implements OnInit {
       );
     }
 
-
+  /**
+  * Creates an array from items chosen in the dropdown (it's ids)
+  */
   updateDeckList(select : number){
     console.log("deck: " + select);
     if(this.selectedDecks != undefined) {
@@ -515,6 +535,9 @@ export class FlashcardManagerComponent implements OnInit {
     }
   }
 
+  /**
+    * Creates an array from items chosen in the dropdown (it's ids)
+    */
   updateReferenceList(select : number){
       console.log("document: " + select);
       if(this.selectedDocuments != undefined) {
@@ -533,21 +556,18 @@ export class FlashcardManagerComponent implements OnInit {
       this.editRef=true;
       this.loadAllSpaces();
       //this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
-      console.log("DOCUMENTS LIST")
-      console.log(this.selectedDocuments.length);
    }
 
+  /**
+  * Sends new references of a flashcard to backend
+  */
    editReferences(flashcard: Flashcard) {
       flashcard.documentReferences = this.getReferences();
-      console.log("EDIT!");
-      console.log(flashcard);
-      console.log(flashcard.documentReferences);
       this.flashcardService.editFlashcard(flashcard).subscribe(
             (updatedFlashcard: Flashcard) => {
                    this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
                    this.selectedFlashcard = updatedFlashcard;
                    this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
-                   console.log("AFTER EDIT SIZE: " + this.selectedFlashcard.documentReferences.length);
                    this.loadDeckDetails(this.selectedDeck);
                    },
                    error => {
@@ -559,7 +579,7 @@ export class FlashcardManagerComponent implements OnInit {
    }
 
   resetDecks() {
-    this.selectedDecks = [];
+    this.selectedDecks = undefined;
     this.resetFlashcardForm();
   }
 
@@ -574,7 +594,6 @@ export class FlashcardManagerComponent implements OnInit {
      this.deleteFlash = del;
      this.editRef = false;
      this.currentRate = this.selectedFlashcard.confidenceLevel;
-     console.log(this.showFlashcardId);
      //get all decks a flashcard belongs to
      this.flashcardService.getFlashcardAssignments(select.id).subscribe(
          (assignedDecks: number[]) => {

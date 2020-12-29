@@ -96,7 +96,7 @@ export class FlashcardService {
   }
 
   /**
-   * Change flashcard question or answer in the backend
+   * Change flashcard question, answer or references in the backend
    * @param flashcard to make changes to
    */
   editFlashcard(flashcard: Flashcard): Observable<Flashcard> {

@@ -18,7 +18,7 @@
             mat-stroked-button>
       Create a deck
     </button>
-    <button (click)="prepareFlashcardCreation();" class="pageTopBarButton" data-target=".create-flashcard-modal"
+    <button (click)="this.prepareFlashcardCreation();" class="pageTopBarButton" data-target=".create-flashcard-modal"
             data-toggle="modal"
             mat-stroked-button>
       Create a flashcard
@@ -71,10 +71,10 @@
         <h2 class="modal-title">Create a new flashcard</h2>
       </div>
       <div class="modal-body flashcardModalBody">
-        <form class="modal-input-form">
+        <form class="modal-input-form" [formGroup]="flashcardForm">
 
           <!-- Question -->
-          <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
+          <mat-form-field appearance="outline" class="modal-input-full-width">
             <mat-label class="modal-label">Question</mat-label>
             <input formControlName="question" formGroupName="question"
                    id="question" matInput
@@ -84,7 +84,7 @@
             </mat-hint>
           </mat-form-field>
           <!-- Answer -->
-          <mat-form-field [formGroup]="flashcardForm" appearance="outline" class="modal-input-full-width">
+          <mat-form-field appearance="outline" class="modal-input-full-width">
             <mat-label class="modal-label">Answer</mat-label>
             <textarea formControlName="answer" formGroupName="answer"
                       id="answer" matInput
@@ -96,9 +96,9 @@
           <!--Select deck-->
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select at least one deck</mat-label>
-            <mat-select class="select" multiple>
+            <mat-select formControlName="selectDecks" class="select" multiple>
               <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
-                          [value]="deck.id">
+                          value="{{deck.id}}">
                 {{deck.name}}
               </mat-option>
             </mat-select>
@@ -106,7 +106,7 @@
           <!--Add document references-->
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select document references</mat-label>
-            <mat-select class="select" multiple>
+            <mat-select formControlName="selectRefs" class="select" multiple>
               <span *ngFor="let space of getSpaces()">
                 <p style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</p>
                 <mat-option (onSelectionChange)="updateReferenceList($event.source.value)" *ngFor="let document of this.documents.get(space.id)"
@@ -357,7 +357,7 @@
                     [hidden]="this.chooseSize" mat-button mat-dialog-actions type="button">
               Rate
             </button>
-            <button (click)="this.chooseSize=true; loadFlashcards(this.selectedDeck)" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+            <button (click)="this.chooseSize=true; this.loadDeckDetails(this.selectedDeck)" data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close
             </button>
           </div>
@@ -544,7 +544,7 @@
 
             <form class="modal-input-form" *ngIf="this.editRef">
 
-              <h4>Edit references:</h4>
+              <h4>Choose references:</h4>
             <mat-form-field appearance="outline" class="mat-select">
               <mat-label>Select document references</mat-label>
               <mat-select class="select" multiple>
