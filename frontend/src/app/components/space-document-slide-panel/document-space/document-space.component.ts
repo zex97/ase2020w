@@ -130,8 +130,8 @@ export class DocumentSpaceComponent implements OnInit {
         this.fileUploadModuleError = true;
         this.fileUploadModuleErrorMessage = 'File \'' + file.name + '\' size exceeds maximum size of 20MB';
       }
-      console.log(file.name.substr(file.name.lastIndexOf('.')));
       if (this.allowedFileTypes.indexOf(file.name.substr(file.name.lastIndexOf('.'))) === -1 && !this.fileUploadModuleError) {
+        console.log(file.name.substr(file.name.lastIndexOf('.')));
         this.fileUploadModuleError = true;
         this.fileUploadModuleErrorMessage = 'File type ' +
           file.name.substr(file.name.lastIndexOf('.')) + ' of file \'' +

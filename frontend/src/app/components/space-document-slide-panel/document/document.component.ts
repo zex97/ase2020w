@@ -1,10 +1,9 @@
-import {Component, Input, OnChanges, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {SpaceService} from '../../../services/space.service';
 import {Document} from '../../../dtos/document';
 import {Space} from '../../../dtos/space';
 import {FileUploadService} from '../../../services/file-upload.service';
 import {DomSanitizer} from '@angular/platform-browser';
-import {Player} from '@vime/angular';
 import {saveAs} from 'file-saver';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
@@ -46,6 +45,7 @@ export class DocumentComponent implements OnInit, OnChanges {
    * */
   ngOnChanges() {
     // if selected space changes load the documents for the newly selected space
+    // console.log('loading all documents of space ' + this.space.name);
     this.loadAllDocuments(this.space.id);
   }
 
@@ -54,6 +54,7 @@ export class DocumentComponent implements OnInit, OnChanges {
     this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), spaceId).subscribe(
       (res) => {
         this.documentsOfSpace = res as Document[];
+        this.documentsOfSpace.sort((doc1, doc2) => doc1.name.localeCompare(doc2.name));
       },
       error => {
         this.defaultErrorHandling(error);
@@ -66,6 +67,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
   getAllDocuments() {
+    // console.log(this.documentsOfSpace.length);
     return this.documentsOfSpace;
   }
 
