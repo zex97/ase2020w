@@ -32,6 +32,16 @@ public class FlashcardController {
                 .collect(Collectors.toList());
     }
 
+    @RequestMapping(value = "/{username}/{searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(
+            value = "Get all decks containing the search parameter in the name.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<DeckDTO> findDecksByName(@PathVariable(name = "searchParam") String searchParam) {
+        return flashcardService.findDecksByName(searchParam).stream()
+                .map(DeckDTO::of)
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping(value = "/deck{deckId}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(
             value = "Get a deck with a specific id.",

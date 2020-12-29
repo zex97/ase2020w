@@ -45,6 +45,12 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
+    public List<Deck> findDecksByName(String searchParam) {
+        logger.info("Getting all decks containing " + searchParam + " in the name.");
+        return deckRepository.findByNameContaining(searchParam);
+    }
+
+    @Override
     public void createDeck(Deck deck) {
         deckRepository.save(deck);
         logger.info("Created new deck with name "

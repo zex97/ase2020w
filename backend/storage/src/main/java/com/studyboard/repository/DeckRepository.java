@@ -24,4 +24,12 @@ public interface DeckRepository extends CrudRepository<Deck, Long> {
      * @return deck object with specified id
      */
     Deck findDeckById(Long deckId);
+
+    /**
+     * Find all decks containing a part of the search parameter in their name
+     *
+     * @param searchParam - search parameter for finding a deck
+     * @return all decks which contain the parameter in their name
+     */
+    List<Deck> findByNameContaining(String searchParam);
 }
