@@ -5,6 +5,7 @@ import com.studyboard.exception.FlashcardConstraintException;
 import com.studyboard.exception.FlashcardDoesNotExist;
 import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.model.Deck;
+import com.studyboard.model.Document;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
 import com.studyboard.repository.DeckRepository;
@@ -16,9 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service used to manage decks and flashcards. Performs decks and flashcards creation, getting, edit and deletion
@@ -109,8 +112,13 @@ public class SimpleFlashcardService implements FlashcardService {
         flashcard.setCorrectnessStreak(0);
         flashcard.setInterval(0);
         flashcard.setNextDueDate(LocalDateTime.now());
+        List<Document> documents = flashcard.getDocumentReferences();
         logger.info("Created new flashcard with question " + flashcard.getQuestion());
-        return flashcardRepository.save(flashcard);
+        Flashcard created = flashcardRepository.save(flashcard);
+        for(Document document : documents) {
+            this.addReference(created.getId(), document.getId());
+        }
+        return created;
     }
 
     @Override
@@ -127,7 +135,11 @@ public class SimpleFlashcardService implements FlashcardService {
             }
         }
     }
-
+    @Override
+    public List<Long> getAssignments(long flashcardId) {
+        logger.info("Getting all decks flashcard " + flashcardId + " is assigned to.");
+        return flashcardRepository.getAllAssignments(flashcardId);
+    }
 
     @Override
     public void deleteDeck(long deckId) {
@@ -150,8 +162,25 @@ public class SimpleFlashcardService implements FlashcardService {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         storedFlashcard.setQuestion(flashcard.getQuestion());
         storedFlashcard.setAnswer(flashcard.getAnswer());
+        for(Document document : storedFlashcard.getDocumentReferences()) {
+            removeReference(storedFlashcard.getId(), document.getId());
+        }
+        for(Document document : flashcard.getDocumentReferences()) {
+            addReference(storedFlashcard.getId(), document.getId());
+        }
+        storedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
         return flashcardRepository.save(storedFlashcard);
+    }
+
+    private void addReference(long flashcardId, long documentId) {
+        flashcardRepository.addReference(flashcardId, documentId);
+        logger.info("Adding a reference to document " + documentId + " to flashcard " + flashcardId);
+    }
+
+    private void removeReference(long flashcardId, long documentId) {
+        flashcardRepository.removeReference(flashcardId, documentId);
+        logger.info("Removing a reference to document " + documentId + " from flashcard " + flashcardId);
     }
 
     @Override

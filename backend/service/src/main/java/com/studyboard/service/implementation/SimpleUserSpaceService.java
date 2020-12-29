@@ -1,6 +1,5 @@
 package com.studyboard.service.implementation;
 
-import com.studyboard.model.Flashcard;
 import com.studyboard.repository.DocumentRepository;
 import com.studyboard.service.UserSpaceService;
 import com.studyboard.exception.SpaceDoesNotExist;
@@ -46,6 +45,11 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public void removeSpace(long spaceId) {
         Space space = spaceRepository.findSpaceById(spaceId);
+        List<Document> documents = getAllDocumentsFromSpace(spaceId);
+        for(Document document: documents) {
+            removeDocumentFromSpace(spaceId, document.getId());
+            documentRepository.deleteById(document.getId());
+        }
         logger.info("Delete space with name " + space.getName());
         spaceRepository.deleteById(spaceId);
     }
@@ -61,7 +65,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     @Override
-    public List<Document> geAllDocumentsFromSpace(long spaceId) {
+    public List<Document> getAllDocumentsFromSpace(long spaceId) {
         Space space = findSpaceById(spaceId);
         logger.info("Getting all documents of space with name " + space.getName());
         return space.getDocuments();

@@ -1,9 +1,7 @@
 package com.studyboard.rest;
 
 import com.studyboard.dto.DocumentDTO;
-import com.studyboard.dto.FlashcardDTO;
 import com.studyboard.dto.SpaceDTO;
-import com.studyboard.model.Document;
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -67,9 +65,11 @@ public class UserSpaceController {
             method = RequestMethod.GET,
             produces = "application/json")
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
-    public List<Document> getAllDocuments(
+    public List<DocumentDTO> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        return service.geAllDocumentsFromSpace(spaceId);
+        return service.getAllDocumentsFromSpace(spaceId).stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(
