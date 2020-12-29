@@ -469,7 +469,7 @@ export class FlashcardManagerComponent implements OnInit {
     if (rate != null) {
       flashcard.confidenceLevel = rate;
     }
-    if (this.currentRate < 1 || this.currentRate > 5) {
+    if (rate < 1 || rate > 5) {
       this.error = true;
       this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
       this.openSnackbar(this.errorMessage, 'warning-snackbar');
