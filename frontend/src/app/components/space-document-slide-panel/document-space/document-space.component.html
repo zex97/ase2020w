@@ -128,7 +128,7 @@
         <button (click)="uploadFiles(currentSpace)" *ngIf="filesReadyForUpload()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
-        <button (click)="clearInputFiles();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="clearInputFiles();toggleSlide(); resetModalWarning()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>
