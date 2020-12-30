@@ -99,19 +99,19 @@ public interface FlashcardService {
     List<Long> getAssignments(long flashcardId);
 
     /**
+     * Remove a single flashcard from a deck
+     *
+     * @param deckId      of the deck in which flashcard is
+     * @param flashcardId of the flashcard that should be removed
+     */
+    void removeAssignment(long deckId, long flashcardId);
+
+    /**
      * Delete a single deck with all of its flashcards
      *
      * @param deckId of the deck that should be deleted
      */
     void deleteDeck(long deckId);
-
-    /**
-     * Delete a single flashcard
-     *
-     * @param deckId      of the deck in which flashcard is
-     * @param flashcardId of the flashcard that should be deleted
-     */
-    void deleteFlashcard(long deckId, long flashcardId);
 
     /**
      * Edit a single flashcard in the deck

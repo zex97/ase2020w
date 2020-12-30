@@ -118,18 +118,32 @@ public class SimpleFlashcardService implements FlashcardService {
         flashcard.setCorrectnessStreak(0);
         flashcard.setInterval(0);
         flashcard.setNextDueDate(LocalDateTime.now());
+        List<Deck> decks = flashcard.getDecks();
         List<Document> documents = flashcard.getDocumentReferences();
-        logger.info("Created new flashcard with question " + flashcard.getQuestion());
         Flashcard created = flashcardRepository.save(flashcard);
+        logger.info("Created new flashcard with question " + flashcard.getQuestion());
+        for(Deck deck : decks) {
+            this.assignFlashcard(deck.getId(), created.getId());
+        }
         for(Document document : documents) {
             this.addReference(created.getId(), document.getId());
         }
+        //created.setDecks(decks);
+        //created.setDocumentReferences(documents);
         return created;
+    }
+
+    public void assignFlashcard(long deckId, long flashcardId) {
+        flashcardRepository.assignFlashcard(deckId, flashcardId);
+        logger.info("Assigning flashcard " + flashcardId + " to deck" + deckId);
+        Deck deck = findDeckById(deckId);
+        deck.setSize(deck.getSize() + 1);
+        deckRepository.save(deck);
     }
 
     @Override
     public void assignFlashcard(long flashcardId, String decks) {
-        String[] deckIds = decks.split("-");
+        String[] deckIds = decks.split("#deck#");
         for (int i = 0; i < deckIds.length; i++) {
             if (!deckIds[i].equals("")) {
                 long id = Long.parseLong(deckIds[i]);
@@ -141,6 +155,16 @@ public class SimpleFlashcardService implements FlashcardService {
             }
         }
     }
+
+    @Override
+    public void removeAssignment(long deckId, long flashcardId) {
+        flashcardRepository.removeAssignment(deckId, flashcardId);
+        logger.info("Removing assignment for flashcard " + flashcardId + " from deck" + deckId);
+        Deck deck = findDeckById(deckId);
+        deck.setSize(deck.getSize() - 1);
+        deckRepository.save(deck);
+    }
+
     @Override
     public List<Long> getAssignments(long flashcardId) {
         logger.info("Getting all decks flashcard " + flashcardId + " is assigned to.");
@@ -155,38 +179,35 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public void deleteFlashcard(long deckId, long flashcardId) {
-        flashcardRepository.removeAssignment(deckId, flashcardId);
-        logger.info("Removing assignment for flashcard " + flashcardId + " from deck" + deckId);
-        Deck deck = findDeckById(deckId);
-        deck.setSize(deck.getSize() - 1);
-        deckRepository.save(deck);
-    }
-
-    @Override
     public Flashcard editFlashcard(Flashcard flashcard) {
         Flashcard storedFlashcard = getOneFlashcard(flashcard.getId());
         storedFlashcard.setQuestion(flashcard.getQuestion());
         storedFlashcard.setAnswer(flashcard.getAnswer());
+        for(Deck deck : storedFlashcard.getDecks()) {
+            removeAssignment(deck.getId(), storedFlashcard.getId());
+        }
+        for(Deck deck  : flashcard.getDecks()) {
+            assignFlashcard(deck.getId(), storedFlashcard.getId());
+        }
         for(Document document : storedFlashcard.getDocumentReferences()) {
             removeReference(storedFlashcard.getId(), document.getId());
         }
         for(Document document : flashcard.getDocumentReferences()) {
             addReference(storedFlashcard.getId(), document.getId());
         }
-        storedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
+        //storedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
         return flashcardRepository.save(storedFlashcard);
     }
 
     private void addReference(long flashcardId, long documentId) {
-        flashcardRepository.addReference(flashcardId, documentId);
         logger.info("Adding a reference to document " + documentId + " for flashcard " + flashcardId);
+        flashcardRepository.addReference(flashcardId, documentId);
     }
 
     private void removeReference(long flashcardId, long documentId) {
-        flashcardRepository.removeReference(flashcardId, documentId);
         logger.info("Removing a reference to document " + documentId + " from flashcard " + flashcardId);
+        flashcardRepository.removeReference(flashcardId, documentId);
     }
 
     @Override
