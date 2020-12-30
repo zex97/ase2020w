@@ -5,13 +5,10 @@ import com.studyboard.exception.FileStorageException;
 import com.studyboard.exception.StorageFileNotFoundException;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
-import com.studyboard.model.User;
 import com.studyboard.repository.DocumentRepository;
 import com.studyboard.repository.SpaceRepository;
-import com.studyboard.repository.UserRepository;
 import com.studyboard.service.FileUploadService;
 import com.studyboard.service.TranscriptionService;
-import com.studyboard.validator.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +17,13 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -37,68 +33,22 @@ import java.util.concurrent.CompletableFuture;
 public class SimpleFileUploadService implements FileUploadService {
 
   private final Logger logger = LoggerFactory.getLogger(SimpleFileUploadService.class);
-  private final Path rootLocation;
-  private final SpaceRepository spaceRepository;
-  private final DocumentRepository documentRepository;
-  private final TranscriptionService transcriptionService;
-  private final FileValidator fileValidator;
+  private Path rootLocation;
 
-  @Autowired
-  public SimpleFileUploadService(
-      FileStorageProperties fileStorageProperties,
-      UserRepository userRepository,
-      SpaceRepository spaceRepository,
-      DocumentRepository documentRepository,
-      TranscriptionService transcriptionService) {
-    this.rootLocation = Paths.get(fileStorageProperties.getLocation());
-    this.spaceRepository = spaceRepository;
-    this.documentRepository = documentRepository;
-    this.transcriptionService = transcriptionService;
-    this.fileValidator = new FileValidator(fileStorageProperties);
-  }
+  @Autowired private SpaceRepository spaceRepository;
+  @Autowired private DocumentRepository documentRepository;
+  @Autowired private TranscriptionService transcriptionService;
+  @Autowired private FileStorageProperties fileStorageProperties;
 
   @Override
   @PostConstruct
   public void init() {
+    this.rootLocation = Paths.get(fileStorageProperties.getLocation());
     try {
       Files.createDirectories(rootLocation);
     } catch (IOException e) {
       throw new FileStorageException("Unable to initialize local storage");
     }
-  }
-
-  /**
-   * Replaced with Async version below
-   */
-  @Override
-  public String store(MultipartFile file, long spaceId) {
-    Space space = spaceRepository.findSpaceById(spaceId);
-    String fileName = file.getOriginalFilename();
-
-    // create folder path for each individual user
-    User user = space.getUser();
-    /*Path completeUserPath =
-        rootLocation
-            .resolve(Paths.get(user.getUsername()))
-            .resolve(Paths.get(space.getName()))
-            .normalize()
-            .toAbsolutePath();
-
-    Path uploadFilePath =
-        this.rootLocation
-            .resolve(user.getUsername())
-            .resolve(space.getName())
-            .resolve(Paths.get(file.getOriginalFilename()))
-            .normalize()
-            .toAbsolutePath();*/
-
-    /*try {
-      //storeAsync(fileName, file.getBytes(), space, uploadFilePath);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }*/
-
-    return fileName;
   }
 
   @Override
@@ -107,12 +57,12 @@ public class SimpleFileUploadService implements FileUploadService {
     Space space = spaceRepository.findSpaceById(spaceId);
 
     Path uploadFilePath =
-            this.rootLocation
-                    .resolve(space.getUser().getUsername())
-                    .resolve(space.getName())
-                    .resolve(Paths.get(fileName))
-                    .normalize()
-                    .toAbsolutePath();
+        this.rootLocation
+            .resolve(space.getUser().getUsername())
+            .resolve(space.getName())
+            .resolve(Paths.get(fileName))
+            .normalize()
+            .toAbsolutePath();
 
     try {
       Files.write(uploadFilePath, content);
@@ -194,7 +144,12 @@ public class SimpleFileUploadService implements FileUploadService {
       if (resource.exists() || resource.isReadable()) {
         return resource;
       } else {
-        logger.debug("Reading of file '" + fileName + "' stored on path " + filePath + " failed");
+        logger.debug(
+            "Reading of file '"
+                + fileName
+                + "' stored on path "
+                + filePath
+                + " failed, resource doesn't exist");
         throw new StorageFileNotFoundException(
             "File '" + fileName + "' could not be read, or doesn't exist");
       }
@@ -235,9 +190,6 @@ public class SimpleFileUploadService implements FileUploadService {
               + ") in space("
               + space.getName()
               + ").");
-    } catch (NoSuchFileException e) {
-      logger.debug("File '" + fileName + "' not in the directory");
-      throw new StorageFileNotFoundException("File '" + fileName + "' not in the directory");
     } catch (IOException e) {
       throw new FileStorageException("Failed to delete file '" + fileName + "'");
     }

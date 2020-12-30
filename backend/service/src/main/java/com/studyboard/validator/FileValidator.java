@@ -22,9 +22,7 @@ public class FileValidator {
   private String[] allowedTypes;
 
   @Autowired
-  public FileValidator(FileStorageProperties fileStorageProperties) {
-    this.allowedTypes = fileStorageProperties.getFileTypes();
-  }
+  private FileStorageProperties fileStorageProperties;
 
   public void validateFile(MultipartFile file) {
     try {
@@ -35,19 +33,20 @@ public class FileValidator {
   }
 
   public void validateFile(String fileName, byte[] content) {
+    allowedTypes = fileStorageProperties.getFileTypes();
 
     if (fileName.isEmpty() || fileName.isBlank()) {
       throw new FileStorageException("File name can't be empty");
     }
 
     String type = fileName.substring(fileName.lastIndexOf('.'));
-
     if (!Arrays.asList(allowedTypes).contains(type)) {
       logger.warn("File type " + type + " not supported!");
       throw new FileStorageException(
           "Filetype " + type + " of file '" + fileName + "' is not supported by the application");
     }
     if (content.length == 0) {
+      logger.warn("File " + fileName + " can't be empty");
       throw new FileStorageException("Uploaded file (" + fileName + ") is empty!");
     }
 
@@ -57,7 +56,7 @@ public class FileValidator {
     }
   }
 
-  public void validatePath(Path path) throws FileStorageException {
+  public void validatePath(Path path) {
     // check if folder already exists
     if (!Files.exists(path)) {
       try {
