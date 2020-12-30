@@ -103,6 +103,9 @@
                 {{deck.name}}
               </mat-option>
             </mat-select>
+            <mat-hint *ngIf="selectedDecks == undefined" class="control-label invalid-input-text">
+              Can't be empty!
+            </mat-hint>
           </mat-form-field>
           <!--Add document references-->
           <mat-form-field appearance="outline" class="mat-select">
@@ -123,7 +126,7 @@
       </div>
       <div class="modal-footer">
         <button (click)="createFlashcard()"
-                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors"
+                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors || selectedDecks == undefined"
                 data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>

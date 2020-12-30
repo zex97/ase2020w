@@ -459,7 +459,7 @@ export class FlashcardManagerComponent implements OnInit {
   */
   copyFlashcard(flashcard: Flashcard) {
     let updatedDecks = this.getChosenDecks();
-    updatedDecks.push(this.selectedDeck);
+    updatedDecks.push(this.selectedDeck.id);
     flashcard.deckDTOs = updatedDecks;
     this.flashcardService.editFlashcard(flashcard).subscribe(
           () => {
@@ -594,10 +594,10 @@ export class FlashcardManagerComponent implements OnInit {
       flashcard.documentReferences = this.getReferences();
       this.flashcardService.editFlashcard(flashcard).subscribe(
             (updatedFlashcard: Flashcard) => {
+                  console.log(updatedFlashcard);
                    this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
                    this.selectedFlashcard = updatedFlashcard;
                    this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
-                   this.loadDeckDetails(this.selectedDeck);
                    },
                    error => {
                      this.error = true;

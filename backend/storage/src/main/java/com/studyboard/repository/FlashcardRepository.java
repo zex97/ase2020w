@@ -86,7 +86,7 @@ public interface FlashcardRepository extends CrudRepository<Flashcard, Long> {
      * @param documentId of the document the flashcard is referencing
      */
     @Modifying
-    @Query(value = "INSERT INTO flashcards_reference VALUES(:cardId, :documentId)", nativeQuery = true)
+    @Query(value = "INSERT INTO flashcards_reference VALUES(:documentId, :cardId)", nativeQuery = true)
     @Transactional
     void addReference(long cardId, long documentId);
 
