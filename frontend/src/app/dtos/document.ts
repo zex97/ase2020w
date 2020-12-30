@@ -5,7 +5,7 @@ export class Document {
               public needsTranscription: boolean,
               public transcription: string,
               public name: string,
-              public space: Space,
+              public spaceDTO: Space,
               public filePath: String) {
   }
 

@@ -1,10 +1,13 @@
 package com.studyboard.dto;
 
 
+import com.studyboard.model.Document;
 import com.studyboard.model.Flashcard;
 
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlashcardDTO {
 
@@ -13,6 +16,7 @@ public class FlashcardDTO {
     private String answer;
     private int confidenceLevel;
     private List<DeckDTO> deckDTOs;
+    private List<DocumentDTO> documentReferences;
 
     public Long getId() {
         return id;
@@ -54,6 +58,14 @@ public class FlashcardDTO {
         this.deckDTOs = deckDTOs;
     }
 
+    public List<DocumentDTO> getDocumentReferences() {
+        return documentReferences;
+    }
+
+    public void setDocumentReferences(List<DocumentDTO> documentReferences) {
+        this.documentReferences = documentReferences;
+    }
+
     public Flashcard FlashcardFromFlashcardDTO() {
         Flashcard flashcard = new Flashcard();
         flashcard.setId(this.id);
@@ -63,6 +75,9 @@ public class FlashcardDTO {
         /*flashcard.setDecks(this.deckDTOs.stream()
                     .map(DeckDTO::toDeck)
                     .collect(Collectors.toList()));*/
+        flashcard.setDocumentReferences(this.documentReferences.stream()
+                .map(DocumentDTO::DocumentFromDocumentDTO)
+                .collect(Collectors.toList()));
         return flashcard;
     }
 
@@ -75,6 +90,9 @@ public class FlashcardDTO {
         /*flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
                 .map(DeckDTO::of)
                 .collect(Collectors.toList()));*/
+        flashcardDTO.setDocumentReferences(flashcard.getDocumentReferences().stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
+                .collect(Collectors.toList()));
         return flashcardDTO;
     }
 
@@ -85,7 +103,7 @@ public class FlashcardDTO {
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 ", confidenceLevel=" + confidenceLevel +
+                ", documentReference size=" + documentReferences.size() +
                 '}';
     }
-
 }

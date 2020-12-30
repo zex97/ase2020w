@@ -25,6 +25,14 @@ public interface FlashcardService {
     Deck findDeckById(Long deckId);
 
     /**
+     * Find a deck containing the search parameter in the name
+     *
+     * @param searchParam to look for in the deck's name
+     * @return all decks containing searchParam in the name
+     */
+    List<Deck> findDecksByName(String searchParam);
+
+    /**
      * Create a single deck
      *
      * @param deck with all the necessary information about a deck
@@ -81,6 +89,14 @@ public interface FlashcardService {
      * @param decks       with the id's of decks flashcard is assigned to
      */
     void assignFlashcard(long flashcardId, String decks);
+
+    /**
+     * Get all decks a flashcard belongs to
+     *
+     * @param flashcardId of the card
+     * @return ids of decks card is assigned to
+     */
+    List<Long> getAssignments(long flashcardId);
 
     /**
      * Delete a single deck with all of its flashcards

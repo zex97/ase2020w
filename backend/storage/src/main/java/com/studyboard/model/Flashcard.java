@@ -40,6 +40,9 @@ public class Flashcard {
     @ManyToMany(mappedBy = "flashcards")
     private List<Deck> decks;
 
+    @ManyToMany(mappedBy = "flashcards")
+    private List<Document> documentReferences;
+
     public long getId() {
         return id;
     }
@@ -112,4 +115,11 @@ public class Flashcard {
         this.nextDueDate = nextDueDate;
     }
 
+    public List<Document> getDocumentReferences() {
+        return documentReferences;
+    }
+
+    public void setDocumentReferences(List<Document> documentReferences) {
+        this.documentReferences = documentReferences;
+    }
 }
