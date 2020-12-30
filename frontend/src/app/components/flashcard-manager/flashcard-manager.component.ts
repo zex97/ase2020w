@@ -82,7 +82,6 @@ export class FlashcardManagerComponent implements OnInit {
         Validators.required,
         Validators.minLength(1)
       ]],
-      selectDecks: [[]],
       selectRefs: [[]]
     });
      this.flashcardEditForm = this.formBuilder.group({
@@ -218,7 +217,11 @@ export class FlashcardManagerComponent implements OnInit {
   * Reset all values when creating a new flashcard
   */
   prepareFlashcardCreation() {
-    this.resetDecks();
+   if(this.selectedDeck == undefined) {
+       this.selectedDecksIds = undefined;
+    } else {
+      this.selectedDecks = [this.selectedDeck.id];
+    }
     this.loadAllSpaces();
     this.resetFlashcardForm();
   }
@@ -265,6 +268,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Builds a flashcard dto and sends a creation request.
    */
   createFlashcard() {
+        console.log(this.selectedDecks);
        let documentReferences = this.getReferences();
        const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, documentReferences);
        this.flashcardService.createFlashcard(flashcard).subscribe(
@@ -296,6 +300,9 @@ export class FlashcardManagerComponent implements OnInit {
   * Build a Document array, from options chosen in the dropdown menu
   */
   getReferences() {
+     if(this.selectedDocuments == undefined) {
+      return [];
+     }
      let documentReferences = [];
      for(let i=0; i< this.spaces.length; i++) {
         let documentObjects = this.documents.get(this.spaces[i].id);
@@ -540,7 +547,6 @@ export class FlashcardManagerComponent implements OnInit {
     * Creates an array from items chosen in the dropdown (it's ids)
     */
   updateReferenceList(select : number){
-      console.log("SELECTION CHANGE");
       console.log("document: " + select);
       if(this.selectedDocuments != undefined) {
         let index = this.selectedDocuments.indexOf(select);
@@ -581,10 +587,7 @@ export class FlashcardManagerComponent implements OnInit {
    }
 
   resetDecks() {
-    if(this.selectedDeck == undefined) {
-      this.selectedDecksIds = undefined;
-    }
-    this.resetFlashcardForm();
+
   }
 
   flashcardClicked(select: Flashcard, del: boolean) {
@@ -629,9 +632,7 @@ export class FlashcardManagerComponent implements OnInit {
    resetFlashcardForm() {
     this.flashcardForm.reset();
     if(this.selectedDeck != undefined) {
-      this.flashcardForm.patchValue({
-        selectDecks: [this.selectedDeck]
-      });
+      this.selectedDecksIds = [this.selectedDeck.id];
     }
    }
 
