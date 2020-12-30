@@ -173,6 +173,11 @@ export class DocumentSpaceComponent implements OnInit {
     return this.filesToUploadNames;
   }
 
+  resetModalWarning() {
+    this.fileUploadModuleError = false;
+    this.fileUploadModuleErrorMessage = '';
+  }
+
 
   /**
    * Iterate through the list of objects and send a post
