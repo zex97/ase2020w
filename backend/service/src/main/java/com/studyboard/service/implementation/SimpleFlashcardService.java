@@ -181,7 +181,7 @@ public class SimpleFlashcardService implements FlashcardService {
 
     private void addReference(long flashcardId, long documentId) {
         flashcardRepository.addReference(flashcardId, documentId);
-        logger.info("Adding a reference to document " + documentId + " to flashcard " + flashcardId);
+        logger.info("Adding a reference to document " + documentId + " for flashcard " + flashcardId);
     }
 
     private void removeReference(long flashcardId, long documentId) {

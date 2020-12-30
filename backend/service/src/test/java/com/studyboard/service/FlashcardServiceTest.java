@@ -139,6 +139,7 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setDecks(decks);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
         flashcardService.assignFlashcard(flashcard.getId(), response.getId() + "-");
 
@@ -236,6 +237,7 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -255,6 +257,7 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setConfidenceLevel(5);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -277,6 +280,7 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setConfidenceLevel(1);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -297,6 +301,7 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -321,6 +326,7 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -345,6 +351,7 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
