@@ -1,7 +1,8 @@
 package com.studyboard.dto;
 
-
 import com.studyboard.model.Document;
+
+import java.util.List;
 
 public class DocumentDTO {
 
@@ -11,6 +12,7 @@ public class DocumentDTO {
     private String name;
     private SpaceDTO spaceDTO;
     private String filePath;
+    private List<FlashcardDTO> flashcards;
 
     public long getId() {
         return id;
@@ -60,23 +62,29 @@ public class DocumentDTO {
         this.needsTranscription = needsTranscription;
     }
 
+    public List<FlashcardDTO> getFlashcards() {
+        return flashcards;
+    }
+
+    public void setFlashcards(List<FlashcardDTO> flashcards) {
+        this.flashcards = flashcards;
+    }
+
     public Document DocumentFromDocumentDTO() {
         Document document = new Document();
         document.setId(this.id);
-        document.setNeedsTranscription(this.needsTranscription);
-        document.setName(this.name);
         document.setFilePath(this.filePath);
+        document.setName(this.name);
         document.setTranscription(this.transcription);
         document.setSpace(this.spaceDTO.toSpace());
         return document;
     }
 
-    public DocumentDTO DocumentDTOFromDocument(Document document) {
+    public static DocumentDTO DocumentDTOFromDocument(Document document) {
         DocumentDTO documentDTO = new DocumentDTO();
         documentDTO.setId(document.getId());
-        documentDTO.setNeedsTranscription(document.isNeedsTranscription());
-        documentDTO.setName(document.getName());
         documentDTO.setFilePath(document.getFilePath());
+        documentDTO.setName(document.getName());
         documentDTO.setTranscription(document.getTranscription());
         documentDTO.setSpaceDTO(SpaceDTO.of(document.getSpace()));
         return documentDTO;
@@ -84,10 +92,12 @@ public class DocumentDTO {
 
     @Override
     public String toString() {
-        return "DocumentDTO{" +
+        return "documentDTO{" +
                 "id=" + id +
+                ", filePath='" + filePath + '\'' +
                 ", name='" + name + '\'' +
-                ", needsTranscription='" + needsTranscription + '\'' +
+                ", needsTranscription=" + transcription +
+                ", spaceDTO=" + spaceDTO.toString() +
                 '}';
     }
 }

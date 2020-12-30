@@ -239,7 +239,7 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
-          this.openSnackbar('Space ' + space.name + 'successfuly created!', 'success-snackbar');
+          this.openSnackbar('Space ' + space.name + ' successfuly created!', 'success-snackbar');
         },
         error => {
           this.defaultErrorHandling(error);

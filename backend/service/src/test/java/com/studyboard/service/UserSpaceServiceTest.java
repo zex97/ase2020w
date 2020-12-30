@@ -76,7 +76,7 @@ public class UserSpaceServiceTest {
 
         Mockito.when(spaceRepository.findSpaceById(SPACE_ID)).thenReturn(space);
 
-        List<Document> response = userSpaceService.geAllDocumentsFromSpace(SPACE_ID);
+        List<Document> response = userSpaceService.getAllDocumentsFromSpace(SPACE_ID);
         Document document1 = response.get(0);
         Document document2 = response.get(1);
 
@@ -91,7 +91,7 @@ public class UserSpaceServiceTest {
         final long SPACE_ID = 1;
 
         Assertions.assertThrows(SpaceDoesNotExist.class, () -> {
-            userSpaceService.geAllDocumentsFromSpace(SPACE_ID);
+            userSpaceService.getAllDocumentsFromSpace(SPACE_ID);
         });
     }
 
