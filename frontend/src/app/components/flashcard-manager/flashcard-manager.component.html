@@ -96,9 +96,9 @@
           <!--Select deck-->
           <mat-form-field appearance="outline" class="mat-select">
             <mat-label>Select at least one deck</mat-label>
-            <mat-select formControlName="selectDecks" class="select" multiple>
+            <mat-select [(value)]="selectedDecksIds" formControlName="selectDecks" class="select" multiple>
               <mat-option (onSelectionChange)="updateDeckList($event.source.value)" *ngFor="let deck of getDecks()"
-                          value="{{deck.id}}">
+                          [value]="deck.id">
                 {{deck.name}}
               </mat-option>
             </mat-select>
@@ -547,10 +547,10 @@
               <h4>Choose references:</h4>
             <mat-form-field appearance="outline" class="mat-select">
               <mat-label>Select document references</mat-label>
-              <mat-select class="select" multiple>
+              <mat-select materialize="material_select" [ngModel]="existingRefs" class="select" multiple [ngModelOptions]="{standalone: true}">
               <span *ngFor="let space of getSpaces()">
                 <p style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</p>
-                <mat-option (onSelectionChange)="updateReferenceList($event.source.value)" *ngFor="let document of this.documents.get(space.id)"
+                <mat-option (click)="updateReferenceList(document.id)" *ngFor="let document of this.documents.get(space.id)"
                             [value]="document.id">
                  {{document.name}}
                 </mat-option>
@@ -565,7 +565,7 @@
             <button *ngIf="this.editRef" (click)="editReferences(this.selectedFlashcard)" mat-button mat-dialog-actions type="button">
               Save
             </button>
-            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
+            <button (click)="this.loadAllSpaces();" data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close
             </button>
           </div>

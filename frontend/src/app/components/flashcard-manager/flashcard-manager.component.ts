@@ -204,6 +204,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.deckEditForm.patchValue({
       title: deck.name
     });
+    this.loadAllSpaces();
   }
 
   /**
@@ -539,6 +540,7 @@ export class FlashcardManagerComponent implements OnInit {
     * Creates an array from items chosen in the dropdown (it's ids)
     */
   updateReferenceList(select : number){
+      console.log("SELECTION CHANGE");
       console.log("document: " + select);
       if(this.selectedDocuments != undefined) {
         let index = this.selectedDocuments.indexOf(select);
@@ -554,8 +556,8 @@ export class FlashcardManagerComponent implements OnInit {
 
    prepareEditRef() {
       this.editRef=true;
-      this.loadAllSpaces();
-      //this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+      this.existingRefs = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+      this.selectedDocuments = this.existingRefs;
    }
 
   /**
@@ -579,7 +581,9 @@ export class FlashcardManagerComponent implements OnInit {
    }
 
   resetDecks() {
-    this.selectedDecks = undefined;
+    if(this.selectedDeck == undefined) {
+      this.selectedDecksIds = undefined;
+    }
     this.resetFlashcardForm();
   }
 
@@ -624,6 +628,11 @@ export class FlashcardManagerComponent implements OnInit {
 
    resetFlashcardForm() {
     this.flashcardForm.reset();
+    if(this.selectedDeck != undefined) {
+      this.flashcardForm.patchValue({
+        selectDecks: [this.selectedDeck]
+      });
+    }
    }
 
    resetRevisionSizeForm() {
@@ -634,10 +643,21 @@ export class FlashcardManagerComponent implements OnInit {
     this.optionError = false;
    }
 
+   checkSelection(compareId: number) {
+    if(this.selectedDeck == undefined) {
+      return false;
+    } else if(this.selectedDeck.id==compareId){
+      console.log(compareId);
+      return true;
+    }
+    return false;
+   }
+
    backToAll() {
      this.viewAll=true;
      this.resetDeckForm();
      this.loadAllDecks();
+     this.selectedDeck = undefined;
    }
 
   openSnackbar(message: string, type: string) {
