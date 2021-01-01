@@ -459,7 +459,7 @@ export class FlashcardManagerComponent implements OnInit {
   */
   copyFlashcard(flashcard: Flashcard) {
     let updatedDecks = this.getChosenDecks();
-    updatedDecks.push(this.selectedDeck.id);
+    updatedDecks.push(this.selectedDeck);
     flashcard.deckDTOs = updatedDecks;
     this.flashcardService.editFlashcard(flashcard).subscribe(
           () => {
