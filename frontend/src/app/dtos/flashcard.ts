@@ -7,6 +7,7 @@ export class Flashcard {
     public question: string,
     public answer: string,
     public confidenceLevel: number,
+    public deckDTOs: Deck[],
     public documentReferences: Document[]) {
   }
 }

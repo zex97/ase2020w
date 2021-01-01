@@ -127,7 +127,7 @@ public class FlashcardController {
 
     @RequestMapping(
             value = "/flashcard{flashcardId}/decks{deckIds}",
-            method = RequestMethod.POST,
+            method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
             value = "Assign a flashcard.",
@@ -176,7 +176,7 @@ public class FlashcardController {
     public ResponseEntity deleteFlashcard(
             @PathVariable(name = "deckId") long deckId,
             @PathVariable(name = "flashcardId") long flashcardId) {
-        flashcardService.deleteFlashcard(deckId, flashcardId);
+        flashcardService.removeAssignment(deckId, flashcardId);
         return ResponseEntity.ok().build();
     }
 

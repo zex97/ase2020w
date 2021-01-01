@@ -82,7 +82,6 @@ export class FlashcardManagerComponent implements OnInit {
         Validators.required,
         Validators.minLength(1)
       ]],
-      selectDecks: [[]],
       selectRefs: [[]]
     });
      this.flashcardEditForm = this.formBuilder.group({
@@ -204,6 +203,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.deckEditForm.patchValue({
       title: deck.name
     });
+    this.loadAllSpaces();
   }
 
   /**
@@ -217,7 +217,11 @@ export class FlashcardManagerComponent implements OnInit {
   * Reset all values when creating a new flashcard
   */
   prepareFlashcardCreation() {
-    this.resetDecks();
+   if(this.selectedDeck == undefined) {
+       this.selectedDecksIds = undefined;
+    } else {
+      this.selectedDecks = [this.selectedDeck.id];
+    }
     this.loadAllSpaces();
     this.resetFlashcardForm();
   }
@@ -264,24 +268,18 @@ export class FlashcardManagerComponent implements OnInit {
    * Builds a flashcard dto and sends a creation request.
    */
   createFlashcard() {
+       console.log(this.selectedDecks);
        let documentReferences = this.getReferences();
-       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, documentReferences);
+       let deckDTOs = this.getChosenDecks();
+       const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, deckDTOs, documentReferences);
        this.flashcardService.createFlashcard(flashcard).subscribe(
-                       (flashcardCreated: Flashcard) => {
-                              this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
-                              this.flashcardService.assignFlashcard(flashcardCreated, this.selectedDecks).subscribe(
-                                                         () => {
-                                                                  if(this.selectedDeck != undefined) {
-                                                                    this.loadDeckDetails(this.selectedDeck);
-                                                                  }
-                                                                  this.loadAllDecks();
-                                                               },
-                                                               error => {
-                                                                      this.error = true;
-                                                                      this.errorMessage = 'Could not assign the flashcard!';
-                                                                      this.openSnackbar(this.errorMessage, 'warning-snackbar');
-                                                               });
-
+                       (created: Flashcard) => {
+                                console.log(created);
+                                this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
+                                if(this.selectedDeck != undefined) {
+                                  this.loadDeckDetails(this.selectedDeck);
+                                }
+                                this.loadAllDecks();
                               },
                               error => {
                                 this.error = true;
@@ -291,10 +289,28 @@ export class FlashcardManagerComponent implements OnInit {
                               });
   }
 
+
+ getChosenDecks() {
+      let chosenDecks = [];
+      if(this.selectedDecks != undefined) {
+        for(let i=0; i< this.decks.length; i++) {
+             for(let j=0; j < this.selectedDecks.length; j++) {
+               if(this.decks[i].id == this.selectedDecks[j]) {
+                 chosenDecks.push(this.decks[i]);
+               }
+           }
+        }
+      }
+      return chosenDecks;
+   }
+
   /**
   * Build a Document array, from options chosen in the dropdown menu
   */
   getReferences() {
+     if(this.selectedDocuments == undefined) {
+      return [];
+     }
      let documentReferences = [];
      for(let i=0; i< this.spaces.length; i++) {
         let documentObjects = this.documents.get(this.spaces[i].id);
@@ -442,24 +458,37 @@ export class FlashcardManagerComponent implements OnInit {
   * Assigns a flashcard to new decks
   */
   copyFlashcard(flashcard: Flashcard) {
-    this.flashcardService.assignFlashcard(flashcard, this.selectedDecks).subscribe(
+    let updatedDecks = this.getChosenDecks();
+    updatedDecks.push(this.selectedDeck);
+    flashcard.deckDTOs = updatedDecks;
+    this.flashcardService.editFlashcard(flashcard).subscribe(
           () => {
-                this.openSnackbar('Flashcard successfully copied or moved', 'success-snackbar');
+                this.openSnackbar('Flashcard successfully copied', 'success-snackbar');
                 this.loadDeckDetails(this.selectedDeck);
           },
           error => {
                   this.error = true;
                   this.errorMessage = 'Could not copy the flashcard!';
                   this.openSnackbar(this.errorMessage, 'warning-snackbar');
-          });
+    });
   }
 
   /**
     * Assigns a flashcard to new decks and removes the assignment from the current deck
     */
   moveFlashcard(flashcard: Flashcard) {
-    this.deleteFlashcard(flashcard.id, this.selectedDeck.id);
-    this.copyFlashcard(flashcard);
+    let updatedDecks = this.getChosenDecks();
+    flashcard.deckDTOs = updatedDecks;
+    this.flashcardService.editFlashcard(flashcard).subscribe(
+          () => {
+                this.openSnackbar('Flashcard successfully copied', 'success-snackbar');
+                this.loadDeckDetails(this.selectedDeck);
+          },
+          error => {
+                  this.error = true;
+                  this.errorMessage = 'Could not copy the flashcard!';
+                  this.openSnackbar(this.errorMessage, 'warning-snackbar');
+     });
   }
 
   /**
@@ -554,8 +583,8 @@ export class FlashcardManagerComponent implements OnInit {
 
    prepareEditRef() {
       this.editRef=true;
-      this.loadAllSpaces();
-      //this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+      this.existingRefs = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+      this.selectedDocuments = this.existingRefs;
    }
 
   /**
@@ -565,10 +594,10 @@ export class FlashcardManagerComponent implements OnInit {
       flashcard.documentReferences = this.getReferences();
       this.flashcardService.editFlashcard(flashcard).subscribe(
             (updatedFlashcard: Flashcard) => {
+                  console.log(updatedFlashcard);
                    this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
                    this.selectedFlashcard = updatedFlashcard;
                    this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
-                   this.loadDeckDetails(this.selectedDeck);
                    },
                    error => {
                      this.error = true;
@@ -579,8 +608,7 @@ export class FlashcardManagerComponent implements OnInit {
    }
 
   resetDecks() {
-    this.selectedDecks = undefined;
-    this.resetFlashcardForm();
+
   }
 
   flashcardClicked(select: Flashcard, del: boolean) {
@@ -624,6 +652,9 @@ export class FlashcardManagerComponent implements OnInit {
 
    resetFlashcardForm() {
     this.flashcardForm.reset();
+    if(this.selectedDeck != undefined) {
+      this.selectedDecksIds = [this.selectedDeck.id];
+    }
    }
 
    resetRevisionSizeForm() {
@@ -634,10 +665,21 @@ export class FlashcardManagerComponent implements OnInit {
     this.optionError = false;
    }
 
+   checkSelection(compareId: number) {
+    if(this.selectedDeck == undefined) {
+      return false;
+    } else if(this.selectedDeck.id==compareId){
+      console.log(compareId);
+      return true;
+    }
+    return false;
+   }
+
    backToAll() {
      this.viewAll=true;
      this.resetDeckForm();
      this.loadAllDecks();
+     this.selectedDeck = undefined;
    }
 
   openSnackbar(message: string, type: string) {

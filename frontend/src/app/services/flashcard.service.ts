@@ -67,6 +67,7 @@ export class FlashcardService {
     * @param flashcard to persist
     */
   createFlashcard(flashcard: Flashcard): Observable<Flashcard> {
+      console.log(flashcard);
       console.log('Create flashcard with question ' + flashcard.question);
       return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard', flashcard);
   }
@@ -76,14 +77,14 @@ export class FlashcardService {
   * @param flashcardId of the flashcard
   * @param decks of all the decks it belongs to
   */
-  assignFlashcard(flashcard: Flashcard, decks : number[]) {
+  assignFlashcard(flashcard: Flashcard, decks : number[]): Observable<Flashcard> {
       console.log('Assigning flashcard ' + flashcard.id + ' to deck(s).');
       let decksString = "";
       for(let i=0; i<decks.length; i++){
-          decksString+=decks[i] + "-"
+          decksString+=decks[i] + "#deck#"
       }
       console.log(decksString);
-      return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/decks' + decksString, flashcard);
+      return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/decks' + decksString, flashcard);
   }
 
  /**

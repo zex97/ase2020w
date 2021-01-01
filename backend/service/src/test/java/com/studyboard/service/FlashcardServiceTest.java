@@ -139,8 +139,10 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setDecks(decks);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
-        flashcardService.assignFlashcard(flashcard.getId(), response.getId() + "-");
+        flashcardService.assignFlashcard(response.getId(), flashcard.getId());
 
         response = flashcardService.findDeckById(DECK_ID);
 
@@ -236,6 +238,8 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -255,6 +259,8 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setConfidenceLevel(5);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -277,6 +283,8 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setConfidenceLevel(1);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -297,6 +305,8 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -321,6 +331,8 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -345,6 +357,8 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
