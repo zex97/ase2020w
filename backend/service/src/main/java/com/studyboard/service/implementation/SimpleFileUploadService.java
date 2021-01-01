@@ -56,6 +56,21 @@ public class SimpleFileUploadService implements FileUploadService {
   public CompletableFuture<String> storeAsync(String fileName, byte[] content, long spaceId) {
     Space space = spaceRepository.findSpaceById(spaceId);
 
+    // user/space path
+    Path spacePath = this.rootLocation
+            .resolve(space.getUser().getUsername())
+            .resolve(space.getName())
+            .normalize().toAbsolutePath();
+
+    // if user or space folder doesn't exist create one
+    if(!Files.exists(spacePath)) {
+      try {
+        Files.createDirectories(spacePath);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
     Path uploadFilePath =
         this.rootLocation
             .resolve(space.getUser().getUsername())
