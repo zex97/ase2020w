@@ -24,11 +24,11 @@
           <mat-card-content>
             <mat-card-title>
               <h3 class="space-name">{{space.name}}</h3>
-              <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
+              <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal" matTooltip="Delete space"
                     data-toggle="modal"><mat-icon>delete</mat-icon></span>
-              <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal" data-toggle="modal"
-                    style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
-              <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal"
+              <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal" matTooltip="Edit space"
+                    data-toggle="modal" style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
+              <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal" matTooltip="Upload files"
                     data-toggle="modal" style="margin-right:5%;"><mat-icon> attach_file</mat-icon></span>
             </mat-card-title>
             <div class="card-text">Add something about specific space!</div>
@@ -75,7 +75,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="createSpace()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+        <button [disabled]="spaceForm.controls.name.errors" (click)="createSpace()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
         <button type="button" data-dismiss="modal" mat-button mat-dialog-actions>
@@ -115,7 +115,7 @@
           <mat-card *ngFor="let file of getFilesToUpload(); let i = index" style="padding-right: 0;">
             {{file.name}}
             <button (click)="removeFileFromList(i)" aria-label="Remove" data-toggle="modal"
-                    mat-button style="float: right;">
+                    mat-button style="float: right;" matTooltip="Remove file">
               <mat-icon style="height: 35px">close</mat-icon>
             </button>
             <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
@@ -160,7 +160,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="saveEdits(currentSpace)" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="saveEdits(currentSpace)" [disabled]="nameEditForm.controls.name.errors" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
         <button (click)="nameEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
