@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 @Entity
 // @Inheritance(strategy = InheritanceType.JOINED)
@@ -17,6 +18,7 @@ public class Document {
     private Space space;
     private String filePath;
     private Set<String> tags;
+    private List<Flashcard> flashcards;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -87,5 +89,18 @@ public class Document {
     @PreRemove
     private void removeDocumentFromSpaces() {
         this.space.removeDocument(this);
+    }
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "flashcards_reference",
+            joinColumns = @JoinColumn(name = "document_id"),
+            inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
+    public List<Flashcard> getFlashcards() {
+        return flashcards;
+    }
+
+    public void setFlashcards(List<Flashcard> flashcards) {
+        this.flashcards = flashcards;
     }
 }

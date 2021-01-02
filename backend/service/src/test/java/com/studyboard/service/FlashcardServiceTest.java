@@ -139,8 +139,10 @@ public class FlashcardServiceTest {
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
         flashcard.setDecks(decks);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
-        flashcardService.assignFlashcard(flashcard.getId(), response.getId() + "-");
+        flashcardService.assignFlashcard(response.getId(), flashcard.getId());
 
         response = flashcardService.findDeckById(DECK_ID);
 
@@ -236,6 +238,8 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
@@ -254,11 +258,14 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setConfidenceLevel(5);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
 
-        flashcardService.rateFlashcard(flashcard, 5);
+        flashcardService.rateFlashcard(flashcard);
         Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
 
         double expectedEasiness = 2.5 - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2);
@@ -275,11 +282,14 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setConfidenceLevel(1);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
 
-        flashcardService.rateFlashcard(flashcard, 1);
+        flashcardService.rateFlashcard(flashcard);
         Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
 
         Assertions.assertEquals(2.5, response.getEasiness());
@@ -295,12 +305,16 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
 
-        flashcardService.rateFlashcard(flashcard, 4);
-        flashcardService.rateFlashcard(flashcard, 5);
+        flashcard.setConfidenceLevel(4);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.rateFlashcard(flashcard);
         Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
 
         double expectedEasiness = 2.5 - 0.8 + 0.28 * 4 - 0.02 * Math.pow(4, 2) - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2);
@@ -317,12 +331,16 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
 
-        flashcardService.rateFlashcard(flashcard, 4);
-        flashcardService.rateFlashcard(flashcard, 2);
+        flashcard.setConfidenceLevel(4);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(2);
+        flashcardService.rateFlashcard(flashcard);
         Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
 
         double expectedEasiness = 2.5 - 0.8 + 0.28 * 4 - 0.02 * Math.pow(4, 2);
@@ -339,13 +357,18 @@ public class FlashcardServiceTest {
         flashcard.setId(FLASHCARD_ID);
         flashcard.setQuestion(FLASHCARD_QUESTION);
         flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
         flashcardService.createFlashcard(flashcard);
 
         Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
 
-        flashcardService.rateFlashcard(flashcard, 4);
-        flashcardService.rateFlashcard(flashcard, 5);
-        flashcardService.rateFlashcard(flashcard, 5);
+        flashcard.setConfidenceLevel(4);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.rateFlashcard(flashcard);
+        flashcard.setConfidenceLevel(5);
+        flashcardService.rateFlashcard(flashcard);
         Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
 
         double expectedEasiness = 2.5 - 0.8 + 0.28 * 4 - 0.02 * Math.pow(4, 2) - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2) - 0.8 + 0.28 * 5 - 0.02 * Math.pow(5, 2);

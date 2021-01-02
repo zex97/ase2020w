@@ -31,6 +31,7 @@ export class DocumentSpaceComponent implements OnInit {
   currentSpace: Space;
   selectSpace: Space;
   isLeftVisible = true;
+  allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
 
   @ViewChild('documentComponent') documentComponent;
 
@@ -129,6 +130,13 @@ export class DocumentSpaceComponent implements OnInit {
         this.fileUploadModuleError = true;
         this.fileUploadModuleErrorMessage = 'File \'' + file.name + '\' size exceeds maximum size of 20MB';
       }
+      if (this.allowedFileTypes.indexOf(file.name.substr(file.name.lastIndexOf('.'))) === -1 && !this.fileUploadModuleError) {
+        console.log(file.name.substr(file.name.lastIndexOf('.')));
+        this.fileUploadModuleError = true;
+        this.fileUploadModuleErrorMessage = 'File type ' +
+          file.name.substr(file.name.lastIndexOf('.')) + ' of file \'' +
+          file.name + '\' is not supported by the application';
+      }
     }
   }
 
@@ -163,6 +171,11 @@ export class DocumentSpaceComponent implements OnInit {
 
   getFilesToUploadNames() {
     return this.filesToUploadNames;
+  }
+
+  resetModalWarning() {
+    this.fileUploadModuleError = false;
+    this.fileUploadModuleErrorMessage = '';
   }
 
 
@@ -231,7 +244,7 @@ export class DocumentSpaceComponent implements OnInit {
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
-          this.openSnackbar('Space ' + space.name + 'successfuly created!', 'success-snackbar');
+          this.openSnackbar('Space ' + space.name + ' successfuly created!', 'success-snackbar');
         },
         error => {
           this.defaultErrorHandling(error);

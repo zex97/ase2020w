@@ -67,6 +67,7 @@ export class FlashcardService {
     * @param flashcard to persist
     */
   createFlashcard(flashcard: Flashcard): Observable<Flashcard> {
+      console.log(flashcard);
       console.log('Create flashcard with question ' + flashcard.question);
       return this.httpClient.post<Flashcard>(this.flashcardBaseUri + '/flashcard', flashcard);
   }
@@ -76,18 +77,27 @@ export class FlashcardService {
   * @param flashcardId of the flashcard
   * @param decks of all the decks it belongs to
   */
-  assignFlashcard(flashcardId: number, decks : number[]) {
-      console.log('Assigning flashcard ' + flashcardId + ' to deck(s).');
+  assignFlashcard(flashcard: Flashcard, decks : number[]): Observable<Flashcard> {
+      console.log('Assigning flashcard ' + flashcard.id + ' to deck(s).');
       let decksString = "";
       for(let i=0; i<decks.length; i++){
-          decksString+=decks[i] + "-"
+          decksString+=decks[i] + "#deck#"
       }
       console.log(decksString);
-      return this.httpClient.get<any>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks' + decksString);
+      return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/decks' + decksString, flashcard);
+  }
+
+ /**
+  * Get all decks a flashcard belongs to
+  * @param flashcardId of the flashcard
+  */
+  getFlashcardAssignments(flashcardId: number): Observable<number[]> {
+    console.log('Getting flashcard ' + flashcardId + ' assignments to decks.')
+    return this.httpClient.get<number[]>(this.flashcardBaseUri + '/flashcard' + flashcardId + '/decks')
   }
 
   /**
-   * Change flashcard question or answer in the backend
+   * Change flashcard question, answer or references in the backend
    * @param flashcard to make changes to
    */
   editFlashcard(flashcard: Flashcard): Observable<Flashcard> {
@@ -99,9 +109,9 @@ export class FlashcardService {
      * Send flashcard rating to backend
      * @param flashcard to make changes to
      */
-   rateFlashcard(flashcard: Flashcard, confidence: number) {
+   rateFlashcard(flashcard: Flashcard) {
          console.log('Rate flashcard - question ' + flashcard.question);
-         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/flashcard' + flashcard.id + '/confidence' + confidence, flashcard);
+         return this.httpClient.put<Flashcard>(this.flashcardBaseUri + '/rate' + flashcard.id, flashcard);
    }
 
   /**

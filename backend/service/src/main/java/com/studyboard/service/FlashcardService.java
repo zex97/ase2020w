@@ -25,6 +25,14 @@ public interface FlashcardService {
     Deck findDeckById(Long deckId);
 
     /**
+     * Find a deck containing the search parameter in the name
+     *
+     * @param searchParam to look for in the deck's name
+     * @return all decks containing searchParam in the name
+     */
+    List<Deck> findDecksByName(String searchParam);
+
+    /**
      * Create a single deck
      *
      * @param deck with all the necessary information about a deck
@@ -83,19 +91,27 @@ public interface FlashcardService {
     void assignFlashcard(long flashcardId, String decks);
 
     /**
+     * Get all decks a flashcard belongs to
+     *
+     * @param flashcardId of the card
+     * @return ids of decks card is assigned to
+     */
+    List<Long> getAssignments(long flashcardId);
+
+    /**
+     * Remove a single flashcard from a deck
+     *
+     * @param deckId      of the deck in which flashcard is
+     * @param flashcardId of the flashcard that should be removed
+     */
+    void removeAssignment(long deckId, long flashcardId);
+
+    /**
      * Delete a single deck with all of its flashcards
      *
      * @param deckId of the deck that should be deleted
      */
     void deleteDeck(long deckId);
-
-    /**
-     * Delete a single flashcard
-     *
-     * @param deckId      of the deck in which flashcard is
-     * @param flashcardId of the flashcard that should be deleted
-     */
-    void deleteFlashcard(long deckId, long flashcardId);
 
     /**
      * Edit a single flashcard in the deck
@@ -109,9 +125,8 @@ public interface FlashcardService {
      * Rate a single flashcard in the deck
      *
      * @param flashcard entity that needs to be edited
-     * @param confidence_level the user chose for the card
      * @throws FlashcardConstraintException when confidence level is outside 1-5 range of values
      */
-    void rateFlashcard(Flashcard flashcard, int confidence_level) throws FlashcardConstraintException;
+    void rateFlashcard(Flashcard flashcard) throws FlashcardConstraintException;
 
 }

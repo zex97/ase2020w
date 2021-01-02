@@ -1,8 +1,10 @@
 package com.studyboard.rest;
 
+import com.studyboard.dto.DocumentDTO;
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.dto.TagDTO;
 import com.studyboard.model.Document;
+
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -66,9 +68,11 @@ public class UserSpaceController {
             method = RequestMethod.GET,
             produces = "application/json")
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
-    public List<Document> getAllDocuments(
+    public List<DocumentDTO> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        return service.getAllDocumentsFromSpace(spaceId);
+        return service.getAllDocumentsFromSpace(spaceId).stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(
@@ -102,6 +106,19 @@ public class UserSpaceController {
     public ResponseEntity deleteTagFromDocument(@PathVariable(name = "documentId") long documentId,
                                            @RequestBody TagDTO tagDTO) {
         service.removeTagFromDocument(documentId, tagDTO.toTag());
+        return ResponseEntity.ok().build();
+    }
+    @RequestMapping(
+            value = "/{spaceId}/{documentId}",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    @ApiOperation(
+            value = "Edit a transcription of a particular document.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity editTranscription(
+            @RequestBody DocumentDTO documentDTO) {
+        service.editTranscription(documentDTO.DocumentFromDocumentDTO());
+
         return ResponseEntity.ok().build();
     }
 }

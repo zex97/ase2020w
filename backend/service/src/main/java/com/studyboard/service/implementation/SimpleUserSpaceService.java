@@ -4,6 +4,7 @@ import com.studyboard.exception.DocumentDoesNotExistException;
 import com.studyboard.exception.IllegalTagException;
 import com.studyboard.exception.TagDoesNotExistException;
 import com.studyboard.repository.DocumentRepository;
+import com.studyboard.repository.UserRepository;
 import com.studyboard.service.UserSpaceService;
 import com.studyboard.exception.SpaceDoesNotExist;
 import com.studyboard.model.Document;
@@ -26,6 +27,8 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Autowired
     private SpaceRepository spaceRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private DocumentRepository documentRepository;
 
     @Override
@@ -42,7 +45,13 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Override
     public void removeSpace(long spaceId) {
-        Space space = findSpaceById(spaceId);
+
+        Space space = spaceRepository.findSpaceById(spaceId);
+        List<Document> documents = getAllDocumentsFromSpace(spaceId);
+        for(Document document: documents) {
+            removeDocumentFromSpace(spaceId, document.getId());
+            documentRepository.deleteById(document.getId());
+        }
         logger.info("Delete space with name " + space.getName());
         spaceRepository.deleteById(spaceId);
     }
@@ -97,6 +106,13 @@ public class SimpleUserSpaceService implements UserSpaceService {
         document.getTags().remove(tag);
         logger.info("Remove tag [{}] from document with name {}.", tag, document.getName());
         documentRepository.save(document);
+    }
+
+    public void editTranscription(Document document) {
+        Document storedDocument = documentRepository.findDocumentById(document.getId());
+        storedDocument.setTranscription(document.getTranscription());
+        logger.info("Edited the transcription of document " + storedDocument.getName());
+        documentRepository.save(storedDocument);
     }
 
     private Space findSpaceById(long spaceId) {

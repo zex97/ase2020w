@@ -1,6 +1,7 @@
 package com.studyboard.service;
 
 import com.studyboard.model.Document;
+import com.studyboard.model.Flashcard;
 import com.studyboard.model.Space;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public interface UserSpaceService {
     void removeDocumentFromSpace(long spaceId, long documentId);
 
     /**
+<<<<<<< HEAD
      * Adds a tag to a document
      *
      * @param documentId id of the document
@@ -77,4 +79,11 @@ public interface UserSpaceService {
      * @param tag new tag to be added
      */
     void removeTagFromDocument(long documentId, String tag);
+
+    /**
+     * Edit a transcription as part of document entity
+     *
+     * @param document entity that needs to be edited
+     */
+    void editTranscription(Document document);
 }

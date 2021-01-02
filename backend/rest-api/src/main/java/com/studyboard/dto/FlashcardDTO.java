@@ -1,17 +1,18 @@
 package com.studyboard.dto;
 
-
 import com.studyboard.model.Flashcard;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlashcardDTO {
 
     private Long id;
     private String question;
     private String answer;
+    private int confidenceLevel;
     private List<DeckDTO> deckDTOs;
+    private List<DocumentDTO> documentReferences;
 
     public Long getId() {
         return id;
@@ -37,6 +38,14 @@ public class FlashcardDTO {
         this.answer = answer;
     }
 
+    public int getConfidenceLevel() {
+        return confidenceLevel;
+    }
+
+    public void setConfidenceLevel(int confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
+    }
+
     public List<DeckDTO> getDeckDTOs() {
         return deckDTOs;
     }
@@ -45,14 +54,26 @@ public class FlashcardDTO {
         this.deckDTOs = deckDTOs;
     }
 
+    public List<DocumentDTO> getDocumentReferences() {
+        return documentReferences;
+    }
+
+    public void setDocumentReferences(List<DocumentDTO> documentReferences) {
+        this.documentReferences = documentReferences;
+    }
+
     public Flashcard FlashcardFromFlashcardDTO() {
         Flashcard flashcard = new Flashcard();
         flashcard.setId(this.id);
         flashcard.setQuestion(this.question);
         flashcard.setAnswer(this.answer);
-        /*flashcard.setDecks(this.deckDTOs.stream()
+        flashcard.setConfidenceLevel(this.confidenceLevel);
+        flashcard.setDecks(this.deckDTOs.stream()
                     .map(DeckDTO::toDeck)
-                    .collect(Collectors.toList()));*/
+                    .collect(Collectors.toList()));
+        flashcard.setDocumentReferences(this.documentReferences.stream()
+                .map(DocumentDTO::DocumentFromDocumentDTO)
+                .collect(Collectors.toList()));
         return flashcard;
     }
 
@@ -61,9 +82,13 @@ public class FlashcardDTO {
         flashcardDTO.setId(flashcard.getId());
         flashcardDTO.setQuestion(flashcard.getQuestion());
         flashcardDTO.setAnswer(flashcard.getAnswer());
-        /*flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
+        flashcardDTO.setConfidenceLevel(flashcard.getConfidenceLevel());
+        flashcardDTO.setDeckDTOs(flashcard.getDecks().stream()
                 .map(DeckDTO::of)
-                .collect(Collectors.toList()));*/
+                .collect(Collectors.toList()));
+        flashcardDTO.setDocumentReferences(flashcard.getDocumentReferences().stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
+                .collect(Collectors.toList()));
         return flashcardDTO;
     }
 
@@ -73,7 +98,9 @@ public class FlashcardDTO {
                 "id=" + id +
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
+                ", confidenceLevel=" + confidenceLevel +
+                ", decks size=" + deckDTOs.size() +
+                ", documentReference size=" + documentReferences.size() +
                 '}';
     }
-
 }
