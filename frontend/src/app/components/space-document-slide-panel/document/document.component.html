@@ -24,23 +24,29 @@
   </div>
 </div>
 
-<mat-nav-list *ngFor="let doc of getAllDocuments()">
-  <mat-list-item (click)="loadFile(doc)">
-    <mat-card-content style="height: 25px; width: 100%">
-      <mat-card-title>
-        <h3 class="document-name">
-          {{doc.name}}
-        </h3>
-        <span class="close" (click)="deleteDocument(doc); $event.stopPropagation();" style="float: right">
-          <mat-icon>delete</mat-icon>
-        </span>
-        <span class="close" (click)="downloadFileFromList(doc); $event.stopPropagation();" style="float: right; margin-right:5%;">
-          <mat-icon>save_alt</mat-icon>
-        </span>
-      </mat-card-title>
-    </mat-card-content>
-  </mat-list-item>
-</mat-nav-list>
+
+<div id="listOfDocuments">
+  <mat-nav-list *ngFor="let doc of getAllDocuments()">
+    <mat-list-item (click)="loadFile(doc)" id="documentListItem">
+      <mat-card-content>
+        <mat-card-title>
+          <h3 class="document-name">
+            {{doc.name}}
+          </h3>
+          <span class="close" (click)="deleteDocument(doc); $event.stopPropagation();" style="float: right">
+            <mat-icon>delete</mat-icon>
+          </span>
+          <span class="close" (click)="downloadFileFromList(doc); $event.stopPropagation();" style="float: right; margin-right:5%;">
+            <mat-icon>save_alt</mat-icon>
+          </span>
+        </mat-card-title>
+        <app-tag-bar [doc]="doc"></app-tag-bar>   
+      </mat-card-content>  
+        
+    </mat-list-item>
+  </mat-nav-list>
+  
+</div>
 
 <div class="warningMessageContainer" *ngIf="isEmpty()">
   <h2 class="warningMessage">No documents added to space {{space.name}}!</h2>

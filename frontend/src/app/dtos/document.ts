@@ -6,7 +6,8 @@ export class Document {
               public transcription: string,
               public name: string,
               public spaceDTO: Space,
-              public filePath: String) {
+              public filePath: String,
+              public tags: string[]) {
   }
 
 }

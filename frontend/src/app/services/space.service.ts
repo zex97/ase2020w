@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
+import { Tag } from '../dtos/Tag';
 
 
 @Injectable({
@@ -71,5 +72,26 @@ export class SpaceService {
     console.log('Deleting document ' + documentId + ' for space ' + space.name);
     // this.httpClient.delete(this.spaceBaseUri);
     return this.httpClient.delete(this.spaceBaseUri + '/' + space.id + '/' + documentId);
+  }
+
+  /**
+   * Add a single tag to a given document
+   * @param tag tag to be added
+   * @param documentId id of the exact document we want to add it to
+   * */
+  addTag(tag: Tag, documentId: number): Observable<Object> {
+    console.log('Adding tag ' + tag + ' to document ' + documentId);
+    return this.httpClient.post(this.spaceBaseUri + '/' + documentId, tag);
+  }
+
+  
+  /**
+   * Delete a single tag from a given document
+   * @param tag tag to be deleted
+   * @param documentId id of the exact document we want to delete it from
+   * */
+  deleteTag(tag: Tag, documentId: number): Observable<Object> {
+    console.log('Deleting tag ' + tag + ' from document ' + documentId);
+    return this.httpClient.post(this.spaceBaseUri + '/' + documentId, tag);
   }
 }
