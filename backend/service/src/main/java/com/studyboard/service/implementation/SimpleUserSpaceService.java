@@ -116,7 +116,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     private Space findSpaceById(long spaceId) {
-        Space space = spaceRepository.findById(spaceId).orElseThrow(SpaceDoesNotExist::new);
+        Space space = spaceRepository.findWithTagsById(spaceId).orElseThrow(SpaceDoesNotExist::new);
         return space;
     }
 
@@ -126,14 +126,8 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     private void checkNewTag(String tag, Document document){
-        if (tag == null) {
-            throw new IllegalTagException("Tag should not be NULL.");
-        }
-        if (tag.matches("\\s*")){
-            throw new IllegalTagException("Tag should not be empty.");
-        }
-        if (document.getTags().contains(tag)){
-            throw new IllegalTagException("Document already contains the tag.");
+        if (tag == null || tag.matches("\\s*") || document.getTags().contains(tag)) {
+            throw new IllegalTagException("Tag should not be NULL, empty or already exist for the document.");
         }
     }
 

@@ -92,20 +92,20 @@ public class UserSpaceController {
             method = RequestMethod.POST,
             produces = "application/json")
     @ApiOperation(value = "Add new tag to a document.", authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity addTagToDocument(@PathVariable(name = "documentId") long documentId,
+    public void addTagToDocument(@PathVariable(name = "documentId") long documentId,
                                            @RequestBody TagDTO tagDTO) {
          service.addTagToDocument(documentId, tagDTO.toTag());
-         return ResponseEntity.ok().build();
+//         return ResponseEntity..build();
     }
 
     @RequestMapping(
-            value = "/{documentId}",
+            value = "/{documentId}/tag={tag}",
             method = RequestMethod.DELETE,
             produces = "application/json")
     @ApiOperation(value = "Delete a tag from a document.", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity deleteTagFromDocument(@PathVariable(name = "documentId") long documentId,
-                                           @RequestBody TagDTO tagDTO) {
-        service.removeTagFromDocument(documentId, tagDTO.toTag());
+                                                @PathVariable(name = "tag") String tag) {
+        service.removeTagFromDocument(documentId, tag);
         return ResponseEntity.ok().build();
     }
     @RequestMapping(
