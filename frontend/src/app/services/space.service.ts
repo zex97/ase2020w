@@ -90,8 +90,8 @@ export class SpaceService {
    * @param tag tag to be deleted
    * @param documentId id of the exact document we want to delete it from
    * */
-  deleteTag(tag: Tag, documentId: number): Observable<Object> {
+  deleteTag(tag: string, documentId: number): Observable<Object> {
     console.log('Deleting tag ' + tag + ' from document ' + documentId);
-    return this.httpClient.post(this.spaceBaseUri + '/' + documentId, tag);
+    return this.httpClient.delete(this.spaceBaseUri + '/' + documentId + '/tag=' + tag);
   }
 }

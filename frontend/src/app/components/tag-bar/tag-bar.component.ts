@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatChipInputEvent} from '@angular/material/chips';
 import { Tag } from 'src/app/dtos/Tag';
 import { SpaceService } from 'src/app/services/space.service';
 import {Document} from 'src/app/dtos/document';
@@ -11,9 +11,8 @@ import {Document} from 'src/app/dtos/document';
 })
 export class TagBarComponent implements OnInit {
 
-  tags: string[] = ['Lemon'];
-
   constructor(private spaceService: SpaceService) { }
+  
   @Input() doc: Document;
 
 
@@ -21,26 +20,33 @@ export class TagBarComponent implements OnInit {
   }
 
   add(event: MatChipInputEvent): void {
-    // local test
-    console.log("adding tag")
+    console.log("adding tag");
     const input = event.input;
     const value = event.value;
-
-  
+    
     if ((value || '').trim()) {
-      this.tags.push(value.trim());
-    }
+      const tagDto = new Tag(value);
+      this.spaceService.addTag(tagDto, this.doc.id).subscribe(
+        () => {
+          this.doc.tags.push(value);
 
-  
-    if (input) {
-      input.value = '';
+          if (input) {
+            input.value = '';
+          }
+        }
+      );
     }
-
   }
 
-  remove(tag: string, doc: Document): void {
-    console.log("removing tag")
-    const deletedTag = new Tag(tag);
-    this.spaceService.deleteTag(deletedTag, doc.id);
+  remove(tag: string): void {
+    console.log("removing tag");
+    this.spaceService.deleteTag(tag, this.doc.id).subscribe(
+      () => {
+        const index = this.doc.tags.indexOf(tag, 0);
+        if (index > -1) {
+          this.doc.tags.splice(index, 1);
+        }
+      }
+    );
   }
 }

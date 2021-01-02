@@ -27,9 +27,9 @@
 
 <div id="listOfDocuments">
   <mat-nav-list *ngFor="let doc of getAllDocuments()">
-    <mat-list-item (click)="loadFile(doc)" id="documentListItem">
+    <mat-list-item id="documentListItem">
       <mat-card-content>
-        <mat-card-title>
+        <mat-card-title (click)="loadFile(doc)">
           <h3 class="document-name">
             {{doc.name}}
           </h3>
