@@ -27,10 +27,11 @@ public interface FlashcardService {
     /**
      * Find a deck containing the search parameter in the name
      *
+     * @param username of the user searching for own decks
      * @param searchParam to look for in the deck's name
      * @return all decks containing searchParam in the name
      */
-    List<Deck> findDecksByName(String searchParam);
+    List<Deck> findDecksByName(String username, String searchParam);
 
     /**
      * Create a single deck
