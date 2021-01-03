@@ -7,13 +7,27 @@
         <p class="h4 mb-4">Login</p>
 
         <div class="form-group">
-          <!-- Email -->
-          <input type="text" formControlName="username" id="defaultLoginFormUsername" class="form-control mb-4"
-                 aria-describedby="usernameHelp" placeholder="Username">
+          <!-- Username -->
+          <mat-form-field appearance="outline" class="modal-input-full-width">
+            <mat-label class="modal-label">Username</mat-label>
+            <input formControlName="username" formGroupName="username"
+                   id="username" matInput
+                   placeholder="Your username" required type="text">
+            <mat-hint *ngIf="loginForm.controls.username.errors && submitted" class="control-label invalid-input-text">
+              Can't be empty!
+            </mat-hint>
+          </mat-form-field>
 
           <!-- Password -->
-          <input type="password" formControlName="password" id="defaultLoginFormPassword" class="form-control mb-4"
-                 placeholder="Password">
+          <mat-form-field appearance="outline" class="modal-input-full-width">
+            <mat-label class="modal-label">Password</mat-label>
+            <input formControlName="password" formGroupName="password"
+                   id="password" matInput
+                   placeholder="Your password" required type="password">
+            <mat-hint *ngIf="loginForm.controls.password.errors && submitted" class="control-label invalid-input-text">
+              Can't be empty!
+            </mat-hint>
+          </mat-form-field>
         </div>
 
         <div class="d-flex justify-content-around">
