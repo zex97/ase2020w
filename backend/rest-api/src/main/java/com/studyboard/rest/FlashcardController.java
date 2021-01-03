@@ -36,8 +36,10 @@ public class FlashcardController {
     @ApiOperation(
             value = "Get all decks containing the search parameter in the name.",
             authorizations = {@Authorization(value = "apiKey")})
-    public List<DeckDTO> findDecksByName(@PathVariable(name = "searchParam") String searchParam) {
-        return flashcardService.findDecksByName(searchParam).stream()
+    public List<DeckDTO> findDecksByName(
+            @PathVariable(name = "username") String username,
+            @PathVariable(name = "searchParam") String searchParam) {
+        return flashcardService.findDecksByName(username, searchParam).stream()
                 .map(DeckDTO::of)
                 .collect(Collectors.toList());
     }
