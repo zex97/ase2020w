@@ -55,6 +55,7 @@ export class FlashcardManagerComponent implements OnInit {
   confidenceError: boolean = false;
   optionError: boolean = false;
   currentRate = 0;
+  deckNameSearch: string;
 
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
@@ -694,6 +695,17 @@ export class FlashcardManagerComponent implements OnInit {
     this.error = true;
     this.errorMessage = '';
     this.errorMessage = error.error.message;
+  }
+
+  searchDecksByName() {
+    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.deckNameSearch).subscribe(
+      (decksList: Deck[]) => {
+        this.decks = decksList;
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      }
+    );
   }
 
 }
