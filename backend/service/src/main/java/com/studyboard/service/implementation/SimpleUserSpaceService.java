@@ -115,7 +115,10 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Override
     public List<Space> getSpacesByName(String username, String searchParam) {
-        logger.info("Getting all decks containing " + searchParam + " in the name that belong to user: " + username);
+        if (searchParam.equals("all")) {
+            searchParam = "";
+        }
+        logger.info("Getting all spaces containing " + searchParam + " in the name that belong to user: " + username);
         return spaceRepository.findByUserUsernameAndNameContaining(username, searchParam);
     }
 }

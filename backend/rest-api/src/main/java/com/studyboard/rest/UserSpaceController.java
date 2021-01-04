@@ -27,7 +27,7 @@ public class UserSpaceController {
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/{username}/{searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/search/{username}/{searchParam}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(
             value = "Get all spaces containing the search parameter in the name.",
             authorizations = {@Authorization(value = "apiKey")})
