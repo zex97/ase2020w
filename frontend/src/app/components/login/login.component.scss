@@ -40,4 +40,9 @@ html, body {
   font-size: large;
 }
 
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: black !important;
+}
+
 

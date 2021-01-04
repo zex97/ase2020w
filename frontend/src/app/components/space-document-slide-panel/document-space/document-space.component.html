@@ -3,13 +3,18 @@
     <div class="topPageDiv">
       <div class="row p-2 mb-4">
 
-        <mat-form-field class="pageTopBarSearchField">
+        <mat-form-field (keyup.enter)="searchSpacesByName()" class="pageTopBarSearchField">
           <mat-placeholder style="color: #FEFFFF">Search spaces</mat-placeholder>
-          <input matInput style="color: #FEFFFF" title="search" type="search">
-          <button aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
+          <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="spaceNameSearch" (ngModelChange)="searchSpacesByName()">
+          <button (click)="searchSpacesByName()" aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
             <mat-icon style="color: #FEFFFF">search</mat-icon>
           </button>
         </mat-form-field>
+
+        <button (click)="backToAll()" *ngIf="this.spaceNameSearch.length!==0" class="pageTopBarButton"
+                mat-stroked-button>
+          View All
+        </button>
 
         <button (click)="resetSpaceFrom()" class="pageTopBarButton" data-target=".create-space-modal" data-toggle="modal"
                 mat-stroked-button>
@@ -37,8 +42,11 @@
         </mat-list-item>
       </mat-nav-list>
     </div>
-    <div class="warningMessageContainer" *ngIf="isEmpty()">
+    <div class="warningMessageContainer" *ngIf="spacesExist()">
       <h2 class="warningMessage">No spaces were created!</h2>
+    </div>
+    <div class="warningMessageContainer" *ngIf="specificSpaceExists()">
+      <h2 class="warningMessage">No spaces with "{{this.spaceNameSearch}}" were created!</h2>
     </div>
   </div>
   <div rightPane>

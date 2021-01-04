@@ -64,3 +64,8 @@ html, body {
   text-align: left;
 }
 
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: black !important;
+}
+

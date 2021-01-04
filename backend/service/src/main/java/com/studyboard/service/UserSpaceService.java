@@ -1,5 +1,6 @@
 package com.studyboard.service;
 
+import com.studyboard.model.Deck;
 import com.studyboard.model.Document;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.Space;
@@ -68,4 +69,13 @@ public interface UserSpaceService {
      * @param document entity that needs to be edited
      */
     void editTranscription(Document document);
+
+    /**
+     * Find a space containing the search parameter in the name
+     *
+     * @param username of the user searching for own spaces
+     * @param searchParam to look for in the space's name
+     * @return all spaces containing searchParam in the name
+     */
+    List<Space> getSpacesByName(String username, String searchParam);
 }

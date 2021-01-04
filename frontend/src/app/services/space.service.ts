@@ -72,4 +72,17 @@ export class SpaceService {
     // this.httpClient.delete(this.spaceBaseUri);
     return this.httpClient.delete(this.spaceBaseUri + '/' + space.id + '/' + documentId);
   }
+
+  /**
+   * Loads all spaces with specific name
+   * @param username of the space owner
+   * @param searchParam name of the spaces to search for
+   */
+  getSpacesByName(username: string, searchParam: string): Observable<Space[]> {
+    console.log('Searching for spaces by name.');
+    if (searchParam?.length === 0) {
+      searchParam = 'all';
+    }
+    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
+  }
 }

@@ -1,5 +1,6 @@
 package com.studyboard.service.implementation;
 
+import com.studyboard.model.Deck;
 import com.studyboard.repository.DocumentRepository;
 import com.studyboard.service.UserSpaceService;
 import com.studyboard.exception.SpaceDoesNotExist;
@@ -110,5 +111,14 @@ public class SimpleUserSpaceService implements UserSpaceService {
             throw new UserDoesNotExist();
         }
         return user;
+    }
+
+    @Override
+    public List<Space> getSpacesByName(String username, String searchParam) {
+        if (searchParam.equals("all")) {
+            searchParam = "";
+        }
+        logger.info("Getting all spaces containing " + searchParam + " in the name that belong to user: " + username);
+        return spaceRepository.findByUserUsernameAndNameContaining(username, searchParam);
     }
 }

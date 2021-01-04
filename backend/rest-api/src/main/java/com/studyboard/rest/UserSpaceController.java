@@ -27,6 +27,18 @@ public class UserSpaceController {
                 .collect(Collectors.toList());
     }
 
+    @RequestMapping(value = "/search/{username}/{searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(
+            value = "Get all spaces containing the search parameter in the name.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<SpaceDTO> getUserSpacesByName(
+            @PathVariable(name = "username") String username,
+            @PathVariable(name = "searchParam") String searchParam) {
+        return service.getSpacesByName(username, searchParam).stream()
+                .map(SpaceDTO::of)
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
     @ApiOperation(value = "Add space to specific user.", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity addUserSpace(
