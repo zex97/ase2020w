@@ -81,6 +81,6 @@ export class SpaceService {
    */
   getSpacesByName(username: string, searchParam: string): Observable<Space[]> {
     console.log('Searching for spaces by name.');
-    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/' + username + '/' + searchParam);
+    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
   }
 }

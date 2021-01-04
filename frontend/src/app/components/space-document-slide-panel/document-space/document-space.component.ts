@@ -321,6 +321,7 @@ export class DocumentSpaceComponent implements OnInit {
     this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch).subscribe(
       (spaceList: Deck[]) => {
         this.spaces = spaceList;
+        this.viewAll = false;
       },
       error => {
         this.defaultErrorHandling(error);
@@ -332,6 +333,7 @@ export class DocumentSpaceComponent implements OnInit {
     this.viewAll = true;
     this.resetSpaceFrom();
     this.loadAllSpaces();
+    this.spaceNameSearch = '';
     this.selectSpace = undefined;
   }
 
