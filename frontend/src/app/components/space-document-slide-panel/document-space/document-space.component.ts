@@ -33,8 +33,7 @@ export class DocumentSpaceComponent implements OnInit {
   selectSpace: Space;
   isLeftVisible = true;
   allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
-  spaceNameSearch: string;
-  viewAll: boolean = true;
+  spaceNameSearch: string = '';
 
   @ViewChild('documentComponent') documentComponent;
 
@@ -265,7 +264,6 @@ export class DocumentSpaceComponent implements OnInit {
         // set chosen space as unselected
         this.selectSpace = null;
         this.loadAllSpaces();
-        this.viewAll = true;
       },
       error => {
         this.defaultErrorHandling(error);
@@ -313,15 +311,18 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
 
-  isEmpty() {
-    return this.spaces?.length === 0;
+  spacesExist() {
+    return this.spaces?.length === 0 && this.spaceNameSearch.length === 0;
+  }
+
+  specificSpaceExists() {
+    return this.spaces?.length === 0 && this.spaceNameSearch.length !== 0;
   }
 
   searchSpacesByName() {
     this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch).subscribe(
       (spaceList: Deck[]) => {
         this.spaces = spaceList;
-        this.viewAll = false;
       },
       error => {
         this.defaultErrorHandling(error);
@@ -330,7 +331,6 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   backToAll() {
-    this.viewAll = true;
     this.resetSpaceFrom();
     this.loadAllSpaces();
     this.spaceNameSearch = '';

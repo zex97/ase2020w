@@ -4,7 +4,6 @@ import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
-import {Deck} from "../dtos/deck";
 
 
 @Injectable({
@@ -81,6 +80,9 @@ export class SpaceService {
    */
   getSpacesByName(username: string, searchParam: string): Observable<Space[]> {
     console.log('Searching for spaces by name.');
+    if (searchParam?.length === 0) {
+      searchParam = 'all';
+    }
     return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
   }
 }
