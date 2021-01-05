@@ -58,7 +58,7 @@ export class SpaceService {
    * @param spaceId whose documents the user wants to see
    * */
   getAllDocuments(userName: string, spaceId: number): Observable<Object> {
-    console.log('Getting all the documents for space ');
+    console.log('Getting all the documents for space ' + spaceId);
     return this.httpClient.get(this.spaceBaseUri + '/' + userName + '/' + spaceId);
   }
 
