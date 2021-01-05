@@ -5,6 +5,7 @@ import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
 import { Tag } from '../dtos/Tag';
+import {Document} from '../dtos/document';
 
 
 @Injectable({
@@ -75,6 +76,15 @@ export class SpaceService {
   }
 
   /**
+   * Edit transcription of a document
+   * @param document to make changes to
+   */
+  editTranscription(document: Document): Observable<Document> {
+    console.log('Edit transcription - document ' + document.name);
+    return this.httpClient.put<Document>(this.spaceBaseUri + '/document' + document.id, document);
+  }
+
+  /**
    * Add a single tag to a given document
    * @param tag tag to be added
    * @param documentId id of the exact document we want to add it to
@@ -84,7 +94,6 @@ export class SpaceService {
     return this.httpClient.post(this.spaceBaseUri + '/' + documentId, tag);
   }
 
-  
   /**
    * Delete a single tag from a given document
    * @param tag tag to be deleted

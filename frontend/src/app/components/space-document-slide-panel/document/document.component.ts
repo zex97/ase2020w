@@ -9,6 +9,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DocumentDialogComponent} from '../../document-dialog/document-dialog.component';
+import {Deck} from '../../../dtos/deck';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
@@ -27,9 +29,16 @@ export class DocumentComponent implements OnInit, OnChanges {
   currentDocument: Document;
   fileObject: Blob;
   blobUrl: any;
+  docEditForm: FormGroup;
 
   constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService, private sanitizer: DomSanitizer,
-              private dialog: MatDialog, private snackBar: MatSnackBar) {
+              private dialog: MatDialog, private snackBar: MatSnackBar, private formBuilder: FormBuilder) {
+    this.docEditForm = this.formBuilder.group({
+      title: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]]
+    });
   }
 
   @Input() space: Space;
@@ -101,6 +110,19 @@ export class DocumentComponent implements OnInit, OnChanges {
           });
       }
     });
+  }
+
+  editTranscription(doc: Document) {
+    doc.transcription = this.docEditForm.controls.title.value;
+    this.spaceService.editTranscription(doc).subscribe(
+      () => {
+          this.openSnackbar('You successfully edited a transcription!', 'success-snackbar');
+        },
+      error => {
+        this.error = true;
+        this.errorMessage = 'Could not edit the transcription!';
+        this.openSnackbar(this.errorMessage, 'warning-snackbar');
+      });
   }
 
   /**
