@@ -150,4 +150,14 @@ export class FlashcardService {
     console.log('Delete a flashcard');
     return this.httpClient.delete<Flashcard>(this.flashcardBaseUri + '/' + deckId + '/' + flashcardId);
   }
+
+  /**
+   * Loads all decks with specific name
+   * @param username of the deck owner
+   * @param searchParam name of the decks to search for
+   */
+  getDecksByName(username: string, searchParam: string): Observable<Deck[]> {
+    console.log('Searching for decks by name.');
+    return this.httpClient.get<Deck[]>(this.flashcardBaseUri + '/' + username + '/' + searchParam);
+  }
 }

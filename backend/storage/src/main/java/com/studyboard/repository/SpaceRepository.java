@@ -32,4 +32,13 @@ public interface SpaceRepository extends CrudRepository<Space, Long> {
      * @return space object with specified id
      */
     Space findSpaceById(long spaceId);
+
+    /**
+     * Find all spaces containing a part of the search parameter in their name
+     *
+     * @param username of the user who is searching for own space
+     * @param searchParam - search parameter for finding a space
+     * @return all spaces which contain the parameter in their name
+     */
+    List<Space> findByUserUsernameAndNameContaining(String username, String searchParam);
 }

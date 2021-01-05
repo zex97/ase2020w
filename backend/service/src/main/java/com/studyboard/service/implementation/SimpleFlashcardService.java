@@ -45,9 +45,9 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public List<Deck> findDecksByName(String searchParam) {
-        logger.info("Getting all decks containing " + searchParam + " in the name.");
-        return deckRepository.findByNameContaining(searchParam);
+    public List<Deck> findDecksByName(String username, String searchParam) {
+        logger.info("Getting all decks containing " + searchParam + " in the name that belong to user: " + username);
+        return deckRepository.findByUserUsernameAndNameContaining(username, searchParam);
     }
 
     @Override

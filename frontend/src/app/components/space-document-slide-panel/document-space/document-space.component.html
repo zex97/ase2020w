@@ -3,13 +3,18 @@
     <div class="topPageDiv">
       <div class="row p-2 mb-4">
 
-        <mat-form-field class="pageTopBarSearchField">
+        <mat-form-field (keyup.enter)="searchSpacesByName()" class="pageTopBarSearchField">
           <mat-placeholder style="color: #FEFFFF">Search spaces</mat-placeholder>
-          <input matInput style="color: #FEFFFF" title="search" type="search">
-          <button aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
+          <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="spaceNameSearch" (ngModelChange)="searchSpacesByName()">
+          <button (click)="searchSpacesByName()" aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
             <mat-icon style="color: #FEFFFF">search</mat-icon>
           </button>
         </mat-form-field>
+
+        <button (click)="backToAll()" *ngIf="this.spaceNameSearch.length!==0" class="pageTopBarButton"
+                mat-stroked-button>
+          View All
+        </button>
 
         <button (click)="resetSpaceFrom()" class="pageTopBarButton" data-target=".create-space-modal" data-toggle="modal"
                 mat-stroked-button>
@@ -24,11 +29,11 @@
           <mat-card-content>
             <mat-card-title>
               <h3 class="space-name">{{space.name}}</h3>
-              <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
+              <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal" matTooltip="Delete space"
                     data-toggle="modal"><mat-icon>delete</mat-icon></span>
-              <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal" data-toggle="modal"
-                    style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
-              <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal"
+              <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal" matTooltip="Edit space"
+                    data-toggle="modal" style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
+              <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal" matTooltip="Upload files"
                     data-toggle="modal" style="margin-right:5%;"><mat-icon> attach_file</mat-icon></span>
             </mat-card-title>
             <div class="card-text">Add something about specific space!</div>
@@ -37,8 +42,11 @@
         </mat-list-item>
       </mat-nav-list>
     </div>
-    <div class="warningMessageContainer" *ngIf="isEmpty()">
+    <div class="warningMessageContainer" *ngIf="spacesExist()">
       <h2 class="warningMessage">No spaces were created!</h2>
+    </div>
+    <div class="warningMessageContainer" *ngIf="specificSpaceExists()">
+      <h2 class="warningMessage">No spaces with "{{this.spaceNameSearch}}" were created!</h2>
     </div>
   </div>
   <div rightPane>
@@ -75,7 +83,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="createSpace()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+        <button [disabled]="spaceForm.controls.name.errors" (click)="createSpace()" data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
         <button type="button" data-dismiss="modal" mat-button mat-dialog-actions>
@@ -115,7 +123,7 @@
           <mat-card *ngFor="let file of getFilesToUpload(); let i = index" style="padding-right: 0;">
             {{file.name}}
             <button (click)="removeFileFromList(i)" aria-label="Remove" data-toggle="modal"
-                    mat-button style="float: right;">
+                    mat-button style="float: right;" matTooltip="Remove file">
               <mat-icon style="height: 35px">close</mat-icon>
             </button>
             <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
@@ -160,7 +168,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="saveEdits(currentSpace)" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="saveEdits(currentSpace)" [disabled]="nameEditForm.controls.name.errors" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
         <button (click)="nameEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>

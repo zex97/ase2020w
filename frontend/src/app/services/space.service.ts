@@ -59,7 +59,7 @@ export class SpaceService {
    * @param spaceId whose documents the user wants to see
    * */
   getAllDocuments(userName: string, spaceId: number): Observable<Object> {
-    console.log('Getting all the documents for space ');
+    console.log('Getting all the documents for space ' + spaceId);
     return this.httpClient.get(this.spaceBaseUri + '/' + userName + '/' + spaceId);
   }
 
@@ -93,5 +93,18 @@ export class SpaceService {
   deleteTag(tag: string, documentId: number): Observable<Object> {
     console.log('Deleting tag ' + tag + ' from document ' + documentId);
     return this.httpClient.delete(this.spaceBaseUri + '/' + documentId + '/tag=' + tag);
+  }
+  /*
+   * Loads all spaces with specific name
+   * @param username of the space owner
+   * @param searchParam name of the spaces to search for
+   */
+  getSpacesByName(username: string, searchParam: string): Observable<Space[]> {
+    console.log('Searching for spaces by name.');
+    if (searchParam?.length === 0) {
+      searchParam = 'all';
+    }
+    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
+
   }
 }

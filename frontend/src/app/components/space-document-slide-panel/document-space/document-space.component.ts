@@ -5,6 +5,7 @@ import {SpaceService} from '../../../services/space.service';
 import {Space} from '../../../dtos/space';
 import {FileUploadService} from '../../../services/file-upload.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Deck} from '../../../dtos/deck';
 
 @Component({
   selector: 'app-document-space',
@@ -32,6 +33,7 @@ export class DocumentSpaceComponent implements OnInit {
   selectSpace: Space;
   isLeftVisible = true;
   allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
+  spaceNameSearch: string = '';
 
   @ViewChild('documentComponent') documentComponent;
 
@@ -309,8 +311,30 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
 
-  isEmpty() {
-    return this.spaces?.length === 0;
+  spacesExist() {
+    return this.spaces?.length === 0 && this.spaceNameSearch.length === 0;
+  }
+
+  specificSpaceExists() {
+    return this.spaces?.length === 0 && this.spaceNameSearch.length !== 0;
+  }
+
+  searchSpacesByName() {
+    this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch).subscribe(
+      (spaceList: Deck[]) => {
+        this.spaces = spaceList;
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      }
+    );
+  }
+
+  backToAll() {
+    this.resetSpaceFrom();
+    this.loadAllSpaces();
+    this.spaceNameSearch = '';
+    this.selectSpace = undefined;
   }
 
 }

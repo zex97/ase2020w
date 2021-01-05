@@ -15,55 +15,59 @@
         </div>
 
         <!-- Username -->
-        <div class="form-group mb-4">
-          <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
-                 aria-describedby="usernameHelp" placeholder="Username *" [ngClass]="(f.username.errors && submitted ? 'input-field-invalid':'')">
-          <span class="control-label invalid-input-text" *ngIf="f.username.errors && submitted">
-              Username is required!
-          </span>
-        </div>
+        <mat-form-field appearance="outline" class="modal-input-full-width">
+          <mat-label class="modal-label">Username</mat-label>
+          <input formControlName="username" formGroupName="username"
+                 id="inputUsername" matInput
+                 placeholder="Your username" required type="text">
+          <mat-hint *ngIf="f.username.errors && submitted" class="control-label invalid-input-text">
+            Can't be empty!
+          </mat-hint>
+        </mat-form-field>
 
         <!-- E-mail -->
-        <div class="form-group mb-4">
-          <input type="email" name="email" formControlName="email" class="form-control" id="inputEmail"
-                 aria-describedby="emailHelp" placeholder="E-mail *" [ngClass]="(f.email.errors && submitted ? 'input-field-invalid':'')">
-          <span class="control-label invalid-input-text" *ngIf="f.email.errors && f.email.errors.required && submitted">
-              Email is required!
-          </span>
-          <span class="control-label invalid-input-text" *ngIf="f.email.errors && !f.email.errors.required && submitted">
-              Invalid email form!
-          </span>
-        </div>
+        <mat-form-field appearance="outline" class="modal-input-full-width">
+          <mat-label class="modal-label">Email</mat-label>
+          <input formControlName="email" formGroupName="email"
+                 id="inputEmail" matInput
+                 placeholder="Your email" required type="text">
+          <mat-hint *ngIf="f.email.errors && f.email.errors.required && submitted" class="control-label invalid-input-text">
+            Can't be empty!
+          </mat-hint>
+          <mat-hint *ngIf="f.email.errors && !f.email.errors.required" class="control-label invalid-input-text">
+            Invalid email form!
+          </mat-hint>
+        </mat-form-field>
 
         <!-- Password -->
-        <div class="form-group mb-4">
-          <input type="password" name="password" formControlName="password" class="form-control" id="inputPassword"
-                 aria-describedby="passwordHelp" placeholder="Password *" (keyup)="registerForm.controls['passwordConfirm'].updateValueAndValidity()"
-                 [ngClass]="(f.password.errors && submitted ? 'input-field-invalid':'')">
-          <span class="input-text-help" *ngIf="!submitted">Use at least 8 characters and 1 digit.</span>
-          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.required && submitted">
-              Password is required!
-          </span>
-          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.minlength && submitted">
-              Password must be at least 8 characters long!
-          </span>
-          <span class="control-label invalid-input-text" *ngIf="f.password.errors && f.password.errors.pattern && !f.password.errors.minlength && submitted">
-              Password must contain at least one digit!
-          </span>
-        </div>
+        <mat-form-field appearance="outline" class="modal-input-full-width">
+          <mat-label class="modal-label">Password</mat-label>
+          <input formControlName="password" formGroupName="password"
+                 id="inputPassword" matInput
+                 placeholder="Your password" required type="password">
+          <mat-hint *ngIf="f.password.errors && f.password.errors.required && submitted" class="control-label invalid-input-text">
+            Can't be empty!
+          </mat-hint>
+          <mat-hint *ngIf="f.password.errors && f.password.errors.minlength" class="control-label invalid-input-text">
+            Password must be at least 8 characters long!
+          </mat-hint>
+          <mat-hint *ngIf="f.password.errors && f.password.errors.pattern && !f.password.errors.minlength" class="control-label invalid-input-text">
+            Password must contain at least one digit!
+          </mat-hint>
+        </mat-form-field>
 
         <!-- Confirm Password -->
-        <div class="form-group mb-4">
-          <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control" id="passwordConfirm"
-                 aria-describedby="passwordConfirmHelp" placeholder="Confirm *"
-                 [ngClass]="(f.passwordConfirm.errors && submitted ? 'input-field-invalid':'')">
-          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.required && submitted">
-              Password confirmation is required!
-          </span>
-          <span class="control-label invalid-input-text" *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.passwordsDifferent && submitted">
-              Passwords must match!
-          </span>
-        </div>
+        <mat-form-field appearance="outline" class="modal-input-full-width">
+          <mat-label class="modal-label">Confirm</mat-label>
+          <input formControlName="passwordConfirm" formGroupName="passwordConfirm"
+                 id="passwordConfirm" matInput required type="password">
+          <mat-hint *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.required && submitted" class="control-label invalid-input-text">
+            Password confirmation is required!
+          </mat-hint>
+          <mat-hint *ngIf="f.passwordConfirm.errors && f.passwordConfirm.errors.passwordsDifferent" class="control-label invalid-input-text">
+            Passwords must match!
+          </mat-hint>
+        </mat-form-field>
 
         <!-- Sign up button -->
         <button mat-raised-button type="submit">Sign up</button>

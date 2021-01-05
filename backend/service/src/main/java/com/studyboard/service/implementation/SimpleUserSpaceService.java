@@ -3,6 +3,7 @@ package com.studyboard.service.implementation;
 import com.studyboard.exception.DocumentDoesNotExistException;
 import com.studyboard.exception.IllegalTagException;
 import com.studyboard.exception.TagDoesNotExistException;
+import com.studyboard.model.Deck;
 import com.studyboard.repository.DocumentRepository;
 import com.studyboard.repository.UserRepository;
 import com.studyboard.service.UserSpaceService;
@@ -135,5 +136,14 @@ public class SimpleUserSpaceService implements UserSpaceService {
         if(!document.getTags().contains(tag)){
             throw new TagDoesNotExistException();
         }
+    }
+
+    @Override
+    public List<Space> getSpacesByName(String username, String searchParam) {
+        if (searchParam.equals("all")) {
+            searchParam = "";
+        }
+        logger.info("Getting all spaces containing " + searchParam + " in the name that belong to user: " + username);
+        return spaceRepository.findByUserUsernameAndNameContaining(username, searchParam);
     }
 }
