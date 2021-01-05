@@ -120,8 +120,9 @@ public class UserSpaceController {
         service.removeTagFromDocument(documentId, tag);
         return ResponseEntity.ok().build();
     }
+
     @RequestMapping(
-            value = "/{spaceId}/{documentId}",
+            value = "/document{documentId}",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
@@ -130,7 +131,6 @@ public class UserSpaceController {
     public ResponseEntity editTranscription(
             @RequestBody DocumentDTO documentDTO) {
         service.editTranscription(documentDTO.DocumentFromDocumentDTO());
-
         return ResponseEntity.ok().build();
     }
 }
