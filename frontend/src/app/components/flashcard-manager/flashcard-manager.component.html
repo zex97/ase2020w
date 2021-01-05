@@ -26,6 +26,10 @@
   </div>
 </div>
 
+<div class="warningMessageContainer" *ngIf="isEmpty()">
+  <h2 class="warningMessage">No decks/flashcards were created!</h2>
+</div>
+
 <!--Create a deck-->
 <div aria-hidden="true" aria-labelledby="Create deck modal" class="modal fade create-deck-modal" role="dialog"
      tabindex="-1">

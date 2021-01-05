@@ -4,6 +4,8 @@ import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
+import { Tag } from '../dtos/Tag';
+import {Document} from '../dtos/document';
 
 
 @Injectable({
@@ -58,7 +60,7 @@ export class SpaceService {
    * @param spaceId whose documents the user wants to see
    * */
   getAllDocuments(userName: string, spaceId: number): Observable<Object> {
-    console.log('Getting all the documents for space ');
+    console.log('Getting all the documents for space ' + spaceId);
     return this.httpClient.get(this.spaceBaseUri + '/' + userName + '/' + spaceId);
   }
 
@@ -74,6 +76,34 @@ export class SpaceService {
   }
 
   /**
+   * Edit transcription of a document
+   * @param document to make changes to
+   */
+  editTranscription(document: Document): Observable<Document> {
+    console.log('Edit transcription - document ' + document.name);
+    return this.httpClient.put<Document>(this.spaceBaseUri + '/document' + document.id, document);
+  }
+
+  /**
+   * Add a single tag to a given document
+   * @param tag tag to be added
+   * @param documentId id of the exact document we want to add it to
+   * */
+  addTag(tag: Tag, documentId: number): Observable<Object> {
+    console.log('Adding tag ' + tag + ' to document ' + documentId);
+    return this.httpClient.post(this.spaceBaseUri + '/' + documentId, tag);
+  }
+
+  /**
+   * Delete a single tag from a given document
+   * @param tag tag to be deleted
+   * @param documentId id of the exact document we want to delete it from
+   * */
+  deleteTag(tag: string, documentId: number): Observable<Object> {
+    console.log('Deleting tag ' + tag + ' from document ' + documentId);
+    return this.httpClient.delete(this.spaceBaseUri + '/' + documentId + '/tag=' + tag);
+  }
+  /*
    * Loads all spaces with specific name
    * @param username of the space owner
    * @param searchParam name of the spaces to search for
@@ -84,5 +114,6 @@ export class SpaceService {
       searchParam = 'all';
     }
     return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
+
   }
 }

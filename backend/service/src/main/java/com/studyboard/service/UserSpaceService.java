@@ -64,6 +64,24 @@ public interface UserSpaceService {
     void removeDocumentFromSpace(long spaceId, long documentId);
 
     /**
+<<<<<<< HEAD
+     * Adds a tag to a document
+     *
+     * @param documentId id of the document
+     * @param tag new tag to be added
+     */
+    void addTagToDocument(long documentId, String tag);
+
+    /**
+     * Removes a tag from a document.
+     * Throws an exception if either document or tag does not exist.
+     *
+     * @param documentId id of the document
+     * @param tag new tag to be added
+     */
+    void removeTagFromDocument(long documentId, String tag);
+
+    /**
      * Edit a transcription as part of document entity
      *
      * @param document entity that needs to be edited
