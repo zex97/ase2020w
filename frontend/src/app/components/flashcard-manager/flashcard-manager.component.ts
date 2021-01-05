@@ -708,4 +708,8 @@ export class FlashcardManagerComponent implements OnInit {
     );
   }
 
+  isEmpty() {
+    return this.decks?.length === 0;
+  }
+
 }
