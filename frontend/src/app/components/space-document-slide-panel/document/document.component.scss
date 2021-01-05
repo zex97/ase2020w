@@ -19,6 +19,28 @@
   text-overflow: ellipsis;
 }
 
+
+#listOfDocuments {
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-width: 50%;
+  padding-right: 1px;
+}
+
+.mat-card-content {
+  width: 100%;
+}
+
+.mat-list-base {
+  padding-top: 1px;
+}
+
+#documentListItem {
+  height: 100px !important;
+  width: 100%;
+  background-color: #FEFFFF;
+}
+
 .unselectable {
   user-drag: none;
   user-select: none;
@@ -41,9 +63,6 @@
 ::ng-deep.mat-form-field-ripple {
   /*change color of underline when focused*/
   background-color: #FEFFFF !important;
-}
-::ng-deep .mat-input-element::placeholder {
-  color: orange !important;
 }
 
 .invalid-input-text {

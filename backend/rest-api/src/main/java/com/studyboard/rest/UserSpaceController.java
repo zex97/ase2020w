@@ -2,6 +2,9 @@ package com.studyboard.rest;
 
 import com.studyboard.dto.DocumentDTO;
 import com.studyboard.dto.SpaceDTO;
+import com.studyboard.dto.TagDTO;
+import com.studyboard.model.Document;
+
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -97,6 +100,27 @@ public class UserSpaceController {
     }
 
     @RequestMapping(
+            value = "/{documentId}",
+            method = RequestMethod.POST,
+            produces = "application/json")
+    @ApiOperation(value = "Add new tag to a document.", authorizations = {@Authorization(value = "apiKey")})
+    public void addTagToDocument(@PathVariable(name = "documentId") long documentId,
+                                           @RequestBody TagDTO tagDTO) {
+         service.addTagToDocument(documentId, tagDTO.toTag());
+//         return ResponseEntity..build();
+    }
+
+    @RequestMapping(
+            value = "/{documentId}/tag={tag}",
+            method = RequestMethod.DELETE,
+            produces = "application/json")
+    @ApiOperation(value = "Delete a tag from a document.", authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity deleteTagFromDocument(@PathVariable(name = "documentId") long documentId,
+                                                @PathVariable(name = "tag") String tag) {
+        service.removeTagFromDocument(documentId, tag);
+        return ResponseEntity.ok().build();
+    }
+    @RequestMapping(
             value = "/{spaceId}/{documentId}",
             method = RequestMethod.PUT,
             produces = "application/json")
@@ -106,6 +130,7 @@ public class UserSpaceController {
     public ResponseEntity editTranscription(
             @RequestBody DocumentDTO documentDTO) {
         service.editTranscription(documentDTO.DocumentFromDocumentDTO());
+
         return ResponseEntity.ok().build();
     }
 }

@@ -13,6 +13,7 @@ public class DocumentDTO {
     private SpaceDTO spaceDTO;
     private String filePath;
     private List<FlashcardDTO> flashcards;
+    private List<String> tags;
 
     public long getId() {
         return id;
@@ -70,6 +71,14 @@ public class DocumentDTO {
         this.flashcards = flashcards;
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
     public Document DocumentFromDocumentDTO() {
         Document document = new Document();
         document.setId(this.id);
@@ -77,6 +86,7 @@ public class DocumentDTO {
         document.setName(this.name);
         document.setTranscription(this.transcription);
         document.setSpace(this.spaceDTO.toSpace());
+        document.setTags(this.tags);
         return document;
     }
 
@@ -87,17 +97,21 @@ public class DocumentDTO {
         documentDTO.setName(document.getName());
         documentDTO.setTranscription(document.getTranscription());
         documentDTO.setSpaceDTO(SpaceDTO.of(document.getSpace()));
+        documentDTO.setTags(document.getTags());
         return documentDTO;
     }
 
     @Override
     public String toString() {
-        return "documentDTO{" +
+        return "DocumentDTO{" +
                 "id=" + id +
-                ", filePath='" + filePath + '\'' +
+                ", needsTranscription=" + needsTranscription +
+                ", transcription='" + transcription + '\'' +
                 ", name='" + name + '\'' +
-                ", needsTranscription=" + transcription +
-                ", spaceDTO=" + spaceDTO.toString() +
+                ", spaceDTO=" + spaceDTO +
+                ", filePath='" + filePath + '\'' +
+                ", flashcards=" + flashcards +
+                ", tags=" + tags +
                 '}';
     }
 }

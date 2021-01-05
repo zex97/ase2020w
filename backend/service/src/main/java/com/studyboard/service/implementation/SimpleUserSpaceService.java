@@ -1,15 +1,16 @@
 package com.studyboard.service.implementation;
 
+import com.studyboard.exception.DocumentDoesNotExistException;
+import com.studyboard.exception.IllegalTagException;
+import com.studyboard.exception.TagDoesNotExistException;
 import com.studyboard.model.Deck;
 import com.studyboard.repository.DocumentRepository;
+import com.studyboard.repository.UserRepository;
 import com.studyboard.service.UserSpaceService;
 import com.studyboard.exception.SpaceDoesNotExist;
-import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.model.Document;
 import com.studyboard.model.Space;
-import com.studyboard.model.User;
 import com.studyboard.repository.SpaceRepository;
-import com.studyboard.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Override
     public void removeSpace(long spaceId) {
+
         Space space = spaceRepository.findSpaceById(spaceId);
         List<Document> documents = getAllDocumentsFromSpace(spaceId);
         for(Document document: documents) {
@@ -90,6 +92,23 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     @Override
+    public void addTagToDocument(long documentId, String tag) {
+        Document document = findDocumentById(documentId);
+        checkNewTag(tag, document);
+        document.getTags().add(tag);
+        logger.info("Add tag [{}] to document with name {}.", tag, document.getName());
+        documentRepository.save(document);
+    }
+
+    @Override
+    public void removeTagFromDocument(long documentId, String tag) {
+        Document document = findDocumentById(documentId);
+        checkExistingTag(tag, document);
+        document.getTags().remove(tag);
+        logger.info("Remove tag [{}] from document with name {}.", tag, document.getName());
+        documentRepository.save(document);
+    }
+
     public void editTranscription(Document document) {
         Document storedDocument = documentRepository.findDocumentById(document.getId());
         storedDocument.setTranscription(document.getTranscription());
@@ -98,19 +117,25 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     private Space findSpaceById(long spaceId) {
-        Space space = spaceRepository.findSpaceById(spaceId);
-        if (space == null) {
-            throw new SpaceDoesNotExist();
-        }
+        Space space = spaceRepository.findWithTagsById(spaceId).orElseThrow(SpaceDoesNotExist::new);
         return space;
     }
 
-    private User findUserByUsername(String username) {
-        User user = userRepository.findOneByUsername(username);
-        if (user == null) {
-            throw new UserDoesNotExist();
+    private Document findDocumentById(long documentId) {
+        Document document = documentRepository.findById(documentId).orElseThrow(DocumentDoesNotExistException::new);
+        return document;
+    }
+
+    private void checkNewTag(String tag, Document document){
+        if (tag == null || tag.matches("\\s*") || document.getTags().contains(tag)) {
+            throw new IllegalTagException("Tag should not be NULL, empty or already exist for the document.");
         }
-        return user;
+    }
+
+    private void checkExistingTag(String tag, Document document){
+        if(!document.getTags().contains(tag)){
+            throw new TagDoesNotExistException();
+        }
     }
 
     @Override

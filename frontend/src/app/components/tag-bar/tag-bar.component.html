@@ -1,0 +1,17 @@
+<mat-chip-list #chipList aria-label="Tags">
+    <mat-label>Tags</mat-label>
+    <mat-chip
+      *ngFor="let tag of doc.tags"
+      [selectable]="false"
+      (removed)="remove(tag)">
+      {{tag}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      placeholder="Add new tag.."
+      #tagInput
+      [matChipInputFor]="chipList"
+      (matChipInputTokenEnd)="add($event)"
+     />
+</mat-chip-list>
+  

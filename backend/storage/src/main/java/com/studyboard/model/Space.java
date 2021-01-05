@@ -70,7 +70,7 @@ public class Space {
         return Objects.hash(id, name, documents);
     }
 
-    public void removeDocument (Document document) {
+    public void removeDocument(Document document) {
         documents.removeIf(storedDocument -> storedDocument.getId() == document.getId());
     }
 }
