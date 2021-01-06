@@ -18,6 +18,7 @@ public class Space {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Document> documents;
     private User user;
+    private String description;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,6 +36,15 @@ public class Space {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "description")
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -81,5 +91,11 @@ public class Space {
     public Space (String name, User user) {
         this.name = name;
         this.user = user;
+    }
+
+    public Space (String name, String description, User user) {
+        this.name = name;
+        this.user = user;
+        this.description = description;
     }
 }

@@ -118,7 +118,7 @@ public class UserSpaceServiceTest {
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         space.setName(NEW_SPACE_NAME);
-        Space storedSpace = userSpaceService.updateSpaceName(space);
+        Space storedSpace = userSpaceService.updateSpace(space);
 
         Assertions.assertNotNull(storedSpace);
         Assertions.assertEquals(NEW_SPACE_NAME, storedSpace.getName());
@@ -131,7 +131,7 @@ public class UserSpaceServiceTest {
         space.setId(SPACE_ID);
 
         Assertions.assertThrows(SpaceDoesNotExist.class, () -> {
-            userSpaceService.updateSpaceName(space);
+            userSpaceService.updateSpace(space);
         });
     }
 

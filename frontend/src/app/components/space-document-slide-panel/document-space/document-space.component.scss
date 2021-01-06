@@ -40,6 +40,20 @@
   background-color: lightgrey !important;
 }
 
+.space-name {
+  width: 25em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card-text {
+  width: 50em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 
 /* Copy to every page scss with a search bar*/
 ::ng-deep.mat-form-field-underline {

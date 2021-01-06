@@ -36,7 +36,8 @@
               <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal" matTooltip="Upload files"
                     data-toggle="modal" style="margin-right:5%;"><mat-icon> attach_file</mat-icon></span>
             </mat-card-title>
-            <div class="card-text">Add something about specific space!</div>
+            <div class="card-text" *ngIf="space.description?.length != 0">{{space.description}}</div>
+            <div class="card-text" *ngIf="space.description == null">This space has no description!</div>
 
           </mat-card-content>
         </mat-list-item>
@@ -79,6 +80,13 @@
             <mat-hint *ngIf="spaceForm.controls.name.errors" class="control-label invalid-input-text">Can't be
               empty!
             </mat-hint>
+          </mat-form-field>
+
+          <mat-form-field [formGroup]="spaceForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Space description</mat-label>
+            <input [value]="spaceForm.value.description" formControlName="description" formGroupName="description" id="description"
+                   matInput placeholder="eg. This spaces contains..."
+                   title="description" type="text">
           </mat-form-field>
         </form>
       </div>
@@ -156,22 +164,28 @@
       </div>
       <div class="modal-body">
         <form class="modal-input-form">
-          <mat-form-field [formGroup]="nameEditForm" appearance="outline" class="modal-input-full-width">
+          <mat-form-field [formGroup]="spaceEditForm" appearance="outline" class="modal-input-full-width">
             <mat-label style="color: #5f6368">Edit name</mat-label>
             <input [value]="currentSpace.name" formControlName="name" formGroupName="name"
                    id="newName" matInput
                    placeholder="eg. MathSpace" required type="text">
-            <mat-hint *ngIf="nameEditForm.controls.name.errors" class="control-label invalid-input-text">
+            <mat-hint *ngIf="spaceEditForm.controls.name.errors" class="control-label invalid-input-text">
               Can't be empty!
             </mat-hint>
+          </mat-form-field>
+          <mat-form-field [formGroup]="spaceEditForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Edit description</mat-label>
+            <input [value]="currentSpace.description" formControlName="description" formGroupName="description"
+                   id="newDescription" matInput
+                   placeholder="eg. This space contains..." required type="text">
           </mat-form-field>
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="saveEdits(currentSpace)" [disabled]="nameEditForm.controls.name.errors" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="saveEdits(currentSpace);toggleSlide()" [disabled]="spaceEditForm.controls.name.errors" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
-        <button (click)="nameEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="spaceEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>
@@ -195,7 +209,7 @@
         <button (click)="deleteSpace(currentSpace.id);toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
-        <button (click)="nameEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="spaceEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>

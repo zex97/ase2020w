@@ -37,7 +37,7 @@ public interface UserSpaceService {
      * @param space - with the information to be updated
      * @return updated space
      */
-    public Space updateSpaceName(Space space);
+    public Space updateSpace(Space space);
 
     /**
      * Returns all documents for a single space

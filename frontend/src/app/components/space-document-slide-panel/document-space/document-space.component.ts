@@ -5,7 +5,6 @@ import {SpaceService} from '../../../services/space.service';
 import {Space} from '../../../dtos/space';
 import {FileUploadService} from '../../../services/file-upload.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Deck} from '../../../dtos/deck';
 
 @Component({
   selector: 'app-document-space',
@@ -16,7 +15,7 @@ import {Deck} from '../../../dtos/deck';
 export class DocumentSpaceComponent implements OnInit {
 
   spaceForm: FormGroup;
-  nameEditForm: FormGroup;
+  spaceEditForm: FormGroup;
   fileUploadForm: FormGroup;
   filesToUpload: File[] = [];
   filesToUploadNames: String[] = [];
@@ -44,6 +43,7 @@ export class DocumentSpaceComponent implements OnInit {
         Validators.required,
         Validators.minLength(1)
       ]],
+      description: ['']
     });
     this.fileUploadForm = this.formBuilder.group({
       name: ['', [
@@ -51,8 +51,12 @@ export class DocumentSpaceComponent implements OnInit {
         Validators.minLength(1)
       ]]
     });
-    this.nameEditForm = this.formBuilder.group({
-      name: ['']
+    this.spaceEditForm = this.formBuilder.group({
+      name: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]],
+      description: ['']
     });
   }
 
@@ -92,8 +96,9 @@ export class DocumentSpaceComponent implements OnInit {
   setCurrentSpace(space: Space) {
     this.currentSpace = space;
     console.log(this.currentSpace);
-    this.nameEditForm.patchValue({
-      name: space.name
+    this.spaceEditForm.patchValue({
+      name: space.name,
+      description: space.description
     });
   }
 
@@ -242,7 +247,7 @@ export class DocumentSpaceComponent implements OnInit {
    */
   createSpace() {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      const space = new Space(0, this.spaceForm.controls.name.value, res);
+      const space = new Space(0, this.spaceForm.controls.name.value, this.spaceForm.controls.description.value, res);
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
@@ -275,7 +280,8 @@ export class DocumentSpaceComponent implements OnInit {
    */
   saveEdits(space: Space) {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(() => {
-      space.name = this.nameEditForm.controls.name.value;
+      space.name = this.spaceEditForm.controls.name.value;
+      space.description = this.spaceEditForm.controls.description.value;
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
@@ -321,7 +327,7 @@ export class DocumentSpaceComponent implements OnInit {
 
   searchSpacesByName() {
     this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch).subscribe(
-      (spaceList: Deck[]) => {
+      (spaceList: Space[]) => {
         this.spaces = spaceList;
       },
       error => {
