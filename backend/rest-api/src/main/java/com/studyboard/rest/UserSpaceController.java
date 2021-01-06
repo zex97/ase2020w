@@ -65,9 +65,9 @@ public class UserSpaceController {
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(value = "Edit space associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editSpaceName(
+    public ResponseEntity editSpace(
             @RequestBody SpaceDTO spaceDTO) {
-        service.updateSpaceName(spaceDTO.toSpace());
+        service.updateSpace(spaceDTO.toSpace());
         return ResponseEntity.ok().build();
     }
 

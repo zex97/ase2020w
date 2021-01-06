@@ -58,12 +58,14 @@ public class SimpleUserSpaceService implements UserSpaceService {
     }
 
     @Override
-    public Space updateSpaceName(Space space) {
+    public Space updateSpace(Space space) {
         Space storedSpace = findSpaceById(space.getId());
         logger.info("Changed the space name: from "
                 + storedSpace.getName() + " to: "
-                + space.getName());
+                + space.getName() + " space description from " + storedSpace.getDescription() + " to: "
+                + space.getDescription());
         storedSpace.setName(space.getName());
+        storedSpace.setDescription(space.getDescription());
         return spaceRepository.save(storedSpace);
     }
 
