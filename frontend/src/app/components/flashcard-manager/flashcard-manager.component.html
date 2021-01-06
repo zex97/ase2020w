@@ -130,7 +130,7 @@
       </div>
       <div class="modal-footer">
         <button (click)="createFlashcard()"
-                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors || selectedDecks == undefined"
+                [disabled]="flashcardForm.controls.question.errors || flashcardForm.controls.answer.errors || selectedDecks == undefined || selectedDecks.length == 0"
                 data-dismiss="modal" mat-button mat-dialog-actions type="button">
           Save
         </button>
@@ -236,8 +236,8 @@
           <div class="modal-header">
             <h2 class="modal-title">Edit deck {{this.selectedDeck.name}}</h2>
           </div>
-          <div class="modal-body">
-            <form class="modal-input-form text-center border border-light p-5">
+          <div class="modal-body flashcardModalBody">
+            <form class="modal-input-form">
 
               <mat-form-field [formGroup]="deckEditForm" appearance="outline" class="modal-input-full-width">
                 <mat-label class="modal-label">New deck title</mat-label>
@@ -519,13 +519,13 @@
 
           </div>
           <div class="modal-footer">
-            <button (click)="moveFlashcard(this.selectedFlashcard)" data-dismiss="modal"
-                    mat-button
+            <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0"(click)="moveFlashcard(this.selectedFlashcard)"
+                    data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Move
             </button>
-            <button (click)="copyFlashcard(this.selectedFlashcard)" data-dismiss="modal"
-                    mat-button
+            <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0" (click)="copyFlashcard(this.selectedFlashcard)"
+                    data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Copy
             </button>
