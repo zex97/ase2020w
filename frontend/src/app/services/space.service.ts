@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
-import { Tag } from '../dtos/Tag';
+import { Tag } from '../dtos/tag';
 import {Document} from '../dtos/document';
 
 
