@@ -15,7 +15,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class DocumentSpaceComponent implements OnInit {
 
   spaceForm: FormGroup;
-  nameEditForm: FormGroup;
+  spaceEditForm: FormGroup;
   fileUploadForm: FormGroup;
   filesToUpload: File[] = [];
   filesToUploadNames: String[] = [];
@@ -51,8 +51,12 @@ export class DocumentSpaceComponent implements OnInit {
         Validators.minLength(1)
       ]]
     });
-    this.nameEditForm = this.formBuilder.group({
-      name: ['']
+    this.spaceEditForm = this.formBuilder.group({
+      name: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]],
+      description: ['']
     });
   }
 
@@ -92,8 +96,9 @@ export class DocumentSpaceComponent implements OnInit {
   setCurrentSpace(space: Space) {
     this.currentSpace = space;
     console.log(this.currentSpace);
-    this.nameEditForm.patchValue({
-      name: space.name
+    this.spaceEditForm.patchValue({
+      name: space.name,
+      description: space.description
     });
   }
 
@@ -275,7 +280,8 @@ export class DocumentSpaceComponent implements OnInit {
    */
   saveEdits(space: Space) {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(() => {
-      space.name = this.nameEditForm.controls.name.value;
+      space.name = this.spaceEditForm.controls.name.value;
+      space.description = this.spaceEditForm.controls.description.value;
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
