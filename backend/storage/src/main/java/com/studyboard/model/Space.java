@@ -19,6 +19,7 @@ public class Space {
     private List<Document> documents;
     private User user;
     private String description;
+    private LocalDate creationDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -45,6 +46,15 @@ public class Space {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Column(nullable = false, name = "creationDate")
+    public LocalDate getCreationDate() {
+        return this.creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -90,6 +100,12 @@ public class Space {
 
     public Space (String name, User user) {
         this.name = name;
+        this.user = user;
+    }
+
+    public Space (String name, LocalDate creationDate, User user) {
+        this.name = name;
+        this.creationDate = creationDate;
         this.user = user;
     }
 
