@@ -5,7 +5,6 @@ import {SpaceService} from '../../../services/space.service';
 import {Space} from '../../../dtos/space';
 import {FileUploadService} from '../../../services/file-upload.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Deck} from '../../../dtos/deck';
 
 @Component({
   selector: 'app-document-space',
@@ -44,6 +43,7 @@ export class DocumentSpaceComponent implements OnInit {
         Validators.required,
         Validators.minLength(1)
       ]],
+      description: ['']
     });
     this.fileUploadForm = this.formBuilder.group({
       name: ['', [
@@ -242,7 +242,7 @@ export class DocumentSpaceComponent implements OnInit {
    */
   createSpace() {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      const space = new Space(0, this.spaceForm.controls.name.value, res);
+      const space = new Space(0, this.spaceForm.controls.name.value, this.spaceForm.controls.description.value, res);
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
@@ -321,7 +321,7 @@ export class DocumentSpaceComponent implements OnInit {
 
   searchSpacesByName() {
     this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch).subscribe(
-      (spaceList: Deck[]) => {
+      (spaceList: Space[]) => {
         this.spaces = spaceList;
       },
       error => {

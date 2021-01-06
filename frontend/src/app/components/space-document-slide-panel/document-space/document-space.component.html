@@ -36,7 +36,8 @@
               <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal" matTooltip="Upload files"
                     data-toggle="modal" style="margin-right:5%;"><mat-icon> attach_file</mat-icon></span>
             </mat-card-title>
-            <div class="card-text">Add something about specific space!</div>
+            <div class="card-text" *ngIf="space.description?.length != 0">{{space.description}}</div>
+            <div class="card-text" *ngIf="space.description == null">This space has no description!</div>
 
           </mat-card-content>
         </mat-list-item>
@@ -79,6 +80,13 @@
             <mat-hint *ngIf="spaceForm.controls.name.errors" class="control-label invalid-input-text">Can't be
               empty!
             </mat-hint>
+          </mat-form-field>
+
+          <mat-form-field [formGroup]="spaceForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Space description</mat-label>
+            <input [value]="spaceForm.value.description" formControlName="description" formGroupName="description" id="description"
+                   matInput placeholder="eg. This spaces contains..."
+                   title="description" type="text">
           </mat-form-field>
         </form>
       </div>
