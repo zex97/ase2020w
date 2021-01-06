@@ -9,6 +9,7 @@ public class SpaceDTO {
     private Long id;
     private String name;
     private UserDTO userDTO;
+    private String description;
 
     public SpaceDTO() {
     }
@@ -30,6 +31,14 @@ public class SpaceDTO {
         this.name = name;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public UserDTO getUserDTO() {
         return userDTO;
     }
@@ -43,6 +52,7 @@ public class SpaceDTO {
         space.setId(this.id);
         space.setName(this.name);
         space.setUser(this.userDTO.toUser());
+        space.setDescription(this.description);
         return space;
     }
 
@@ -51,6 +61,7 @@ public class SpaceDTO {
         spaceDTO.setId(space.getId());
         spaceDTO.setName(space.getName());
         spaceDTO.setUserDTO(UserDTO.of(space.getUser()));
+        spaceDTO.setDescription(space.getDescription());
         return spaceDTO;
     }
 
@@ -59,6 +70,7 @@ public class SpaceDTO {
         return "spaceDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 "userDTO=" + userDTO.toString() +
                 '}';
     }

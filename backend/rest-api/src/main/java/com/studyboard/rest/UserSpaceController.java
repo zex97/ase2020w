@@ -3,7 +3,6 @@ package com.studyboard.rest;
 import com.studyboard.dto.DocumentDTO;
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.dto.TagDTO;
-import com.studyboard.model.Document;
 
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;

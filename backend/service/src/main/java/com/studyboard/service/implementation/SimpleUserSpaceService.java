@@ -40,7 +40,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Override
     public void addSpace(Space space) {
-        logger.info("Created new user space with name " + space.getName());
+        logger.info("Created new user space with name " + space.getName() + " and description " + space.getDescription());
         spaceRepository.save(space);
     }
 
