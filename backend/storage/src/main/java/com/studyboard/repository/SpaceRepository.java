@@ -23,7 +23,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long> {
      * @param username of user who created the spaces
      * @return list of user's spaces
      */
-    List<Space> findByUserUsername(String username);
+    List<Space> findByUserUsernameOrderByCreationDateDesc(String username);
 
     /**
      * Find a single space entry by id.
@@ -40,5 +40,5 @@ public interface SpaceRepository extends CrudRepository<Space, Long> {
      * @param searchParam - search parameter for finding a space
      * @return all spaces which contain the parameter in their name
      */
-    List<Space> findByUserUsernameAndNameContaining(String username, String searchParam);
+    List<Space> findByUserUsernameAndNameContainingOrderByCreationDateDesc(String username, String searchParam);
 }

@@ -246,8 +246,11 @@ export class DocumentSpaceComponent implements OnInit {
    * Builds a space dto and sends a creation request.
    */
   createSpace() {
+    const date = new Date();
+    date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
+    const dateString = date.toISOString();
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      const space = new Space(0, this.spaceForm.controls.name.value, this.spaceForm.controls.description.value, res);
+      const space = new Space(0, this.spaceForm.controls.name.value, this.spaceForm.controls.description.value, dateString, res);
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
@@ -273,6 +276,7 @@ export class DocumentSpaceComponent implements OnInit {
       error => {
         this.defaultErrorHandling(error);
       });
+    this.openSnackbar('Space ' + this.selectSpace.name + ' successfuly deleted!', 'success-snackbar');
   }
 
   /**
@@ -291,6 +295,7 @@ export class DocumentSpaceComponent implements OnInit {
         }
       );
     });
+    this.openSnackbar('Space ' + this.selectSpace.name + ' successfuly updated!', 'success-snackbar');
   }
 
   openSnackbar(message: string, type: string) {

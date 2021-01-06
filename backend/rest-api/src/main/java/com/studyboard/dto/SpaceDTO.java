@@ -2,6 +2,7 @@ package com.studyboard.dto;
 
 import com.studyboard.model.Space;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class SpaceDTO {
@@ -10,6 +11,7 @@ public class SpaceDTO {
     private String name;
     private UserDTO userDTO;
     private String description;
+    private LocalDate creationDate;
 
     public SpaceDTO() {
     }
@@ -39,6 +41,14 @@ public class SpaceDTO {
         this.description = description;
     }
 
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public UserDTO getUserDTO() {
         return userDTO;
     }
@@ -53,6 +63,7 @@ public class SpaceDTO {
         space.setName(this.name);
         space.setUser(this.userDTO.toUser());
         space.setDescription(this.description);
+        space.setCreationDate(this.creationDate);
         return space;
     }
 
@@ -62,6 +73,7 @@ public class SpaceDTO {
         spaceDTO.setName(space.getName());
         spaceDTO.setUserDTO(UserDTO.of(space.getUser()));
         spaceDTO.setDescription(space.getDescription());
+        spaceDTO.setCreationDate(space.getCreationDate());
         return spaceDTO;
     }
 

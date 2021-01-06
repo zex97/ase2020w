@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,7 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public List<Space> getUserSpaces(String username) {
         logger.info("Getting all user spaces for user with username " + username);
-        return spaceRepository.findByUserUsername(username);
+        return spaceRepository.findByUserUsernameOrderByCreationDateDesc(username);
     }
 
     @Override
@@ -146,6 +148,6 @@ public class SimpleUserSpaceService implements UserSpaceService {
             searchParam = "";
         }
         logger.info("Getting all spaces containing " + searchParam + " in the name that belong to user: " + username);
-        return spaceRepository.findByUserUsernameAndNameContaining(username, searchParam);
+        return spaceRepository.findByUserUsernameAndNameContainingOrderByCreationDateDesc(username, searchParam);
     }
 }

@@ -52,7 +52,7 @@ public class UserSpaceServiceTest {
         Space space = new Space();
         space.setUser(user);
 
-        Mockito.when(spaceRepository.findByUserUsername(user.getUsername())).thenReturn(Collections.singletonList(space));
+        Mockito.when(spaceRepository.findByUserUsernameOrderByCreationDateDesc(user.getUsername())).thenReturn(Collections.singletonList(space));
 
         List<Space> response = userSpaceService.getUserSpaces(user.getUsername());
         Space storedSpace = response.get(0);
