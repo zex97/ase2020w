@@ -20,7 +20,7 @@ public interface FlashcardRepository extends CrudRepository<Flashcard, Long> {
      * @param deckId of the deck containing flashcards
      * @return all flashcards belonging to specified deck
      */
-    @Query(value = "SELECT * FROM flashcard f JOIN flashcards_assignment f_a ON f.f_id=f_a.flashcard_id WHERE f_a.deck_id = :deckId", nativeQuery = true)
+    @Query(value = "SELECT * FROM flashcard f JOIN flashcards_assignment f_a ON f.f_id=f_a.flashcard_id WHERE f_a.deck_id = :deckId ORDER BY f.f_id", nativeQuery = true)
     List<Flashcard> findByDeckId(@Param("deckId") long deckId);
 
     /**
