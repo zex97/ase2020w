@@ -199,7 +199,7 @@ public class SimpleFlashcardService implements FlashcardService {
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
         Flashcard editedFlashcard = flashcardRepository.save(storedFlashcard);
         System.out.println(flashcard.getDocumentReferences().size());
-        System.out.println(editedFlashcard.getDocumentReferences().size());
+//        System.out.println(editedFlashcard.getDocumentReferences().size());
         return editedFlashcard;
         //return flashcardRepository.save(storedFlashcard);
     }
@@ -257,15 +257,6 @@ public class SimpleFlashcardService implements FlashcardService {
         }
         logger.info("Searching for the deck with the name " + deck.getName());
         return deck;
-    }
-
-    public Flashcard findFlashcardById(Long flashcardId) {
-        Flashcard flashcard = flashcardRepository.findFlashcardById(flashcardId);
-        if (flashcard == null) {
-            logger.warn("Flashcard does not exist");
-            //throw new DeckDoesNotExist();
-        }
-        return flashcard;
     }
 
     private User findUserById(long userId) {

@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("unit-test")
@@ -68,6 +70,52 @@ public class FlashcardRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Test
+    public void repositorySavesFlashcardCorrectly() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUsername(USER_USERNAME);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
+        user.setLoginAttempts(USER_LOGIN_ATTEMPTS);
+        user.setRole(USER_ROLE);
+        user.setEnabled(USER_ENABLED);
+        userRepository.save(user);
+
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
+        deck.setName(DECK_NAME);
+        deck.setSize(DECK_SIZE);
+        deck.setCreationDate(DECK_CREATION_DATE);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED);
+        deck.setUser(user);
+        deckRepository.save(deck);
+
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID_2);
+        flashcard.setQuestion(FLASHCARD_QUESTION_2);
+        flashcard.setAnswer(FLASHCARD_ANSWER_2);
+        flashcard.setEasiness(FLASHCARD_EASINESS_2);
+        flashcard.setInterval(FLASHCARD_INTERVAL_2);
+        flashcard.setCorrectnessStreak(FLASHCARD_CORRECTNESS_STREAK_2);
+        flashcard.setNextDueDate(FLASHCARD_NEXT_DUE_DATE_2);
+        flashcardRepository.save(flashcard);
+        flashcardRepository.assignFlashcard(DECK_ID, FLASHCARD_ID_2);
+
+        Flashcard flashcard1 = flashcardRepository.findFlashcardById(FLASHCARD_ID_2);
+
+        assertAll(
+                () -> Assertions.assertEquals(FLASHCARD_ID_2, flashcard1.getId()),
+                () -> Assertions.assertEquals(FLASHCARD_QUESTION_2, flashcard1.getQuestion()),
+                () -> Assertions.assertEquals(FLASHCARD_ANSWER_2, flashcard1.getAnswer()),
+                () -> Assertions.assertEquals(FLASHCARD_EASINESS_2, flashcard1.getEasiness()),
+                () -> Assertions.assertEquals(FLASHCARD_INTERVAL_2, flashcard1.getInterval()),
+                () -> Assertions.assertEquals(FLASHCARD_CORRECTNESS_STREAK_2, flashcard1.getCorrectnessStreak()),
+                () -> Assertions.assertEquals(FLASHCARD_NEXT_DUE_DATE_2, flashcard1.getNextDueDate())
+        );
+
+    }
 
     @Test
     public void repositoryReturnsDueCardsOnly() {
