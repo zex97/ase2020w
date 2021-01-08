@@ -123,7 +123,6 @@
                role="alert">
             <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
           </div>
-          <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
           <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames"
                  accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
                  multiple type="file"
