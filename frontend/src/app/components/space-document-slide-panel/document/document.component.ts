@@ -41,7 +41,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
   @Input() space: Space;
-  @Output() toggleSlideEvent = new EventEmitter();
+  @Output() documentEvents = new EventEmitter();
 
   ngOnInit() {
     // this.loadAllDocuments(this.spaceId);
