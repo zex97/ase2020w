@@ -33,6 +33,7 @@ export class DocumentSpaceComponent implements OnInit {
   isLeftVisible = true;
   allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
   spaceNameSearch: string = '';
+  filesCountString: string = 'No file chosen';
 
   @ViewChild('documentComponent') documentComponent;
 
@@ -141,6 +142,11 @@ export class DocumentSpaceComponent implements OnInit {
   handleFileInput(files: File[]) {
     console.log('Handling files for space: ' + this.spaceId);
     this.filesToUpload = Array.from(files);
+    if (this.filesToUpload.length === 0) {
+      this.filesCountString = 'No file chosen';
+    } else {
+      this.filesCountString = this.filesToUpload.length + ' files selected.';
+    }
     this.vanishModuleErrorMessage();
     for (let i = 0; i < this.filesToUpload.length; i++) {
       const file = this.filesToUpload[i];
@@ -169,9 +175,12 @@ export class DocumentSpaceComponent implements OnInit {
     this.filesToUploadNames.splice(i, 1);
 
 
-    if (this.filesToUpload.length === 0) {
+    if (this.filesToUpload.length == 0) {
       this.filesToUpload = [];
       this.filesToUploadNames = [];
+      this.filesCountString = 'No file chosen';
+    } else {
+      this.filesCountString = this.filesToUpload.length + ' files selected.';
     }
     this.handleFileInput(this.filesToUpload);
   }

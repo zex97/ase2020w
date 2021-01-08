@@ -127,7 +127,12 @@
           <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames"
                  accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
                  multiple type="file"
-                 value="name">
+                 value="name" style="display: none;">
+
+          <input type="button" value="Choose Files" onclick="document.getElementById('files').click();" />
+          <span>
+            {{filesCountString}}
+          </span>
           <!--<label for="files">Choose files </label>-->
         </div>
         <div *ngIf="filesToUpload.length>0">
