@@ -59,7 +59,7 @@ public class SimpleFileUploadService implements FileUploadService {
     // user/space path
     Path spacePath = this.rootLocation
             .resolve(space.getUser().getUsername())
-            .resolve(space.getName())
+            .resolve(space.getId() + "")
             .normalize().toAbsolutePath();
 
     // if user or space folder doesn't exist create one
@@ -74,7 +74,7 @@ public class SimpleFileUploadService implements FileUploadService {
     Path uploadFilePath =
         this.rootLocation
             .resolve(space.getUser().getUsername())
-            .resolve(space.getName())
+            .resolve(space.getId() + "")
             .resolve(Paths.get(fileName))
             .normalize()
             .toAbsolutePath();
@@ -128,7 +128,7 @@ public class SimpleFileUploadService implements FileUploadService {
           "Created new document for file '"
               + path.getFileName().toString()
               + "' in space("
-              + space.getName()
+              + space.getId()
               + ") of user ("
               + space.getUser().getUsername()
               + ")");
@@ -153,7 +153,7 @@ public class SimpleFileUploadService implements FileUploadService {
   @Override
   public Resource loadAsResource(Space space, String fileName) {
     String userName = space.getUser().getUsername();
-    Path filePath = load(fileName, space.getName(), userName);
+    Path filePath = load(fileName, space.getId() + "", userName);
     try {
       Resource resource = new UrlResource(filePath.toUri());
       if (resource.exists() || resource.isReadable()) {
@@ -179,7 +179,7 @@ public class SimpleFileUploadService implements FileUploadService {
   public void deleteUserFile(String fileName, long spaceId) {
     Space space = spaceRepository.findSpaceById(spaceId);
     List<Document> list = space.getDocuments();
-    Path filePath = load(fileName, space.getName(), space.getUser().getUsername());
+    Path filePath = load(fileName, space.getId() + "", space.getUser().getUsername());
 
     for (Document document : list) {
       if (document.getName().equals(fileName)) {
@@ -203,7 +203,7 @@ public class SimpleFileUploadService implements FileUploadService {
               + "' has been successfully deleted by user("
               + space.getUser().getUsername()
               + ") in space("
-              + space.getName()
+              + space.getId()
               + ").");
     } catch (IOException e) {
       throw new FileStorageException("Failed to delete file '" + fileName + "'");
