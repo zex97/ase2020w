@@ -11,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +48,7 @@ public class UserSpaceRepositoryTest {
     @Test
     public void repositorySavesSpaceCorrectly() {
         assertEquals(
-                0, spaceRepository.findByUserUsername(USER_USERNAME).size());
+                0, spaceRepository.findByUserUsernameOrderByCreationDateDesc(USER_USERNAME).size());
 
         User user = new User();
         user.setId(USER_ID);
@@ -63,9 +64,10 @@ public class UserSpaceRepositoryTest {
         space.setId(SPACE_ID);
         space.setName(SPACE_NAME);
         space.setUser(user);
+        space.setCreationDate(LocalDate.now());
         spaceRepository.save(space);
 
-        List<Space> spaces = spaceRepository.findByUserUsername(USER_USERNAME);
+        List<Space> spaces = spaceRepository.findByUserUsernameOrderByCreationDateDesc(USER_USERNAME);
 
         Space storedSpace = spaces.get(0);
         assertEquals(SPACE_NAME, storedSpace.getName());
@@ -74,7 +76,7 @@ public class UserSpaceRepositoryTest {
     @Test
     public void repositoryFindsAllSpacesWithNameContainingSpecificStringCorrectly() {
         assertEquals(
-                0, spaceRepository.findByUserUsername(USER_USERNAME).size());
+                0, spaceRepository.findByUserUsernameOrderByCreationDateDesc(USER_USERNAME).size());
 
         User user = new User();
         user.setId(USER_ID);
@@ -90,9 +92,10 @@ public class UserSpaceRepositoryTest {
         space.setId(SPACE_ID);
         space.setName(SPACE_NAME);
         space.setUser(user);
+        space.setCreationDate(LocalDate.now());
         spaceRepository.save(space);
 
-        List<Space> spaces = spaceRepository.findByUserUsernameAndNameContaining(USER_USERNAME, SPACE_SEARCH_PARAMETER);
+        List<Space> spaces = spaceRepository.findByUserUsernameAndNameContainingOrderByCreationDateDesc(USER_USERNAME, SPACE_SEARCH_PARAMETER);
 
         Space storedSpace = spaces.get(0);
         assertEquals(spaces.size(), 1);
@@ -103,7 +106,7 @@ public class UserSpaceRepositoryTest {
     @Test
     public void repositoryFindsAllUserSpacesCorrectly() {
         assertEquals(
-                0, spaceRepository.findByUserUsername(USER_USERNAME).size());
+                0, spaceRepository.findByUserUsernameOrderByCreationDateDesc(USER_USERNAME).size());
 
         User user = new User();
         user.setId(USER_ID);
@@ -119,15 +122,17 @@ public class UserSpaceRepositoryTest {
         space.setId(SPACE_ID);
         space.setName(SPACE_NAME);
         space.setUser(user);
+        space.setCreationDate(LocalDate.now());
         spaceRepository.save(space);
 
         Space space1 = new Space();
         space1.setId(SPACE_ID_1);
         space1.setName(SPACE_NAME_1);
         space1.setUser(user);
+        space1.setCreationDate(LocalDate.now());
         spaceRepository.save(space1);
 
-        List<Space> spaces = spaceRepository.findByUserUsernameAndNameContaining(USER_USERNAME, SPACE_SEARCH_PARAMETER);
+        List<Space> spaces = spaceRepository.findByUserUsernameAndNameContainingOrderByCreationDateDesc(USER_USERNAME, SPACE_SEARCH_PARAMETER);
 
         assertEquals(spaces.size(), 2);
     }

@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserSpaceControllerTest extends BaseIntegrationTest {
@@ -40,8 +42,8 @@ public class UserSpaceControllerTest extends BaseIntegrationTest {
 
         String responseString = resultActionsUser.andReturn().getResponse().getContentAsString();
         User[] responseArray = mapper.readValue(responseString, User[].class);
-        TEST_SPACE_1 =  new Space("test1", responseArray[0]);
-        TEST_SPACE_2 =  new Space("test2", responseArray[0]);
+        TEST_SPACE_1 =  new Space("test1", LocalDate.now(), responseArray[0]);
+        TEST_SPACE_2 =  new Space("test2", LocalDate.now(), responseArray[0]);
     }
 
     @AfterEach

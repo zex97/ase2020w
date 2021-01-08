@@ -9,7 +9,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DocumentDialogComponent} from '../../document-dialog/document-dialog.component';
-import {Deck} from '../../../dtos/deck';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
@@ -56,6 +55,7 @@ export class DocumentComponent implements OnInit, OnChanges {
     // if selected space changes load the documents for the newly selected space
     // console.log('loading all documents of space ' + this.space.name);
     this.loadAllDocuments(this.space.id);
+    window.scrollTo(0, 0);
   }
 
   loadAllDocuments(spaceId: number) {
