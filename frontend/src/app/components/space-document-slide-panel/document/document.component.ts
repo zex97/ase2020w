@@ -29,6 +29,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   fileObject: Blob;
   blobUrl: any;
   docEditForm: FormGroup;
+  documentNameSearch: string = '';
 
   constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService, private sanitizer: DomSanitizer,
               private dialog: MatDialog, private snackBar: MatSnackBar, private formBuilder: FormBuilder) {
@@ -195,6 +196,24 @@ export class DocumentComponent implements OnInit, OnChanges {
     this.error = true;
     this.errorMessage = '';
     this.errorMessage = error.error.message;
+  }
+
+
+  searchDocumentsByName() {
+    // Uncomment when backend implementation of document search is finished
+    /*this.spaceService.getDocumentsByName(localStorage.getItem('currentUser'), this.space.id, this.documentNameSearch).subscribe(
+      (documentList: Document[]) => {
+        this.documentsOfSpace = documentList;
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      }
+    );*/
+  }
+
+  backToAll() {
+    this.loadAllDocuments(this.space.id);
+    this.documentNameSearch = '';
   }
 
 }
