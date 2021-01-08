@@ -115,29 +115,29 @@ public class SimpleFileUploadService implements FileUploadService {
 
       // extension is lost then
       document.setSpace(space);
-      document.setNeedsTranscription(isTranscriptionNeeded(path.getFileName().toString()));
-      document.setTranscription(null);
-
-      // TODO: add transcriber trigger
-      if (document.isNeedsTranscription()) {
-        transcriptionService.transcribe(document);
-      }
-      documentRepository.save(document);
 
       logger.info(
-          "Created new document for file '"
-              + path.getFileName().toString()
-              + "' in space("
-              + space.getId()
-              + ") of user ("
-              + space.getUser().getUsername()
-              + ")");
+              "Created new document for file '"
+                      + path.getFileName().toString()
+                      + "' in space("
+                      + space.getId()
+                      + ") of user ("
+                      + space.getUser().getUsername()
+                      + ")");
     } else {
       logger.info(
-          "File '"
-              + path.getFileName().toString()
-              + "' already exists, overriding the file content.");
+              "File '"
+                      + path.getFileName().toString()
+                      + "' already exists, overriding the file content.");
     }
+    document.setNeedsTranscription(isTranscriptionNeeded(path.getFileName().toString()));
+    document.setTranscription(null);
+
+    // TODO: add transcriber trigger
+    if (document.isNeedsTranscription()) {
+      transcriptionService.transcribe(document);
+    }
+    documentRepository.save(document);
   }
 
   @Override
