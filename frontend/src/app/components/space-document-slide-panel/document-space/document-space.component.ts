@@ -130,6 +130,7 @@ export class DocumentSpaceComponent implements OnInit {
       document.getElementById('editSpaceHidden').click();
     }
     if (value === 'uploadToSpace') {
+      this.clearInputFiles();
       document.getElementById('uploadToSpaceHidden').click();
     }
   }
@@ -217,6 +218,7 @@ export class DocumentSpaceComponent implements OnInit {
     console.log('Uploading file for space: ' + spaceId);
     let successUploadCount: number = 0;
     // tslint:disable-next-line:forin
+    this.filesCountString = 'No file chosen';
     for (let i = 0; i < this.filesToUpload.length; i++) {
       const file = this.filesToUpload[i];
       this.fileUploadService.uploadFile(file, spaceId).subscribe((res) => {
@@ -248,6 +250,7 @@ export class DocumentSpaceComponent implements OnInit {
    * Resets the file input field after a close or submit
    * */
   clearInputFiles() {
+    this.filesCountString = 'No file chosen';
     this.filesToUpload = [];
     this.filesToUploadNames = [];
   }
