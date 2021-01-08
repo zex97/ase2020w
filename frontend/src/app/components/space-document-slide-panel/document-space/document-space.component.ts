@@ -119,8 +119,20 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   parentEventHandlerFunction(value) {
-    this.toggleSlide();
+    if (value === 'backToSpaces') {
+      this.toggleSlide();
+    }
+    if (value === 'deleteSpace') {
+      document.getElementById('deleteSpaceHidden').click();
+    }
+    if (value === 'editSpace') {
+      document.getElementById('editSpaceHidden').click();
+    }
+    if (value === 'uploadToSpace') {
+      document.getElementById('uploadToSpaceHidden').click();
+    }
   }
+
 
   /**
    * Save uploaded files into a global variable and check if any
