@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {MatChipInputEvent} from '@angular/material/chips';
-import { Tag } from 'src/app/dtos/Tag';
+import { Tag } from 'src/app/dtos/tag';
 import { SpaceService } from 'src/app/services/space.service';
 import {Document} from 'src/app/dtos/document';
 
@@ -12,7 +12,7 @@ import {Document} from 'src/app/dtos/document';
 export class TagBarComponent implements OnInit {
 
   constructor(private spaceService: SpaceService) { }
-  
+
   @Input() doc: Document;
 
 
@@ -23,7 +23,7 @@ export class TagBarComponent implements OnInit {
     console.log("adding tag");
     const input = event.input;
     const value = event.value;
-    
+
     if ((value || '').trim()) {
       const tagDto = new Tag(value);
       this.spaceService.addTag(tagDto, this.doc.id).subscribe(

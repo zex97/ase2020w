@@ -3,7 +3,6 @@ package com.studyboard.rest;
 import com.studyboard.dto.DocumentDTO;
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.dto.TagDTO;
-import com.studyboard.model.Document;
 
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
@@ -66,9 +65,9 @@ public class UserSpaceController {
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(value = "Edit space associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editSpaceName(
+    public ResponseEntity editSpace(
             @RequestBody SpaceDTO spaceDTO) {
-        service.updateSpaceName(spaceDTO.toSpace());
+        service.updateSpace(spaceDTO.toSpace());
         return ResponseEntity.ok().build();
     }
 

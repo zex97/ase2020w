@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
-import { Tag } from '../dtos/Tag';
+import { Tag } from '../dtos/tag';
 import {Document} from '../dtos/document';
 
 
@@ -50,7 +50,7 @@ export class SpaceService {
    * @param space to make changes to
    */
   editSpace(space: Space): Observable<Space> {
-    console.log('Change the space name to ' + space.name);
+    console.log('Change the space name to ' + space.name + ' and space description to ' + space.description);
     return this.httpClient.put<Space>(this.spaceBaseUri, space);
   }
 

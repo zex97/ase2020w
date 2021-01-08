@@ -4,6 +4,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +18,8 @@ public class Space {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Document> documents;
     private User user;
+    private String description;
+    private LocalDate creationDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -33,6 +37,24 @@ public class Space {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "description")
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column(nullable = false, name = "creationDate")
+    public LocalDate getCreationDate() {
+        return this.creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -72,5 +94,24 @@ public class Space {
 
     public void removeDocument(Document document) {
         documents.removeIf(storedDocument -> storedDocument.getId() == document.getId());
+    }
+
+    public Space () {}
+
+    public Space (String name, User user) {
+        this.name = name;
+        this.user = user;
+    }
+
+    public Space (String name, LocalDate creationDate, User user) {
+        this.name = name;
+        this.creationDate = creationDate;
+        this.user = user;
+    }
+
+    public Space (String name, String description, User user) {
+        this.name = name;
+        this.user = user;
+        this.description = description;
     }
 }
