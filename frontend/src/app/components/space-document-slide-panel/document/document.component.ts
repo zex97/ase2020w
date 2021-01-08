@@ -29,6 +29,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   fileObject: Blob;
   blobUrl: any;
   docEditForm: FormGroup;
+  documentOpen: boolean = false;
 
   constructor(private spaceService: SpaceService, private fileUploadService: FileUploadService, private sanitizer: DomSanitizer,
               private dialog: MatDialog, private snackBar: MatSnackBar, private formBuilder: FormBuilder) {
@@ -129,14 +130,21 @@ export class DocumentComponent implements OnInit, OnChanges {
    * Fetches a file as resource from the backend
    * */
   loadFile(document: Document) {
+    if (this.documentOpen) {
+      return;
+    }
+    this.documentOpen = true;
     this.fileUploadService.getFile(this.space, document.name).subscribe(
       (res) => {
         this.handleFileExtensions(document, res);
-        this.dialog.open(DocumentDialogComponent, {
+        const ref = this.dialog.open(DocumentDialogComponent, {
           data: {
             currentDocument: document,
             blobUrl: this.blobUrl
           }
+        });
+        ref.afterClosed().subscribe(() => {
+          this.documentOpen = false;
         });
       },
       error => {
