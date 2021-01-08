@@ -62,7 +62,15 @@ public interface FileUploadService {
   /**
    * Deletes the user folder with all the files belonging to the user
    *
-   * @param userId id of the user that is being deleted
+   * @param userName username of the user that is being deleted
    */
-  void deleteUserFolder(String userId);
+  void deleteUserFolder(String userName);
+
+  /**
+   * Deletes the space folder with all the files belonging to the space
+   *
+   * @param userName username of the user that the space belongs to
+   * @param spaceId id of the space that is being deleted
+   */
+  void deleteSpaceFolder(String userName, String spaceId);
 }

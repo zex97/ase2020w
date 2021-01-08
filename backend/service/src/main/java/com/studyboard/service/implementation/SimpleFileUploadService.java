@@ -214,4 +214,9 @@ public class SimpleFileUploadService implements FileUploadService {
   public void deleteUserFolder(String userName) {
     FileSystemUtils.deleteRecursively(rootLocation.resolve(userName).toFile());
   }
+
+  @Override
+  public void deleteSpaceFolder(String userName, String spaceId) {
+    FileSystemUtils.deleteRecursively(rootLocation.resolve(userName).resolve(spaceId).toFile());
+  }
 }

@@ -176,7 +176,7 @@ export class DocumentSpaceComponent implements OnInit {
     this.filesToUploadNames.splice(i, 1);
 
 
-    if (this.filesToUpload.length == 0) {
+    if (this.filesToUpload.length === 0) {
       this.filesToUpload = [];
       this.filesToUploadNames = [];
       this.filesCountString = 'No file chosen';
@@ -291,6 +291,12 @@ export class DocumentSpaceComponent implements OnInit {
    * Sends a request to delete a specific space.
    */
   deleteSpace(id: number) {
+    this.fileUploadService.deleteSpaceFiles(id).subscribe(() => {
+      console.log('Files deleted.');
+    },
+      error1 => {
+      this.defaultErrorHandling(error1);
+      });
     this.spaceService.deleteSpace(id).subscribe(
       () => {
         // set chosen space as unselected

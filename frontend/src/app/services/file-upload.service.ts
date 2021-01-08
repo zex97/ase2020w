@@ -47,4 +47,13 @@ export class FileUploadService {
     return this.httpClient.delete(this.userBaseUri + '/delete-file/' + space.id + '/' + fileName);
   }
 
+  /**
+   * Delete space folder and files
+   * @param spaceId id of space being deleted
+   */
+  deleteSpaceFiles(spaceId: number) {
+    console.log('Deleting files from space.');
+    return this.httpClient.delete(this.userBaseUri + '/delete-space-folder/' + localStorage.getItem('currentUser') + '/' + spaceId);
+  }
+
 }
