@@ -29,8 +29,8 @@
 <div id="listOfDocuments">
   <mat-nav-list *ngFor="let doc of getAllDocuments()">
     <mat-list-item id="documentListItem">
-      <mat-card-content>
-        <mat-card-title (click)="loadFile(doc)">
+      <mat-card-content (click)="loadFile(doc)">
+        <mat-card-title>
           <h3 class="document-name">
             {{doc.name}}
           </h3>
@@ -41,7 +41,7 @@
             <mat-icon>save_alt</mat-icon>
           </span>
         </mat-card-title>
-        <app-tag-bar [doc]="doc"></app-tag-bar>
+        <app-tag-bar [doc]="doc" (click)="$event.stopPropagation();"></app-tag-bar>
       </mat-card-content>
     </mat-list-item>
   </mat-nav-list>

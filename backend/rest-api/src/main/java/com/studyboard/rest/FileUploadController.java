@@ -88,6 +88,20 @@ public class FileUploadController {
     fileUploaderService.deleteUserFolder(userName);
   }
 
+  @RequestMapping(
+          value = "/delete-space-folder/{userName}/{spaceId}",
+          method = RequestMethod.DELETE,
+          produces = "application/json")
+  @ApiOperation(
+          value = "Delete space folder belonging to a user and all files in it.",
+          authorizations = {@Authorization(value = "apiKey")})
+  @CrossOrigin
+  public void deleteUserFolder(
+          @PathVariable String userName,
+          @PathVariable String spaceId) {
+    fileUploaderService.deleteSpaceFolder(userName, spaceId);
+  }
+
   @ExceptionHandler(StorageFileNotFoundException.class)
   public ResponseEntity handleStorageException(StorageFileNotFoundException e) {
     return ResponseEntity.notFound().build();
