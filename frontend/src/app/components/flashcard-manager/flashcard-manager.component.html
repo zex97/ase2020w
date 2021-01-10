@@ -325,8 +325,7 @@
                        style="width:15%;" type="number">
               </div>
             </form>
-            <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not corresponding to the size of
-              the deck or 0!</h5>
+            <h5 *ngIf="this.sizeError" class="text-warning">Number of chosen cards not applicable to the deck!</h5>
             <h5 *ngIf="this.optionError" class="text-warning">You must choose an option!</h5>
 
             <ng-template #reviseBlock>
@@ -477,11 +476,11 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Rate a flashcard "{{this.selectedFlashcard.question}}"</h2>
+            <h2 class="modal-title">Rate flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
             <form class="border border-light p-5">
-              <ngb-rating [(rate)]="currentRate" [max]="5" [readonly]="false"></ngb-rating>
+              <ngb-rating [(rate)]="currentRate" [max]="5" [readonly]="false" ></ngb-rating>
               <h3 style="margin-top: 20px"> Rate personal confidence level from 1 to 5 by choosing the appropriate
                 number of stars!</h3>
             </form>

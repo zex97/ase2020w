@@ -496,6 +496,9 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a request to rate a specific flashcard while in revision mode.
    */
   rateFlashcardInRevision(flashcard: Flashcard, rate: number) {
+    if(this.revisionCounter<this.revisionFlashcards.length) {
+      this.getRevisionFlashcard();
+    }
     if (rate != null) {
       flashcard.confidenceLevel = rate;
     }
