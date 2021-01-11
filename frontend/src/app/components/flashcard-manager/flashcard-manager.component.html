@@ -3,7 +3,7 @@
 
     <mat-form-field (keyup.enter)="searchDecksByName()" *ngIf="this.viewAll" class="pageTopBarSearchField">
       <mat-placeholder style="color: #FEFFFF">Search decks</mat-placeholder>
-      <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="deckNameSearch">
+      <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="deckNameSearch" (ngModelChange)="searchDecksByName()">
       <button (click)="searchDecksByName()" aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF;">
         <mat-icon style="color: #FEFFFF">search</mat-icon>
       </button>
@@ -26,8 +26,8 @@
   </div>
 </div>
 
-<div class="warningMessageContainer" *ngIf="isEmpty()">
-  <h2 class="warningMessage">No decks/flashcards were created!</h2>
+<div class="warningMessageContainer" *ngIf="isEmptyDecks()">
+  <h2 class="warningMessage">No decks were created!</h2>
 </div>
 
 <!--Create a deck-->
@@ -191,6 +191,11 @@
       </mat-card>
     </div>
     <h3 id="flashcard-title">Flashcards:</h3>
+
+    <div class="warningMessageContainer" *ngIf="isEmptyFlashcards()">
+      <h2 class="warningMessage">No flashcards were created in this deck!</h2>
+    </div>
+
     <div class="row" style="margin-left:-4%;">
       <div *ngFor="let flashcard of getFlashcards()" class="col-xl-3 col-4 p-2">
         <mat-accordion>
@@ -300,6 +305,7 @@
 
               <div class="flex-grid">
                 <mat-radio-button (change)="this.chosenOption=1" *ngIf="this.dueDateFlashcards"
+                                  [checked]="this.chosenOption==1"
                                   [disabled]="this.dueDateFlashcards.length==0"
                                   style="padding-bottom: 15px;" value="1">Revise all cards that are
                   due today: <strong>{{this.dueDateFlashcards.length}}</strong></mat-radio-button>
@@ -311,6 +317,7 @@
               </div>
               <div class="flex-grid">
                 <mat-radio-button (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;"
+                                  [checked]="this.chosenOption==2"
                                   value="2">Choose a different number of flashcards
                   for revision:
                 </mat-radio-button>
@@ -359,6 +366,7 @@
                         class="close" matTooltip="Next flashcard">
                    <mat-icon>arrow_forward_ios</mat-icon>
                   </span>
+                  <span *ngIf="this.revisionCounter>=this.revisionFlashcards.length" style="width:23px;"></span>
 
                 </div>
               </div>

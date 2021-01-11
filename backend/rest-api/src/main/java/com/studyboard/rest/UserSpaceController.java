@@ -21,7 +21,7 @@ public class UserSpaceController {
     @Autowired
     private SimpleUserSpaceService service;
 
-    @RequestMapping(value = "/{username}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/search/{username}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(value = "Get space associated with specific user.", authorizations = {@Authorization(value = "apiKey")})
     public List<SpaceDTO> getUserSpaces(@PathVariable(name = "username") String username) {
         return service.getUserSpaces(username).stream()
