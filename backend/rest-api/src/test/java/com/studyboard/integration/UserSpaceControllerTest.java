@@ -70,7 +70,7 @@ public class UserSpaceControllerTest extends BaseIntegrationTest {
 
         ResultActions resultActionsSpace =
                 this.mockMvc
-                        .perform(MockMvcRequestBuilders.get(SPACE_ENDPOINT + "/testUsername").accept(MediaType.APPLICATION_JSON))
+                        .perform(MockMvcRequestBuilders.get(SPACE_ENDPOINT + "/search/testUsername").accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
 

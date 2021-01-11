@@ -36,6 +36,7 @@ export class DocumentSpaceComponent implements OnInit {
   filesCountString: string = 'No file chosen';
 
   @ViewChild('documentComponent') documentComponent;
+  @ViewChild('sortOption') sortOption;
 
   constructor(private formBuilder: FormBuilder, private spaceService: SpaceService, private userService: UserService,
               private fileUploadService: FileUploadService, private snackBar: MatSnackBar) {
@@ -256,7 +257,31 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   getSpaces() {
-    return this.spaces;
+    if (this.sortOption != null) {
+      // console.log(this.sortOption.value);
+      // const sortOption = document.getElementById('sortOptions');
+      // if (this.sortOption != null && this.sortOption != undefined) {
+      switch (this.sortOption.value) {
+        case 'name-asc': {
+          return this.spaces.sort((s1, s2) => s1.name.localeCompare(s2.name));
+        }
+        case 'name-desc': {
+          return this.spaces.sort((s1, s2) => s2.name.localeCompare(s1.name));
+        }
+        case 'date-asc': {
+          return this.spaces.sort((s1, s2) => Date.parse(s1.creationDate) - Date.parse(s2.creationDate));
+        }
+        case 'date-desc': {
+          return this.spaces.sort((s2, s1) => Date.parse(s1.creationDate) - Date.parse(s2.creationDate));
+        }
+        case 'default': {
+          return this.spaces;
+        }
+        default: {
+          return this.spaces;
+        }
+      }
+    }
   }
 
   /**
@@ -292,10 +317,10 @@ export class DocumentSpaceComponent implements OnInit {
    */
   deleteSpace(id: number) {
     this.fileUploadService.deleteSpaceFiles(id).subscribe(() => {
-      console.log('Files deleted.');
-    },
+        console.log('Files deleted.');
+      },
       error1 => {
-      this.defaultErrorHandling(error1);
+        this.defaultErrorHandling(error1);
       });
     this.spaceService.deleteSpace(id).subscribe(
       () => {

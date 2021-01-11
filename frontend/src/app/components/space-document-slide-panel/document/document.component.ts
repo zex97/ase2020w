@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
 import {SpaceService} from '../../../services/space.service';
 import {Document} from '../../../dtos/document';
 import {Space} from '../../../dtos/space';
@@ -44,6 +44,7 @@ export class DocumentComponent implements OnInit, OnChanges {
 
   @Input() space: Space;
   @Output() documentEvents = new EventEmitter();
+  @ViewChild('sortOption') sortOption;
 
   ngOnInit() {
     // this.loadAllDocuments(this.spaceId);
@@ -53,12 +54,19 @@ export class DocumentComponent implements OnInit, OnChanges {
    * If different space is selected makes sure
    * that the documents are loaded for the new space.
    * */
-  ngOnChanges() {
+  async ngOnChanges() {
     // if selected space changes load the documents for the newly selected space
     // console.log('loading all documents of space ' + this.space.name);
+    await delay(100);
     this.loadAllDocuments(this.space.id);
     window.scrollTo(0, 0);
+
+    // add delay for the reload of all documents after adding a new one
+    function delay(ms: number) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
   }
+
 
   loadAllDocuments(spaceId: number) {
     this.documentsOfSpace = [];
@@ -78,8 +86,23 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
   getAllDocuments() {
-    // console.log(this.documentsOfSpace.length);
-    return this.documentsOfSpace;
+      if (this.sortOption != null) {
+      switch (this.sortOption.value) {
+        case 'name-asc': {
+          return this.documentsOfSpace.sort((s1, s2) => s1.name.localeCompare(s2.name));
+        }
+        case 'name-desc': {
+          return this.documentsOfSpace.sort((s1, s2) => s2.name.localeCompare(s1.name));
+        }
+        case 'default': {
+          return this.documentsOfSpace;
+        }
+        default: {
+          return this.documentsOfSpace;
+        }
+      }
+    }
+      return this.documentsOfSpace;
   }
 
   deleteDocument(doc: Document) {
