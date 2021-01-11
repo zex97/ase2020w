@@ -278,7 +278,7 @@ public class FlashcardServiceTest {
         Mockito.when(deckRepository.findDeckById(DECK_ID)).thenReturn(deck);
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            flashcardService.getFlashcardsForRevision(DECK_ID, 1, 2);
+            flashcardService.getFlashcardsForRevision(DECK_ID, 1, 2, true);
         });
     }
 

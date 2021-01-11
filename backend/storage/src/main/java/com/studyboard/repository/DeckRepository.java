@@ -32,5 +32,5 @@ public interface DeckRepository extends CrudRepository<Deck, Long> {
      * @param searchParam - search parameter for finding a deck
      * @return all decks which contain the parameter in their name
      */
-    List<Deck> findByUserUsernameAndNameContaining(String username, String searchParam);
+    List<Deck> findByUserUsernameAndNameContainingOrderByLastTimeUsedDesc(String username, String searchParam);
 }

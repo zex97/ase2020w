@@ -119,9 +119,9 @@ export class FlashcardService {
    * @param size of question set for the revision
    * @param deckId of the deck whose flashcards are going to be revised
    */
-  revise(size: number, deckId: number, version: number): Observable<Flashcard[]> {
+  revise(size: number, deckId: number, version: number, updateDate: boolean): Observable<Flashcard[]> {
         console.log('Getting flashcards for revision.');
-        return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/size' + size + '/version' + version);
+        return this.httpClient.get<Flashcard[]>(this.flashcardBaseUri + '/' + deckId + '/size' + size + '/version' + version + '/update' + updateDate);
   }
 
   /**
