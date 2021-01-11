@@ -122,4 +122,11 @@ public class Flashcard {
     public void setDocumentReferences(List<Document> documentReferences) {
         this.documentReferences = documentReferences;
     }
+
+    public Flashcard() {}
+
+    public Flashcard(String question, String answer) {
+        this.question = question;
+        this.answer = answer;
+    }
 }

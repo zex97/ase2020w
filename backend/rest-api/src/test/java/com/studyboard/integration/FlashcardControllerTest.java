@@ -2,7 +2,9 @@ package com.studyboard.integration;
 
 import com.studyboard.dto.DeckDTO;
 import com.studyboard.exception.DeckDoesNotExist;
+import com.studyboard.exception.FlashcardDoesNotExist;
 import com.studyboard.model.Deck;
+import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -23,10 +25,12 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
 
     private static final String FLASHCARD_ENDPOINT = "/api/flashcards";
     private static final String DECK_ID_PATH = "/deck{deckID}";
+    private static final String FLASHCARD_ID_PATH = "/flashcard{flashcardID}";
     private static final String USER_ENDPOINT = "/api/user";
 
     private static final User TEST_USER = new User("testUsername", "testPassword", "user@email.com", 2, "USER", true);
     private static Deck TEST_DECK, TEST_DECK_2;
+    private static Flashcard TEST_FLASHCARD, TEST_FLASHCARD_2;
 
     @BeforeAll
     public void setUp() throws Exception {
@@ -50,6 +54,8 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
         User[] responseArray = mapper.readValue(responseString, User[].class);
         TEST_DECK = new Deck("testName", 0, LocalDate.of(2020, 12, 10), LocalDateTime.of(2020, 12, 10, 23, 55, 55), responseArray[0]);
         TEST_DECK_2 =  new Deck("test_2", 0, LocalDate.of(2020, 12, 29), LocalDateTime.of(2020, 12, 29, 23, 55, 55), responseArray[0]);
+        TEST_FLASHCARD = new Flashcard("question", "answer");
+        TEST_FLASHCARD_2 = new Flashcard("question2", "answer2");
     }
 
     @AfterAll
@@ -65,6 +71,15 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
                 .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + DECK_ID_PATH, 1).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(mvcResult -> Assertions.assertTrue(mvcResult.getResolvedException() instanceof DeckDoesNotExist));
+
+    }
+
+    @Test
+    public void findFlashcardByIdWhichDoesNotExistThrowsException() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/1" + FLASHCARD_ID_PATH, 1).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(mvcResult -> Assertions.assertTrue(mvcResult.getResolvedException() instanceof FlashcardDoesNotExist));
 
     }
 
