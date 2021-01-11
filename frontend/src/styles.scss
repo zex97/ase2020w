@@ -194,4 +194,36 @@ mat-select.mat-form-field-underline {
 }
 
 
+/* Sorting dropdown menu */
+.orderByDropdown .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+.orderByDropdown .mat-form-field-flex {
+  padding-top: 0 !important;
+}
+.orderByDropdown .mat-form-field-infix {
+  padding-bottom: 0 !important;
+}
+.orderByDropdown .mat-form-field-underline {
+  opacity: 0;
+}
+.topPageDiv .row {
+  padding-bottom: 0 !important;
+}
+.sortingDropdownMenuContainer {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  align-content: center !important;
+}
+.orderByDropdown {
+  align-self: flex-end !important;
+  padding-right: 15px !important;
+}
+.topPageDiv {
+  padding-bottom: 0 !important;
+}
+
+
 

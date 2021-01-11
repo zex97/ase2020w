@@ -24,19 +24,22 @@
           Create a space
         </button>
       </div>
-      <mat-form-field class="orderByDropdown" appearance="fill">
-        <mat-label style="color: #FEFFFF;">Order by</mat-label>
-        <mat-select value="default" id="bla" #sortOption>
-          <mat-optgroup label="Name">
-            <mat-option value="name-asc">a-Z</mat-option>
-            <mat-option value="name-desc">Z-a</mat-option>
-          </mat-optgroup>
-          <mat-optgroup label="Date">
-            <mat-option value="date-asc">Oldest first</mat-option>
-            <mat-option value="date-desc">Newest first</mat-option>
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field>
+
+      <div class="sortingDropdownMenuContainer">
+        <mat-form-field class="orderByDropdown" appearance="fill">
+          <mat-label style="color: #FEFFFF;">Order by</mat-label>
+          <mat-select value="default" id="bla" #sortOption>
+            <mat-optgroup label="Name">
+              <mat-option value="name-asc">a-Z</mat-option>
+              <mat-option value="name-desc">Z-a</mat-option>
+            </mat-optgroup>
+            <mat-optgroup label="Date">
+              <mat-option value="date-asc">Oldest first</mat-option>
+              <mat-option value="date-desc">Newest first</mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
     </div>
 
@@ -49,7 +52,7 @@
               <h3 class="space-name">{{space.name}}</h3>
               <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
                     matTooltip="Delete space"
-                    data-toggle="modal"><mat-icon>delete</mat-icon></span>
+                    data-toggle="modal" style="margin-right:1.5%;"><mat-icon>delete</mat-icon></span>
               <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal"
                     matTooltip="Edit space"
                     data-toggle="modal" style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
