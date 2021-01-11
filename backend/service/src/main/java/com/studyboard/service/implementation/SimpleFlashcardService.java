@@ -77,12 +77,14 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version) {
+    public List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version, boolean updateLastTimeUsed) {
         Deck deck = findDeckById(deckId);
         if (version == 2 && deck.getSize() < size) {
             throw new IllegalArgumentException("Deck size too large!");
         }
-        deck.setLastTimeUsed(LocalDateTime.now());
+        if(updateLastTimeUsed) {
+            deck.setLastTimeUsed(LocalDateTime.now());
+        }
         deckRepository.save(deck);
         if (version == 1) {
             logger.info("Getting all flashcards that are scheduled for revision now, belonging to the deck with name " + deck.getName());
@@ -128,8 +130,6 @@ public class SimpleFlashcardService implements FlashcardService {
         for(Document document : documents) {
             this.addReference(created.getId(), document.getId());
         }
-        //created.setDecks(decks);
-        //created.setDocumentReferences(documents);
         return created;
     }
 
@@ -197,11 +197,7 @@ public class SimpleFlashcardService implements FlashcardService {
         }
         storedFlashcard.setDocumentReferences(flashcard.getDocumentReferences());
         logger.info("Edited the flashcard with question " + storedFlashcard.getQuestion());
-        Flashcard editedFlashcard = flashcardRepository.save(storedFlashcard);
-        System.out.println(flashcard.getDocumentReferences().size());
-        System.out.println(editedFlashcard.getDocumentReferences().size());
-        return editedFlashcard;
-        //return flashcardRepository.save(storedFlashcard);
+        return flashcardRepository.save(storedFlashcard);
     }
 
     private void addReference(long flashcardId, long documentId) {

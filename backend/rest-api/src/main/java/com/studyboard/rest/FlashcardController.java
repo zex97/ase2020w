@@ -89,14 +89,15 @@ public class FlashcardController {
     }
 
     @RequestMapping(
-            value = "/{deckId}/size{size}/version{version}",
+            value = "/{deckId}/size{size}/version{version}/update{updateLastTimeUsed}",
             method = RequestMethod.GET,
             produces = "application/json")
     public List<FlashcardDTO> getFlashcardsForRevision(
             @PathVariable(name = "deckId") long deckId,
             @PathVariable(name = "size") int size,
-            @PathVariable(name = "version") int version) {
-        return flashcardService.getFlashcardsForRevision(deckId, size, version).stream()
+            @PathVariable(name = "version") int version,
+            @PathVariable(name = "updateLastTimeUsed") boolean updateLastTimeUsed) {
+        return flashcardService.getFlashcardsForRevision(deckId, size, version, updateLastTimeUsed).stream()
                 .map(FlashcardDTO::FlashcardDTOFromFlashcard)
                 .collect(Collectors.toList());
     }

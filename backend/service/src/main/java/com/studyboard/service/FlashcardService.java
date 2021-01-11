@@ -63,9 +63,10 @@ public interface FlashcardService {
      * @param deckId of the deck flashcards belong to
      * @param size   - amount of flashcards to revise
      * @param version determines whether to take all due cards or a custom size
+     * @param updateLastTimeUsed determines whether the date of usage should be updated (if revision actually occured)
      * @return chosen number of flashcards from a specified deck
      */
-    List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version);
+    List<Flashcard> getFlashcardsForRevision(long deckId, int size, int version, boolean updateLastTimeUsed);
 
 
     /**
