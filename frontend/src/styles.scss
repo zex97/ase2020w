@@ -168,6 +168,10 @@ mat-select.mat-form-field-underline {
   margin: 0px 10px !important;
 }
 
+.pageTopBarSearchField .mat-form-field-underline {
+  background-color: white !important;
+}
+
 /* Display mat-select fields over the modal (depth adjustment) */
 .cdk-global-overlay-wrapper, .cdk-overlay-container { z-index: 9999!important; }
 
