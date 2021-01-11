@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
@@ -193,7 +193,7 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
-    this.flashcardService.revise(1, deck.id, 1).subscribe(
+    this.flashcardService.revise(1, deck.id, 1, false).subscribe(
               (flashcards: Flashcard[]) => {
                  this.dueDateFlashcards = flashcards;
                },
@@ -366,7 +366,7 @@ export class FlashcardManagerComponent implements OnInit {
       } else {
             this.chooseSize = false;
             this.revisionCounter = 0;
-            this.flashcardService.revise(size, this.selectedDeck.id, this.chosenOption).subscribe(
+            this.flashcardService.revise(size, this.selectedDeck.id, this.chosenOption, true).subscribe(
                 (flashcards: Flashcard[]) => {
                              this.revisionFlashcards = flashcards;
                              this.getRevisionFlashcard();
@@ -496,6 +496,9 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a request to rate a specific flashcard while in revision mode.
    */
   rateFlashcardInRevision(flashcard: Flashcard, rate: number) {
+    if(this.revisionCounter<this.revisionFlashcards.length) {
+      this.getRevisionFlashcard();
+    }
     if (rate != null) {
       flashcard.confidenceLevel = rate;
     }
