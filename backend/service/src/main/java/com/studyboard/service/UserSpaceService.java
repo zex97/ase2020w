@@ -64,7 +64,6 @@ public interface UserSpaceService {
     void removeDocumentFromSpace(long spaceId, long documentId);
 
     /**
-<<<<<<< HEAD
      * Adds a tag to a document
      *
      * @param documentId id of the document

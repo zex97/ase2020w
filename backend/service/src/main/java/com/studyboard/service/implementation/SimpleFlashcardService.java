@@ -255,15 +255,6 @@ public class SimpleFlashcardService implements FlashcardService {
         return deck;
     }
 
-    public Flashcard findFlashcardById(Long flashcardId) {
-        Flashcard flashcard = flashcardRepository.findFlashcardById(flashcardId);
-        if (flashcard == null) {
-            logger.warn("Flashcard does not exist");
-            //throw new DeckDoesNotExist();
-        }
-        return flashcard;
-    }
-
     private User findUserById(long userId) {
         User user = userRepository.findUserById(userId);
         if (user == null) {

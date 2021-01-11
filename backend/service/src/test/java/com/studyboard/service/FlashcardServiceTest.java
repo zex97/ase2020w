@@ -2,6 +2,7 @@ package com.studyboard.service;
 
 import com.studyboard.exception.DeckDoesNotExist;
 import com.studyboard.exception.FlashcardConstraintException;
+import com.studyboard.exception.FlashcardDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(MockitoExtension.class)
 public class FlashcardServiceTest {
@@ -50,6 +53,8 @@ public class FlashcardServiceTest {
     private static final Long FLASHCARD_ID = 1L;
     private static final String FLASHCARD_QUESTION = "Question";
     private static final String FLASHCARD_ANSWER = "Answer";
+    private static final String FLASHCARD_QUESTION1 = "Question1";
+    private static final String FLASHCARD_ANSWER1 = "Answer1";
 
 
     @Mock
@@ -100,9 +105,62 @@ public class FlashcardServiceTest {
     }
 
     @Test
+    public void findAllFlashcardsOfADeck() {
+
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUsername(USER_USERNAME);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
+        user.setLoginAttempts(USER_LOGIN_ATTEMPTS);
+        user.setRole(USER_ROLE);
+        user.setEnabled(USER_ENABLED);
+
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
+        deck.setName(DECK_NAME);
+        deck.setSize(DECK_SIZE);
+        deck.setCreationDate(DECK_CREATION_DATE);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED);
+        deck.setUser(user);
+
+        List<Deck> decks = new ArrayList<>();
+        decks.add(deck);
+
+        Mockito.when(deckRepository.findDeckById(DECK_ID)).thenReturn(deck);
+
+        Deck response = flashcardService.findDeckById(DECK_ID);
+
+        Assertions.assertEquals(0, response.getSize());
+
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(decks);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
+        flashcardService.createFlashcard(flashcard);
+        flashcardService.assignFlashcard(response.getId(), flashcard.getId());
+
+        response = flashcardService.findDeckById(DECK_ID);
+        Mockito.when(flashcardRepository.findByDeckId(DECK_ID)).thenReturn(Arrays.asList(flashcard));
+        List<Flashcard> flashcards = flashcardService.getAllFlashcardsOfDeck(response.getId());
+
+        Assertions.assertEquals(1, flashcards.size());
+    }
+
+    @Test
     public void searchForDeckThatDoesNotExist_ThrowsException() {
         Assertions.assertThrows(DeckDoesNotExist.class, () -> {
             flashcardService.findDeckById(DECK_ID);
+        });
+    }
+
+    @Test
+    public void searchForFlashcardThatDoesNotExist_ThrowsException() {
+        Assertions.assertThrows(FlashcardDoesNotExist.class, () -> {
+            flashcardService.getOneFlashcard(FLASHCARD_ID);
         });
     }
 
@@ -147,6 +205,55 @@ public class FlashcardServiceTest {
         response = flashcardService.findDeckById(DECK_ID);
 
         Assertions.assertEquals(1, response.getSize());
+    }
+
+    @Test
+    public void removingAssignmentOfFlashcardDecreasesDeckSize() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUsername(USER_USERNAME);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
+        user.setLoginAttempts(USER_LOGIN_ATTEMPTS);
+        user.setRole(USER_ROLE);
+        user.setEnabled(USER_ENABLED);
+
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
+        deck.setName(DECK_NAME);
+        deck.setSize(DECK_SIZE);
+        deck.setCreationDate(DECK_CREATION_DATE);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED);
+        deck.setUser(user);
+
+        List<Deck> decks = new ArrayList<>();
+        decks.add(deck);
+
+        Mockito.when(deckRepository.findDeckById(DECK_ID)).thenReturn(deck);
+
+        Deck response = flashcardService.findDeckById(DECK_ID);
+
+        Assertions.assertEquals(0, response.getSize());
+
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(decks);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
+        flashcardService.createFlashcard(flashcard);
+        flashcardService.assignFlashcard(response.getId(), flashcard.getId());
+
+        response = flashcardService.findDeckById(DECK_ID);
+
+        Assertions.assertEquals(1, response.getSize());
+
+        flashcardService.removeAssignment(response.getId(), flashcard.getId());
+
+        response = flashcardService.findDeckById(DECK_ID);
+
+        Assertions.assertEquals(0, response.getSize());
     }
 
     @Test
@@ -250,6 +357,64 @@ public class FlashcardServiceTest {
         Assertions.assertEquals(0, response.getCorrectnessStreak());
         Assertions.assertEquals(0, response.getInterval());
         Assertions.assertTrue(response.getNextDueDate().isBefore(LocalDateTime.now()));
+    }
+
+    @Test
+    public void editingFlashcardSetsNewValuesCorrectly() {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(FLASHCARD_ID);
+        flashcard.setQuestion(FLASHCARD_QUESTION);
+        flashcard.setAnswer(FLASHCARD_ANSWER);
+        flashcard.setDecks(new ArrayList<>());
+        flashcard.setDocumentReferences(new ArrayList<>());
+        flashcardService.createFlashcard(flashcard);
+
+        Mockito.when(flashcardRepository.findFlashcardById(FLASHCARD_ID)).thenReturn(flashcard);
+        Flashcard response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        Assertions.assertEquals(FLASHCARD_QUESTION, response.getQuestion());
+        Assertions.assertEquals(FLASHCARD_ANSWER, response.getAnswer());
+
+        flashcard.setQuestion(FLASHCARD_QUESTION1);
+        flashcard.setAnswer(FLASHCARD_ANSWER1);
+        flashcardService.editFlashcard(flashcard);
+
+        response = flashcardService.getOneFlashcard(FLASHCARD_ID);
+
+        Assertions.assertEquals(FLASHCARD_QUESTION1, response.getQuestion());
+        Assertions.assertEquals(FLASHCARD_ANSWER1, response.getAnswer());
+    }
+
+    @Test
+    public void editingDeckSetsNewValuesCorrectly() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUsername(USER_USERNAME);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
+        user.setLoginAttempts(USER_LOGIN_ATTEMPTS);
+        user.setRole(USER_ROLE);
+        user.setEnabled(USER_ENABLED);
+
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
+        deck.setName(DECK_NAME);
+        deck.setSize(DECK_SIZE);
+        deck.setCreationDate(DECK_CREATION_DATE);
+        deck.setLastTimeUsed(DECK_LAST_TIME_USED);
+        deck.setUser(user);
+        List<Deck> decks = new ArrayList<>();
+        decks.add(deck);
+
+        Mockito.when(deckRepository.findDeckById(DECK_ID)).thenReturn(deck);
+        Deck response = flashcardService.findDeckById(DECK_ID);
+        Assertions.assertEquals(DECK_NAME, response.getName());
+
+        deck.setName(DECK_NAME_2);
+        flashcardService.updateDeckName(deck);
+        response = flashcardService.findDeckById(DECK_ID);
+
+        Assertions.assertEquals(DECK_NAME_2, response.getName());
     }
 
     @Test

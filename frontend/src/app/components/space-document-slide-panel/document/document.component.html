@@ -1,16 +1,25 @@
 <div class="topPageDiv">
-  <h2 class="page-title-small">{{space.name}}</h2>
+  <mat-card-title>
+    <h1 class="page-title-small" style="display: inline-block;">{{space.name}}</h1>
+    <button mat-button (click)="documentEvents.emit('deleteSpace')" matTooltip="Delete space" style="float: right; margin-right:0.2em; color: white !important;display: inline-block;"><mat-icon>delete</mat-icon></button>
+    <button mat-button (click)="documentEvents.emit('editSpace')" matTooltip="Edit space" style="float: right;margin-right:1.5em;color: white !important;display: inline-block;"><mat-icon>edit</mat-icon></button>
+    <button mat-button (click)="documentEvents.emit('uploadToSpace')" matTooltip="Upload files" style="float: right; margin-right:1.5em; color: white !important;display: inline-block;"><mat-icon> attach_file</mat-icon></button>
+  </mat-card-title>
   <div class="row p-2 mb-4" style="padding-top: 0">
-
     <mat-form-field class="pageTopBarSearchField">
       <mat-placeholder style="color: #FEFFFF">Search space {{space.name}}</mat-placeholder>
-      <input matInput style="color: #FEFFFF" title="search" type="search">
-      <button aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
+      <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="documentNameSearch" (ngModelChange)="searchDocumentsByName()">
+      <button (click)="searchDocumentsByName()" aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF">
         <mat-icon style="color: #FEFFFF">search</mat-icon>
       </button>
     </mat-form-field>
 
-    <button class="pageTopBarButton" (click)="toggleSlideEvent.emit('backToSpaces')"
+    <button (click)="backToAll()" *ngIf="this.documentNameSearch.length!==0" class="pageTopBarButton"
+            mat-stroked-button>
+      Clear search
+    </button>
+
+    <button class="pageTopBarButton" (click)="documentEvents.emit('backToSpaces')"
             mat-stroked-button>
       Back to all
     </button>
@@ -20,19 +29,19 @@
 <div id="listOfDocuments">
   <mat-nav-list *ngFor="let doc of getAllDocuments()">
     <mat-list-item id="documentListItem">
-      <mat-card-content>
-        <mat-card-title (click)="loadFile(doc)">
+      <mat-card-content (click)="loadFile(doc)">
+        <mat-card-title>
           <h3 class="document-name">
             {{doc.name}}
           </h3>
-          <span class="close" (click)="deleteDocument(doc); $event.stopPropagation();" style="float: right">
+          <span class="close" (click)="deleteDocument(doc); $event.stopPropagation();" style="float: right" matTooltip="Delete">
             <mat-icon>delete</mat-icon>
           </span>
-          <span class="close" (click)="downloadFileFromList(doc); $event.stopPropagation();" style="float: right; margin-right:5%;">
+          <span class="close" (click)="downloadFileFromList(doc); $event.stopPropagation();" style="float: right; margin-right:5%;" matTooltip="Download">
             <mat-icon>save_alt</mat-icon>
           </span>
         </mat-card-title>
-        <app-tag-bar [doc]="doc"></app-tag-bar>
+        <app-tag-bar [doc]="doc" (click)="$event.stopPropagation();"></app-tag-bar>
       </mat-card-content>
     </mat-list-item>
   </mat-nav-list>

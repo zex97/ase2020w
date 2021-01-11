@@ -13,7 +13,7 @@
 
         <button (click)="backToAll()" *ngIf="this.spaceNameSearch.length!==0" class="pageTopBarButton"
                 mat-stroked-button>
-          View All
+          Clear search
         </button>
 
         <button (click)="resetSpaceFrom()" class="pageTopBarButton" data-target=".create-space-modal" data-toggle="modal"
@@ -25,7 +25,7 @@
 
     <div class="col" id="listOfSpaces">
       <mat-nav-list *ngFor="let space of getSpaces()">
-        <mat-list-item (click)="loadSpaceDetails(space.id); setSelectSpace(space);toggleSlide()" id="spacesListItem">
+        <mat-list-item (click)="loadSpaceDetails(space.id); setSelectSpace(space);setCurrentSpace(space);toggleSlide()" id="spacesListItem">
           <mat-card-content>
             <mat-card-title>
               <h3 class="space-name">{{space.name}}</h3>
@@ -51,9 +51,13 @@
     </div>
   </div>
   <div rightPane>
-    <app-document *ngIf="selectSpace" [space]=selectSpace (toggleSlideEvent)="parentEventHandlerFunction($event)" #documentComponent></app-document>
+    <app-document *ngIf="selectSpace" [space]=selectSpace (documentEvents)="parentEventHandlerFunction($event)" #documentComponent></app-document>
   </div>
 </app-space-document-slide-panel>
+
+<span id="deleteSpaceHidden" data-target=".delete-space-modal" data-toggle="modal" style="display: none;">delete</span>
+<span id="editSpaceHidden" data-target=".edit-space-modal" data-toggle="modal" style="display: none;">edit</span>
+<span id="uploadToSpaceHidden" data-target=".upload-file-modal" data-toggle="modal" style="display: none;">upload</span>
 
 
 
@@ -119,11 +123,15 @@
                role="alert">
             <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
           </div>
-          <!-- TODO: how to avoid input tag file number display (inconsistent when user removes some files) -->
           <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames"
                  accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
                  multiple type="file"
-                 value="name">
+                 value="name" style="display: none;">
+
+          <input type="button" value="Choose Files" onclick="document.getElementById('files').click();" />
+          <span>
+            {{filesCountString}}
+          </span>
           <!--<label for="files">Choose files </label>-->
         </div>
         <div *ngIf="filesToUpload.length>0">
@@ -141,10 +149,10 @@
       </div>
 
       <div class="modal-footer">
-        <button (click)="uploadFiles(currentSpace);toggleSlide();" *ngIf="filesReadyForUpload()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="uploadFiles(currentSpace);" *ngIf="filesReadyForUpload()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
-        <button (click)="clearInputFiles();toggleSlide(); resetModalWarning()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="clearInputFiles();resetModalWarning()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>
@@ -182,10 +190,10 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button (click)="saveEdits(currentSpace);toggleSlide()" [disabled]="spaceEditForm.controls.name.errors" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="saveEdits(currentSpace);" [disabled]="spaceEditForm.controls.name.errors" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Submit
         </button>
-        <button (click)="spaceEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+        <button (click)="spaceEditForm.reset();" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
           Close
         </button>
       </div>

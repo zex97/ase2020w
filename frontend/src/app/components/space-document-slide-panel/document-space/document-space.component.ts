@@ -33,6 +33,7 @@ export class DocumentSpaceComponent implements OnInit {
   isLeftVisible = true;
   allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
   spaceNameSearch: string = '';
+  filesCountString: string = 'No file chosen';
 
   @ViewChild('documentComponent') documentComponent;
 
@@ -119,8 +120,21 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   parentEventHandlerFunction(value) {
-    this.toggleSlide();
+    if (value === 'backToSpaces') {
+      this.toggleSlide();
+    }
+    if (value === 'deleteSpace') {
+      document.getElementById('deleteSpaceHidden').click();
+    }
+    if (value === 'editSpace') {
+      document.getElementById('editSpaceHidden').click();
+    }
+    if (value === 'uploadToSpace') {
+      this.clearInputFiles();
+      document.getElementById('uploadToSpaceHidden').click();
+    }
   }
+
 
   /**
    * Save uploaded files into a global variable and check if any
@@ -129,6 +143,11 @@ export class DocumentSpaceComponent implements OnInit {
   handleFileInput(files: File[]) {
     console.log('Handling files for space: ' + this.spaceId);
     this.filesToUpload = Array.from(files);
+    if (this.filesToUpload.length === 0) {
+      this.filesCountString = 'No file chosen';
+    } else {
+      this.filesCountString = this.filesToUpload.length + ' files selected.';
+    }
     this.vanishModuleErrorMessage();
     for (let i = 0; i < this.filesToUpload.length; i++) {
       const file = this.filesToUpload[i];
@@ -160,6 +179,9 @@ export class DocumentSpaceComponent implements OnInit {
     if (this.filesToUpload.length === 0) {
       this.filesToUpload = [];
       this.filesToUploadNames = [];
+      this.filesCountString = 'No file chosen';
+    } else {
+      this.filesCountString = this.filesToUpload.length + ' files selected.';
     }
     this.handleFileInput(this.filesToUpload);
   }
@@ -196,6 +218,7 @@ export class DocumentSpaceComponent implements OnInit {
     console.log('Uploading file for space: ' + spaceId);
     let successUploadCount: number = 0;
     // tslint:disable-next-line:forin
+    this.filesCountString = 'No file chosen';
     for (let i = 0; i < this.filesToUpload.length; i++) {
       const file = this.filesToUpload[i];
       this.fileUploadService.uploadFile(file, spaceId).subscribe((res) => {
@@ -227,6 +250,7 @@ export class DocumentSpaceComponent implements OnInit {
    * Resets the file input field after a close or submit
    * */
   clearInputFiles() {
+    this.filesCountString = 'No file chosen';
     this.filesToUpload = [];
     this.filesToUploadNames = [];
   }
@@ -267,6 +291,12 @@ export class DocumentSpaceComponent implements OnInit {
    * Sends a request to delete a specific space.
    */
   deleteSpace(id: number) {
+    this.fileUploadService.deleteSpaceFiles(id).subscribe(() => {
+      console.log('Files deleted.');
+    },
+      error1 => {
+      this.defaultErrorHandling(error1);
+      });
     this.spaceService.deleteSpace(id).subscribe(
       () => {
         // set chosen space as unselected

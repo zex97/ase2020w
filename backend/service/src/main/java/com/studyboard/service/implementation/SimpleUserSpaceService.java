@@ -144,9 +144,6 @@ public class SimpleUserSpaceService implements UserSpaceService {
 
     @Override
     public List<Space> getSpacesByName(String username, String searchParam) {
-        if (searchParam.equals("all")) {
-            searchParam = "";
-        }
         logger.info("Getting all spaces containing " + searchParam + " in the name that belong to user: " + username);
         return spaceRepository.findByUserUsernameAndNameContainingOrderByCreationDateDesc(username, searchParam);
     }
