@@ -102,6 +102,7 @@ export class DocumentComponent implements OnInit, OnChanges {
         }
       }
     }
+      return this.documentsOfSpace;
   }
 
   deleteDocument(doc: Document) {

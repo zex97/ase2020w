@@ -108,6 +108,22 @@ body {
   }
 }
 
+.orderByDropdown {
+  padding-left: 22px;
+}
+
+.mat-select-value {
+  color: #FEFFFF;
+}
+
+.mat-select-arrow {
+  color: #FEFFFF;
+}
+
+mat-select.mat-form-field-underline {
+  color: #FEFFFF;
+  background: #FEFFFF;
+}
 
 /* Empty content message */
 .warningMessageContainer {

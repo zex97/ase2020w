@@ -2,7 +2,6 @@
   <div leftPane>
     <div class="topPageDiv">
       <div class="row p-2 mb-4">
-
         <mat-form-field (keyup.enter)="searchSpacesByName()" class="pageTopBarSearchField">
           <mat-placeholder style="color: #FEFFFF">Search spaces</mat-placeholder>
           <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="spaceNameSearch"
@@ -13,20 +12,6 @@
           </button>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Order by</mat-label>
-          <mat-select value="default" id="bla" class="mat-select" #sortOption>
-            <mat-optgroup label="Name">
-              <mat-option value="name-asc">Ascending</mat-option>
-              <mat-option value="name-desc">Descending</mat-option>
-            </mat-optgroup>
-            <mat-optgroup label="Date">
-              <mat-option value="date-asc">Ascending (oldest first)</mat-option>
-              <mat-option value="date-desc">Descending (newest first)</mat-option>
-            </mat-optgroup>
-          </mat-select>
-        </mat-form-field>
-        <p>{{sortOption.value}}</p>
 
         <button (click)="backToAll()" *ngIf="this.spaceNameSearch.length!==0" class="pageTopBarButton"
                 mat-stroked-button>
@@ -39,6 +24,20 @@
           Create a space
         </button>
       </div>
+      <mat-form-field class="orderByDropdown" appearance="fill">
+        <mat-label style="color: #FEFFFF;">Order by</mat-label>
+        <mat-select value="default" id="bla" #sortOption>
+          <mat-optgroup label="Name">
+            <mat-option value="name-asc">A-z</mat-option>
+            <mat-option value="name-desc">z-A</mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="Date">
+            <mat-option value="date-asc">Oldest first</mat-option>
+            <mat-option value="date-desc">Newest first</mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+
     </div>
 
     <div class="col" id="listOfSpaces">

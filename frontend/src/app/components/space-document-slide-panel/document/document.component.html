@@ -14,16 +14,6 @@
       </button>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Order by</mat-label>
-      <mat-select value="default" id="bla" class="mat-select" #sortOption>
-        <mat-optgroup label="Name">
-          <mat-option value="name-asc">Ascending</mat-option>
-          <mat-option value="name-desc">Descending</mat-option>
-        </mat-optgroup>
-      </mat-select>
-    </mat-form-field>
-    <p>{{sortOption.value}}</p>
 
     <button (click)="backToAll()" *ngIf="this.documentNameSearch.length!==0" class="pageTopBarButton"
             mat-stroked-button>
@@ -34,7 +24,17 @@
             mat-stroked-button>
       Back to all
     </button>
+
   </div>
+  <mat-form-field class="orderByDropdown" appearance="fill">
+    <mat-label style="color: #FEFFFF">Order by</mat-label>
+    <mat-select value="default" id="bla" class="mat-select" #sortOption>
+      <mat-optgroup label="Name">
+        <mat-option value="name-asc">A-z</mat-option>
+        <mat-option value="name-desc">z-A</mat-option>
+      </mat-optgroup>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <div id="listOfDocuments">
