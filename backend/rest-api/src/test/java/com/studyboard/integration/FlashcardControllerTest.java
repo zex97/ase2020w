@@ -6,10 +6,7 @@ import com.studyboard.exception.FlashcardDoesNotExist;
 import com.studyboard.model.Deck;
 import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,7 +29,7 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
     private static Deck TEST_DECK, TEST_DECK_2;
     private static Flashcard TEST_FLASHCARD, TEST_FLASHCARD_2;
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() throws Exception {
         User user = new User(TEST_USER);
         String requestJson = convertObjectToStringForJson(user);
@@ -58,7 +55,7 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
         TEST_FLASHCARD_2 = new Flashcard("question2", "answer2");
     }
 
-    @AfterAll
+    @AfterEach
     void tearDown() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "deck");
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "sb_user", "user_roles");
@@ -127,6 +124,55 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
         DeckDTO[] responseArrayUpdated = mapper.readValue(responseStringUpdated, DeckDTO[].class);
         Assertions.assertEquals(deckUpdatedName.getName(), responseArrayUpdated[0].getName());
         Assertions.assertEquals(responseArray[0].getId(), responseArrayUpdated[0].getId());
+    }
+
+    @Test
+    public void getOneDeckReturnsCorrectResult() throws Exception{
+        DeckDTO deck1 = DeckDTO.of(TEST_DECK);
+        String requestJson1 = convertObjectToStringForJson(deck1);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isOk());
+
+        ResultActions resultActionsDeck =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + DECK_ID_PATH,2).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
+
+        String responseString = resultActionsDeck.andReturn().getResponse().getContentAsString();
+        DeckDTO response = mapper.readValue(responseString, DeckDTO.class);
+
+        Assertions.assertEquals(TEST_DECK.getName(), response.getName());
+    }
+
+    @Test
+    public void deleteOneDeckReturnsCorrectResult() throws Exception{
+        DeckDTO deck1 = DeckDTO.of(TEST_DECK);
+        String requestJson1 = convertObjectToStringForJson(deck1);
+        DeckDTO deck2 = DeckDTO.of(TEST_DECK_2);
+        String requestJson2 = convertObjectToStringForJson(deck2);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isOk());
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson2))
+                .andExpect(status().isOk());
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.delete(FLASHCARD_ENDPOINT + "/{deckID}", 4).contentType(MediaType.APPLICATION_JSON).content(requestJson2))
+                .andExpect(status().isOk());
+
+        ResultActions resultActionsDeck =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/testUsername").accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
+
+        String responseString = resultActionsDeck.andReturn().getResponse().getContentAsString();
+        DeckDTO[] responseArray = mapper.readValue(responseString, DeckDTO[].class);
+
+        Assertions.assertEquals(TEST_DECK.getName(), responseArray[0].getName());
     }
 
     @Test
