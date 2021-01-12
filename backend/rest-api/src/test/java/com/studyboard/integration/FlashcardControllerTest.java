@@ -262,14 +262,14 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOneFlashcardReturnsCorrectResult() throws Exception {
+    public void createAndRateFlashcardSuccessfully() throws Exception {
         DeckDTO deck = DeckDTO.of(TEST_DECK);
         String requestJson = convertObjectToStringForJson(deck);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isOk());
 
-        TEST_DECK.setId(9L);
+        TEST_DECK.setId(7L);
         TEST_FLASHCARD.setDecks(List.of(TEST_DECK));
         TEST_FLASHCARD.setDocumentReferences(new ArrayList<>());
 
@@ -281,7 +281,57 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
 
         ResultActions resultActionsFlash =
                 this.mockMvc
-                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckID}" + FLASHCARD_ID_PATH, 9, 10).accept(MediaType.APPLICATION_JSON))
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckID}/flashcards", 7).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$[0].confidenceLevel").value(TEST_FLASHCARD.getConfidenceLevel()));
+
+        String responseString = resultActionsFlash.andReturn().getResponse().getContentAsString();
+        FlashcardDTO[] responseArray = mapper.readValue(responseString, FlashcardDTO[].class);
+
+        FlashcardDTO flashcardDTO1 = FlashcardDTO.FlashcardDTOFromFlashcard(TEST_FLASHCARD);
+        flashcardDTO1.setId(responseArray[0].getId());
+        flashcardDTO1.setConfidenceLevel(4);
+        String requestJsonUpdated = convertObjectToStringForJson(flashcardDTO1);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.put(FLASHCARD_ENDPOINT + "/rate{flashcardID}", 8).contentType(MediaType.APPLICATION_JSON).content(requestJsonUpdated))
+                .andExpect(status().isOk());
+
+        ResultActions resultActionsUpdated =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckID}/flashcards", 7).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$[0].confidenceLevel").value(flashcardDTO1.getConfidenceLevel()));
+
+        String responseStringUpdated = resultActionsUpdated.andReturn().getResponse().getContentAsString();
+        FlashcardDTO[] responseArrayUpdated = mapper.readValue(responseStringUpdated, FlashcardDTO[].class);
+        Assertions.assertEquals(flashcardDTO1.getConfidenceLevel(), responseArrayUpdated[0].getConfidenceLevel());
+        Assertions.assertEquals(responseArray[0].getId(), responseArrayUpdated[0].getId());
+    }
+
+    @Test
+    public void getOneFlashcardReturnsCorrectResult() throws Exception {
+        DeckDTO deck = DeckDTO.of(TEST_DECK);
+        String requestJson = convertObjectToStringForJson(deck);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(status().isOk());
+
+        TEST_DECK.setId(11L);
+        TEST_FLASHCARD.setDecks(List.of(TEST_DECK));
+        TEST_FLASHCARD.setDocumentReferences(new ArrayList<>());
+
+        FlashcardDTO flashcardDTO = FlashcardDTO.FlashcardDTOFromFlashcard(TEST_FLASHCARD);
+        String requestJson1 = convertObjectToStringForJson(flashcardDTO);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT + "/flashcard").contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isOk());
+
+        ResultActions resultActionsFlash =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckID}" + FLASHCARD_ID_PATH, 11, 12).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.question").value(TEST_FLASHCARD.getQuestion()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$.answer").value(TEST_FLASHCARD.getAnswer()));
