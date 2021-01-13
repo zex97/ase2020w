@@ -38,10 +38,26 @@
     </vm-player>
   </div>
   <div class="modal-body">
-    <h2>Transcription</h2>
-    <p>{{this.currentDocument.transcription}}</p>
+    <div style="display:flex; justify-content:space-between">
+      <h2>Transcription</h2>
+      <span *ngIf="this.editState==false" (click)="this.prepareEdit()" class="close"><mat-icon>edit</mat-icon></span>
+    </div>
+    <p *ngIf="this.editState==false">{{this.currentDocument.transcription}}</p>
+
+    <form *ngIf="this.editState==true"  style="min-width: 300px; width:100%">
+      <mat-form-field [formGroup]="transcriptionEditForm" appearance="outline" class="modal-input-full-width" style="height: 100%">
+        <mat-label class="modal-label">Edit transcription</mat-label>
+        <textarea formControlName="content" formGroupName="content"
+                  id="editContent" matInput required type="text"></textarea>
+        <mat-hint *ngIf="transcriptionEditForm.controls.content.errors" class="control-label invalid-input-text">
+          Can't be empty!
+        </mat-hint>
+      </mat-form-field>
+    </form>
+
   </div>
   <div class="modal-footer">
+    <button *ngIf="this.editState==true" mat-button [mat-dialog-close]="true" (click)="editTranscription()">Save</button>
     <button mat-button [mat-dialog-close]="true">Cancel</button>
   </div>
 </div>
