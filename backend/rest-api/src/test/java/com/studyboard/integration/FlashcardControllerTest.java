@@ -203,8 +203,8 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
         String responseString = resultActionsDeck.andReturn().getResponse().getContentAsString();
         DeckDTO[] responseArray = mapper.readValue(responseString, DeckDTO[].class);
 
-        Assertions.assertEquals(TEST_DECK.getName(), responseArray[0].getName());
-        Assertions.assertEquals(TEST_DECK_2.getName(), responseArray[1].getName());
+        Assertions.assertEquals(TEST_DECK.getName(), responseArray[1].getName());
+        Assertions.assertEquals(TEST_DECK_2.getName(), responseArray[0].getName());
     }
 
     @Test
