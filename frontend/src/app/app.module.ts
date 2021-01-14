@@ -42,6 +42,7 @@ import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 import {DocumentDialogComponent} from './components/document-dialog/document-dialog.component';
 import {MatTreeModule} from '@angular/material/tree';
+import { ProfileWidgetComponent } from './components/profile-widget/profile-widget.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import {MatTreeModule} from '@angular/material/tree';
     ConfirmDialogComponent,
     SpaceDocumentSlidePanelComponent,
     DocumentDialogComponent,
-    TagBarComponent
+    TagBarComponent,
+    ProfileWidgetComponent
   ],
     imports: [
         BrowserModule,

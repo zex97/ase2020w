@@ -1,0 +1,27 @@
+<div class="profilePictureContainer">
+  <div class="circle">
+    <div *ngIf="showInitials" class="initials">
+      {{ initials }}
+    </div>
+  </div>
+</div>
+<div class="profileInfoContainer">
+  <mat-expansion-panel class="widgetPanel" hideToggle>
+    <!-- #enddocregion hide-toggle -->
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Username:
+      </mat-panel-title>
+      <mat-panel-description style="color: #FEFFFF">
+        {{currentUser.username}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-panel-title>
+      Email:
+    </mat-panel-title>
+    <mat-panel-description style="color: #FEFFFF">
+      {{currentUser.email}}
+    </mat-panel-description>
+  </mat-expansion-panel>
+</div>
+
