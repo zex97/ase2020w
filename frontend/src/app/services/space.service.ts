@@ -121,8 +121,8 @@ export class SpaceService {
    * @param spaceId whose documents the user wants to see
    * @param searchParam name of the documents to search for
    * */
-  getDocumentsByName(username: string, spaceId: number, searchParam: string): Observable<Object> {
+  getDocumentsByName(spaceId: number, searchParam: string): Observable<Object> {
     console.log('Getting specific documents for space ' + spaceId);
-    return this.httpClient.get(this.spaceBaseUri + '/' + username + '/' + spaceId + '/' + searchParam);
+    return this.httpClient.get(this.spaceBaseUri + '/search/' + spaceId + '/p=' + searchParam);
   }
 }
