@@ -33,21 +33,24 @@
 .widgetPanel {
   width: 200px;
   font-size: 0.9em;
-  background-color: #17252A;
+  background-color: #17252A !important;
 }
 
 .mat-expansion-panel-header {
   height: 40px;
+  background-color: #17252A !important;
 }
 
 .mat-expansion-panel-header-title {
   color: #FEFFFF !important;
   font-weight: lighter;
+  background-color: #17252A !important;
 }
 
 .mat-expansion-panel-description {
   color: #FEFFFF !important;
   font-weight: lighter;
+  background-color: #17252A !important;
 }
 
 

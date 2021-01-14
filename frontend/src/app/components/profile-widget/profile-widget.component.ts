@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
+import {split} from 'ts-node';
 
 @Component({
   selector: 'app-profile-widget',
@@ -35,6 +36,7 @@ export class ProfileWidgetComponent implements OnInit {
 
   private createInititals(): void {
     let initials = '';
+    let splitted: string[];
     const name = this.currentUser.username;
     if (name.split( ' ').length >= 2) {
       for (let i = 0; i < name.length; i++) {
@@ -49,6 +51,10 @@ export class ProfileWidgetComponent implements OnInit {
             break;
           }
         }
+      }
+      if (initials === '') {
+        splitted = name.split(' ');
+        initials = splitted[0].charAt(0).toUpperCase() + splitted[1].charAt(0).toUpperCase();
       }
     } else {
       initials = name.charAt(0).toUpperCase() + name.charAt(1).toUpperCase();
