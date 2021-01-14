@@ -131,13 +131,17 @@ public class SimpleFileUploadService implements FileUploadService {
                       + "' already exists, overriding the file content.");
     }
     document.setNeedsTranscription(isTranscriptionNeeded(path.getFileName().toString()));
-    document.setTranscription(null);
+
 
     // TODO: add transcriber trigger
     if (document.isNeedsTranscription()) {
+      document.setTranscription("Transcription in process...");
+      document = documentRepository.save(document);
       transcriptionService.transcribe(document);
+    } else {
+      document.setTranscription(null);
+      documentRepository.save(document);
     }
-    documentRepository.save(document);
   }
 
   @Override

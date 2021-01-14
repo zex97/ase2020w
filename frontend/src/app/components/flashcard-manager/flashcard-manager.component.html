@@ -116,7 +116,7 @@
             <mat-label>Select document references</mat-label>
             <mat-select class="select" formControlName="selectRefs" multiple>
               <span *ngFor="let space of getSpaces()">
-                <p style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</p>
+                <h4 *ngIf="this.documents.get(space.id).length!=0" style="padding: 5px 0px 0px 15px;"> Space {{space.name}}</h4>
                 <mat-option (onSelectionChange)="updateReferenceList($event.source.value)"
                             *ngFor="let document of this.documents.get(space.id)"
                             value="{{document.id}}">
