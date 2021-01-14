@@ -147,4 +147,9 @@ public class SimpleUserSpaceService implements UserSpaceService {
         logger.info("Getting all spaces containing " + searchParam + " in the name that belong to user: " + username);
         return spaceRepository.findByUserUsernameAndNameContainingOrderByCreationDateDesc(username, searchParam);
     }
+
+    public List<Document> getDocumentsByName(long spaceId, String searchParam) {
+        logger.info("Getting all documents containing " + searchParam + " in the name that belong to space: " + spaceId);
+        return documentRepository.findBySpaceIdAndNameContaining(spaceId, searchParam);
+    }
 }
