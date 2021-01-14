@@ -55,6 +55,11 @@ export class DocumentDialogComponent implements OnInit {
         });
   }
 
+  isTranscriptionDone() {
+    // this.dialogRef.componentInstance.data = ;
+    return this.currentDocument.transcription.startsWith('Transcription in process...');
+  }
+
   openSnackbar(message: string, type: string) {
     this.snackBar.open(message, 'close', {
       duration: 4000,

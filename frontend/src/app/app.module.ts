@@ -42,6 +42,7 @@ import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 import {DocumentDialogComponent} from './components/document-dialog/document-dialog.component';
 import {MatTreeModule} from '@angular/material/tree';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import {MatTreeModule} from '@angular/material/tree';
         VimeModule,
         MatTreeModule,
         MatChipsModule,
+        MatProgressBarModule,
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

@@ -9,7 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DocumentDialogComponent} from '../../document-dialog/document-dialog.component';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 
 
 @Component({
@@ -79,7 +79,7 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
   getAllDocuments() {
-      if (this.sortOption != null) {
+    if (this.sortOption != null) {
       switch (this.sortOption.value) {
         case 'name-asc': {
           return this.documentsOfSpace.sort((s1, s2) => s1.name.localeCompare(s2.name));
@@ -95,7 +95,7 @@ export class DocumentComponent implements OnInit, OnChanges {
         }
       }
     }
-      return this.documentsOfSpace;
+    return this.documentsOfSpace;
   }
 
   deleteDocument(doc: Document) {
@@ -151,6 +151,7 @@ export class DocumentComponent implements OnInit, OnChanges {
         });
         ref.afterClosed().subscribe(() => {
           this.documentOpen = false;
+          this.loadAllDocuments(this.space.id);
         });
       },
       error => {
