@@ -25,6 +25,9 @@ public class Deck {
     @Column(nullable = true, name = "lastTimeUsed")
     private LocalDateTime lastTimeUsed;
 
+    @Column(nullable = true, name = "favorite")
+    private boolean favorite;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sb_user_id")
     private User user;
@@ -106,6 +109,13 @@ public class Deck {
         this.lastTimeUsed = lastTimeUsed;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 
     public User getUser() {
         return user;

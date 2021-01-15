@@ -47,7 +47,7 @@ public interface FlashcardService {
      * @return updated deck
      */
 
-    Deck updateDeckName(Deck deck);
+    Deck editDeck(Deck deck);
 
     /**
      * Find all flashcards user created and assigned to one deck

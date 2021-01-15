@@ -60,12 +60,16 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public Deck updateDeckName(Deck deck) {
+    public Deck editDeck(Deck deck) {
         Deck storedDeck = findDeckById(deck.getId());
-        logger.info("Changed the deck name: from "
-                + storedDeck.getName() + " to: "
-                + deck.getName());
+        if (!storedDeck.getName().equals(deck.getName())) {
+            logger.info("Changed the deck name: from " + storedDeck.getName() + " to: " + deck.getName());
+        }
+        else {
+            logger.info("Changed the preference of deck " + deck.getName() + " (is favorite or not)");
+        }
         storedDeck.setName(deck.getName());
+        storedDeck.setFavorite(deck.isFavorite());
         return deckRepository.save(storedDeck);
     }
 

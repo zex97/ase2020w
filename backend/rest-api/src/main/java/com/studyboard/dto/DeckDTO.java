@@ -13,6 +13,7 @@ public class DeckDTO {
     private Integer size;
     private LocalDate creationDate;
     private LocalDateTime lastTimeUsed;
+    private boolean favorite;
     private UserDTO userDTO;
 
     public Long getId() {
@@ -55,6 +56,14 @@ public class DeckDTO {
         this.lastTimeUsed = lastTimeUsed;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     public UserDTO getUserDTO() {
         return userDTO;
     }
@@ -70,6 +79,7 @@ public class DeckDTO {
         deck.setSize(this.size);
         deck.setCreationDate(this.creationDate);
         deck.setLastTimeUsed(this.lastTimeUsed);
+        deck.setFavorite(this.favorite);
         deck.setUser(this.userDTO.toUser());
         return deck;
     }
@@ -81,6 +91,7 @@ public class DeckDTO {
         deckDTO.setSize(deck.getSize());
         deckDTO.setCreationDate(deck.getCreationDate());
         deckDTO.setLastTimeUsed(deck.getLastTimeUsed());
+        deckDTO.setFavorite(deck.isFavorite());
         deckDTO.setUserDTO(UserDTO.of(deck.getUser()));
         return deckDTO;
     }
@@ -93,6 +104,7 @@ public class DeckDTO {
                 ", size=" + size +
                 ", creationDate=" + creationDate +
                 ", lastTimeUsed=" + lastTimeUsed +
+                ", favorite=" + favorite +
                 (userDTO == null ? ", userDTO=null" : ", userDTO=" + userDTO.toString()) +
                 '}';
     }
@@ -109,6 +121,7 @@ public class DeckDTO {
         if (!Objects.equals(size, that.size)) return false;
         if (!Objects.equals(creationDate, that.creationDate)) return false;
         if (!Objects.equals(lastTimeUsed, that.lastTimeUsed)) return false;
+        if (!Objects.equals(favorite, that.favorite)) return false;
         return Objects.equals(userDTO, that.userDTO);
 
     }
