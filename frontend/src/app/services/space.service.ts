@@ -38,7 +38,6 @@ export class SpaceService {
   /**
    * Delete space from backend
    * @param id of the space to delete
-   * @param username of the user
    */
   deleteSpace(id: number): Observable<Space> {
     console.log('Delete a space');
@@ -46,11 +45,11 @@ export class SpaceService {
   }
 
   /**
-   * Change space name in the backend
+   * Edit space in the backend
    * @param space to make changes to
    */
   editSpace(space: Space): Observable<Space> {
-    console.log('Change the space name to ' + space.name + ' and space description to ' + space.description);
+    console.log('Edit the space' + space.name);
     return this.httpClient.put<Space>(this.spaceBaseUri, space);
   }
 

@@ -1,4 +1,4 @@
-import {User} from "./user"
+import {User} from './user';
 
 export class Space {
   constructor(
@@ -6,6 +6,7 @@ export class Space {
     public name: string,
     public description: string,
     public creationDate: string,
+    public favorite: boolean,
     public userDTO: User) {
   }
 }
