@@ -62,12 +62,20 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public Space updateSpace(Space space) {
         Space storedSpace = findSpaceById(space.getId());
-        logger.info("Changed the space name: from "
-                + storedSpace.getName() + " to: "
-                + space.getName() + " space description from " + storedSpace.getDescription() + " to: "
-                + space.getDescription());
+        if (storedSpace.isFavorite() == space.isFavorite()) {
+            logger.info(
+                "Changed the space name: from " + storedSpace.getName()
+                + " to: " + space.getName() + " space description from "
+                + storedSpace.getDescription() + " to: " + space.getDescription());
+        } else {
+            logger.info("Changed the space name: from " + storedSpace.getName()
+                    + " to: " + space.getName() + " space description from "
+                    + storedSpace.getDescription() + " to: " + space.getDescription()
+                    + "and changed the preference - is favorite or not");
+        }
         storedSpace.setName(space.getName());
         storedSpace.setDescription(space.getDescription());
+        storedSpace.setFavorite(space.isFavorite());
         return spaceRepository.save(storedSpace);
     }
 

@@ -20,6 +20,7 @@ public class Space {
     private User user;
     private String description;
     private LocalDate creationDate;
+    private boolean favorite;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -55,6 +56,13 @@ public class Space {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Column(nullable = true, name = "favorite")
+    public boolean isFavorite() { return this.favorite; }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
