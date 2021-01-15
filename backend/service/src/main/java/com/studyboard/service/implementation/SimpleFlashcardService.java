@@ -64,8 +64,7 @@ public class SimpleFlashcardService implements FlashcardService {
         Deck storedDeck = findDeckById(deck.getId());
         if (!storedDeck.getName().equals(deck.getName())) {
             logger.info("Changed the deck name: from " + storedDeck.getName() + " to: " + deck.getName());
-        }
-        else {
+        } else {
             logger.info("Changed the preference of deck " + deck.getName() + " (is favorite or not)");
         }
         storedDeck.setName(deck.getName());

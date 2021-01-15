@@ -12,6 +12,7 @@ public class SpaceDTO {
     private UserDTO userDTO;
     private String description;
     private LocalDate creationDate;
+    private boolean favorite;
 
     public SpaceDTO() {
     }
@@ -49,6 +50,14 @@ public class SpaceDTO {
         this.creationDate = creationDate;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     public UserDTO getUserDTO() {
         return userDTO;
     }
@@ -64,6 +73,7 @@ public class SpaceDTO {
         space.setUser(this.userDTO.toUser());
         space.setDescription(this.description);
         space.setCreationDate(this.creationDate);
+        space.setFavorite(this.favorite);
         return space;
     }
 
@@ -74,6 +84,7 @@ public class SpaceDTO {
         spaceDTO.setUserDTO(UserDTO.of(space.getUser()));
         spaceDTO.setDescription(space.getDescription());
         spaceDTO.setCreationDate(space.getCreationDate());
+        spaceDTO.setFavorite(space.isFavorite());
         return spaceDTO;
     }
 
@@ -83,6 +94,7 @@ public class SpaceDTO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", favorite='" + favorite + '\'' +
                 "userDTO=" + userDTO.toString() +
                 '}';
     }

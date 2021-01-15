@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../services/user.service';
 import {SpaceService} from '../../../services/space.service';
 import {Space} from '../../../dtos/space';
@@ -34,6 +34,7 @@ export class DocumentSpaceComponent implements OnInit {
   allowedFileTypes: String[] = ['.png', '.jpg', '.pdf', '.mp3', '.mp4'];
   spaceNameSearch: string = '';
   filesCountString: string = 'No file chosen';
+  spaceFavorite = new FormControl(false);
 
   @ViewChild('documentComponent') documentComponent;
   @ViewChild('sortOption') sortOption;
@@ -45,7 +46,8 @@ export class DocumentSpaceComponent implements OnInit {
         Validators.required,
         Validators.minLength(1)
       ]],
-      description: ['']
+      description: [''],
+      favorite: this.spaceFavorite
     });
     this.fileUploadForm = this.formBuilder.group({
       name: ['', [
@@ -58,7 +60,8 @@ export class DocumentSpaceComponent implements OnInit {
         Validators.required,
         Validators.minLength(1)
       ]],
-      description: ['']
+      description: [''],
+      favorite: this.spaceFavorite
     });
   }
 
@@ -100,7 +103,8 @@ export class DocumentSpaceComponent implements OnInit {
     console.log(this.currentSpace);
     this.spaceEditForm.patchValue({
       name: space.name,
-      description: space.description
+      description: space.description,
+      favorite: space.favorite
     });
   }
 
@@ -299,7 +303,8 @@ export class DocumentSpaceComponent implements OnInit {
     date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
     const dateString = date.toISOString();
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      const space = new Space(0, this.spaceForm.controls.name.value, this.spaceForm.controls.description.value, dateString, res);
+      const space = new Space(0, this.spaceForm.controls.name.value, this.spaceForm.controls.description.value,
+        dateString, this.spaceForm.controls.favorite.value, res);
       this.spaceService.createSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
@@ -341,6 +346,7 @@ export class DocumentSpaceComponent implements OnInit {
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(() => {
       space.name = this.spaceEditForm.controls.name.value;
       space.description = this.spaceEditForm.controls.description.value;
+      space.favorite = this.spaceEditForm.controls.favorite.value;
       this.spaceService.editSpace(space).subscribe(
         () => {
           this.loadAllSpaces();
