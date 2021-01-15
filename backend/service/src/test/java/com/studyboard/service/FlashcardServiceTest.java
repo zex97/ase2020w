@@ -411,7 +411,7 @@ public class FlashcardServiceTest {
         Assertions.assertEquals(DECK_NAME, response.getName());
 
         deck.setName(DECK_NAME_2);
-        flashcardService.updateDeckName(deck);
+        flashcardService.editDeck(deck);
         response = flashcardService.findDeckById(DECK_ID);
 
         Assertions.assertEquals(DECK_NAME_2, response.getName());

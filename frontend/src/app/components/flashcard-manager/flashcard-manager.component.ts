@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
 import {SpaceService} from '../../services/space.service';
@@ -56,7 +56,7 @@ export class FlashcardManagerComponent implements OnInit {
   optionError: boolean = false;
   currentRate = 0;
   deckNameSearch: string;
-
+  deckFavorite = new FormControl(false);
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private spaceService: SpaceService,
@@ -66,13 +66,15 @@ export class FlashcardManagerComponent implements OnInit {
       title: ['', [
         Validators.required,
         Validators.minLength(1)
-      ]]
+      ]],
+      favorite: this.deckFavorite
     });
     this.deckEditForm = this.formBuilder.group({
-          title: ['', [
-            Validators.required,
-            Validators.minLength(1)
-          ]]
+      title: ['', [
+        Validators.required,
+        Validators.minLength(1)
+      ]],
+      favorite: this.deckFavorite
         });
     this.flashcardForm = this.formBuilder.group({
       question: ['', [
@@ -135,7 +137,7 @@ export class FlashcardManagerComponent implements OnInit {
     date.setHours(date.getHours() - date.getTimezoneOffset() / 60);
     const dateString = date.toISOString();
     this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
-      const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, res);
+      const deck = new Deck(0, this.deckForm.controls.title.value, 0, dateString, dateString, this.deckForm.controls.favorite.value, res);
       this.flashcardService.createDeck(deck).subscribe(
         () => {
           this.openSnackbar('You successfully created a deck with the title ' + deck.name + `!`, 'success-snackbar');
@@ -156,6 +158,7 @@ export class FlashcardManagerComponent implements OnInit {
   saveEdits(deck: Deck) {
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
              deck.name = this.deckEditForm.controls.title.value;
+             deck.favorite = this.deckEditForm.controls.favorite.value;
                  this.flashcardService.editDeck(deck).subscribe(
                       () => {
                              this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
@@ -182,7 +185,7 @@ export class FlashcardManagerComponent implements OnInit {
           error => {
             this.defaultErrorHandling(error);
           }
-    )
+    );
     this.selectedDecksIds = [deck.id];
     this.flashcardService.getFlashcards(deck.id).subscribe(
       (flashcards: Flashcard[]) => {
@@ -202,7 +205,8 @@ export class FlashcardManagerComponent implements OnInit {
                }
        );
     this.deckEditForm.patchValue({
-      title: deck.name
+      title: deck.name,
+      favorite: deck.favorite
     });
     this.loadAllSpaces();
   }

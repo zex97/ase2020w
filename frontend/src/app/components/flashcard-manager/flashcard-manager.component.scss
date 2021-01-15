@@ -103,6 +103,11 @@ ngb-rating {
   background: #ffffff;
 }
 
+mat-checkbox {
+  margin-top: 5px;
+  margin-left: 3px;
+}
+
 ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
       background-color: #3aafa9 !important;   /*inner circle color change*/
 }

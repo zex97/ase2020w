@@ -1,4 +1,4 @@
-import {User} from "./user"
+import {User} from './user';
 
 export class Deck {
   constructor(
@@ -7,6 +7,7 @@ export class Deck {
     public size: number,
     public creationDate: string,
     public lastTimeUsed: string,
+    public favorite: boolean,
     public userDTO: User) {
   }
 }

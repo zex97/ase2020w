@@ -50,6 +50,7 @@
               Can't be empty!
             </mat-hint>
           </mat-form-field>
+          <mat-checkbox [formControl]="deckFavorite" color="primary" > Favorite Deck</mat-checkbox>
         </form>
       </div>
       <div class="modal-footer">
@@ -188,6 +189,7 @@
       <mat-card>
         <h5>Created: {{this.selectedDeck.creationDate}}</h5>
         <h5>Last revision: {{this.selectedDeck.lastTimeUsed.substring(0, 10)}}</h5>
+        <h5 *ngIf="this.selectedDeck.favorite">- Favorite Deck -</h5>
       </mat-card>
     </div>
     <h3 id="flashcard-title">Flashcards:</h3>
@@ -253,6 +255,7 @@
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
+              <mat-checkbox [formControl]="this.deckFavorite" color="primary" > Favorite Deck</mat-checkbox>
             </form>
           </div>
           <div class="modal-footer">

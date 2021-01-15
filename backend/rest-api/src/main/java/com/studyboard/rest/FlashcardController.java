@@ -68,9 +68,9 @@ public class FlashcardController {
     @ApiOperation(
             value = "Edit a specific deck",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editDeckName(
+    public ResponseEntity editDeck(
             @RequestBody DeckDTO deckDTO) {
-        flashcardService.updateDeckName(deckDTO.toDeck());
+        flashcardService.editDeck(deckDTO.toDeck());
         return ResponseEntity.ok().build();
     }
 
