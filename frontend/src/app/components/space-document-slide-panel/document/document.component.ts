@@ -229,4 +229,8 @@ export class DocumentComponent implements OnInit, OnChanges {
     this.documentNameSearch = '';
   }
 
+  scrollUp() {
+    window.scrollTo(0, 0);
+  }
+
 }

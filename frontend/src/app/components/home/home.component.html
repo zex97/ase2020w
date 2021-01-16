@@ -2,12 +2,18 @@
 
   <!-- Sidebar / SIDEBARCOMPONENT-->
   <div id="sidebar-wrapper">
-    <div id="title">Studyboard</div>
+    <app-profile-widget></app-profile-widget>
     <div class="list-group" id="sidenavList">
+      <mat-divider></mat-divider>
       <button mat-button [routerLink]="[{outlets:{view:'spaces'}}]" (click)="selectedPage='Spaces'">Spaces</button>
+      <mat-divider></mat-divider>
       <button mat-button [routerLink]="[{outlets:{view:'flashcards'}}]" (click)="selectedPage='Flashcards'">Flashcards</button>
+      <mat-divider></mat-divider>
       <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</button>
+      <mat-divider></mat-divider>
     </div>
+    <mat-divider class="help"></mat-divider>
+    <div class="studyboardSmall">Studyboard</div>
   </div>
   <!-- /#sidebar-wrapper -->
 
