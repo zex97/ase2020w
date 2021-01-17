@@ -4,6 +4,7 @@ import com.studyboard.dto.DocumentDTO;
 import com.studyboard.dto.SpaceDTO;
 import com.studyboard.dto.TagDTO;
 
+import com.studyboard.model.Document;
 import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -38,6 +39,18 @@ public class UserSpaceController {
             @PathVariable(name = "searchParam") String searchParam) {
         return service.getSpacesByName(username, searchParam).stream()
                 .map(SpaceDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/search/{spaceId}/p={searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(
+            value = "Get all documents containing the search parameter in the name.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<DocumentDTO> getSpaceDocumentsByName(
+            @PathVariable(name = "spaceId") long spaceId,
+            @PathVariable(name = "searchParam") String searchParam) {
+        return service.getDocumentsByName(spaceId, searchParam).stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
                 .collect(Collectors.toList());
     }
 

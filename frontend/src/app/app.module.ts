@@ -17,7 +17,7 @@ import {RegisterComponent} from './components/register/register.component';
 import {FlashcardManagerComponent} from './components/flashcard-manager/flashcard-manager.component';
 import {DocumentSpaceComponent} from './components/space-document-slide-panel/document-space/document-space.component';
 import {DocumentComponent} from './components/space-document-slide-panel/document/document.component';
-import { TagBarComponent } from './components/tag-bar/tag-bar.component';
+import {TagBarComponent } from './components/tag-bar/tag-bar.component';
 import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -42,6 +42,7 @@ import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog
 import {SpaceDocumentSlidePanelComponent} from './components/space-document-slide-panel/space-document-slide-panel.component';
 import {DocumentDialogComponent} from './components/document-dialog/document-dialog.component';
 import {MatTreeModule} from '@angular/material/tree';
+import {ProfileWidgetComponent } from './components/profile-widget/profile-widget.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
@@ -59,7 +60,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     ConfirmDialogComponent,
     SpaceDocumentSlidePanelComponent,
     DocumentDialogComponent,
-    TagBarComponent
+    TagBarComponent,
+    ProfileWidgetComponent
   ],
     imports: [
         BrowserModule,

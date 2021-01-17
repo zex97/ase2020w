@@ -214,20 +214,23 @@ export class DocumentComponent implements OnInit, OnChanges {
 
 
   searchDocumentsByName() {
-    // Uncomment when backend implementation of document search is finished
-    /*this.spaceService.getDocumentsByName(localStorage.getItem('currentUser'), this.space.id, this.documentNameSearch).subscribe(
+    this.spaceService.getDocumentsByName(this.space.id, this.documentNameSearch).subscribe(
       (documentList: Document[]) => {
         this.documentsOfSpace = documentList;
       },
       error => {
         this.defaultErrorHandling(error);
       }
-    );*/
+    );
   }
 
   backToAll() {
     this.loadAllDocuments(this.space.id);
     this.documentNameSearch = '';
+  }
+
+  scrollUp() {
+    window.scrollTo(0, 0);
   }
 
 }
