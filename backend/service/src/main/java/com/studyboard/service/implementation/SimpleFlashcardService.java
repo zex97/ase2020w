@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.print.Doc;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,18 @@ public class SimpleFlashcardService implements FlashcardService {
     @Override
     public List<Deck> getAllDecks(String username) {
         logger.info("Getting all decks belonging to the user with username " + username);
-        return deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(username);
+        List<Deck> decks = new ArrayList<>();
+        for (Deck deck : deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(username)) {
+            if(deck.isFavorite()) {
+                decks.add(deck);
+            }
+        }
+        for (Deck deck : deckRepository.findByUserUsernameOrderByLastTimeUsedDesc(username)) {
+            if(!deck.isFavorite()) {
+                decks.add(deck);
+            }
+        }
+        return decks;
     }
 
     @Override
