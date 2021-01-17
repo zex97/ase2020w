@@ -53,4 +53,25 @@ public interface UserService {
      */
     User resetLoginAttempts(Long id);
 
+    /**
+     * Check if email address exists and send recovery email with reset token.
+     *
+     * @param email of the user
+     */
+    void checkEmailAndRecover(String email);
+
+    /**
+     * Validate reset token.
+     *
+     * @param token - password reset token which is being verified.
+     * @return true if token is valid and non-expired
+     */
+    boolean validateResetToken(String token);
+
+    /**
+     * Change password if token is valid and non-expired.
+     *
+     * @param token - password reset token which is being verified.
+     */
+    void changePasswordWithToken(String token, String password);
 }

@@ -61,4 +61,29 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequestMapping(value = "/reset/{email}", method = RequestMethod.POST)
+    @ApiOperation(value = "Check if email address exists and send recovery link if it does.")
+    public ResponseEntity checkEmailAndRecover(@PathVariable(name = "email") String email) {
+        userService.checkEmailAndRecover(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/reset/token/{token}", method = RequestMethod.POST)
+    @ApiOperation(value = "Verify reset token.")
+    public String verifyResetToken(@PathVariable(name = "token") String token) {
+        if(userService.validateResetToken(token)) {
+            return "{\"token\":\"" + token + "\"}";
+        }
+        return "{\"token\":\"invalid\"}";
+    }
+
+    @RequestMapping(value = "/reset/change/{token}", method = RequestMethod.POST)
+    @ApiOperation(value = "Change user password with reset token.")
+    public ResponseEntity changePasswordWithToken(@PathVariable(name = "token") String token, @RequestBody UserDTO userDTO) {
+        if(userService.validateResetToken(token)) {
+            userService.changePasswordWithToken(token, userDTO.getPassword());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }

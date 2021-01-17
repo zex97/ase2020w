@@ -63,4 +63,20 @@ export class UserService {
     console.log('Resetting login attempts.');
     return this.httpClient.put<void>(this.userBaseUri + '/' + id, null);
   }
+
+
+  checkEmailAndRecover(email: string): Observable<void> {
+    console.log('Checking email ' + email + ' and sending recovery link.');
+    return this.httpClient.post<void>(this.userBaseUri + '/reset/' + email, null);
+  }
+
+  verifyToken(token: string): Observable<any> {
+    console.log('Verifying token.');
+    return this.httpClient.post<any>(this.userBaseUri + '/reset/token/' + token, null);
+  }
+
+  changePasswordWithToken(token: string, user: User): Observable<void> {
+    console.log('Changing password.');
+    return this.httpClient.post<void>(this.userBaseUri + '/reset/change/' + token, user);
+  }
 }
