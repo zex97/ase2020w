@@ -77,6 +77,21 @@ span {
   text-align: left;
 }
 
+.help {
+  border-top-color: #3AAFA9;
+  margin-top: 15em;
+  margin-right: 2em !important;
+  margin-left: 2em !important;
+}
+
+.studyboardSmall {
+  margin-top: 0.2em;
+  color: #3AAFA9;
+  font-weight: lighter;
+  font-size: 1.5em;
+  text-align: center;
+}
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 250px;

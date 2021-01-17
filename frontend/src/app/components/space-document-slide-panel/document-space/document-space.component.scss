@@ -26,6 +26,23 @@
   padding-top: 1px;
 }
 
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.custom-file-upload:hover {
+  background-color: lightgray;
+}
+.custom-file-upload:active {
+  outline: none !important;
+}
+.custom-file-upload:focus {
+  outline: none !important;
+}
+
 #spacesListItem {
   height: 100px !important; /** experiment with height **/
   width: 100%;
