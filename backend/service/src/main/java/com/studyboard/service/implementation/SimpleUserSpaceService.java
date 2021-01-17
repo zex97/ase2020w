@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,18 @@ public class SimpleUserSpaceService implements UserSpaceService {
     @Override
     public List<Space> getUserSpaces(String username) {
         logger.info("Getting all user spaces for user with username " + username);
-        return spaceRepository.findByUserUsernameOrderByCreationDateDesc(username);
+        List<Space> spaces = new ArrayList<>();
+        for (Space space : spaceRepository.findByUserUsernameOrderByCreationDateDesc(username)) {
+            if(space.isFavorite()) {
+                spaces.add(space);
+            }
+        }
+        for (Space space : spaceRepository.findByUserUsernameOrderByCreationDateDesc(username)) {
+            if(!space.isFavorite()) {
+                spaces.add(space);
+            }
+        }
+        return spaces;
     }
 
     @Override

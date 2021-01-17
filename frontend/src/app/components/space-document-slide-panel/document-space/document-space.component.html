@@ -49,7 +49,7 @@
                        id="spacesListItem">
           <mat-card-content>
             <mat-card-title>
-              <h3 class="space-name" *ngIf="space.favorite">{{space.name}} - favorite space</h3>
+              <h3 class="space-name" *ngIf="space.favorite"> <mat-icon>grade</mat-icon> {{space.name}}  </h3>
               <h3 class="space-name" *ngIf="!space.favorite">{{space.name}}</h3>
               <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
                     matTooltip="Delete space"
