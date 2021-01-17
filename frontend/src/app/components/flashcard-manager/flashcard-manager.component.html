@@ -155,7 +155,8 @@
           <div class="card-body">
             <h3 class="card-title wrapper txt-clr-dark">{{deck.name}}</h3>
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
-            <div class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
+            <div *ngIf="deck.favorite" class="wrapper"><img src="../../../assets/deckfav.png" width="90%;"></div>
+            <div *ngIf="!deck.favorite" class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
               <button (click)=" this.viewAll=false; loadDeckDetails(deck);" class="btn btn-middle"
                       mat-button>
