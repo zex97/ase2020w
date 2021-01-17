@@ -173,7 +173,8 @@
   <ng-template #elseBlockDetails>
     <div id="deck-info">
       <div class="flex-container-space-between">
-        <h2 class="txt-clr-dark">Deck {{this.selectedDeck.name}}</h2>
+        <h2 *ngIf="this.selectedDeck.favorite" class="txt-clr-dark"><mat-icon>grade</mat-icon> Deck {{this.selectedDeck.name}}</h2>
+        <h2 *ngIf="!this.selectedDeck.favorite" class="txt-clr-dark"><mat-icon>grade</mat-icon> Deck {{this.selectedDeck.name}}</h2>
         <div id="deck-buttons">
         <span class="close" data-target=".delete-deck-modal" data-toggle="modal" matTooltip="Delete deck">
           <mat-icon>delete</mat-icon>
@@ -190,7 +191,6 @@
       <mat-card>
         <h5>Created: {{this.selectedDeck.creationDate}}</h5>
         <h5>Last revision: {{this.selectedDeck.lastTimeUsed.substring(0, 10)}}</h5>
-        <h5 *ngIf="this.selectedDeck.favorite">- Favorite Deck -</h5>
       </mat-card>
     </div>
     <h3 id="flashcard-title">Flashcards:</h3>
