@@ -747,14 +747,10 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   searchDocumentsInModal(inputVal: string) {
-      /*if(this.documentNameSearch == undefined) {
-        this.filteredDocuments = this.documents;
-      } else {*/
-        let allSpaces = this.getSpaces();
-        this.filteredDocuments = new Map<number, Document[]>();
-        for(let i=0; i<allSpaces.length; i++) {
-           this.searchDocumentsOfSpace(inputVal, allSpaces[i].id);
-        //}
+      let allSpaces = this.getSpaces();
+      this.filteredDocuments = new Map<number, Document[]>();
+      for(let i=0; i<allSpaces.length; i++) {
+         this.searchDocumentsOfSpace(inputVal, allSpaces[i].id);
       }
   }
 
