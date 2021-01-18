@@ -108,6 +108,13 @@ mat-checkbox {
   margin-left: 3px;
 }
 
+.heart {
+  position: absolute;
+  top: 125px;
+  left: 30px;
+  color: #3AAFA9;
+}
+
 ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
       background-color: #3aafa9 !important;   /*inner circle color change*/
 }
