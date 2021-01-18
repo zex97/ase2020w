@@ -44,6 +44,8 @@ import {DocumentDialogComponent} from './components/document-dialog/document-dia
 import {MatTreeModule} from '@angular/material/tree';
 import {ProfileWidgetComponent } from './components/profile-widget/profile-widget.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
 
 @NgModule({
   declarations: [
@@ -92,6 +94,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         MatTreeModule,
         MatChipsModule,
         MatProgressBarModule,
+        MatAutocompleteModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]
