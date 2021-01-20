@@ -97,14 +97,14 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public User updateUserPassword(User user) {
-        User storedUser = userRepository.findUserById(user.getId());
+    public User updateUserPassword(String username, String password) {
+        User storedUser = userRepository.findOneByUsername(username);
         if (storedUser == null) {
             throw new UserDoesNotExist();
         }
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        String hashedPassword = passwordEncoder.encode(password);
         storedUser.setPassword(hashedPassword);
-        logger.info("Password of user with username" + user.getUsername() + " was updated");
+        logger.info("Password of user with username" + username + " was updated");
         return userRepository.save(storedUser);
     }
 
@@ -125,8 +125,10 @@ public class SimpleUserService implements UserService {
         if (user == null) {
             throw new UserDoesNotExist();
         }
-//        resetTokenRepository.delete(user.getResetToken());
-//        user.setResetToken(null);
+        List<PasswordResetToken> tokens = resetTokenRepository.findAllByUserId(user.getId());
+        if (tokens.size() > 0) {
+            resetTokenRepository.delete(tokens.get(0));
+        }
         String token = UUID.randomUUID().toString();
         PasswordResetToken resetToken = new PasswordResetToken(user, token);
         resetTokenRepository.save(resetToken);
@@ -161,6 +163,8 @@ public class SimpleUserService implements UserService {
         User user = passwordResetToken.getUser();
         String hashedPassword = passwordEncoder.encode(password);
         user.setPassword(hashedPassword);
+        user.setLoginAttempts(0);
+        user.setEnabled(true);
         userRepository.save(user);
         resetTokenRepository.delete(passwordResetToken);
     }

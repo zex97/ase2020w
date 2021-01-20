@@ -59,9 +59,9 @@ export class LoginComponent implements OnInit {
       },
       error => {
         this.error = true;
-        this.errorMessage = 'Invalid username or password!';
-        console.log('Could not log in: ' + this.errorMessage);
-        this.openSnackbar(this.errorMessage, 'warning-snackbar');
+        this.errorMessage = error;
+        console.log('Could not log in: ' + error);
+        this.openSnackbar(error, 'warning-snackbar');
         this.loginForm.reset();
       }
     );

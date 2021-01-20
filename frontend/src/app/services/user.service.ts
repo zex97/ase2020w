@@ -47,15 +47,6 @@ export class UserService {
   }
 
   /**
-   * Persists user with changed password to the backend
-   * @param user to update
-   */
-  updateUserPassword(user: User): Observable<void> {
-    console.log('Updating password for user ' + user.username);
-    return this.httpClient.put<void>(this.userBaseUri, user);
-  }
-
-  /**
    * Resets the login count of the a user
    * @param id of the user
    */
@@ -65,18 +56,37 @@ export class UserService {
   }
 
 
+  /**
+   * Check if email exists and send recovery email with token
+   * @param email used to identify the user who forgot the password
+   */
   checkEmailAndRecover(email: string): Observable<void> {
     console.log('Checking email ' + email + ' and sending recovery link.');
     return this.httpClient.post<void>(this.userBaseUri + '/reset/' + email, null);
   }
 
+  /**
+   * Verify if the token url parameter is valid and not expired
+   * @param token used to identify the user who forgot the password
+   */
   verifyToken(token: string): Observable<any> {
     console.log('Verifying token.');
     return this.httpClient.post<any>(this.userBaseUri + '/reset/token/' + token, null);
   }
 
-  changePasswordWithToken(token: string, user: User): Observable<void> {
+  /**
+   * Change the password of a user
+   * @param token used to identify the user who forgot the password
+   * @param user new password is send in a user object
+   * @param url differentiates authenticated and unauthenticated password changes
+   */
+  changePassword(token: string, user: User, url: string): Observable<void> {
     console.log('Changing password.');
-    return this.httpClient.post<void>(this.userBaseUri + '/reset/change/' + token, user);
+    if (url === '/changePassword' || url.includes('/changePassword?')) {
+      return this.httpClient.post<void>(this.userBaseUri + '/reset/change/' + token, user);
+    } else if (url === '/changePasswordHome') {
+      user.username = localStorage.getItem('currentUser');
+      return this.httpClient.put<void>(this.userBaseUri, user);
+    }
   }
 }

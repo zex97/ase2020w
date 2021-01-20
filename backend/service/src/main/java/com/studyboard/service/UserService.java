@@ -40,10 +40,11 @@ public interface UserService {
     /**
      * Update user password
      *
-     * @param user whose password should be updated
+     * @param username of the user whose password should be updated
+     * @param password new password
      * @return user with updated password
      */
-    User updateUserPassword(User user);
+    User updateUserPassword(String username, String password);
 
     /**
      * Resets login attempts to 0

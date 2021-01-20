@@ -18,6 +18,7 @@ export class ChangePasswordComponent implements OnInit {
   // Error flag
   error: boolean = false;
   errorMessage: string = '';
+  urlString: string;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private userService: UserService, private router: Router,
               private snackBar: MatSnackBar) {
@@ -30,12 +31,13 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.urlString = this.router.url;
     this.token = this.route.snapshot.queryParamMap.get('token');
-    if (this.token != null) {
+    if ((this.urlString === '/changePassword' || this.urlString.includes('/changePassword?')) && this.token != null) {
       this.userService.verifyToken(this.token).subscribe((data) => {
         if (data.token !== this.token) {
           this.openSnackbar('Token is invalid or expired!', 'warning-snackbar');
-          this.navigateToLogin();
+          this.navigateToLoginOrHome();
         }
       });
     }
@@ -55,10 +57,10 @@ export class ChangePasswordComponent implements OnInit {
         null,
         0
       );
-      this.userService.changePasswordWithToken(this.token, user).subscribe(() => {
-        this.openSnackbar('Password successfully changed!', 'success-snackbar');
-        this.navigateToLogin();
-      },
+      this.userService.changePassword(this.token, user, this.urlString).subscribe(() => {
+          this.openSnackbar('Password successfully changed!', 'success-snackbar');
+          this.navigateToLoginOrHome();
+        },
         error => {
           this.defaultErrorHandling(error);
         });
@@ -67,8 +69,12 @@ export class ChangePasswordComponent implements OnInit {
     }
   }
 
-  navigateToLogin() {
-    this.router.navigate(['/login']);
+  navigateToLoginOrHome() {
+    if (this.urlString === '/changePassword' || this.urlString.includes('/changePassword?')) {
+      this.router.navigate(['/login']);
+    } else if (this.urlString === '/changePasswordHome') {
+      this.router.navigate(['/home']);
+    }
   }
 
   openSnackbar(message: string, type: string) {
@@ -82,12 +88,16 @@ export class ChangePasswordComponent implements OnInit {
     console.log(error);
     this.error = true;
     this.errorMessage = '';
-    this.errorMessage = error.error.message;
+    this.errorMessage = error.message;
 
-    if (error.status == 400) {
+    if ((this.urlString === '/changePassword' || this.urlString.includes('/changePassword?')) && error.status === 400) {
       this.openSnackbar('Token is invalid or expired!', 'warning-snackbar');
       this.error = false;
-      this.navigateToLogin();
+      this.navigateToLoginOrHome();
+    }
+    if (this.urlString === '/changePasswordHome' && error.status === 404) {
+      this.openSnackbar('User does not exist!', 'warning-snackbar');
+      this.error = false;
     }
   }
 

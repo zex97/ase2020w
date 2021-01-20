@@ -18,6 +18,7 @@ export class PasswordResetComponent implements OnInit {
   // Error flag
   error: boolean = false;
   errorMessage: string = '';
+  loading: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router, private snackBar: MatSnackBar) {
     this.emailCheckForm = this.formBuilder.group({
@@ -34,17 +35,21 @@ export class PasswordResetComponent implements OnInit {
    */
   checkEmailAndRecover() {
     this.submitted = true;
+    this.loading = true;
     if (this.emailCheckForm.valid) {
       this.userService.checkEmailAndRecover(this.emailCheckForm.controls.email.value).subscribe(() => {
-        this.emailCheckForm.reset();
-        this.openSnackbar('Recovery email has been sent.', 'success-snackbar');
-        this.router.navigate(['/login']);
-      },
-          error => {
-        this.defaultErrorHandling(error);
-      }
-        );
+          this.emailCheckForm.reset();
+          this.openSnackbar('Recovery email has been sent.', 'success-snackbar');
+          this.loading = false;
+          this.router.navigate(['/login']);
+        },
+        error => {
+          this.loading = false;
+          this.defaultErrorHandling(error);
+        }
+      );
     } else {
+      this.loading = false;
       console.log('Invalid input.');
     }
   }

@@ -50,7 +50,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation(value = "Edit user password", authorizations = {@Authorization(value = "apiKey")})
     public ResponseEntity editUserPassword(@RequestBody UserDTO userDTO) {
-        userService.updateUserPassword(userDTO.toUser());
+        userService.updateUserPassword(userDTO.getUsername(), userDTO.getPassword());
         return ResponseEntity.ok().build();
     }
 

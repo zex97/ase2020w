@@ -39,6 +39,11 @@ const routes: Routes = [
         component: ChangePasswordComponent
       },
       {
+        path: 'changePasswordHome',
+        component: ChangePasswordComponent,
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'home',
         component: HomeComponent,
         canActivate: [AuthGuard],

@@ -1,5 +1,6 @@
 package com.studyboard.security.rest;
 
+import com.studyboard.exception.UserDoesNotExist;
 import com.studyboard.security.dto.AuthenticationRequest;
 import com.studyboard.security.dto.AuthenticationToken;
 import com.studyboard.security.dto.AuthenticationTokenInfo;
@@ -9,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -26,8 +28,16 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Get an authentication token with your username and password")
-    public AuthenticationToken authenticate(@RequestBody final AuthenticationRequest authenticationRequest) {
-        return authenticationService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+    public ResponseEntity<?> authenticate(@RequestBody final AuthenticationRequest authenticationRequest) {
+        AuthenticationToken authenticationToken;
+        authenticationService.incrementLoginAttempts(authenticationRequest.getUsername());
+        try {
+            authenticationToken = authenticationService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+        authenticationService.resetLoginAttempts(authenticationRequest.getUsername());
+        return ResponseEntity.ok(authenticationToken);
     }
 
     @RequestMapping(method = RequestMethod.GET)
