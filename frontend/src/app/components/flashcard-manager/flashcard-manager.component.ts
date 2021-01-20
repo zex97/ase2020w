@@ -12,6 +12,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {DocumentDialogComponent} from '../document-dialog/document-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatChipsModule} from '@angular/material/chips';
 
 
 @Component({
@@ -41,11 +43,13 @@ export class FlashcardManagerComponent implements OnInit {
   sizeError: boolean = false;
   chosenOption: number;
   private decks: Deck[];
+  private filteredDecks: Deck[];
   private flashcards: Flashcard[];
   selectedDecks: number[];
   private unassignedDecks: Deck[] = [];
   private spaces: Space[];
   documents: Map<number, Document[]> = new Map<number, Document[]>();
+  filteredDocuments: Map<number,Document[]> = new Map<number, Document[]>();
   selectedDocuments: number[];
   existingRefs: number[];
   revisionFlashcards: Flashcard[];
@@ -56,7 +60,14 @@ export class FlashcardManagerComponent implements OnInit {
   optionError: boolean = false;
   currentRate = 0;
   deckNameSearch: string;
+  deckNameSearchModal: string;
+  documentNameSearch: string;
   deckFavorite = new FormControl(false);
+  deckSelectControl = new FormControl();
+  documentSelectControl = new FormControl();
+  selectable = true;
+  removable = true;
+
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private spaceService: SpaceService,
@@ -224,9 +235,12 @@ export class FlashcardManagerComponent implements OnInit {
   prepareFlashcardCreation() {
    if(this.selectedDeck == undefined) {
        this.selectedDecksIds = undefined;
+       this.selectedDecks = [];
+       this.selectedDocuments = undefined;
     } else {
       this.selectedDecks = [this.selectedDeck.id];
     }
+    this.filteredDecks = this.getDecks();
     this.loadAllSpaces();
     this.resetFlashcardForm();
   }
@@ -715,12 +729,55 @@ export class FlashcardManagerComponent implements OnInit {
     );
   }
 
+  searchDecksInModal(inputVal: string) {
+   console.log(inputVal);
+   this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), inputVal).subscribe(
+     (decksList: Deck[]) => {
+       this.filteredDecks = decksList;
+       console.log(decksList.length);
+     },
+     error => {
+       this.defaultErrorHandling(error);
+     }
+   );
+  }
+
+  getFilteredDecks() {
+    return this.filteredDecks;
+  }
+
+  searchDocumentsInModal(inputVal: string) {
+      let allSpaces = this.getSpaces();
+      this.filteredDocuments = new Map<number, Document[]>();
+      for(let i=0; i<allSpaces.length; i++) {
+         this.searchDocumentsOfSpace(inputVal, allSpaces[i].id);
+      }
+  }
+
+  searchDocumentsOfSpace(inputVal: string, spaceId: number) {
+    this.spaceService.getDocumentsByName(spaceId, inputVal).subscribe(
+      (documentList: Document[]) => {
+        this.filteredDocuments.set(spaceId, documentList);
+      },
+      error => {
+        this.defaultErrorHandling(error);
+      }
+    );
+  }
+
+
+
   isEmptyDecks() {
     return this.decks?.length === 0;
   }
 
   isEmptyFlashcards() {
-      return this.flashcards?.length === 0;
-    }
+    return this.flashcards?.length === 0;
+  }
+
+  isSpaceEmpty(spaceId: number) {
+    return this.documents.get(spaceId) && this.documents.get(spaceId).length!=0 && this.filteredDocuments.get(spaceId) && this.filteredDocuments.get(spaceId).length!=0;
+  }
+
 
 }

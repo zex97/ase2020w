@@ -44,6 +44,7 @@ import {DocumentDialogComponent} from './components/document-dialog/document-dia
 import {MatTreeModule} from '@angular/material/tree';
 import {ProfileWidgetComponent } from './components/profile-widget/profile-widget.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
@@ -96,6 +97,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
         MatTreeModule,
         MatChipsModule,
         MatProgressBarModule,
+        MatAutocompleteModule
     ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

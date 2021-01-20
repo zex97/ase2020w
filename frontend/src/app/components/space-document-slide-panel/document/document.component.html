@@ -1,6 +1,7 @@
 <div class="topPageDiv">
   <mat-card-title>
-    <h1 class="page-title-small" style="display: inline-block;">{{space.name}}</h1>
+    <h1 class="page-title-small" style="display: inline-block;" *ngIf="space.favorite"> <mat-icon matTooltip="Favorite space" >favorite</mat-icon> {{space.name}}</h1>
+    <h1 class="page-title-small" style="display: inline-block;" *ngIf="!space.favorite"> {{space.name}}</h1>
     <button mat-button (click)="documentEvents.emit('deleteSpace')" matTooltip="Delete space" style="float: right; margin-right:0.1em; color: white !important;display: inline-block;"><mat-icon>delete</mat-icon></button>
     <button mat-button (click)="documentEvents.emit('editSpace')" matTooltip="Edit space" style="float: right;margin-right:1.5em;color: white !important;display: inline-block;"><mat-icon>edit</mat-icon></button>
     <button mat-button (click)="documentEvents.emit('uploadToSpace')" matTooltip="Upload files" style="float: right; margin-right:1.5em; color: white !important;display: inline-block;"><mat-icon> attach_file</mat-icon></button>
