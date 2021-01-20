@@ -98,10 +98,8 @@ public class UserServiceTest {
 
     @Test
     public void updateUserThatDoesNotExist_ThrowsUserDoesNotExist() {
-        User user = new User();
-        user.setId(TEST_ID_1);
         Assertions.assertThrows(UserDoesNotExist.class, () -> {
-            userService.updateUserPassword(user);
+            userService.updateUserPassword(TEST_USER_1.getUsername(), TEST_USER_1.getPassword());
         });
     }
 
@@ -141,11 +139,11 @@ public class UserServiceTest {
         userWithNewPassword.setPassword(TEST_UPDATED_PASSWORD);
 
         Mockito.when(passwordEncoder.encode(userWithNewPassword.getPassword())).thenReturn(TEST_HASHED_PASSWORD);
-        Mockito.when(userRepository.findUserById(TEST_ID_1)).thenReturn(user);
+        Mockito.when(userRepository.findOneByUsername(TEST_USER_1.getUsername())).thenReturn(user);
         user.setPassword(TEST_HASHED_PASSWORD);
         Mockito.when(userRepository.save(user)).thenReturn(user);
-        userService.updateUserPassword(userWithNewPassword);
+        userService.updateUserPassword(TEST_USER_1.getUsername(), TEST_UPDATED_PASSWORD);
 
-        Assertions.assertEquals(user, userService.updateUserPassword(userWithNewPassword));
+        Assertions.assertEquals(user, userService.updateUserPassword(TEST_USER_1.getUsername(), TEST_UPDATED_PASSWORD));
     }
 }

@@ -42,7 +42,8 @@ export class RegisterComponent implements OnInit {
    */
   registerUser() {
     this.submitted = true;
-    if (this.registerForm.valid && (this.registerForm.controls.username.value !== 'user')) {
+    if (this.registerForm.valid && (this.registerForm.controls.username.value !== 'user') &&
+      (this.registerForm.controls.password.value === this.registerForm.controls.passwordConfirm.value)) {
       const user: User = new User(
         null,
         this.registerForm.controls.username.value,

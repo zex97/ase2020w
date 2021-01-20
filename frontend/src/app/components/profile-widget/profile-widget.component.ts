@@ -3,6 +3,7 @@ import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {split} from 'ts-node';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-profile-widget',
@@ -17,7 +18,7 @@ export class ProfileWidgetComponent implements OnInit {
   // dummy user until the actual user is fetched from backend
   currentUser: User = new User(1, 'username', 'dummy', 'email@email.com', 1);
 
-  constructor(private userService: UserService, private authService: AuthService) { }
+  constructor(private userService: UserService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.getCurrentUser();
@@ -62,4 +63,7 @@ export class ProfileWidgetComponent implements OnInit {
     this.initials = initials;
   }
 
+  navigateToChangePassword() {
+    this.router.navigate(['/changePasswordHome']);
+  }
 }
