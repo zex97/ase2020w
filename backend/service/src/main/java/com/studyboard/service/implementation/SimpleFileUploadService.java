@@ -75,7 +75,7 @@ public class SimpleFileUploadService implements FileUploadService {
         this.rootLocation
             .resolve(space.getUser().getUsername())
             .resolve(space.getId() + "")
-            .resolve(Paths.get(fileName))
+            .resolve(Paths.get(clean(fileName)))
             .normalize()
             .toAbsolutePath();
 
@@ -87,7 +87,7 @@ public class SimpleFileUploadService implements FileUploadService {
     }
 
     // reference the document of the file
-    storeRefToNewDocument(space, uploadFilePath);
+    storeRefToNewDocument(space, uploadFilePath, fileName);
 
     return CompletableFuture.completedFuture(fileName);
   }
@@ -99,7 +99,16 @@ public class SimpleFileUploadService implements FileUploadService {
     return transcriptionFormats.contains(extension);
   }
 
-  private void storeRefToNewDocument(Space space, Path path) {
+  /**
+   * Remove all spaces characters from the file name and replace them with "_"
+   * @param fileName name of the file that needs to be replaced
+   * @return name of the file with "_" instead of " "
+   */
+  private String clean(String fileName) {
+    return "_" + fileName.replace(' ', '_');
+  }
+
+  private void storeRefToNewDocument(Space space, Path path, String originalFileName) {
     Document document = null;
     for (Document d : space.getDocuments()) {
       if (d.getFilePath().equals(path.toAbsolutePath().toString())) {
@@ -111,7 +120,7 @@ public class SimpleFileUploadService implements FileUploadService {
       document = new Document();
       document.setFilePath(path.toAbsolutePath().toString());
       // use name without the file extension
-      document.setName(path.getFileName().toString());
+      document.setName(originalFileName);
 
       // extension is lost then
       document.setSpace(space);
@@ -149,7 +158,7 @@ public class SimpleFileUploadService implements FileUploadService {
     return rootLocation
         .resolve(userName)
         .resolve(spaceName)
-        .resolve(filename)
+        .resolve(clean(filename))
         .normalize()
         .toAbsolutePath();
   }
