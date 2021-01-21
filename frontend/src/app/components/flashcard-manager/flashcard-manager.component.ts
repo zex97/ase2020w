@@ -627,6 +627,7 @@ export class FlashcardManagerComponent implements OnInit {
       this.editRef=true;
       this.existingRefs = this.selectedFlashcard.documentReferences.map(({ id }) => id);
       this.selectedDocuments = this.existingRefs;
+      this.searchDocumentsInModal("");
    }
 
   /**
