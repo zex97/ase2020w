@@ -47,7 +47,7 @@ export class FlashcardManagerComponent implements OnInit {
   private flashcards: Flashcard[];
   selectedDecks: number[];
   private unassignedDecks: Deck[] = [];
-  private spaces: Space[];
+  private spaces: Space[] = [];
   documents: Map<number, Document[]> = new Map<number, Document[]>();
   filteredDocuments: Map<number,Document[]> = new Map<number, Document[]>();
   selectedDocuments: number[];
@@ -62,9 +62,11 @@ export class FlashcardManagerComponent implements OnInit {
   deckNameSearch: string;
   deckNameSearchModal: string;
   documentNameSearch: string;
+  documentNameSearchEdit: string;
   deckFavorite = new FormControl(false);
   deckSelectControl = new FormControl();
   documentSelectControl = new FormControl();
+  documentSelectControlEdit = new FormControl();
   selectable = true;
   removable = true;
   showInfo = false;
@@ -233,15 +235,15 @@ export class FlashcardManagerComponent implements OnInit {
   * Reset all values when creating a new flashcard
   */
   prepareFlashcardCreation() {
+   this.loadAllSpaces();
    if(this.selectedDeck == undefined) {
        this.selectedDecksIds = undefined;
        this.selectedDecks = [];
-       this.selectedDocuments = undefined;
     } else {
       this.selectedDecks = [this.selectedDeck.id];
     }
+    this.selectedDocuments = undefined;
     this.filteredDecks = this.getDecks();
-    this.loadAllSpaces();
     this.resetFlashcardForm();
   }
 
@@ -276,6 +278,7 @@ export class FlashcardManagerComponent implements OnInit {
               documentList[i].space = space;
             }*/
             this.documents.set(space.id, documentList);
+            this.filteredDocuments.set(space.id, documentList);
           },
           error => {
             this.defaultErrorHandling(error);

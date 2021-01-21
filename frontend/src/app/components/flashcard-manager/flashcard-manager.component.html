@@ -18,7 +18,7 @@
             mat-stroked-button>
       Create a deck
     </button>
-    <button (click)="this.prepareFlashcardCreation();inputDecks.value=null;" class="pageTopBarButton" data-target=".create-flashcard-modal"
+    <button (click)="this.prepareFlashcardCreation(); inputDecks.value=null; inputDocs.value=null;" class="pageTopBarButton" data-target=".create-flashcard-modal"
             data-toggle="modal"
             mat-stroked-button>
       Create a flashcard
@@ -113,7 +113,7 @@
               <input (ngModelChange)="searchDecksInModal(inputDecks.value)"
                      [(ngModel)]="deckNameSearchModal"
                      [formControl]="deckSelectControl"
-                     [matAutocomplete]="auto"
+                     [matAutocomplete]="autoDecks"
                      [matChipInputFor]="chipListDecks"
                      aria-label="Deck"
                      matInput
@@ -121,7 +121,7 @@
                      placeholder="Deck"
                      type="text">
             </mat-chip-list>
-            <mat-autocomplete #auto="matAutocomplete">
+            <mat-autocomplete #autoDecks="matAutocomplete">
               <mat-option (click)="updateDeckList(deck.id);inputDecks.value=null"
                           *ngFor="let deck of getFilteredDecks()"
                           [value]="deck.id">
@@ -133,22 +133,22 @@
             </mat-hint>
           </mat-form-field>
           <!--Add document references-->
-          <mat-form-field *ngIf="this.getSpaces()" appearance="outline"
+          <mat-form-field appearance="outline"
                           class="modal-input-full-width">
             <mat-label>Select document references</mat-label>
             <mat-chip-list #chipListRefs aria-label="References selection">
               <mat-chip
-                *ngFor="let document of getReferences()"
-                [removable]="removable"
-                [selectable]="selectable"
-                (removed)="updateReferenceList(document.id)">
-                {{document.name}}
+                        *ngFor="let document of getReferences()"
+                        [removable]="removable"
+                        [selectable]="selectable"
+                        (removed)="updateReferenceList(document.id)">
+                        {{document.name}}
                 <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input (ngModelChange)="searchDocumentsInModal(inputDocs.value)"
                      [(ngModel)]="documentNameSearch"
                      [formControl]="documentSelectControl"
-                     [matAutocomplete]="auto"
+                     [matAutocomplete]="autoDocs"
                      [matChipInputFor]="chipListRefs"
                      aria-label="Document"
                      matInput
@@ -156,7 +156,7 @@
                      placeholder="Document"
                      type="text">
             </mat-chip-list>
-            <mat-autocomplete #auto="matAutocomplete">
+            <mat-autocomplete #autoDocs="matAutocomplete">
                <span *ngFor="let space of getSpaces()">
                 <h4 *ngIf="isSpaceEmpty(space.id)" style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
               <mat-option (click)="updateReferenceList(document.id);inputDocs.value=null"
@@ -224,7 +224,7 @@
           <span class="close" data-target=".edit-deck-modal" data-toggle="modal" matTooltip="Edit deck">
           <mat-icon>edit</mat-icon>
         </span>
-          <span (click)="this.sizeError=false; this.resetRevisionSizeForm();" class="close"
+          <span (click)="this.sizeError=false; this.resetRevisionSizeForm(); this.showInfo=false;" class="close"
                 data-target=".revise-deck" data-toggle="modal" matTooltip="Revise flashcards">
           <mat-icon>repeat</mat-icon>
         </span>
@@ -614,7 +614,7 @@
             <div class="flex-container-space-between">
               <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
               <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
-              <span (click)="prepareEditRef()" *ngIf="!this.editRef" class="close" matTooltip="Edit references"
+              <span (click)="prepareEditRef(); inputDocsChange.value=null" *ngIf="!this.editRef" class="close" matTooltip="Edit references"
                     style="margin-right:0px;"><mat-icon>edit</mat-icon></span>
             </div>
             <ul *ngFor="let document of this.selectedFlashcard.documentReferences">
@@ -625,13 +625,13 @@
               </li>
             </ul>
 
-            <form *ngIf="this.editRef" class="modal-input-form">
+            <form [hidden]="!this.editRef" class="modal-input-form">
 
               <h4>Choose references:</h4>
-              <mat-form-field *ngIf="this.getSpaces()" appearance="outline"
+              <mat-form-field appearance="outline"
                               class="modal-input-full-width">
                 <mat-label>Select document references</mat-label>
-                <mat-chip-list #chipListRefs aria-label="References selection">
+                <mat-chip-list #chipListRefsEdit aria-label="References selection">
                   <mat-chip
                     *ngFor="let document of getReferences()"
                     [removable]="removable"
@@ -640,21 +640,21 @@
                     {{document.name}}
                     <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
                   </mat-chip>
-                  <input (ngModelChange)="searchDocumentsInModal(inputDocs.value)"
-                         [(ngModel)]="documentNameSearch"
-                         [formControl]="documentSelectControl"
-                         [matAutocomplete]="auto"
-                         [matChipInputFor]="chipListRefs"
+                  <input (ngModelChange)="searchDocumentsInModal(inputDocsChange.value)"
+                         [(ngModel)]="documentNameSearchEdit"
+                         [formControl]="documentSelectControlEdit"
+                         [matAutocomplete]="autoEdit"
+                         [matChipInputFor]="chipListRefsEdit"
                          aria-label="Document"
                          matInput
-                         #inputDocs
+                         #inputDocsChange
                          placeholder="Document"
                          type="text">
                 </mat-chip-list>
-                <mat-autocomplete #auto="matAutocomplete">
+                <mat-autocomplete #autoEdit="matAutocomplete">
                <span *ngFor="let space of getSpaces()">
                 <h4 *ngIf="isSpaceEmpty(space.id)" style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
-              <mat-option (click)="updateReferenceList(document.id);inputDocs.value=null"
+              <mat-option (click)="updateReferenceList(document.id);inputDocsChange.value=null"
                           *ngFor="let document of this.filteredDocuments.get(space.id)"
                           [value]="document.id">
                 {{document.name}}
