@@ -36,6 +36,10 @@
   background-color: #17252A !important;
 }
 
+::ng-deep .mat-expansion-panel-body {
+  background-color: #17252A !important;
+}
+
 .mat-expansion-panel-header {
   height: 40px;
   background-color: #17252A !important;
