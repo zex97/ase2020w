@@ -584,6 +584,11 @@ export class FlashcardManagerComponent implements OnInit {
     } else {
       this.selectedDecks = [select];
     }
+    this.updateFilteredDecks();
+  }
+
+  updateFilteredDecks() {
+
   }
 
   /**
@@ -733,8 +738,8 @@ export class FlashcardManagerComponent implements OnInit {
    console.log(inputVal);
    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), inputVal).subscribe(
      (decksList: Deck[]) => {
-       this.filteredDecks = decksList;
-       console.log(decksList.length);
+       let selected = this.getChosenDecks();
+       this.filteredDecks = decksList.filter( (el) => !selected.find(rm => (rm.id==el.id)));
      },
      error => {
        this.defaultErrorHandling(error);
@@ -757,6 +762,8 @@ export class FlashcardManagerComponent implements OnInit {
   searchDocumentsOfSpace(inputVal: string, spaceId: number) {
     this.spaceService.getDocumentsByName(spaceId, inputVal).subscribe(
       (documentList: Document[]) => {
+        let selected = this.getReferences();
+        documentList = documentList.filter( (el) => !selected.find(rm => (rm.id==el.id)));
         this.filteredDocuments.set(spaceId, documentList);
       },
       error => {
