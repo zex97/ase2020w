@@ -67,7 +67,7 @@ export class FlashcardManagerComponent implements OnInit {
   documentSelectControl = new FormControl();
   selectable = true;
   removable = true;
-
+  showInfo = false;
 
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private spaceService: SpaceService,
@@ -406,6 +406,18 @@ export class FlashcardManagerComponent implements OnInit {
      this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
      if (this.revisionCounter < this.revisionFlashcards.length) {
         this.revisionCounter = this.revisionCounter + 1;
+     }
+     if(this.currentlyRevisedCard.confidenceLevel > 0) {
+        this.flashcardService.rateFlashcard(this.currentlyRevisedCard).subscribe(
+                () => {
+                  console.log("Rating with the old confidence level again.")
+                },
+                error => {
+                  this.confidenceError = true;
+                  this.error = true;
+                  this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+                  this.openSnackbar(this.errorMessage, 'warning-snackbar');
+                });
      }
    }
 

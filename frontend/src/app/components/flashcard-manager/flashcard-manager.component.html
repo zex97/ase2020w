@@ -356,11 +356,19 @@
                                   style="padding-bottom: 15px;" value="1">Revise all cards that are
                   due today: <strong>{{this.dueDateFlashcards.length}}</strong></mat-radio-button>
                 <button class="close" matTooltip="Our app is using SM-2 algorithm to schedule flashcard revision."
-                        matTooltipPosition="above"
+                        matTooltipPosition="above" (click)="showInfo=true"
                         style="margin: -15px 0px 0px 10px;">
                   <mat-icon>help</mat-icon>
                 </button>
               </div>
+              <div *ngIf="showInfo" style="margin-bottom: 10px; border: 1px solid #000000">
+                <h5 style="padding: 5px 10px 0px 10px;">
+                  SM-2 is a <b>spaced repetition algorithm</b> that calculates how long to wait before showing a flashcard again based on the how easy the information from the card was remembered during the last revision.
+                  <br>
+                  <b>More difficult and newly introduced flashcards are shown more frequently and older and less difficult cards less frequently.</b>
+                </h5>
+              </div>
+
               <div class="flex-grid">
                 <mat-radio-button (change)="this.chosenOption=2" style="padding-top: 10px; padding-right: 5px;"
                                   [checked]="this.chosenOption==2"
@@ -408,7 +416,7 @@
                               [readonly]="false" matTooltip="Change confidence level"
                               style="margin-top:20px; font-size:40px"></ngb-rating>
                   <span (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length"
-                        class="close" matTooltip="Next flashcard">
+                        class="close" matTooltip="Warning: Not changing the existing confidence level counts as rating with the same confidence level again.">
                    <mat-icon>arrow_forward_ios</mat-icon>
                   </span>
                   <span *ngIf="this.revisionCounter>=this.revisionFlashcards.length" style="width:23px;"></span>
@@ -423,6 +431,7 @@
             </button>
             <button
               (click)="rateFlashcardInRevision(this.currentlyRevisedCard, this.currentlyRevisedCard.confidenceLevel)"
+              matTooltip="Confidence level of a flashcard influences how often it will appear in future revisions."
               [hidden]="this.chooseSize" mat-button mat-dialog-actions type="button">
               Rate
             </button>
