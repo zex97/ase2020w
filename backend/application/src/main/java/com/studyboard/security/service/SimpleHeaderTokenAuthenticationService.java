@@ -1,5 +1,7 @@
 package com.studyboard.security.service;
 
+import com.studyboard.exception.UserDoesNotExist;
+import com.studyboard.repository.UserRepository;
 import com.studyboard.security.dto.AuthenticationToken;
 import com.studyboard.security.dto.AuthenticationTokenInfo;
 import com.studyboard.security.configuration.properties.AuthenticationConfigurationProperties;
@@ -9,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,6 +40,9 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHeaderTokenAuthenticationService.class);
 
+    @Autowired
+    private UserRepository userRepository;
+
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
     private final SecretKeySpec signingKey;
@@ -64,9 +70,25 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
     }
 
     @Override
-    public AuthenticationToken authenticate(String username, CharSequence password) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password));
+    public AuthenticationToken authenticate(String username, CharSequence password) throws Exception{
+        Authentication authentication;
+        try {
+             authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+        } catch (Exception e) {
+            com.studyboard.model.User user = userRepository.findOneByUsername(username);
+            if (user == null) {
+                throw new Exception("Username does not exist.");
+            } else if (!user.getEnabled()) {
+                throw new Exception("Exceeded login attempt limit, user disabled.");
+            } else {
+                if (user.getLoginAttempts() == 5) {
+                    throw new Exception("Exceeded login attempt limit, user disabled");
+                } else {
+                    throw new Exception("Incorrect password. " + (5 - user.getLoginAttempts()) + " attempt(s) left.");
+                }
+            }
+        }
         Instant now = Instant.now();
         String authorities = "";
         try {
@@ -182,5 +204,27 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
             LOGGER.error("Failed to unwrap roles", e);
         }
         return authoritiesWrapper;
+    }
+
+    @Override
+    public void incrementLoginAttempts(String username) {
+        com.studyboard.model.User user = userRepository.findOneByUsername(username);
+        if (user != null) {
+            Integer attempts = user.getLoginAttempts();
+            attempts++;
+            user.setLoginAttempts(attempts);
+            if (attempts > 5)
+                user.setEnabled(false);
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void resetLoginAttempts(String username) {
+        com.studyboard.model.User user = userRepository.findOneByUsername(username);
+        if (user != null) {
+            user.setLoginAttempts(0);
+            userRepository.save(user);
+        }
     }
 }

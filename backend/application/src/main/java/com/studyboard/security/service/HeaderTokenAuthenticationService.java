@@ -14,7 +14,7 @@ public interface HeaderTokenAuthenticationService {
      * @param password of the user
      * @return an authentication token
      */
-    AuthenticationToken authenticate(String username, CharSequence password);
+    AuthenticationToken authenticate(String username, CharSequence password) throws Exception;
 
     /**
      * Get informations about a header token.
@@ -40,5 +40,19 @@ public interface HeaderTokenAuthenticationService {
      * @throws AuthenticationException when the authentication of the provided headerToken fails
      */
     User authenticate(String headerToken) throws AuthenticationException;
+
+    /**
+     * Increment users login attempts after a bad login
+     *
+     * @param username of the user
+     */
+    void incrementLoginAttempts(String username);
+
+    /**
+     * Reset login attempt count after successful authentication
+     *
+     * @param username of the user
+     */
+    void resetLoginAttempts(String username);
 
 }

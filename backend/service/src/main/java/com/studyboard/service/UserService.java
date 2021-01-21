@@ -40,10 +40,11 @@ public interface UserService {
     /**
      * Update user password
      *
-     * @param user whose password should be updated
+     * @param username of the user whose password should be updated
+     * @param password new password
      * @return user with updated password
      */
-    User updateUserPassword(User user);
+    User updateUserPassword(String username, String password);
 
     /**
      * Resets login attempts to 0
@@ -53,4 +54,25 @@ public interface UserService {
      */
     User resetLoginAttempts(Long id);
 
+    /**
+     * Check if email address exists and send recovery email with reset token.
+     *
+     * @param email of the user
+     */
+    void checkEmailAndRecover(String email);
+
+    /**
+     * Validate reset token.
+     *
+     * @param token - password reset token which is being verified.
+     * @return true if token is valid and non-expired
+     */
+    boolean validateResetToken(String token);
+
+    /**
+     * Change password if token is valid and non-expired.
+     *
+     * @param token - password reset token which is being verified.
+     */
+    void changePasswordWithToken(String token, String password);
 }

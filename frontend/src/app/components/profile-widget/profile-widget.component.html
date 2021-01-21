@@ -6,22 +6,27 @@
   </div>
 </div>
 <div class="profileInfoContainer">
-  <mat-expansion-panel class="widgetPanel" hideToggle matTooltip="User Profile">
+  <mat-expansion-panel class="widgetPanel" hideToggle>
     <!-- #enddocregion hide-toggle -->
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Username:
+    <mat-expansion-panel-header matTooltip="View your profile">
+      <mat-panel-title id="userInfo">
+        User Profile
       </mat-panel-title>
-      <mat-panel-description style="color: #FEFFFF">
-        {{currentUser.username}}
-      </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-panel-title>
+      Username:
+    </mat-panel-title>
+    <mat-panel-description style="color: #FEFFFF">
+      {{currentUser.username}}
+    </mat-panel-description>
+    <mat-panel-title style="margin-top: 5px">
       Email:
     </mat-panel-title>
     <mat-panel-description style="color: #FEFFFF">
       {{currentUser.email}}
     </mat-panel-description>
+    <button mat-button (click)="navigateToChangePassword()" id="changePasswordBtn" matTooltip="Change your password">Click to change password</button>
+
   </mat-expansion-panel>
 </div>
 
