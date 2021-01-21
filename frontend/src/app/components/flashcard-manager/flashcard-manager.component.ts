@@ -123,8 +123,6 @@ export class FlashcardManagerComponent implements OnInit {
    * Get a list of all decks belonging to the logged-in user from backend
    */
   loadAllDecks() {
-    this.resetDeckForm();
-    this.resetFlashcardForm();
     this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
       (decksList: Deck[]) => {
         this.decks = decksList;
@@ -133,6 +131,8 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
+    this.resetDeckForm();
+    this.resetFlashcardForm();
   }
 
   /**
@@ -172,16 +172,16 @@ export class FlashcardManagerComponent implements OnInit {
       this.userService.getUserByUsername(localStorage.getItem('currentUser')).subscribe(res => {
              deck.name = this.deckEditForm.controls.title.value;
              deck.favorite = this.deckEditForm.controls.favorite.value;
-                 this.flashcardService.editDeck(deck).subscribe(
-                      () => {
-                             this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
-                             },
-                             error => {
-                               this.error = true;
-                               this.errorMessage = 'Could not edit the deck!';
-                               this.openSnackbar(this.errorMessage, 'warning-snackbar');
-                             }
-                           );
+              this.flashcardService.editDeck(deck).subscribe(
+                () => {
+                  this.openSnackbar('You successfully edited a deck!', 'success-snackbar');
+                },
+                error => {
+                 this.error = true;
+                 this.errorMessage = 'Could not edit the deck!';
+                 this.openSnackbar(this.errorMessage, 'warning-snackbar');
+               }
+              );
        });
   }
 
@@ -209,6 +209,7 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
+    //get cards for revision in advance to show how many are scheduled for the day
     this.flashcardService.revise(1, deck.id, 1, false).subscribe(
               (flashcards: Flashcard[]) => {
                  this.dueDateFlashcards = flashcards;
@@ -233,6 +234,7 @@ export class FlashcardManagerComponent implements OnInit {
 
   /**
   * Reset all values when creating a new flashcard
+  * Load values which are needed
   */
   prepareFlashcardCreation() {
    this.loadAllSpaces();
@@ -274,9 +276,6 @@ export class FlashcardManagerComponent implements OnInit {
   loadDocuments(space: Space) {
     this.spaceService.getAllDocuments(localStorage.getItem('currentUser'), space.id).subscribe(
           (documentList: Document[]) => {
-            /*for(let i=0; i<documentList.length; i++) {
-              documentList[i].space = space;
-            }*/
             this.documents.set(space.id, documentList);
             this.filteredDocuments.set(space.id, documentList);
           },
@@ -295,182 +294,255 @@ export class FlashcardManagerComponent implements OnInit {
        let deckDTOs = this.getChosenDecks();
        const flashcard = new Flashcard(0, this.flashcardForm.controls.question.value, this.flashcardForm.controls.answer.value, 0, deckDTOs, documentReferences);
        this.flashcardService.createFlashcard(flashcard).subscribe(
-                       (created: Flashcard) => {
-                                console.log(created);
-                                this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
-                                if(this.selectedDeck != undefined) {
-                                  this.loadDeckDetails(this.selectedDeck);
-                                }
-                                this.loadAllDecks();
-                              },
-                              error => {
-                                this.error = true;
-                                this.errorMessage = 'Could not create a flashcard!';
-                                this.openSnackbar(this.errorMessage, 'warning-snackbar');
-
-                              });
-  }
-
-
- getChosenDecks() {
-      let chosenDecks = [];
-      if(this.selectedDecks != undefined) {
-        for(let i=0; i< this.decks.length; i++) {
-             for(let j=0; j < this.selectedDecks.length; j++) {
-               if(this.decks[i].id == this.selectedDecks[j]) {
-                 chosenDecks.push(this.decks[i]);
-               }
-           }
-        }
-      }
-      return chosenDecks;
-   }
-
-  /**
-  * Build a Document array, from options chosen in the dropdown menu
-  */
-  getReferences() {
-     if(this.selectedDocuments == undefined) {
-      return [];
-     }
-     let documentReferences = [];
-     for(let i=0; i< this.spaces.length; i++) {
-        let documentObjects = this.documents.get(this.spaces[i].id);
-        for(let j=0; j< documentObjects.length; j++) {
-          for(let k=0; k < this.selectedDocuments.length; k++) {
-            if(documentObjects[j].id == this.selectedDocuments[k]) {
-              documentReferences.push(documentObjects[j]);
-            }
-          }
-        }
-     }
-     return documentReferences;
-    }
-
-  /**
-   * Save changes to flashcard dto and sends an edition request.
-   */
-  saveFlashcardEdits(flashcard: Flashcard) {
-              let question = this.flashcardEditForm.controls.question.value;
-              let answer = this.flashcardEditForm.controls.answer.value;
-              if(question != null && question != "") {
-                flashcard.question = question;
-              }
-              if(answer != null && answer != "") {
-                flashcard.answer = answer;
-              }
-              this.flashcardService.editFlashcard(flashcard).subscribe(
-                    () => {
-                           this.openSnackbar('You successfully edited a flashcard!', 'success-snackbar');
-                           this.loadDeckDetails(this.selectedDeck);
-                           },
-                           error => {
-                             this.error = true;
-                             this.errorMessage = 'Could not edit the flashcard!';
-                             this.openSnackbar(this.errorMessage, 'warning-snackbar');
-              });
-    }
-
-
-  /**
-   * Sends a revision request based on chosen revision size.
-   */
-  revise() {
-      console.log("Option: " + this.chosenOption)
-      this.sizeError = false;
-      this.optionError = false;
-      let size = this.revisionSizeForm.controls.revisionSize.value;
-      if (size <= 0 || size > this.selectedDeck.size) {
-          this.sizeError = true;
-      } else if(this.chosenOption == undefined) {
-          this.optionError = true;
-      } else {
-            this.chooseSize = false;
-            this.revisionCounter = 0;
-            this.flashcardService.revise(size, this.selectedDeck.id, this.chosenOption, true).subscribe(
-                (flashcards: Flashcard[]) => {
-                             this.revisionFlashcards = flashcards;
-                             this.getRevisionFlashcard();
-                             },
-                             error => {
-                                   this.defaultErrorHandling(error);
-                             }
-                         );
-
-      }
-
-  }
-
-  /**
-   * @return next flashcard for the revision
-   */
-   getRevisionFlashcard() {
-     this.showAnswer = false;
-     this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
-     if (this.revisionCounter < this.revisionFlashcards.length) {
-        this.revisionCounter = this.revisionCounter + 1;
-     }
-     if(this.currentlyRevisedCard.confidenceLevel > 0) {
-        this.flashcardService.rateFlashcard(this.currentlyRevisedCard).subscribe(
-                () => {
-                  console.log("Rating with the old confidence level again.")
+         (created: Flashcard) => {
+                  console.log(created);
+                  this.openSnackbar('You successfully created a flashcard with the question ' + flashcard.question + `!`, 'success-snackbar');
+                  if(this.selectedDeck != undefined) {
+                    this.loadDeckDetails(this.selectedDeck);
+                  }
+                  this.loadAllDecks();
                 },
                 error => {
-                  this.confidenceError = true;
                   this.error = true;
-                  this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+                  this.errorMessage = 'Could not create a flashcard!';
                   this.openSnackbar(this.errorMessage, 'warning-snackbar');
-                });
+
+        });
+  }
+
+   /**
+    * Build a Deck object array, from options chosen in the dropdown menu
+   */
+   getChosenDecks() {
+        let chosenDecks = [];
+        if(this.selectedDecks != undefined) {
+          for(let i=0; i< this.decks.length; i++) {
+               for(let j=0; j < this.selectedDecks.length; j++) {
+                 if(this.decks[i].id == this.selectedDecks[j]) {
+                   chosenDecks.push(this.decks[i]);
+                 }
+             }
+          }
+        }
+        return chosenDecks;
      }
-   }
+
+    /**
+    * Build a Document object array, from options chosen in the dropdown menu
+    */
+    getReferences() {
+       if(this.selectedDocuments == undefined) {
+        return [];
+       }
+       let documentReferences = [];
+       for(let i=0; i< this.spaces.length; i++) {
+          let documentObjects = this.documents.get(this.spaces[i].id);
+          for(let j=0; j< documentObjects.length; j++) {
+            for(let k=0; k < this.selectedDocuments.length; k++) {
+              if(documentObjects[j].id == this.selectedDocuments[k]) {
+                documentReferences.push(documentObjects[j]);
+              }
+            }
+          }
+       }
+       return documentReferences;
+      }
+
+    /**
+     * Save changes to flashcard dto and sends an edition request.
+     */
+    saveFlashcardEdits(flashcard: Flashcard) {
+                let question = this.flashcardEditForm.controls.question.value;
+                let answer = this.flashcardEditForm.controls.answer.value;
+                if(question != null && question != "") {
+                  flashcard.question = question;
+                }
+                if(answer != null && answer != "") {
+                  flashcard.answer = answer;
+                }
+                this.flashcardService.editFlashcard(flashcard).subscribe(
+                  () => {
+                         this.openSnackbar('You successfully edited a flashcard!', 'success-snackbar');
+                         this.loadDeckDetails(this.selectedDeck);
+                   },
+                   error => {
+                     this.error = true;
+                     this.errorMessage = 'Could not edit the flashcard!';
+                     this.openSnackbar(this.errorMessage, 'warning-snackbar');
+                });
+      }
 
 
-  /**
-   * Sends a request to delete a specific deck.
-   */
-  deleteDeck(id: number) {
-    this.flashcardService.deleteDeck(id).subscribe(
-      () => {
-        this.openSnackbar('You successfully deleted the deck!', 'success-snackbar');
-        this.loadAllDecks();
-        this.viewAll = true;
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      });
-  }
+    /**
+     * Sends a revision request based on chosen revision size.
+     */
+    revise() {
+        console.log("Option: " + this.chosenOption)
+        this.sizeError = false;
+        this.optionError = false;
+        let size = this.revisionSizeForm.controls.revisionSize.value;
+        if (size <= 0 || size > this.selectedDeck.size) {
+            this.sizeError = true;
+        } else if(this.chosenOption == undefined) {
+            this.optionError = true;
+        } else {
+              this.chooseSize = false;
+              this.revisionCounter = 0;
+              this.flashcardService.revise(size, this.selectedDeck.id, this.chosenOption, true).subscribe(
+                  (flashcards: Flashcard[]) => {
+                               this.revisionFlashcards = flashcards;
+                               this.getRevisionFlashcard();
+                               },
+                               error => {
+                                     this.defaultErrorHandling(error);
+                               }
+                           );
 
-  /**
-   * Sends a request to delete a specific flashcard.
-   */
-  deleteFlashcard(flashcardId: number, deckId: number) {
-    this.flashcardService.deleteFlashcard(flashcardId, deckId).subscribe(
-      () => {
-        this.openSnackbar('You successfully removed the flashcard!', 'success-snackbar');
-        this.loadAllDecks();
-        this.loadDeckDetails(this.selectedDeck);
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      });
-  }
-
-  /**
-   * Sends a request to rate a specific flashcard.
-   */
-  rateFlashcard(flashcard: Flashcard, rate: number) {
-    if (rate != null) {
-      flashcard.confidenceLevel = rate;
+        }
     }
-    if (this.currentRate < 1 || this.currentRate > 5) {
-      this.error = true;
-      this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
-      this.openSnackbar(this.errorMessage, 'warning-snackbar');
-    } else {
-      this.flashcardService.rateFlashcard(flashcard).subscribe(
+
+    /**
+     * @return next flashcard for the revision
+     * In case the confidence level was unchanged - sends a request to rate it again with the same confidence level
+     */
+     getRevisionFlashcard() {
+       this.showAnswer = false;
+       this.currentlyRevisedCard = this.revisionFlashcards[this.revisionCounter];
+       if (this.revisionCounter < this.revisionFlashcards.length) {
+          this.revisionCounter = this.revisionCounter + 1;
+       }
+       if(this.currentlyRevisedCard.confidenceLevel > 0) {
+          this.flashcardService.rateFlashcard(this.currentlyRevisedCard).subscribe(
+                  () => {
+                    console.log("Rating with the old confidence level again.")
+                  },
+                  error => {
+                    this.confidenceError = true;
+                    this.error = true;
+                    this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+                    this.openSnackbar(this.errorMessage, 'warning-snackbar');
+                  });
+       }
+     }
+
+
+    /**
+     * Sends a request to delete a specific deck.
+     */
+    deleteDeck(id: number) {
+      this.flashcardService.deleteDeck(id).subscribe(
+        () => {
+          this.openSnackbar('You successfully deleted the deck!', 'success-snackbar');
+          this.loadAllDecks();
+          this.viewAll = true;
+        },
+        error => {
+          this.defaultErrorHandling(error);
+        });
+    }
+
+    /**
+     * Sends a request to delete a specific flashcard.
+     */
+    deleteFlashcard(flashcardId: number, deckId: number) {
+      this.flashcardService.deleteFlashcard(flashcardId, deckId).subscribe(
+        () => {
+          this.openSnackbar('You successfully removed the flashcard!', 'success-snackbar');
+          this.loadAllDecks();
+          this.loadDeckDetails(this.selectedDeck);
+        },
+        error => {
+          this.defaultErrorHandling(error);
+        });
+    }
+
+    /**
+     * Sends a request to rate a specific flashcard.
+     */
+    rateFlashcard(flashcard: Flashcard, rate: number) {
+      if (rate != null) {
+        flashcard.confidenceLevel = rate;
+      }
+      if (this.currentRate < 1 || this.currentRate > 5) {
+        this.error = true;
+        this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+        this.openSnackbar(this.errorMessage, 'warning-snackbar');
+      } else {
+        this.flashcardService.rateFlashcard(flashcard).subscribe(
+            () => {
+              this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
+              this.loadDeckDetails(this.selectedDeck);
+            },
+            error => {
+              this.confidenceError = true;
+              this.error = true;
+              this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+              this.openSnackbar(this.errorMessage, 'warning-snackbar');
+            });
+        }
+    }
+
+    /**
+    * Gets all decks a flashcard doesn't belongs to
+    */
+    getUnassignedDecks() {
+      return this.unassignedDecks;
+    }
+
+    /**
+    * Assigns a flashcard to new decks
+    */
+    copyFlashcard(flashcard: Flashcard) {
+      let updatedDecks = this.getChosenDecks();
+      updatedDecks.push(this.selectedDeck);
+      flashcard.deckDTOs = updatedDecks;
+      this.flashcardService.editFlashcard(flashcard).subscribe(
+            () => {
+                  this.openSnackbar('Flashcard successfully copied', 'success-snackbar');
+                  this.loadDeckDetails(this.selectedDeck);
+            },
+            error => {
+                    this.error = true;
+                    this.errorMessage = 'Could not copy the flashcard!';
+                    this.openSnackbar(this.errorMessage, 'warning-snackbar');
+      });
+    }
+
+    /**
+      * Assigns a flashcard to new decks and removes the assignment from the current deck
+      */
+    moveFlashcard(flashcard: Flashcard) {
+      flashcard.deckDTOs = this.getChosenDecks();
+      this.flashcardService.editFlashcard(flashcard).subscribe(
+            () => {
+                  this.openSnackbar('Flashcard successfully copied', 'success-snackbar');
+                  this.loadDeckDetails(this.selectedDeck);
+            },
+            error => {
+                    this.error = true;
+                    this.errorMessage = 'Could not copy the flashcard!';
+                    this.openSnackbar(this.errorMessage, 'warning-snackbar');
+       });
+    }
+
+    /**
+     * Sends a request to rate a specific flashcard while in revision mode.
+     */
+    rateFlashcardInRevision(flashcard: Flashcard, rate: number) {
+      if(this.revisionCounter<this.revisionFlashcards.length) {
+        this.getRevisionFlashcard();
+      }
+      if (rate != null) {
+        flashcard.confidenceLevel = rate;
+      }
+      if (rate < 1 || rate > 5) {
+        this.error = true;
+        this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
+        this.openSnackbar(this.errorMessage, 'warning-snackbar');
+      } else {
+        this.flashcardService.rateFlashcard(flashcard).subscribe(
           () => {
             this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
-            this.loadDeckDetails(this.selectedDeck);
           },
           error => {
             this.confidenceError = true;
@@ -479,328 +551,266 @@ export class FlashcardManagerComponent implements OnInit {
             this.openSnackbar(this.errorMessage, 'warning-snackbar');
           });
       }
-  }
+    }
 
-  /**
-  * Gets all decks a flashcard doesn't belongs to
-  */
-  getUnassignedDecks() {
-    return this.unassignedDecks;
-  }
-
-  /**
-  * Assigns a flashcard to new decks
-  */
-  copyFlashcard(flashcard: Flashcard) {
-    let updatedDecks = this.getChosenDecks();
-    updatedDecks.push(this.selectedDeck);
-    flashcard.deckDTOs = updatedDecks;
-    this.flashcardService.editFlashcard(flashcard).subscribe(
-          () => {
-                this.openSnackbar('Flashcard successfully copied', 'success-snackbar');
-                this.loadDeckDetails(this.selectedDeck);
-          },
-          error => {
-                  this.error = true;
-                  this.errorMessage = 'Could not copy the flashcard!';
-                  this.openSnackbar(this.errorMessage, 'warning-snackbar');
-    });
-  }
-
-  /**
-    * Assigns a flashcard to new decks and removes the assignment from the current deck
+    /**
+    * Loads and opens the document that is referenced
     */
-  moveFlashcard(flashcard: Flashcard) {
-    let updatedDecks = this.getChosenDecks();
-    flashcard.deckDTOs = updatedDecks;
-    this.flashcardService.editFlashcard(flashcard).subscribe(
-          () => {
-                this.openSnackbar('Flashcard successfully copied', 'success-snackbar');
-                this.loadDeckDetails(this.selectedDeck);
+     loadFile(document: Document) {
+        this.fileUploadService.getFile(document.spaceDTO, document.name).subscribe(
+          (res) => {
+               let fileObject: Blob;
+               let blobUrl: any;
+               if (document.name.includes('.mp3') || document.name.includes('.mp4')) {
+                 fileObject = res;
+                 blobUrl = URL.createObjectURL(fileObject);
+               } else if (document.name.includes('.pdf')) {
+                 fileObject = new Blob([res], {type: 'application/pdf'});
+                 blobUrl = URL.createObjectURL(fileObject);
+               } else {
+                 fileObject = res;
+                 blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(fileObject));
+               }
+            this.dialog.open(DocumentDialogComponent, {
+              data: {
+                currentDocument: document,
+                blobUrl: blobUrl
+              }
+            });
           },
           error => {
-                  this.error = true;
-                  this.errorMessage = 'Could not copy the flashcard!';
-                  this.openSnackbar(this.errorMessage, 'warning-snackbar');
-     });
-  }
+            this.defaultErrorHandling(error);
+          }
+        );
+      }
 
-  /**
-   * Sends a request to rate a specific flashcard while in revision mode.
-   */
-  rateFlashcardInRevision(flashcard: Flashcard, rate: number) {
-    if(this.revisionCounter<this.revisionFlashcards.length) {
-      this.getRevisionFlashcard();
+    /**
+    * Creates an array from items chosen in the dropdown (it's ids)
+    */
+    updateDeckList(select : number){
+      console.log("deck: " + select);
+      if(this.selectedDecks != undefined) {
+        let index = this.selectedDecks.indexOf(select);
+        if(index > -1) {
+            this.selectedDecks.splice(index, 1)
+        } else {
+            this.selectedDecks.push(select);
+        }
+      } else {
+        this.selectedDecks = [select];
+      }
     }
-    if (rate != null) {
-      flashcard.confidenceLevel = rate;
-    }
-    if (rate < 1 || rate > 5) {
-      this.error = true;
-      this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
-      this.openSnackbar(this.errorMessage, 'warning-snackbar');
-    } else {
-      this.flashcardService.rateFlashcard(flashcard).subscribe(
-        () => {
-          this.openSnackbar('You successfully rated a flashcard!', 'success-snackbar');
-        },
-        error => {
-          this.confidenceError = true;
-          this.error = true;
-          this.errorMessage = 'Could not rate the flashcard! Please choose the value between 1 and 5.';
-          this.openSnackbar(this.errorMessage, 'warning-snackbar');
+
+    /**
+      * Creates an array from items chosen in the dropdown (it's ids)
+      */
+    updateReferenceList(select : number){
+        console.log("document: " + select);
+        if(this.selectedDocuments != undefined) {
+          let index = this.selectedDocuments.indexOf(select);
+          if(index > -1) {
+              this.selectedDocuments.splice(index, 1)
+          } else {
+              this.selectedDocuments.push(select);
+          }
+        } else {
+          this.selectedDocuments = [select];
+        }
+     }
+
+     /**
+     * Prepare values need for editing references
+     */
+     prepareEditRef() {
+        this.editRef=true;
+        this.existingRefs = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+        this.selectedDocuments = this.existingRefs;
+        this.searchDocumentsInModal("");
+     }
+
+    /**
+    * Sends new references of a flashcard to backend
+    */
+     editReferences(flashcard: Flashcard) {
+        flashcard.documentReferences = this.getReferences();
+        this.flashcardService.editFlashcard(flashcard).subscribe(
+              (updatedFlashcard: Flashcard) => {
+                    console.log(updatedFlashcard);
+                     this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
+                     this.selectedFlashcard = updatedFlashcard;
+                     this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
+                     },
+                     error => {
+                       this.error = true;
+                       this.errorMessage = 'Could not edit the flashcard references!';
+                       this.openSnackbar(this.errorMessage, 'warning-snackbar');
         });
-    }
-  }
+        this.editRef = false;
+     }
 
-  /**
-  * Loads and opens the document that is referenced
-  */
-   loadFile(document: Document) {
-      this.fileUploadService.getFile(document.spaceDTO, document.name).subscribe(
-        (res) => {
-             let fileObject: Blob;
-             let blobUrl: any;
-             if (document.name.includes('.mp3') || document.name.includes('.mp4')) {
-               fileObject = res;
-               blobUrl = URL.createObjectURL(fileObject);
-             } else if (document.name.includes('.pdf')) {
-               fileObject = new Blob([res], {type: 'application/pdf'});
-               blobUrl = URL.createObjectURL(fileObject);
-             } else {
-               fileObject = res;
-               blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(fileObject));
-             }
-          this.dialog.open(DocumentDialogComponent, {
-            data: {
-              currentDocument: document,
-              blobUrl: blobUrl
+    /**
+    * When a flashcard-related function was chosen
+    */
+    flashcardClicked(select: Flashcard, del: boolean) {
+       console.log(select);
+       this.flashcardEditForm.patchValue({
+               question: select.question,
+               answer: select.answer
+        });
+       this.selectedFlashcard = select;
+       this.showFlashcardId = select.id;
+       this.deleteFlash = del;
+       this.editRef = false;
+       this.currentRate = this.selectedFlashcard.confidenceLevel;
+       //get all decks a flashcard belongs to
+       this.flashcardService.getFlashcardAssignments(select.id).subscribe(
+           (assignedDecks: number[]) => {
+                  this.loadAllDecks();
+                  this.unassignedDecks = [];
+                  this.decks.forEach(val => this.unassignedDecks.push(Object.assign({}, val)));
+                  for(let i=0; i< this.decks.length; i++) {
+                      let index = assignedDecks.indexOf(this.decks[i].id);
+                      if(index > -1) {
+                        for(let j=0; j< this.unassignedDecks.length; j++) {
+                          if(this.unassignedDecks[j].id==this.decks[i].id) {
+                            this.unassignedDecks.splice(j, 1);
+                          }
+                        }
+                      }
+                  }
+           },
+           error => {
+               this.defaultErrorHandling(error);
             }
-          });
+       );
+       this.selectedDecks = undefined;
+     }
+
+     /**
+     * Sends a request to filter the deck results based on a sign/sign group they contain
+     */
+    searchDecksByName() {
+       this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.deckNameSearch).subscribe(
+         (decksList: Deck[]) => {
+           this.decks = decksList;
+         },
+         error => {
+           this.defaultErrorHandling(error);
+         }
+       );
+     }
+
+      /**
+      * Sends a request to filter the deck results based on a sign/sign group they contain
+      * Filters out already selected options
+      */
+     searchDecksInModal(inputVal: string) {
+      console.log(inputVal);
+      this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), inputVal).subscribe(
+        (decksList: Deck[]) => {
+          let selected = this.getChosenDecks();
+          this.filteredDecks = decksList.filter( (el) => !selected.find(rm => (rm.id==el.id)));
         },
         error => {
           this.defaultErrorHandling(error);
         }
       );
-    }
+     }
 
-  /**
-  * Creates an array from items chosen in the dropdown (it's ids)
-  */
-  updateDeckList(select : number){
-    console.log("deck: " + select);
-    if(this.selectedDecks != undefined) {
-      let index = this.selectedDecks.indexOf(select);
-      if(index > -1) {
-          this.selectedDecks.splice(index, 1)
-      } else {
-          this.selectedDecks.push(select);
-      }
-    } else {
-      this.selectedDecks = [select];
-    }
-    this.updateFilteredDecks();
-  }
+     getFilteredDecks() {
+       return this.filteredDecks;
+     }
 
-  updateFilteredDecks() {
+     /**
+     * Calls the filter/search function for documents of all spaces
+     */
+     searchDocumentsInModal(inputVal: string) {
+         let allSpaces = this.getSpaces();
+         this.filteredDocuments = new Map<number, Document[]>();
+         for(let i=0; i<allSpaces.length; i++) {
+            this.searchDocumentsOfSpace(inputVal, allSpaces[i].id);
+         }
+     }
 
-  }
-
-  /**
-    * Creates an array from items chosen in the dropdown (it's ids)
-    */
-  updateReferenceList(select : number){
-      console.log("document: " + select);
-      if(this.selectedDocuments != undefined) {
-        let index = this.selectedDocuments.indexOf(select);
-        if(index > -1) {
-            this.selectedDocuments.splice(index, 1)
-        } else {
-            this.selectedDocuments.push(select);
-        }
-      } else {
-        this.selectedDocuments = [select];
-      }
-   }
-
-   prepareEditRef() {
-      this.editRef=true;
-      this.existingRefs = this.selectedFlashcard.documentReferences.map(({ id }) => id);
-      this.selectedDocuments = this.existingRefs;
-      this.searchDocumentsInModal("");
-   }
-
-  /**
-  * Sends new references of a flashcard to backend
-  */
-   editReferences(flashcard: Flashcard) {
-      flashcard.documentReferences = this.getReferences();
-      this.flashcardService.editFlashcard(flashcard).subscribe(
-            (updatedFlashcard: Flashcard) => {
-                  console.log(updatedFlashcard);
-                   this.openSnackbar('You successfully edited flashcard references!', 'success-snackbar');
-                   this.selectedFlashcard = updatedFlashcard;
-                   this.selectedDocuments = this.selectedFlashcard.documentReferences.map(({ id }) => id);
-                   },
-                   error => {
-                     this.error = true;
-                     this.errorMessage = 'Could not edit the flashcard references!';
-                     this.openSnackbar(this.errorMessage, 'warning-snackbar');
-      });
-      this.editRef = false;
-   }
-
-  resetDecks() {
-
-  }
-
-  flashcardClicked(select: Flashcard, del: boolean) {
-     console.log(select);
-     this.flashcardEditForm.patchValue({
-             question: select.question,
-             answer: select.answer
-      });
-     this.selectedFlashcard = select;
-     this.showFlashcardId = select.id;
-     this.deleteFlash = del;
-     this.editRef = false;
-     this.currentRate = this.selectedFlashcard.confidenceLevel;
-     //get all decks a flashcard belongs to
-     this.flashcardService.getFlashcardAssignments(select.id).subscribe(
-         (assignedDecks: number[]) => {
-                this.loadAllDecks();
-                this.unassignedDecks = [];
-                this.decks.forEach(val => this.unassignedDecks.push(Object.assign({}, val)));
-                for(let i=0; i< this.decks.length; i++) {
-                    let index = assignedDecks.indexOf(this.decks[i].id);
-                    if(index > -1) {
-                      for(let j=0; j< this.unassignedDecks.length; j++) {
-                        if(this.unassignedDecks[j].id==this.decks[i].id) {
-                          this.unassignedDecks.splice(j, 1);
-                        }
-                      }
-                    }
-                }
+     /**
+     * Sends a request to filter the document results based on a sign/sign group they contain
+     * Filters out already selected options
+     */
+     searchDocumentsOfSpace(inputVal: string, spaceId: number) {
+       this.spaceService.getDocumentsByName(spaceId, inputVal).subscribe(
+         (documentList: Document[]) => {
+           let selected = this.getReferences();
+           documentList = documentList.filter( (el) => !selected.find(rm => (rm.id==el.id)));
+           this.filteredDocuments.set(spaceId, documentList);
          },
          error => {
-             this.defaultErrorHandling(error);
-          }
-     );
-     this.selectedDecks = undefined;
-   }
-
-   resetDeckForm() {
-    this.deckForm.reset();
-   }
-
-   resetFlashcardForm() {
-    this.flashcardForm.reset();
-    if(this.selectedDeck != undefined) {
-      this.selectedDecksIds = [this.selectedDeck.id];
-    }
-   }
-
-   resetRevisionSizeForm() {
-    this.revisionSizeForm.patchValue({
-      revisionSize: 1
-    });
-    this.chosenOption = undefined;
-    this.optionError = false;
-   }
-
-   checkSelection(compareId: number) {
-    if(this.selectedDeck == undefined) {
-      return false;
-    } else if(this.selectedDeck.id==compareId){
-      console.log(compareId);
-      return true;
-    }
-    return false;
-   }
-
-   backToAll() {
-     this.viewAll=true;
-     this.resetDeckForm();
-     this.loadAllDecks();
-     this.selectedDeck = undefined;
-   }
-
-  openSnackbar(message: string, type: string) {
-    this.snackBar.open(message, 'close', {
-      duration: 4000,
-      panelClass: [type]
-    });
-  }
-
-  private defaultErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    this.errorMessage = '';
-    this.errorMessage = error.error.message;
-  }
-
-  searchDecksByName() {
-    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.deckNameSearch).subscribe(
-      (decksList: Deck[]) => {
-        this.decks = decksList;
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
-  }
-
-  searchDecksInModal(inputVal: string) {
-   console.log(inputVal);
-   this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), inputVal).subscribe(
-     (decksList: Deck[]) => {
-       let selected = this.getChosenDecks();
-       this.filteredDecks = decksList.filter( (el) => !selected.find(rm => (rm.id==el.id)));
-     },
-     error => {
-       this.defaultErrorHandling(error);
+           this.defaultErrorHandling(error);
+         }
+       );
      }
-   );
-  }
 
-  getFilteredDecks() {
-    return this.filteredDecks;
-  }
-
-  searchDocumentsInModal(inputVal: string) {
-      let allSpaces = this.getSpaces();
-      this.filteredDocuments = new Map<number, Document[]>();
-      for(let i=0; i<allSpaces.length; i++) {
-         this.searchDocumentsOfSpace(inputVal, allSpaces[i].id);
+      isEmptyDecks() {
+        return this.decks?.length === 0;
       }
-  }
 
-  searchDocumentsOfSpace(inputVal: string, spaceId: number) {
-    this.spaceService.getDocumentsByName(spaceId, inputVal).subscribe(
-      (documentList: Document[]) => {
-        let selected = this.getReferences();
-        documentList = documentList.filter( (el) => !selected.find(rm => (rm.id==el.id)));
-        this.filteredDocuments.set(spaceId, documentList);
-      },
-      error => {
-        this.defaultErrorHandling(error);
+      isEmptyFlashcards() {
+        return this.flashcards?.length === 0;
       }
-    );
-  }
 
+      isSpaceEmpty(spaceId: number) {
+        return this.filteredDocuments.get(spaceId) && this.filteredDocuments.get(spaceId).length!=0;
+      }
 
+     resetDeckForm() {
+      this.deckForm.reset();
+     }
 
-  isEmptyDecks() {
-    return this.decks?.length === 0;
-  }
+     resetFlashcardForm() {
+      this.flashcardForm.reset();
+      if(this.selectedDeck != undefined) {
+        this.selectedDecksIds = [this.selectedDeck.id];
+      }
+     }
 
-  isEmptyFlashcards() {
-    return this.flashcards?.length === 0;
-  }
+     resetRevisionSizeForm() {
+      this.revisionSizeForm.patchValue({
+        revisionSize: 1
+      });
+      this.chosenOption = undefined;
+      this.optionError = false;
+     }
 
-  isSpaceEmpty(spaceId: number) {
-    return this.documents.get(spaceId) && this.documents.get(spaceId).length!=0 && this.filteredDocuments.get(spaceId) && this.filteredDocuments.get(spaceId).length!=0;
-  }
+     checkSelection(compareId: number) {
+      if(this.selectedDeck == undefined) {
+        return false;
+      } else if(this.selectedDeck.id==compareId){
+        console.log(compareId);
+        return true;
+      }
+      return false;
+     }
 
+     /**
+     * Set the values to go back to seeing all decks
+     */
+     backToAll() {
+       this.viewAll=true;
+       this.resetDeckForm();
+       this.loadAllDecks();
+       this.selectedDeck = undefined;
+     }
 
+    openSnackbar(message: string, type: string) {
+      this.snackBar.open(message, 'close', {
+        duration: 4000,
+        panelClass: [type]
+      });
+    }
+
+    private defaultErrorHandling(error: any) {
+      console.log(error);
+      this.error = true;
+      this.errorMessage = '';
+      this.errorMessage = error.error.message;
+    }
 }
