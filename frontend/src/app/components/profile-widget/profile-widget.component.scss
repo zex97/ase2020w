@@ -62,5 +62,22 @@
   float: left;
 }
 
+#userInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: lighter;
+}
+
+#changePasswordBtn {
+  font-size: small;
+  padding-left: 0;
+  height: 25px;
+}
+
+#changePasswordBtn:hover {
+  color: #3AAFA9;
+}
+
 
 
