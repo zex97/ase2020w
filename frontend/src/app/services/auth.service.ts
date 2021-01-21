@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
-import {interval, Observable} from 'rxjs';
+import {interval, Observable, throwError } from 'rxjs';
 import {AuthResponse} from '../dtos/auth-response';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {tap, map, catchError} from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
 
@@ -28,9 +28,21 @@ export class AuthService {
   loginUser(authRequest: AuthRequest): Observable<AuthResponse> {
     console.log('Log in');
     return this.httpClient.post<AuthResponse>(this.authBaseUri, authRequest)
+      .pipe(catchError(this.handleError))
       .pipe(
         tap((authResponse: AuthResponse) => this.setToken(authResponse))
       );
+  }
+
+
+  handleError(error: HttpErrorResponse) {
+    let errorMessage;
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `${error.error}`;
+    }
+    return throwError(errorMessage);
   }
 
 
