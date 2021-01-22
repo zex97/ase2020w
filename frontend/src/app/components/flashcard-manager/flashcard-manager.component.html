@@ -3,8 +3,10 @@
 
     <mat-form-field (keyup.enter)="searchDecksByName()" *ngIf="this.viewAll" class="pageTopBarSearchField">
       <mat-placeholder style="color: #FEFFFF">Search decks</mat-placeholder>
-      <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="deckNameSearch" (ngModelChange)="searchDecksByName()">
-      <button (click)="searchDecksByName()" aria-label="search" mat-button mat-stroked-button matSuffix style="border-color: #FEFFFF;">
+      <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="deckNameSearch"
+             (ngModelChange)="searchDecksByName()">
+      <button (click)="searchDecksByName()" aria-label="search" mat-button mat-stroked-button matSuffix
+              style="border-color: #FEFFFF;">
         <mat-icon style="color: #FEFFFF">search</mat-icon>
       </button>
     </mat-form-field>
@@ -18,7 +20,8 @@
             mat-stroked-button>
       Create a deck
     </button>
-    <button (click)="this.prepareFlashcardCreation(); inputDecks.value=null; inputDocs.value=null;" class="pageTopBarButton" data-target=".create-flashcard-modal"
+    <button (click)="this.prepareFlashcardCreation(); inputDecks.value=null; inputDocs.value=null;"
+            class="pageTopBarButton" data-target=".create-flashcard-modal"
             data-toggle="modal"
             mat-stroked-button>
       Create a flashcard
@@ -50,7 +53,7 @@
               Can't be empty!
             </mat-hint>
           </mat-form-field>
-          <mat-checkbox [formControl]="deckFavorite" color="primary" > Favorite deck</mat-checkbox>
+          <mat-checkbox [formControl]="deckFavorite" color="primary"> Favorite deck</mat-checkbox>
         </form>
       </div>
       <div class="modal-footer">
@@ -99,7 +102,7 @@
             </mat-hint>
           </mat-form-field>
           <!--Select deck-->
-          <mat-form-field  appearance="outline" class="modal-input-full-width">
+          <mat-form-field appearance="outline" class="modal-input-full-width">
             <mat-label>Select decks</mat-label>
             <mat-chip-list #chipListDecks aria-label="Deck selection">
               <mat-chip
@@ -138,11 +141,11 @@
             <mat-label>Select document references</mat-label>
             <mat-chip-list #chipListRefs aria-label="References selection">
               <mat-chip
-                        *ngFor="let document of getReferences()"
-                        [removable]="removable"
-                        [selectable]="selectable"
-                        (removed)="updateReferenceList(document.id)">
-                        {{document.name}}
+                *ngFor="let document of getReferences()"
+                [removable]="removable"
+                [selectable]="selectable"
+                (removed)="updateReferenceList(document.id)">
+                {{document.name}}
                 <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input (ngModelChange)="searchDocumentsInModal(inputDocs.value)"
@@ -199,7 +202,10 @@
             <h3 class="card-title wrapper txt-clr-dark"> {{deck.name}}</h3>
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div *ngIf="deck.favorite" class="wrapper"><img src="../../../assets/deck.png" width="90%;">
-              <div class="heart"><mat-icon matTooltip="Favorite deck" >favorite</mat-icon></div></div>
+              <div class="heart">
+                <mat-icon matTooltip="Favorite deck">favorite</mat-icon>
+              </div>
+            </div>
             <div *ngIf="!deck.favorite" class="wrapper"><img src="../../../assets/deck.png" width="90%;"></div>
             <div class="wrapper">
               <button (click)=" this.viewAll=false; loadDeckDetails(deck);" class="btn btn-middle"
@@ -217,7 +223,10 @@
   <ng-template #elseBlockDetails>
     <div id="deck-info">
       <div class="flex-container-space-between">
-        <h2 *ngIf="this.selectedDeck.favorite" class="txt-clr-dark"><mat-icon matTooltip="Favorite deck" >favorite</mat-icon> Deck "{{this.selectedDeck.name}}"</h2>
+        <h2 *ngIf="this.selectedDeck.favorite" class="txt-clr-dark">
+          <mat-icon matTooltip="Favorite deck">favorite</mat-icon>
+          Deck "{{this.selectedDeck.name}}"
+        </h2>
         <h2 *ngIf="!this.selectedDeck.favorite" class="txt-clr-dark"> Deck "{{this.selectedDeck.name}}"</h2>
         <div id="deck-buttons">
         <span class="close" data-target=".delete-deck-modal" data-toggle="modal" matTooltip="Delete deck">
@@ -300,7 +309,7 @@
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
-              <mat-checkbox [formControl]="this.deckFavorite" color="primary" > Favorite Deck</mat-checkbox>
+              <mat-checkbox [formControl]="this.deckFavorite" color="primary"> Favorite Deck</mat-checkbox>
             </form>
           </div>
           <div class="modal-footer">
@@ -365,9 +374,12 @@
               </div>
               <div *ngIf="showInfo" style="margin-bottom: 10px; border: 1px solid #000000">
                 <h5 style="padding: 5px 10px 0px 10px;">
-                  SM-2 is a <b>spaced repetition algorithm</b> that calculates how long to wait before showing a flashcard again based on the how easy the information from the card was remembered during the last revision.
+                  SM-2 is a <strong>spaced repetition algorithm</strong> that calculates how long to wait before showing a
+                  flashcard again based on the how easy the information from the card was remembered during the last
+                  revision.
                   <br>
-                  <b>More difficult and newly introduced flashcards are shown more frequently and older and less difficult cards less frequently.</b>
+                  <strong>More difficult and newly introduced flashcards are shown more frequently and older and less
+                    difficult cards less frequently.</strong>
                 </h5>
               </div>
 
@@ -386,7 +398,8 @@
 
             <ng-template #reviseBlock>
               <div *ngIf="this.currentlyRevisedCard">
-                <h4 style="text-align:center">Flashcard <strong>{{this.revisionCounter}}/{{this.revisionFlashcards.length}}</strong>
+                <h4 style="text-align:center">Flashcard <strong>{{this.revisionCounter}}
+                  /{{this.revisionFlashcards.length}}</strong>
                 </h4>
                 <mat-card class="flashcard">
                   <h4> Q: {{this.currentlyRevisedCard.question}}</h4>
@@ -418,7 +431,8 @@
                               [readonly]="false" matTooltip="Change confidence level"
                               style="margin-top:20px; font-size:40px"></ngb-rating>
                   <span (click)="getRevisionFlashcard();" *ngIf="this.revisionCounter<this.revisionFlashcards.length"
-                        class="close" matTooltip="Warning: Not changing the existing confidence level counts as rating with the same confidence level again.">
+                        class="close"
+                        matTooltip="Warning: Not changing the existing confidence level counts as rating with the same confidence level again.">
                    <mat-icon>arrow_forward_ios</mat-icon>
                   </span>
                   <span *ngIf="this.revisionCounter>=this.revisionFlashcards.length" style="width:23px;"></span>
@@ -537,7 +551,7 @@
           </div>
           <div class="modal-body">
             <form class="border border-light p-5">
-              <ngb-rating [(rate)]="currentRate" [max]="5" [readonly]="false" ></ngb-rating>
+              <ngb-rating [(rate)]="currentRate" [max]="5" [readonly]="false"></ngb-rating>
               <h3 style="margin-top: 20px"> Rate personal confidence level from 1 to 5 by choosing the appropriate
                 number of stars!</h3>
             </form>
@@ -583,12 +597,14 @@
 
           </div>
           <div class="modal-footer">
-            <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0"(click)="moveFlashcard(this.selectedFlashcard)"
+            <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0"
+                    (click)="moveFlashcard(this.selectedFlashcard)"
                     data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Move
             </button>
-            <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0" (click)="copyFlashcard(this.selectedFlashcard)"
+            <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0"
+                    (click)="copyFlashcard(this.selectedFlashcard)"
                     data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Copy
@@ -616,7 +632,8 @@
             <div class="flex-container-space-between">
               <h4 *ngIf="this.selectedFlashcard.documentReferences.length!=0">References to documents:</h4>
               <h4 *ngIf="this.selectedFlashcard.documentReferences.length==0">No references to documents.</h4>
-              <span (click)="prepareEditRef(); inputDocsChange.value=null" *ngIf="!this.editRef" class="close" matTooltip="Edit references"
+              <span (click)="prepareEditRef(); inputDocsChange.value=null" *ngIf="!this.editRef" class="close"
+                    matTooltip="Edit references"
                     style="margin-right:0px;"><mat-icon>edit</mat-icon></span>
             </div>
             <ul *ngFor="let document of this.selectedFlashcard.documentReferences">
@@ -656,7 +673,8 @@
                 <mat-autocomplete #autoEdit="matAutocomplete">
                   <div>
                    <span *ngFor="let space of getSpaces()">
-                    <h4 *ngIf="isSpaceNotEmpty(space.id)" style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                    <h4 *ngIf="isSpaceNotEmpty(space.id)"
+                        style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
                       <mat-option (click)="updateReferenceList(document.id);inputDocsChange.value=null"
                                   *ngFor="let document of this.filteredDocuments.get(space.id)"
                                   [value]="document.id">

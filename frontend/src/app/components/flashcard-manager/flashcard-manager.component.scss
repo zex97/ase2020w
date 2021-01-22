@@ -5,7 +5,7 @@
 }
 
 .topPageDiv {
-  padding-bottom: 30px !important;  // necessary because of global style changes for orderBy in spaces
+  padding-bottom: 30px !important; // necessary because of global style changes for orderBy in spaces
 }
 
 .modal-label {
@@ -26,21 +26,21 @@
   margin-left: 10px;
 }
 
-.wrapper{
-  text-align:center;
+.wrapper {
+  text-align: center;
 }
 
 .flashcardModalBody {
-  overflow-y:inherit !important;
+  overflow-y: inherit !important;
 }
 
 #deck-info {
-  background-color:#ffffff;
+  background-color: #ffffff;
   padding: 5px 10px 10px 10px;
 }
 
 .flex-grid {
-  display:flex;
+  display: flex;
 }
 
 .flex-container-space-between {
@@ -59,38 +59,38 @@
 }
 
 #flashcard-title {
-  margin-top:10px;
+  margin-top: 10px;
   color: #17252A;
 }
 
 .flashcard {
   background-color: #3aafa9;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
 }
 
 .flashcard-answer {
   background-color: #2b7a78;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
 }
 
 .flashcard-reference {
-  background-color:#def2f1;
+  background-color: #def2f1;
   color: #2b7a78;
-  text-align:center;
+  text-align: center;
 }
 
-::ng-deep .mat-expansion-panel{
+::ng-deep .mat-expansion-panel {
   background-color: #3aafa9;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
 }
 
-::ng-deep .mat-expansion-panel-body{
+::ng-deep .mat-expansion-panel-body {
   background-color: #2b7a78;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
 }
 
 ::ng-deep .mat-expansion-panel-body > h4 {
@@ -116,11 +116,11 @@ mat-checkbox {
 }
 
 ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
-      background-color: #3aafa9 !important;   /*inner circle color change*/
+  background-color: #3aafa9 !important; /*inner circle color change*/
 }
 
 ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-     border-color: #3aafa9 !important; /*outer ring color change*/
+  border-color: #3aafa9 !important; /*outer ring color change*/
 }
 
 
