@@ -49,8 +49,11 @@
                        id="spacesListItem">
           <mat-card-content>
             <mat-card-title>
-              <h3 class="space-name" *ngIf="space.favorite"> <mat-icon matTooltip="Favorite space">favorite</mat-icon> {{space.name}}  </h3>
-              <h3 class="space-name" *ngIf="!space.favorite">{{space.name}}</h3>
+              <h3 class="space-name"> {{space.name}}
+                <mat-icon style="position: relative; top:7px;" *ngIf="space.favorite" matTooltip="Favorite space">
+                  favorite
+                </mat-icon>
+              </h3>
               <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
                     matTooltip="Delete space"
                     data-toggle="modal" style="margin-right:1.5%;"><mat-icon>delete</mat-icon></span>
@@ -117,7 +120,7 @@
                    title="description" type="text">
           </mat-form-field>
 
-          <mat-checkbox [formControl]="spaceFavorite" color="primary" > Favorite space</mat-checkbox>
+          <mat-checkbox [formControl]="spaceFavorite" color="primary"> Favorite space</mat-checkbox>
         </form>
       </div>
       <div class="modal-footer">
@@ -155,7 +158,8 @@
                  multiple type="file"
                  value="name" style="display: none;">
 
-          <input class="custom-file-upload" type="button" value="Choose Files" onclick="document.getElementById('files').click();"/>
+          <input class="custom-file-upload" type="button" value="Choose Files"
+                 onclick="document.getElementById('files').click();"/>
           <span>
             {{filesCountString}}
           </span>
@@ -216,7 +220,7 @@
                    id="newDescription" matInput
                    placeholder="eg. This space contains..." required type="text">
           </mat-form-field>
-          <mat-checkbox [formControl]="this.spaceFavorite" color="primary" > Favorite Space</mat-checkbox>
+          <mat-checkbox [formControl]="this.spaceFavorite" color="primary"> Favorite Space</mat-checkbox>
         </form>
       </div>
       <div class="modal-footer">
