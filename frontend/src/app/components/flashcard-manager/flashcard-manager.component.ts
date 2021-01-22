@@ -222,7 +222,7 @@ export class FlashcardManagerComponent implements OnInit {
       title: deck.name,
       favorite: deck.favorite
     });
-    this.loadAllSpaces();
+    //this.loadAllSpaces();
   }
 
   /**
@@ -314,38 +314,27 @@ export class FlashcardManagerComponent implements OnInit {
     * Build a Deck object array, from options chosen in the dropdown menu
    */
    getChosenDecks() {
-        let chosenDecks = [];
-        if(this.selectedDecks != undefined) {
-          for(let i=0; i< this.decks.length; i++) {
-               for(let j=0; j < this.selectedDecks.length; j++) {
-                 if(this.decks[i].id == this.selectedDecks[j]) {
-                   chosenDecks.push(this.decks[i]);
-                 }
-             }
-          }
-        }
-        return chosenDecks;
+      if(this.selectedDecks != undefined) {
+        return this.decks.filter( (el) => this.selectedDecks.find(sel => (sel==el.id)));
+      }
+      else {
+        return [];
+      }
      }
 
     /**
     * Build a Document object array, from options chosen in the dropdown menu
     */
     getReferences() {
-       if(this.selectedDocuments == undefined) {
-        return [];
-       }
-       let documentReferences = [];
-       for(let i=0; i< this.spaces.length; i++) {
-          let documentObjects = this.documents.get(this.spaces[i].id);
-          for(let j=0; j< documentObjects.length; j++) {
-            for(let k=0; k < this.selectedDocuments.length; k++) {
-              if(documentObjects[j].id == this.selectedDocuments[k]) {
-                documentReferences.push(documentObjects[j]);
-              }
-            }
+       if(this.selectedDocuments != undefined) {
+          let values = [];
+          for(let i=0; i< this.spaces.length; i++) {
+            values = values.concat(this.documents.get(this.spaces[i].id).filter((el) => this.selectedDocuments.find(sel => (sel==el.id))));
           }
-       }
-       return documentReferences;
+          return values;
+        } else {
+          return [];
+        }
       }
 
     /**
@@ -652,16 +641,17 @@ export class FlashcardManagerComponent implements OnInit {
     * When a flashcard-related function was chosen
     */
     flashcardClicked(select: Flashcard, del: boolean) {
+      console.log(this.getSpaces());
        console.log(select);
-       this.flashcardEditForm.patchValue({
-               question: select.question,
-               answer: select.answer
-        });
        this.selectedFlashcard = select;
        this.showFlashcardId = select.id;
        this.deleteFlash = del;
        this.editRef = false;
        this.currentRate = this.selectedFlashcard.confidenceLevel;
+       this.flashcardEditForm.patchValue({
+              question: select.question,
+              answer: select.answer
+       });
        //get all decks a flashcard belongs to
        this.flashcardService.getFlashcardAssignments(select.id).subscribe(
            (assignedDecks: number[]) => {
@@ -684,6 +674,7 @@ export class FlashcardManagerComponent implements OnInit {
             }
        );
        this.selectedDecks = undefined;
+       this.loadAllSpaces();
      }
 
      /**
@@ -726,7 +717,6 @@ export class FlashcardManagerComponent implements OnInit {
      */
      searchDocumentsInModal(inputVal: string) {
          let allSpaces = this.getSpaces();
-         this.filteredDocuments = new Map<number, Document[]>();
          for(let i=0; i<allSpaces.length; i++) {
             this.searchDocumentsOfSpace(inputVal, allSpaces[i].id);
          }
@@ -757,8 +747,10 @@ export class FlashcardManagerComponent implements OnInit {
         return this.flashcards?.length === 0;
       }
 
-      isSpaceEmpty(spaceId: number) {
-        return this.filteredDocuments.get(spaceId) && this.filteredDocuments.get(spaceId).length!=0;
+      isSpaceNotEmpty(spaceId: number) {
+        if(this.filteredDocuments.get(spaceId) != undefined) {
+          return this.filteredDocuments.get(spaceId).length!=0;
+        }
       }
 
      resetDeckForm() {

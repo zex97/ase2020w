@@ -157,14 +157,16 @@
                      type="text">
             </mat-chip-list>
             <mat-autocomplete #autoDocs="matAutocomplete">
-               <span *ngFor="let space of getSpaces()">
-                <h4 *ngIf="isSpaceEmpty(space.id)" style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
-              <mat-option (click)="updateReferenceList(document.id);inputDocs.value=null"
-                          *ngFor="let document of this.filteredDocuments.get(space.id)"
-                          [value]="document.id">
-                {{document.name}}
-              </mat-option>
-               </span>
+                <span *ngFor="let space of getSpaces()">
+                 <div *ngIf="isSpaceNotEmpty(space.id)">
+                    <h4 style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                    <mat-option (click)="updateReferenceList(document.id);inputDocs.value=null"
+                                *ngFor="let document of this.filteredDocuments.get(space.id)"
+                                [value]="document.id">
+                      {{document.name}}
+                    </mat-option>
+                   </div>
+                 </span>
             </mat-autocomplete>
           </mat-form-field>
 
@@ -652,14 +654,16 @@
                          type="text">
                 </mat-chip-list>
                 <mat-autocomplete #autoEdit="matAutocomplete">
-               <span *ngFor="let space of getSpaces()">
-                <h4 *ngIf="isSpaceEmpty(space.id)" style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
-              <mat-option (click)="updateReferenceList(document.id);inputDocsChange.value=null"
-                          *ngFor="let document of this.filteredDocuments.get(space.id)"
-                          [value]="document.id">
-                {{document.name}}
-              </mat-option>
-               </span>
+                  <div>
+                   <span *ngFor="let space of getSpaces()">
+                    <h4 *ngIf="isSpaceNotEmpty(space.id)" style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                      <mat-option (click)="updateReferenceList(document.id);inputDocsChange.value=null"
+                                  *ngFor="let document of this.filteredDocuments.get(space.id)"
+                                  [value]="document.id">
+                        {{document.name}}
+                      </mat-option>
+                   </span>
+                  </div>
                 </mat-autocomplete>
               </mat-form-field>
 
@@ -671,7 +675,7 @@
                     type="button">
               Save
             </button>
-            <button (click)="this.loadAllSpaces();" data-dismiss="modal" mat-button mat-dialog-actions type="button">
+            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
               Close
             </button>
           </div>
