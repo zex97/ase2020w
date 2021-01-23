@@ -199,7 +199,7 @@
         <div class="card">
 
           <div class="card-body">
-            <h3 class="card-title wrapper txt-clr-dark"> {{deck.name}}</h3>
+            <h3 class="card-title wrapper txt-clr-dark deck-name"> {{deck.name}}</h3>
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div *ngIf="deck.favorite" class="wrapper"><img src="../../../assets/deck.png" width="90%;">
               <div class="heart">
@@ -223,11 +223,10 @@
   <ng-template #elseBlockDetails>
     <div id="deck-info">
       <div class="flex-container-space-between">
-        <h2 *ngIf="this.selectedDeck.favorite" class="txt-clr-dark">
-          <mat-icon matTooltip="Favorite deck">favorite</mat-icon>
+        <h2 class="deck-name-details txt-clr-dark">
+          <mat-icon matTooltip="Favorite deck" *ngIf="this.selectedDeck.favorite">favorite</mat-icon>
           Deck "{{this.selectedDeck.name}}"
         </h2>
-        <h2 *ngIf="!this.selectedDeck.favorite" class="txt-clr-dark"> Deck "{{this.selectedDeck.name}}"</h2>
         <div id="deck-buttons">
         <span class="close" data-target=".delete-deck-modal" data-toggle="modal" matTooltip="Delete deck">
           <mat-icon>delete</mat-icon>

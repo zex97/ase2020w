@@ -34,6 +34,20 @@
   overflow-y: inherit !important;
 }
 
+.deck-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  align: center;
+}
+
+.deck-name-details {
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: initial;
+}
+
 #deck-info {
   background-color: #ffffff;
   padding: 5px 10px 10px 10px;
@@ -85,12 +99,23 @@
   background-color: #3aafa9;
   color: #ffffff;
   text-align: center;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  min-width: 0;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
 }
 
 ::ng-deep .mat-expansion-panel-body {
   background-color: #2b7a78;
   color: #ffffff;
   text-align: center;
+  overflow-wrap: break-word;
 }
 
 ::ng-deep .mat-expansion-panel-body > h4 {
