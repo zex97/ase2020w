@@ -276,7 +276,7 @@
                 data-toggle="modal" matTooltip="Edit flashcard">
             <mat-icon>edit</mat-icon>
           </span>
-          <span (click)="flashcardClicked(flashcard, false)" class="close" data-target=".move-flashcard-modal"
+          <span (click)="flashcardClicked(flashcard, false); searchDecksInModal('')" class="close" data-target=".move-flashcard-modal"
                 data-toggle="modal" matTooltip="Move or copy to another deck">
             <mat-icon>move_to_inbox</mat-icon>
           </span>
@@ -572,7 +572,7 @@
 
     <!--Move or copy a flashcard-->
     <div *ngIf="this.selectedFlashcard" aria-hidden="true" aria-labelledby="Move/copy flashcard modal"
-         class="modal fade move-flashcard-modal"
+         class="modal fade move-flashcard-modal" data-backdrop="static" data-keyboard="false"
          role="dialog"
          tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -582,7 +582,7 @@
           </div>
           <div class="modal-body">
 
-            <div *ngIf="this.unassignedDecks">
+            <!--div *ngIf="this.unassignedDecks">
               <mat-form-field appearance="outline" class="mat-select">
                 <mat-label>Select a deck</mat-label>
                 <mat-select class="select" multiple>
@@ -593,23 +593,54 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
+            </div-->
+
+            <mat-form-field appearance="outline" class="modal-input-full-width">
+              <mat-label>Select decks</mat-label>
+              <mat-chip-list #chipListDecksChange aria-label="Deck selection">
+                <mat-chip
+                  *ngFor="let deck of getChosenDecks()"
+                  [removable]="removable"
+                  [selectable]="selectable"
+                  (removed)="updateDeckList(deck.id)">
+                  {{deck.name}}
+                  <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input (ngModelChange)="searchDecksInModal(inputDecksChange.value)"
+                       [(ngModel)]="deckNameMoveModal"
+                       [formControl]="deckMoveControl"
+                       [matAutocomplete]="autoDecksChange"
+                       [matChipInputFor]="chipListDecksChange"
+                       aria-label="Deck"
+                       matInput
+                       #inputDecksChange
+                       placeholder="Deck"
+                       type="text">
+              </mat-chip-list>
+              <mat-autocomplete #autoDecksChange="matAutocomplete">
+                <mat-option (click)="updateDeckList(deck.id);inputDecksChange.value=null"
+                            *ngFor="let deck of getUnassignedFilteredDecks()"
+                            [value]="deck.id">
+                  {{deck.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
 
           </div>
           <div class="modal-footer">
             <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0"
-                    (click)="moveFlashcard(this.selectedFlashcard)"
+                    (click)="moveFlashcard(this.selectedFlashcard); inputDecksChange.value=null"
                     data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Move
             </button>
             <button [disabled]="selectedDecks == undefined || selectedDecks.length == 0"
-                    (click)="copyFlashcard(this.selectedFlashcard)"
+                    (click)="copyFlashcard(this.selectedFlashcard); inputDecksChange.value=null;"
                     data-dismiss="modal" mat-button
                     mat-dialog-actions type="button">
               Copy
             </button>
-            <button data-dismiss="modal" mat-button mat-dialog-actions type="button">
+            <button data-dismiss="modal" mat-button mat-dialog-actions type="button" (click)="inputDecksChange.value=null">
               Close
             </button>
           </div>

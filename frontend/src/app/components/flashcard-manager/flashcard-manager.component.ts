@@ -44,7 +44,7 @@ export class FlashcardManagerComponent implements OnInit {
   private filteredDecks: Deck[];
   private flashcards: Flashcard[];
   selectedDecks: number[];
-  private unassignedDecks: Deck[] = [];
+  private unassignedFilteredDecks: Deck[] = [];
   private spaces: Space[] = [];
   documents: Map<number, Document[]> = new Map<number, Document[]>();
   filteredDocuments: Map<number, Document[]> = new Map<number, Document[]>();
@@ -61,10 +61,12 @@ export class FlashcardManagerComponent implements OnInit {
   deckNameSearchModal: string;
   documentNameSearch: string;
   documentNameSearchEdit: string;
+  deckNameMoveModal: string;
   deckFavorite = new FormControl(false);
   deckSelectControl = new FormControl();
   documentSelectControl = new FormControl();
   documentSelectControlEdit = new FormControl();
+  deckMoveControl = new FormControl();
   selectable = true;
   removable = true;
   showInfo = false;
@@ -470,13 +472,6 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   /**
-   * Gets all decks a flashcard doesn't belongs to
-   */
-  getUnassignedDecks() {
-    return this.unassignedDecks;
-  }
-
-  /**
    * Assigns a flashcard to new decks
    */
   copyFlashcard(flashcard: Flashcard) {
@@ -586,6 +581,7 @@ export class FlashcardManagerComponent implements OnInit {
     } else {
       this.selectedDecks = [select];
     }
+    this.searchDecksInModal('');
   }
 
   /**
@@ -603,6 +599,7 @@ export class FlashcardManagerComponent implements OnInit {
     } else {
       this.selectedDocuments = [select];
     }
+    this.searchDocumentsInModal('');
   }
 
   /**
@@ -650,30 +647,13 @@ export class FlashcardManagerComponent implements OnInit {
       question: select.question,
       answer: select.answer
     });
-    // get all decks a flashcard belongs to
-    this.flashcardService.getFlashcardAssignments(select.id).subscribe(
-      (assignedDecks: number[]) => {
-        this.loadAllDecks();
-        this.unassignedDecks = [];
-        this.decks.forEach(val => this.unassignedDecks.push(Object.assign({}, val)));
-        for (let i = 0; i < this.decks.length; i++) {
-          const index = assignedDecks.indexOf(this.decks[i].id);
-          if (index > -1) {
-            for (let j = 0; j < this.unassignedDecks.length; j++) {
-              if (this.unassignedDecks[j].id === this.decks[i].id) {
-                this.unassignedDecks.splice(j, 1);
-              }
-            }
-          }
-        }
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
     this.selectedDecks = undefined;
     this.loadAllSpaces();
   }
+
+  /**
+  * Get all decks a flashcard doesn't belong to
+  */
 
   /**
    * Sends a request to filter the deck results based on a sign/sign group they contain
@@ -699,6 +679,18 @@ export class FlashcardManagerComponent implements OnInit {
       (decksList: Deck[]) => {
         const selected = this.getChosenDecks();
         this.filteredDecks = decksList.filter((el) => !selected.find(rm => (rm.id === el.id)));
+        if(this.selectedFlashcard != undefined) {
+          this.flashcardService.getFlashcardAssignments(this.selectedFlashcard.id).subscribe(
+              (assignedDecks: number[]) => {
+                 console.log(assignedDecks);
+                 this.unassignedFilteredDecks =  decksList.filter((el) => !assignedDecks.find(rm => (rm === el.id)));
+                 this.unassignedFilteredDecks =  this.unassignedFilteredDecks.filter((el) => !selected.find(rm => (rm.id === el.id)));
+              },
+              error => {
+                this.defaultErrorHandling(error);
+              }
+            );
+         }
       },
       error => {
         this.defaultErrorHandling(error);
@@ -709,6 +701,13 @@ export class FlashcardManagerComponent implements OnInit {
   getFilteredDecks() {
     return this.filteredDecks;
   }
+
+    /**
+     * Gets all decks a flashcard doesn't belongs to
+     */
+    getUnassignedFilteredDecks() {
+      return this.unassignedFilteredDecks;
+    }
 
   /**
    * Calls the filter/search function for documents of all spaces
