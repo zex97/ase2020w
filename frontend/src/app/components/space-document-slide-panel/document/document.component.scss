@@ -45,9 +45,11 @@
 }
 
 #documentListItem {
-  height: 100px !important;
+  height: max-content;
   width: 100%;
   background-color: #FEFFFF;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .unselectable {
