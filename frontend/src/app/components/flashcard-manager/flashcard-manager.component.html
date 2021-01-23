@@ -257,8 +257,12 @@
           <mat-expansion-panel (closed)="this.showAnswer = false" (opened)="this.showAnswer = true" class="flashcard"
                                style="justify-content:center">
             <mat-expansion-panel-header>
-              <h4> Q: {{flashcard.question}}</h4>
+              <mat-title>
+                <h4 *ngIf="flashcard.question.length<=12"> Flashcard {{flashcard.question}}</h4>
+                <h4 *ngIf="flashcard.question.length>12"> Flashcard {{flashcard.question.substring(0, 12)}}...</h4>
+              </mat-title>
             </mat-expansion-panel-header>
+            <h4> Q: {{flashcard.question}}</h4>
             <h4>A: {{flashcard.answer}}</h4>
           </mat-expansion-panel>
         </mat-accordion>

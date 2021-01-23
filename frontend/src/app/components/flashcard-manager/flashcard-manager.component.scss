@@ -98,16 +98,11 @@
 ::ng-deep .mat-expansion-panel {
   background-color: #3aafa9;
   color: #ffffff;
-  text-align: center;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  min-width: 0;
-  text-overflow: ellipsis;
 }
 
 ::ng-deep .mat-expansion-panel-header {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+  overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
