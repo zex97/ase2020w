@@ -9,6 +9,7 @@ import com.studyboard.model.Flashcard;
 import com.studyboard.model.User;
 import org.junit.jupiter.api.*;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -315,31 +316,140 @@ public class FlashcardControllerTest extends BaseIntegrationTest {
     public void getOneFlashcardReturnsCorrectResult() throws Exception {
         DeckDTO deck = DeckDTO.of(TEST_DECK);
         String requestJson = convertObjectToStringForJson(deck);
-        this.mockMvc
+        ResultActions resultAction = this.mockMvc
                 .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isOk());
 
-        TEST_DECK.setId(11L);
+        String responseString = resultAction.andReturn().getResponse().getContentAsString();
+        DeckDTO responseDeck = mapper.readValue(responseString, DeckDTO.class);
+        TEST_DECK.setId(responseDeck.getId());
+
         TEST_FLASHCARD.setDecks(List.of(TEST_DECK));
         TEST_FLASHCARD.setDocumentReferences(new ArrayList<>());
 
         FlashcardDTO flashcardDTO = FlashcardDTO.FlashcardDTOFromFlashcard(TEST_FLASHCARD);
         String requestJson1 = convertObjectToStringForJson(flashcardDTO);
-        this.mockMvc
+        resultAction = this.mockMvc
                 .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT + "/flashcard").contentType(MediaType.APPLICATION_JSON).content(requestJson1))
                 .andExpect(status().isOk());
 
+        responseString = resultAction.andReturn().getResponse().getContentAsString();
+        FlashcardDTO responseCard = mapper.readValue(responseString, FlashcardDTO.class);
+
         ResultActions resultActionsFlash =
                 this.mockMvc
-                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckID}" + FLASHCARD_ID_PATH, 11, 12).accept(MediaType.APPLICATION_JSON))
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckID}" + FLASHCARD_ID_PATH, TEST_DECK.getId(), responseCard.getId()).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.jsonPath("$.question").value(TEST_FLASHCARD.getQuestion()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$.answer").value(TEST_FLASHCARD.getAnswer()));
 
-        String responseString = resultActionsFlash.andReturn().getResponse().getContentAsString();
+        responseString = resultActionsFlash.andReturn().getResponse().getContentAsString();
         FlashcardDTO response = mapper.readValue(responseString, FlashcardDTO.class);
 
         Assertions.assertEquals(TEST_FLASHCARD.getQuestion(), response.getQuestion());
         Assertions.assertEquals(TEST_FLASHCARD.getAnswer(), response.getAnswer());
     }
+
+    @Test
+    public void assignFlashcardToADeck() throws Exception {
+        DeckDTO deck = DeckDTO.of(TEST_DECK);
+        String requestJson = convertObjectToStringForJson(deck);
+        ResultActions resultAction = this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(status().isOk());
+
+        String responseString = resultAction.andReturn().getResponse().getContentAsString();
+        DeckDTO responseDeck = mapper.readValue(responseString, DeckDTO.class);
+        TEST_DECK.setId(responseDeck.getId());
+
+        TEST_FLASHCARD.setDecks(List.of(TEST_DECK));
+        TEST_FLASHCARD.setDocumentReferences(new ArrayList<>());
+
+        FlashcardDTO flashcardDTO = FlashcardDTO.FlashcardDTOFromFlashcard(TEST_FLASHCARD);
+        requestJson = convertObjectToStringForJson(flashcardDTO);
+        resultAction = this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT + "/flashcard").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(status().isOk());
+
+        responseString = resultAction.andReturn().getResponse().getContentAsString();
+        FlashcardDTO responseCard = mapper.readValue(responseString, FlashcardDTO.class);
+
+        ResultActions resultActionsFlash =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/flashcard{flashcardId}/decks", responseCard.getId()).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1));
+
+        String responseStringFlash = resultActionsFlash.andReturn().getResponse().getContentAsString();
+        Long[] responseArray = mapper.readValue(responseStringFlash, Long[].class);
+        Assertions.assertEquals(TEST_DECK.getId(), responseArray[0]);
+    }
+
+    /*@Test
+    public void assignSameFlashcardToTwoDecksAndDeleteFromOne_FlashcardStaysInOther() throws Exception {
+        DeckDTO deck = DeckDTO.of(TEST_DECK);
+        String requestJson1 = convertObjectToStringForJson(deck);
+        ResultActions resultAction = this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson1))
+                .andExpect(status().isOk());
+
+        String responseString1 = resultAction.andReturn().getResponse().getContentAsString();
+        DeckDTO responseDeck1 = mapper.readValue(responseString1, DeckDTO.class);
+        TEST_DECK.setId(responseDeck1.getId());
+
+        DeckDTO deck2 = DeckDTO.of(TEST_DECK_2);
+        String requestJson2 = convertObjectToStringForJson(deck2);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson2))
+                .andExpect(status().isOk());
+
+        String responseString2 = resultAction.andReturn().getResponse().getContentAsString();
+        DeckDTO responseDeck2 = mapper.readValue(responseString2, DeckDTO.class);
+        TEST_DECK_2.setId(responseDeck2.getId());
+
+        List<Deck> list = new ArrayList<>();
+        list.add(TEST_DECK);
+        Assertions.assertEquals(1L, TEST_DECK.getId());
+        Assertions.assertEquals(2L, TEST_DECK_2.getId());
+        list.add(TEST_DECK_2);
+        TEST_FLASHCARD.setDecks(list);
+        TEST_FLASHCARD.setDocumentReferences(new ArrayList<>());
+
+        FlashcardDTO flashcardDTO = FlashcardDTO.FlashcardDTOFromFlashcard(TEST_FLASHCARD);
+        String requestJson3 = convertObjectToStringForJson(flashcardDTO);
+        resultAction = this.mockMvc
+                .perform(MockMvcRequestBuilders.post(FLASHCARD_ENDPOINT + "/flashcard").contentType(MediaType.APPLICATION_JSON).content(requestJson3))
+                .andExpect(status().isOk());
+
+        String responseStringF = resultAction.andReturn().getResponse().getContentAsString();
+        FlashcardDTO responseCard = mapper.readValue(responseStringF, FlashcardDTO.class);
+
+        ResultActions resultActionsFlash =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/flashcard{flashcardId}/decks", responseCard.getId()).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
+
+        String responseStringFlash = resultActionsFlash.andReturn().getResponse().getContentAsString();
+        Long[] responseArray = mapper.readValue(responseStringFlash, Long[].class);
+        Assertions.assertEquals(responseStringFlash, "A");
+        Assertions.assertEquals(TEST_DECK.getId(), responseArray[0]);
+        Assertions.assertEquals(TEST_DECK_2.getId(), responseArray[1]);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/{deckId}/{flashcardID}", TEST_DECK.getId(), TEST_FLASHCARD.getId()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        resultActionsFlash =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(FLASHCARD_ENDPOINT + "/flashcard{flashcardId}/decks", responseCard.getId()).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
+                        //.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1));
+
+        responseStringFlash = resultActionsFlash.andReturn().getResponse().getContentAsString();
+        responseArray = mapper.readValue(responseStringFlash, Long[].class);
+        Assertions.assertEquals(responseStringFlash, "A");
+        //Assertions.assertEquals(TEST_DECK_2.getId(), responseArray[0]);
+
+        }*/
 }

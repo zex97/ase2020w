@@ -56,10 +56,9 @@ public class FlashcardController {
     @ApiOperation(
             value = "Create deck associated to a user specified in the DTO",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity createDeck(
+    public DeckDTO createDeck(
             @RequestBody DeckDTO deckDTO) {
-        flashcardService.createDeck(deckDTO.toDeck());
-        return ResponseEntity.ok().build();
+        return DeckDTO.of(flashcardService.createDeck(deckDTO.toDeck()));
     }
 
     @RequestMapping(
