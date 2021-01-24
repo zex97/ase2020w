@@ -224,8 +224,7 @@
     <div id="deck-info">
       <div class="flex-container-space-between">
         <h2 class="deck-name-details txt-clr-dark">
-          <mat-icon matTooltip="Favorite deck" *ngIf="this.selectedDeck.favorite">favorite</mat-icon>
-          Deck "{{this.selectedDeck.name}}"
+          Deck "{{this.selectedDeck.name}}" <mat-icon style="position: relative; top: 5px" matTooltip="Favorite deck" *ngIf="this.selectedDeck.favorite">favorite</mat-icon>
         </h2>
         <div id="deck-buttons">
         <span class="close" data-target=".delete-deck-modal" data-toggle="modal" matTooltip="Delete deck">
