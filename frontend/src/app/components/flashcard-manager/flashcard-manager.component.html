@@ -110,7 +110,8 @@
                 [removable]="removable"
                 [selectable]="selectable"
                 (removed)="updateDeckList(deck.id)">
-                {{deck.name}}
+                <span *ngIf="deck.name.length < 45"> {{deck.name}} </span>
+                <span *ngIf="deck.name.length >= 45"> {{deck.name.substring(0, 45)}}... </span>
                 <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input (ngModelChange)="searchDecksInModal(inputDecks.value)"
@@ -145,7 +146,8 @@
                 [removable]="removable"
                 [selectable]="selectable"
                 (removed)="updateReferenceList(document.id)">
-                {{document.name}}
+                <span *ngIf="deck.name.length < 45"> {{document.name}} </span>
+                <span *ngIf="deck.name.length >= 45"> {{document.name.substring(0, 45)}}... </span>
                 <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input (ngModelChange)="searchDocumentsInModal(inputDocs.value)"
@@ -223,7 +225,7 @@
   <ng-template #elseBlockDetails>
     <div id="deck-info">
       <div class="flex-container-space-between">
-        <h2 class="deck-name-details txt-clr-dark">
+        <h2 class="name-details txt-clr-dark">
           <mat-icon matTooltip="Favorite deck" *ngIf="this.selectedDeck.favorite">favorite</mat-icon>
           Deck "{{this.selectedDeck.name}}"
         </h2>
@@ -298,7 +300,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Edit deck "{{this.selectedDeck.name}}"</h2>
+            <h2 class="modal-title name-details">Edit deck "{{this.selectedDeck.name}}"</h2>
           </div>
           <div class="modal-body flashcardModalBody">
             <form class="modal-input-form">
@@ -332,10 +334,10 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Deck "{{this.selectedDeck.name}}"</h2>
+            <h2 class="modal-title name-details">Deck "{{this.selectedDeck.name}}"</h2>
           </div>
           <div class="modal-body">
-            <h4>Do you really want to delete deck "{{this.selectedDeck.name}}"? </h4>
+            <h4 class="name-details">Do you really want to delete deck "{{this.selectedDeck.name}}"? </h4>
             <h4> All flashcard within the deck that don't belong to another deck will be lost. </h4>
           </div>
           <div class="modal-footer">
@@ -357,7 +359,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Deck "{{this.selectedDeck.name}}" revision</h2>
+            <h2 class="modal-title name-details">Deck "{{this.selectedDeck.name}}" revision</h2>
           </div>
           <div class="modal-body border border-light p-5">
 
@@ -523,7 +525,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Flashcard "{{this.selectedFlashcard.question}}"</h2>
+            <h2 class="modal-title name-details">Flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
             <h4>Do you really want to remove this flashcard from the deck? </h4>
@@ -550,7 +552,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Rate flashcard "{{this.selectedFlashcard.question}}"</h2>
+            <h2 class="modal-title name-details">Rate flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
             <form class="border border-light p-5">
@@ -581,7 +583,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Flashcard "{{this.selectedFlashcard.question}}"</h2>
+            <h2 class="modal-title name-details">Flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
 
@@ -593,7 +595,8 @@
                   [removable]="removable"
                   [selectable]="selectable"
                   (removed)="updateDeckList(deck.id)">
-                  {{deck.name}}
+                  <span *ngIf="deck.name.length < 45"> {{deck.name}} </span>
+                  <span *ngIf="deck.name.length >= 45"> {{deck.name.substring(0, 45)}}... </span>
                   <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input (ngModelChange)="searchDecksInModal(inputDecksChange.value)"
@@ -646,7 +649,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title">Flashcard "{{this.selectedFlashcard.question}}"</h2>
+            <h2 class="modal-title name-details">Flashcard "{{this.selectedFlashcard.question}}"</h2>
           </div>
           <div class="modal-body">
 
@@ -677,7 +680,8 @@
                     [removable]="removable"
                     [selectable]="selectable"
                     (removed)="updateReferenceList(document.id)">
-                    {{document.name}}
+                    <span *ngIf="deck.name.length < 45"> {{document.name}} </span>
+                    <span *ngIf="deck.name.length >= 45"> {{document.name.substring(0, 45)}}... </span>
                     <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
                   </mat-chip>
                   <input (ngModelChange)="searchDocumentsInModal(inputDocsChange.value)"
