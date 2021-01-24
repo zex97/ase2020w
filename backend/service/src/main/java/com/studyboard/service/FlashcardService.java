@@ -38,7 +38,7 @@ public interface FlashcardService {
      *
      * @param deck with all the necessary information about a deck
      */
-    void createDeck(Deck deck);
+    Deck createDeck(Deck deck);
 
     /**
      * Update a single deck

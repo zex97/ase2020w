@@ -63,12 +63,12 @@ public class SimpleFlashcardService implements FlashcardService {
     }
 
     @Override
-    public void createDeck(Deck deck) {
-        deckRepository.save(deck);
+    public Deck createDeck(Deck deck) {
         logger.info("Created new deck with name "
                 + deck.getName() +
                 " for user with username "
                 + deck.getUser().getUsername());
+        return deckRepository.save(deck);
     }
 
     @Override

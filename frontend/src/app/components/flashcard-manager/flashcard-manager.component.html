@@ -146,8 +146,8 @@
                 [removable]="removable"
                 [selectable]="selectable"
                 (removed)="updateReferenceList(document.id)">
-                <span *ngIf="deck.name.length < 45"> {{document.name}} </span>
-                <span *ngIf="deck.name.length >= 45"> {{document.name.substring(0, 45)}}... </span>
+                <span *ngIf="document.name.length < 45"> {{document.name}} </span>
+                <span *ngIf="document.name.length >= 45"> {{document.name.substring(0, 45)}}... </span>
                 <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input (ngModelChange)="searchDocumentsInModal(inputDocs.value)"
@@ -679,8 +679,8 @@
                     [removable]="removable"
                     [selectable]="selectable"
                     (removed)="updateReferenceList(document.id)">
-                    <span *ngIf="deck.name.length < 45"> {{document.name}} </span>
-                    <span *ngIf="deck.name.length >= 45"> {{document.name.substring(0, 45)}}... </span>
+                    <span *ngIf="document.name.length < 45"> {{document.name}} </span>
+                    <span *ngIf="document.name.length >= 45"> {{document.name.substring(0, 45)}}... </span>
                     <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
                   </mat-chip>
                   <input (ngModelChange)="searchDocumentsInModal(inputDocsChange.value)"
