@@ -103,7 +103,7 @@
           </mat-form-field>
           <!--Select deck-->
           <mat-form-field appearance="outline" class="modal-input-full-width">
-            <mat-label>Select decks</mat-label>
+            <mat-label class="modal-label">Select decks</mat-label>
             <mat-chip-list #chipListDecks aria-label="Deck selection">
               <mat-chip
                 *ngFor="let deck of getChosenDecks()"
@@ -138,7 +138,7 @@
           <!--Add document references-->
           <mat-form-field appearance="outline"
                           class="modal-input-full-width">
-            <mat-label>Select document references</mat-label>
+            <mat-label class="modal-label">Select document references</mat-label>
             <mat-chip-list #chipListRefs aria-label="References selection">
               <mat-chip
                 *ngFor="let document of getReferences()"
@@ -585,21 +585,8 @@
           </div>
           <div class="modal-body">
 
-            <!--div *ngIf="this.unassignedDecks">
-              <mat-form-field appearance="outline" class="mat-select">
-                <mat-label>Select a deck</mat-label>
-                <mat-select class="select" multiple>
-                  <mat-option (onSelectionChange)="updateDeckList($event.source.value)"
-                              *ngFor="let deck of getUnassignedDecks()"
-                              value="{{deck.id}}">
-                    {{deck.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div-->
-
             <mat-form-field appearance="outline" class="modal-input-full-width">
-              <mat-label>Select decks</mat-label>
+              <mat-label class="modal-label">Select decks</mat-label>
               <mat-chip-list #chipListDecksChange aria-label="Deck selection">
                 <mat-chip
                   *ngFor="let deck of getChosenDecks()"
@@ -683,7 +670,7 @@
               <h4>Choose references:</h4>
               <mat-form-field appearance="outline"
                               class="modal-input-full-width">
-                <mat-label>Select document references</mat-label>
+                <mat-label class="modal-label">Select document references</mat-label>
                 <mat-chip-list #chipListRefsEdit aria-label="References selection">
                   <mat-chip
                     *ngFor="let document of getReferences()"
