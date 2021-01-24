@@ -41,7 +41,7 @@
   align: center;
 }
 
-.deck-name-details {
+.name-details {
   overflow: hidden;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -95,6 +95,16 @@
   background-color: #def2f1;
   color: #2b7a78;
   text-align: center;
+}
+
+::ng-deep .mat-chip {
+  overflow: hidden;
+  white-space: nowrap;
+  display: block !important;
+}
+
+#matChipRemove {
+  display: inline-block;
 }
 
 ::ng-deep .mat-expansion-panel {
