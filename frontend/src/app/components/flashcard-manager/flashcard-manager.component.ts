@@ -724,16 +724,10 @@ export class FlashcardManagerComponent implements OnInit {
    * Filters out already selected options
    */
   searchDocumentsOfSpace(inputVal: string, spaceId: number) {
-    this.spaceService.getDocumentsByName(spaceId, inputVal).subscribe(
-      (documentList: Document[]) => {
-        const selected = this.getReferences();
-        documentList = documentList.filter((el) => !selected.find(rm => (rm.id === el.id)));
-        this.filteredDocuments.set(spaceId, documentList);
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
+    let documentList = this.spaceService.getDocumentsByName(spaceId, inputVal);
+    const selected = this.getReferences();
+    documentList = documentList.filter((el) => !selected.find(rm => (rm.id === el.id)));
+    this.filteredDocuments.set(spaceId, documentList);
   }
 
   isEmptyDecks() {

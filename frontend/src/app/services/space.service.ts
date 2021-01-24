@@ -13,7 +13,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SpaceService {
-  private documents: Map<number, Document[]>;
+  private documents = new Map<number, Document[]>();
 
   constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
   }
@@ -125,8 +125,8 @@ export class SpaceService {
    * @param spaceId whose documents the user wants to see
    * @param searchParam name of the documents to search for
    * */
-  getDocumentsByName(spaceId: number, searchParam: string): Observable<Object> {
+  getDocumentsByName(spaceId: number, searchParam: string): Document[] {
     console.log('Getting specific documents for space ' + spaceId);
-    return this.httpClient.get(this.spaceBaseUri + '/search/' + spaceId + '/p=' + searchParam);
+    return this.documents.get(spaceId).filter(d => d.name.includes(searchParam));
   }
 }
