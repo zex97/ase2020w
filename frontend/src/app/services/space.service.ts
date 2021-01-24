@@ -14,6 +14,7 @@ import { tap } from 'rxjs/operators';
 })
 export class SpaceService {
   private documents = new Map<number, Document[]>();
+  private spaces = new Map<string, Space[]>();
 
   constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
   }
@@ -25,7 +26,10 @@ export class SpaceService {
    */
   getSpaces(username: string): Observable<Space[]> {
     console.log('Searching for spaces.');
-    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username);
+    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username).pipe(
+      tap( (s: Space[]) => {
+        this.spaces.set(username, [...s]);
+      }));
   }
 
   /**
@@ -113,9 +117,9 @@ export class SpaceService {
    * @param username of the space owner
    * @param searchParam name of the spaces to search for
    */
-  getSpacesByName(username: string, searchParam: string): Observable<Space[]> {
+  getSpacesByName(username: string, searchParam: string): Space[] {
     console.log('Searching for spaces by name.');
-    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
+    return this.spaces.get(username).filter((s: Space) => s.name.includes(searchParam));
 
   }
 
