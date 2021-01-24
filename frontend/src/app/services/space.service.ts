@@ -133,4 +133,21 @@ export class SpaceService {
     console.log('Getting specific documents for space ' + spaceId);
     return this.documents.get(spaceId).filter(d => d.name.includes(searchParam));
   }
+
+  /**
+   * Load all documents for a given user space
+   * @param username name of the current user
+   * @param spaceId whose documents the user wants to see
+   * @param searchParam name or tag of the documents to search for
+   * */
+  getDocumentsByNameAndTags(spaceId: number, searchParam: string): Document[] {
+    console.log('Getting specific documents for space ' + spaceId);
+    let filteredDocs = new Set<Document>([
+      ...this.documents.get(spaceId).filter(d => d.name.includes(searchParam)),
+      ...this.documents.get(spaceId).filter(d => 
+                     d.tags.filter(t => t.includes(searchParam)).length > 0)
+      ]);
+
+    return [...filteredDocs];
+  }
 }
