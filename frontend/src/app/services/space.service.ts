@@ -6,12 +6,14 @@ import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
 import { Tag } from '../dtos/tag';
 import {Document} from '../dtos/document';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpaceService {
+  private documents: Map<number, Document[]>;
 
   constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
   }
@@ -60,7 +62,10 @@ export class SpaceService {
    * */
   getAllDocuments(userName: string, spaceId: number): Observable<Object> {
     console.log('Getting all the documents for space ' + spaceId);
-    return this.httpClient.get(this.spaceBaseUri + '/' + userName + '/' + spaceId);
+    return this.httpClient.get<Document[]>(this.spaceBaseUri + '/' + userName + '/' + spaceId).pipe(
+      tap( (r: Document[]) => {
+        this.documents.set(spaceId, [...r]);
+      }));
   }
 
   /**
