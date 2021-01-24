@@ -27,6 +27,22 @@
       Create a flashcard
     </button>
   </div>
+  <div *ngIf="this.selectedDeck === undefined" class="sortingDropdownMenuContainer">
+    <mat-form-field class="orderByDropdown" appearance="fill">
+      <mat-label style="color: #FEFFFF">Order by</mat-label>
+      <mat-select value="default" id="bla" class="mat-select" #sortOption>
+        <mat-optgroup label="Name">
+          <mat-option value="name-asc">a-Z</mat-option>
+          <mat-option value="name-desc">Z-a</mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Date">
+          <mat-option value="name-asc">Newest first</mat-option>
+          <mat-option value="name-desc">Oldest first</mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
 </div>
 
 <div class="warningMessageContainer" *ngIf="isEmptyDecks()">
