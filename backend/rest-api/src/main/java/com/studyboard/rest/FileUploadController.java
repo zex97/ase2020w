@@ -96,7 +96,7 @@ public class FileUploadController {
           value = "Delete space folder belonging to a user and all files in it.",
           authorizations = {@Authorization(value = "apiKey")})
   @CrossOrigin
-  public void deleteUserFolder(
+  public void deleteUserSpaceFolder(
           @PathVariable String userName,
           @PathVariable String spaceId) {
     fileUploaderService.deleteSpaceFolder(userName, spaceId);
