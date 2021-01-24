@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { FlashcardManagerComponent } from './flashcard-manager.component';
+import {FlashcardManagerComponent} from './flashcard-manager.component';
 
 describe('FlashcardManagerComponent', () => {
   let component: FlashcardManagerComponent;
@@ -8,9 +8,9 @@ describe('FlashcardManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FlashcardManagerComponent ]
+      declarations: [FlashcardManagerComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

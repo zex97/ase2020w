@@ -24,8 +24,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -46,7 +44,7 @@ public class FileUploadServiceTest {
   private final long TEST_SPACE_ID = 1;
   private final String TEST_SPACE_NAME = "DummySpace";
   private final String TEST_USER_NAME = "DummyUser";
-  private final Path TEST_PATH_ENDING = Path.of(TEST_USER_NAME, TEST_SPACE_NAME, TEST_FILE_NAME);
+  private final Path TEST_PATH_ENDING = Path.of(TEST_USER_NAME, TEST_SPACE_NAME, "_" + TEST_FILE_NAME);
   private static final String TEST_CLASS_RESOURCE_PATH = "src/test/resources/";
 
   @Mock private SpaceRepository spaceRepository;
@@ -79,7 +77,7 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void loadCorrectFilePathGivenUserNameSpaceAndFileName() {
+  void loadCorrectFilePathGivenUserNameSpaceAndFileName() {
     Assertions.assertTrue(
         simpleFileUploadService
             .load(TEST_FILE_NAME, TEST_SPACE_NAME, TEST_USER_NAME)
@@ -87,7 +85,7 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfUserFolderIsDeleted() {
+  void checkIfUserFolderIsDeleted() {
     try {
       Path path =
           Files.createDirectories(Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME));
@@ -100,7 +98,7 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfUserNonExistingFileCanBeDeleted_throwsException() {
+  void checkIfUserNonExistingFileCanBeDeleted_throwsException() {
     User user = new User();
     user.setUsername(TEST_USER_NAME);
     Space space = new Space();
@@ -116,10 +114,10 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfUserFileIsDeleted() {
+  void checkIfUserFileIsDeleted() {
     try {
       Files.createDirectories(
-          Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_NAME)
+          Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_ID + "")
               .toAbsolutePath());
       File file =
           new File(
@@ -127,8 +125,8 @@ public class FileUploadServiceTest {
                       TEST_CLASS_RESOURCE_PATH,
                       "testing",
                       TEST_USER_NAME,
-                      TEST_SPACE_NAME,
-                      TEST_FILE_NAME)
+                      TEST_SPACE_ID + "",
+                      "_" + TEST_FILE_NAME)
                   .toString());
       Assertions.assertTrue(file.createNewFile());
     } catch (IOException e) {
@@ -143,6 +141,7 @@ public class FileUploadServiceTest {
     doc.setName(TEST_FILE_NAME);
     list.add(doc);
     space.setDocuments(list);
+    space.setId(TEST_SPACE_ID);
     space.setName(TEST_SPACE_NAME);
     space.setUser(user);
 
@@ -154,15 +153,16 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfFileIsStoredCorrectly() throws IOException {
+  void checkIfFileIsStoredCorrectly() throws IOException {
     User user = new User();
     user.setUsername(TEST_USER_NAME);
     Space space = new Space();
     space.setName(TEST_SPACE_NAME);
+    space.setId(TEST_SPACE_ID);
     space.setUser(user);
     Mockito.when(spaceRepository.findSpaceById(TEST_SPACE_ID)).thenReturn(space);
     Files.createDirectories(
-        Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_NAME)
+        Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_ID + "")
             .toAbsolutePath());
 
     MockMultipartFile mockMultipartFile =
@@ -182,8 +182,8 @@ public class FileUploadServiceTest {
                   TEST_CLASS_RESOURCE_PATH,
                   "testing",
                   TEST_USER_NAME,
-                  TEST_SPACE_NAME,
-                  TEST_FILE_NAME)));
+                  TEST_SPACE_ID + "",
+                  "_" + TEST_FILE_NAME)));
 
       Assertions.assertArrayEquals(
           "Hello World!".getBytes(StandardCharsets.UTF_8),
@@ -192,8 +192,8 @@ public class FileUploadServiceTest {
                   TEST_CLASS_RESOURCE_PATH,
                   "testing",
                   TEST_USER_NAME,
-                  TEST_SPACE_NAME,
-                  TEST_FILE_NAME)));
+                  TEST_SPACE_ID + "",
+                  "_" + TEST_FILE_NAME)));
     } catch (IOException | ExecutionException | InterruptedException e) {
       e.printStackTrace();
     }
@@ -201,7 +201,7 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfFileIsStoredCorrectlyWithADifferentDocument() throws IOException {
+  void checkIfFileIsStoredCorrectlyWithADifferentDocument() throws IOException {
     Document document = new Document();
     document.setName(TEST_FILE_NAME + "1");
     document.setFilePath("some/file/path");
@@ -209,12 +209,13 @@ public class FileUploadServiceTest {
     user.setUsername(TEST_USER_NAME);
     Space space = new Space();
     space.setName(TEST_SPACE_NAME);
+    space.setId(TEST_SPACE_ID);
     space.setUser(user);
     space.setDocuments(Collections.singletonList(document));
     Mockito.when(spaceRepository.findSpaceById(TEST_SPACE_ID)).thenReturn(space);
     // Mockito.doNothing().when(documentRepository.delete());
     Files.createDirectories(
-        Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_NAME)
+        Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_ID + "")
             .toAbsolutePath());
 
     MockMultipartFile mockMultipartFile =
@@ -234,8 +235,8 @@ public class FileUploadServiceTest {
                   TEST_CLASS_RESOURCE_PATH,
                   "testing",
                   TEST_USER_NAME,
-                  TEST_SPACE_NAME,
-                  TEST_FILE_NAME)));
+                  TEST_SPACE_ID + "",
+                  "_" + TEST_FILE_NAME)));
 
       Assertions.assertArrayEquals(
           "Hello World!".getBytes(StandardCharsets.UTF_8),
@@ -244,8 +245,8 @@ public class FileUploadServiceTest {
                   TEST_CLASS_RESOURCE_PATH,
                   "testing",
                   TEST_USER_NAME,
-                  TEST_SPACE_NAME,
-                  TEST_FILE_NAME)));
+                  TEST_SPACE_ID + "",
+                  "_" + TEST_FILE_NAME)));
     } catch (IOException | ExecutionException | InterruptedException e) {
       e.printStackTrace();
     }
@@ -253,7 +254,7 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfFileIsStoredCorrectlyWithExistingDocument() throws IOException {
+  void checkIfFileIsStoredCorrectlyWithExistingDocument() throws IOException {
     Document document = new Document();
     document.setName(TEST_FILE_NAME + "1");
     document.setFilePath(
@@ -261,20 +262,21 @@ public class FileUploadServiceTest {
                 TEST_CLASS_RESOURCE_PATH,
                 "testing",
                 TEST_USER_NAME,
-                TEST_SPACE_NAME,
-                TEST_FILE_NAME)
+                TEST_SPACE_ID + "",
+                "_" + TEST_FILE_NAME)
             .toAbsolutePath()
             .toString());
     User user = new User();
     user.setUsername(TEST_USER_NAME);
     Space space = new Space();
     space.setName(TEST_SPACE_NAME);
+    space.setId(TEST_SPACE_ID);
     space.setUser(user);
     space.setDocuments(Collections.singletonList(document));
     Mockito.when(spaceRepository.findSpaceById(TEST_SPACE_ID)).thenReturn(space);
     // Mockito.doNothing().when(documentRepository.delete());
     Files.createDirectories(
-        Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_NAME)
+        Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME, TEST_SPACE_ID + "")
             .toAbsolutePath());
 
     MockMultipartFile mockMultipartFile =
@@ -294,8 +296,8 @@ public class FileUploadServiceTest {
                   TEST_CLASS_RESOURCE_PATH,
                   "testing",
                   TEST_USER_NAME,
-                  TEST_SPACE_NAME,
-                  TEST_FILE_NAME)));
+                  TEST_SPACE_ID + "",
+                  "_" + TEST_FILE_NAME)));
 
       Assertions.assertArrayEquals(
           "Hello World!".getBytes(StandardCharsets.UTF_8),
@@ -304,8 +306,8 @@ public class FileUploadServiceTest {
                   TEST_CLASS_RESOURCE_PATH,
                   "testing",
                   TEST_USER_NAME,
-                  TEST_SPACE_NAME,
-                  TEST_FILE_NAME)));
+                  TEST_SPACE_ID + "",
+                  "_" + TEST_FILE_NAME)));
     } catch (IOException | ExecutionException | InterruptedException e) {
       e.printStackTrace();
     }
@@ -313,33 +315,34 @@ public class FileUploadServiceTest {
   }
 
   @Test
-  public void checkIfNonExistingFileCanBeLoaded_throwsException() {
+  void checkIfNonExistingFileCanBeLoaded_throwsException() {
     User user = new User();
     user.setUsername(TEST_USER_NAME);
     Space space = new Space();
     space.setName(TEST_SPACE_NAME);
+    space.setId(TEST_SPACE_ID);
     space.setUser(user);
 
     StorageFileNotFoundException ex =
         Assertions.assertThrows(
             StorageFileNotFoundException.class,
-            () -> simpleFileUploadService.loadAsResource(space, TEST_FILE_NAME));
-    Assertions.assertTrue(ex.getMessage().endsWith("could not be read, or doesn't exist"));
+            () -> simpleFileUploadService.loadAsResource(space, TEST_FILE_NAME + "x"));
+    Assertions.assertTrue(ex.getMessage().contains("could not be read, or doesn't exist"));
   }
 
   @Test
-  public void checkIfExistingFileLoadedAsResource() {
+  void checkIfExistingFileLoadedAsResource() {
     try {
       Files.createDirectories(
-          Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME+ "1", TEST_SPACE_NAME)
+          Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME+ "1", TEST_SPACE_ID + "")
               .toAbsolutePath());
       Files.write(
           Path.of(
-              TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1", TEST_SPACE_NAME, TEST_FILE_NAME_1),
+              TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1", TEST_SPACE_ID + "", "_" + TEST_FILE_NAME_1),
           "Hello World!".getBytes(StandardCharsets.UTF_8));
 
       Assertions.assertTrue(Files.exists(Path.of(
-              TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1", TEST_SPACE_NAME, TEST_FILE_NAME_1)));
+              TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1", TEST_SPACE_ID + "", "_" + TEST_FILE_NAME_1)));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -348,19 +351,20 @@ public class FileUploadServiceTest {
     user.setUsername(TEST_USER_NAME + "1");
     Space space = new Space();
     space.setName(TEST_SPACE_NAME);
+    space.setId(TEST_SPACE_ID);
     space.setUser(user);
     Resource resource = simpleFileUploadService.loadAsResource(space, TEST_FILE_NAME_1);
     try {
       Assertions.assertArrayEquals(
           "Hello World!".getBytes(StandardCharsets.UTF_8),
           Files.readAllBytes(Path.of(
-                  TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1", TEST_SPACE_NAME, TEST_FILE_NAME_1)));
+                  TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1", TEST_SPACE_ID + "", "_" + TEST_FILE_NAME_1)));
     } catch (IOException e) {
       e.printStackTrace();
     }
-    Assertions.assertEquals(TEST_FILE_NAME_1, resource.getFilename());
+    Assertions.assertEquals("_" + TEST_FILE_NAME_1, resource.getFilename());
     try {
-      FileSystemUtils.deleteRecursively(Path.of(TEST_CLASS_RESOURCE_PATH, "testing", TEST_USER_NAME + "1"));
+      FileSystemUtils.deleteRecursively(Path.of(TEST_CLASS_RESOURCE_PATH, "testing", "_" + TEST_USER_NAME + "1"));
     } catch (IOException e) {
       e.printStackTrace();
     }
