@@ -1,18 +1,25 @@
 package com.studyboard.integration;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import com.studyboard.exception.UniqueConstraintException;
 import com.studyboard.exception.UserDoesNotExist;
+import com.studyboard.model.PasswordResetToken;
 import com.studyboard.model.User;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.studyboard.repository.ResetTokenRepository;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import javax.mail.Message;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +30,7 @@ public class UserControllerTest extends BaseIntegrationTest {
     private static final String USER_ENDPOINT = "/api/user";
     private static final String USER_ID_PATH = "/{userID}";
     private static final String USER_USERNAME_PATH = "/username{username}";
+    private static final String USER_VERIFY_EMAIL_PATH = "/reset/{email}";
 
     private static final User TEST_USER_1 = new User("testUsername1", "testPassword1", "user1@email.com", 2, "USER", true);
     private static final User TEST_USER_2 = new User("testUsername2", "testPassword2", "user2@email.com", 0, "USER", true);
@@ -31,9 +39,33 @@ public class UserControllerTest extends BaseIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JavaMailSenderImpl mailSender;
+
+    @Autowired
+    private ResetTokenRepository resetTokenRepository;
+
+    private GreenMail testSmtp;
+
+    @BeforeAll
+    public void testSmtpInit(){
+        testSmtp = new GreenMail(ServerSetupTest.SMTP);
+        testSmtp.setUser("studyboard.example@gmail.com", "studyboardpassword");
+        testSmtp.setUser(TEST_USER_1.getEmail(),TEST_USER_1.getPassword());
+        testSmtp.start();
+
+        mailSender.setPort(3025);
+        mailSender.setHost("localhost");
+    }
+
+    @AfterAll
+    public void cleanup(){
+        testSmtp.stop();
+    }
+
     @AfterEach
     void tearDown() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "sb_user", "user_roles");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "password_reset_token", "sb_user", "user_roles");
     }
 
     @Test
@@ -202,5 +234,42 @@ public class UserControllerTest extends BaseIntegrationTest {
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(responseArray[0].getId()))
                         .andExpect(MockMvcResultMatchers.jsonPath("$[0].loginAttempts").value(0));
 
+    }
+
+    @Test
+    public void verifyEmailAndSendRecoveryToken() throws Exception {
+        User user = new User(TEST_USER_1);
+        String requestJson = convertObjectToStringForJson(user);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(USER_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(status().isOk());
+
+        ResultActions resultActionsUser =
+                this.mockMvc
+                        .perform(MockMvcRequestBuilders.get(USER_ENDPOINT).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1));
+
+        String responseString = resultActionsUser.andReturn().getResponse().getContentAsString();
+        User[] responseArray = mapper.readValue(responseString, User[].class);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(USER_ENDPOINT + USER_VERIFY_EMAIL_PATH, TEST_USER_1.getEmail()))
+                .andExpect(status().isOk());
+
+        List<PasswordResetToken> token = resetTokenRepository.findAllByUserId(responseArray[0].getId());
+        Assertions.assertEquals(1, token.size());
+        responseArray[0].setEnabled(true);
+        Assertions.assertEquals(responseArray[0], token.get(0).getUser());
+
+        Message[] messages = testSmtp.getReceivedMessages();
+        Assertions.assertEquals(1, messages.length);
+        Assertions.assertEquals("studyboard.example@gmail.com", messages[0].getFrom()[0].toString());
+        Assertions.assertEquals("Reset password", messages[0].getSubject());
+        String body = GreenMailUtil.getBody(messages[0]).replaceAll("\r\n", "");
+        String link = "http://localhost:4200/changePassword?token=" + token.get(0).getToken();
+        String expectedBody = "Hello " + user.getUsername() + "! Click on the link to reset you password. " + link;
+        Assertions.assertEquals(expectedBody, body);
     }
 }

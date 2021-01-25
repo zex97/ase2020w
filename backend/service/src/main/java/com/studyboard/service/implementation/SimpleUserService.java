@@ -13,21 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.util.*;
 
 /** Service used to manage users. Performs user creation, getting, and update of user password */
@@ -46,7 +36,7 @@ public class SimpleUserService implements UserService {
     private ResetTokenRepository resetTokenRepository;
 
     @Autowired
-    JavaMailSender mailSender;
+    JavaMailSenderImpl mailSender;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
