@@ -84,7 +84,7 @@ public class UserSpaceServiceTest {
         doc2.setId(DOCUMENT_2_ID);
         space.setDocuments(Arrays.asList(new Document[]{doc1, doc2}));
 
-        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
+        Mockito.when(spaceRepository.findWithTagsById(SPACE_ID)).thenReturn(Optional.of(space));
 
         List<Document> response = userSpaceService.getAllDocumentsFromSpace(SPACE_ID);
         Document document1 = response.get(0);
@@ -114,7 +114,7 @@ public class UserSpaceServiceTest {
         space.setId(SPACE_ID);
         space.setName(SPACE_NAME);
 
-        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
+        Mockito.when(spaceRepository.findWithTagsById(SPACE_ID)).thenReturn(Optional.of(space));
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         space.setName(NEW_SPACE_NAME);
@@ -144,7 +144,7 @@ public class UserSpaceServiceTest {
         Space space = new Space();
         space.setId(SPACE_ID);
 
-        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
+        Mockito.when(spaceRepository.findWithTagsById(SPACE_ID)).thenReturn(Optional.of(space));
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         userSpaceService.addDocumentToSpace(SPACE_ID, document);
@@ -173,7 +173,7 @@ public class UserSpaceServiceTest {
         space.setId(SPACE_ID);
         space.setDocuments(Arrays.asList(new Document[]{document}));
 
-        Mockito.when(spaceRepository.findById(SPACE_ID)).thenReturn(Optional.of(space));
+        Mockito.when(spaceRepository.findWithTagsById(SPACE_ID)).thenReturn(Optional.of(space));
         Mockito.when(spaceRepository.save(space)).thenReturn(space);
 
         userSpaceService.removeDocumentFromSpace(SPACE_ID, DOCUMENT_ID);
