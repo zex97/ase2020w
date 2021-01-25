@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
@@ -71,6 +71,8 @@ export class FlashcardManagerComponent implements OnInit {
   removable = true;
   showInfo = false;
 
+  @ViewChild('sortOption') sortOption;
+
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private spaceService: SpaceService,
               private fileUploadService: FileUploadService, private snackBar: MatSnackBar,
@@ -139,6 +141,29 @@ export class FlashcardManagerComponent implements OnInit {
    * @return all decks belonging to the logged-in user
    */
   getDecks() {
+
+    if (this.sortOption != null) {
+      switch (this.sortOption.value) {
+        case 'name-asc' : {
+          return this.decks.sort((d1, d2) => d1.name.localeCompare(d2.name));
+        }
+        case 'name-desc' : {
+          return this.decks.sort((d1, d2) => d2.name.localeCompare(d1.name));
+        }
+        case 'date-asc': {
+          return this.decks.sort((d1, d2) => Date.parse(d1.creationDate) - Date.parse(d2.creationDate));
+        }
+        case 'date-desc': {
+          return this.decks.sort((d2, d1) => Date.parse(d1.creationDate) - Date.parse(d2.creationDate));
+        }
+        case 'default': {
+          return this.decks;
+        }
+        default : {
+          return this.decks;
+        }
+      }
+    }
     return this.decks;
   }
 
@@ -652,8 +677,8 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   /**
-  * Get all decks a flashcard doesn't belong to
-  */
+   * Get all decks a flashcard doesn't belong to
+   */
 
   /**
    * Sends a request to filter the deck results based on a sign/sign group they contain
@@ -679,18 +704,18 @@ export class FlashcardManagerComponent implements OnInit {
       (decksList: Deck[]) => {
         const selected = this.getChosenDecks();
         this.filteredDecks = decksList.filter((el) => !selected.find(rm => (rm.id === el.id)));
-        if(this.selectedFlashcard != undefined) {
+        if (this.selectedFlashcard !== undefined) {
           this.flashcardService.getFlashcardAssignments(this.selectedFlashcard.id).subscribe(
-              (assignedDecks: number[]) => {
-                 console.log(assignedDecks);
-                 this.unassignedFilteredDecks =  decksList.filter((el) => !assignedDecks.find(rm => (rm === el.id)));
-                 this.unassignedFilteredDecks =  this.unassignedFilteredDecks.filter((el) => !selected.find(rm => (rm.id === el.id)));
-              },
-              error => {
-                this.defaultErrorHandling(error);
-              }
-            );
-         }
+            (assignedDecks: number[]) => {
+              console.log(assignedDecks);
+              this.unassignedFilteredDecks = decksList.filter((el) => !assignedDecks.find(rm => (rm === el.id)));
+              this.unassignedFilteredDecks = this.unassignedFilteredDecks.filter((el) => !selected.find(rm => (rm.id === el.id)));
+            },
+            error => {
+              this.defaultErrorHandling(error);
+            }
+          );
+        }
       },
       error => {
         this.defaultErrorHandling(error);
@@ -702,12 +727,12 @@ export class FlashcardManagerComponent implements OnInit {
     return this.filteredDecks;
   }
 
-    /**
-     * Gets all decks a flashcard doesn't belongs to
-     */
-    getUnassignedFilteredDecks() {
-      return this.unassignedFilteredDecks;
-    }
+  /**
+   * Gets all decks a flashcard doesn't belongs to
+   */
+  getUnassignedFilteredDecks() {
+    return this.unassignedFilteredDecks;
+  }
 
   /**
    * Calls the filter/search function for documents of all spaces
