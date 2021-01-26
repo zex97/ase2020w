@@ -213,12 +213,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
             MediaType.APPLICATION_PDF_VALUE,
             "Hello World!!!".getBytes());
 
-    Files.createDirectories(Path.of("uploadedFiles", TEST_USER.getUsername(), "2"));
-    Files.write(
-        Path.of(
-            "uploadedFiles/" + TEST_USER.getUsername() + "/" + "2" + "/_" + TEST_FILE_NAME_DELETE),
-        "Hello World!".getBytes(StandardCharsets.UTF_8));
-
     List<Document> list = Collections.singletonList(TEST_DOCUMENT);
     TEST_SPACE_1.setDocuments(list);
     SpaceDTO space1 = SpaceDTO.of(TEST_SPACE_1);
@@ -231,10 +225,44 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
                 .content(requestJson1))
         .andExpect(status().isOk());
 
+    ResultActions resultActionsUser =
+        this.mockMvc
+            .perform(
+                MockMvcRequestBuilders.get(SPACE_ENDPOINT + "/search/" + TEST_USER.getUsername())
+                    .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1));
+
+    String responseString = resultActionsUser.andReturn().getResponse().getContentAsString();
+    System.out.println("RES: String " + responseString);
+    String id =
+        responseString.substring(responseString.indexOf(':') + 1, responseString.indexOf(','));
+    System.out.println("RES:  " + id);
+    //Space[] responseArray = mapper.readValue(responseString, Space[].class);
+
+    TEST_SPACE_1.setId(Long.parseLong(id));
+
+    Files.createDirectories(
+        Path.of("uploadedFiles", TEST_USER.getUsername(), TEST_SPACE_1.getId() + ""));
+    Files.write(
+        Path.of(
+            "uploadedFiles/"
+                + TEST_USER.getUsername()
+                + "/"
+                + TEST_SPACE_1.getId()
+                + "/_"
+                + TEST_FILE_NAME_DELETE),
+        "Hello World!".getBytes(StandardCharsets.UTF_8));
+
     this.mockMvc
         .perform(
             MockMvcRequestBuilders.delete(
-                FILE_UPLOAD_ENDPOINT + "/delete-file/" + "2/" + TEST_FILE_NAME_DELETE, 2))
+                FILE_UPLOAD_ENDPOINT
+                    + "/delete-file/"
+                    + TEST_SPACE_1.getId()
+                    + "/"
+                    + TEST_FILE_NAME_DELETE,
+                2))
         .andDo(print())
         .andExpect(status().isOk());
   }
