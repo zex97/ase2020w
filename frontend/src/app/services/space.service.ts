@@ -6,12 +6,15 @@ import {AuthService} from './auth.service';
 import {Space} from '../dtos/space';
 import { Tag } from '../dtos/tag';
 import {Document} from '../dtos/document';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpaceService {
+  private documents = new Map<number, Document[]>();
+  private spaces = new Map<string, Space[]>();
 
   constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
   }
@@ -23,7 +26,10 @@ export class SpaceService {
    */
   getSpaces(username: string): Observable<Space[]> {
     console.log('Searching for spaces.');
-    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username);
+    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username).pipe(
+      tap( (s: Space[]) => {
+        this.spaces.set(username, [...s]);
+      }));
   }
 
   /**
@@ -60,7 +66,10 @@ export class SpaceService {
    * */
   getAllDocuments(userName: string, spaceId: number): Observable<Object> {
     console.log('Getting all the documents for space ' + spaceId);
-    return this.httpClient.get(this.spaceBaseUri + '/' + userName + '/' + spaceId);
+    return this.httpClient.get<Document[]>(this.spaceBaseUri + '/' + userName + '/' + spaceId).pipe(
+      tap( (r: Document[]) => {
+        this.documents.set(spaceId, [...r]);
+      }));
   }
 
   /**
@@ -108,9 +117,9 @@ export class SpaceService {
    * @param username of the space owner
    * @param searchParam name of the spaces to search for
    */
-  getSpacesByName(username: string, searchParam: string): Observable<Space[]> {
+  getSpacesByName(username: string, searchParam: string): Space[] {
     console.log('Searching for spaces by name.');
-    return this.httpClient.get<Space[]>(this.spaceBaseUri + '/search/' + username + '/' + searchParam);
+    return this.spaces.get(username).filter((s: Space) => s.name.includes(searchParam));
 
   }
 
@@ -120,8 +129,25 @@ export class SpaceService {
    * @param spaceId whose documents the user wants to see
    * @param searchParam name of the documents to search for
    * */
-  getDocumentsByName(spaceId: number, searchParam: string): Observable<Object> {
+  getDocumentsByName(spaceId: number, searchParam: string): Document[] {
     console.log('Getting specific documents for space ' + spaceId);
-    return this.httpClient.get(this.spaceBaseUri + '/search/' + spaceId + '/p=' + searchParam);
+    return this.documents.get(spaceId).filter(d => d.name.includes(searchParam));
+  }
+
+  /**
+   * Load all documents for a given user space
+   * @param username name of the current user
+   * @param spaceId whose documents the user wants to see
+   * @param searchParam name or tag of the documents to search for
+   * */
+  getDocumentsByNameAndTags(spaceId: number, searchParam: string): Document[] {
+    console.log('Getting specific documents for space ' + spaceId);
+    let filteredDocs = new Set<Document>([
+      ...this.documents.get(spaceId).filter(d => d.name.includes(searchParam)),
+      ...this.documents.get(spaceId).filter(d => 
+                     d.tags.filter(t => t.includes(searchParam)).length > 0)
+      ]);
+
+    return [...filteredDocs];
   }
 }
