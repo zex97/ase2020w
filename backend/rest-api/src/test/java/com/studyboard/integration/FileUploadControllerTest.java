@@ -102,7 +102,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  // @Order(2)
   void testUploadingOfNewValidFile() throws Exception {
 
     MockMultipartFile mockMultipartFile =
@@ -128,7 +127,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  // @Order(5)
   void testFetchingOfFiles() throws Exception {
 
     MockMultipartFile mockMultipartFile =
@@ -171,7 +169,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  // @Order(4)
   void testUploadingOfNewFileWithInvalidFileType_ThrowsException() throws Exception {
 
     MockMultipartFile mockMultipartFile =
@@ -180,16 +177,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
             TEST_FILE_NAME + "234",
             MediaType.APPLICATION_PDF_VALUE,
             "Hello World!!!".getBytes());
-
-    SpaceDTO space1 = SpaceDTO.of(TEST_SPACE);
-    String requestJson1 = convertObjectToStringForJson(space1);
-
-    /*this.mockMvc
-    .perform(
-        MockMvcRequestBuilders.post(SPACE_ENDPOINT)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestJson1))
-    .andExpect(status().isOk());*/
 
     this.mockMvc
         .perform(
@@ -200,7 +187,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  // @Order(3)
   void tryingToFetchNonExistingFile_ThrowsException() throws Exception {
 
     SpaceDTO space1 = SpaceDTO.of(TEST_SPACE);
@@ -227,6 +213,12 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
             MediaType.APPLICATION_PDF_VALUE,
             "Hello World!!!".getBytes());
 
+    Files.createDirectories(Path.of("uploadedFiles", TEST_USER.getUsername(), "2"));
+    Files.write(
+        Path.of(
+            "uploadedFiles/" + TEST_USER.getUsername() + "/" + "2" + "/_" + TEST_FILE_NAME_DELETE),
+        "Hello World!".getBytes(StandardCharsets.UTF_8));
+
     List<Document> list = Collections.singletonList(TEST_DOCUMENT);
     TEST_SPACE_1.setDocuments(list);
     SpaceDTO space1 = SpaceDTO.of(TEST_SPACE_1);
@@ -238,20 +230,12 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson1))
         .andExpect(status().isOk());
-    this.mockMvc
-        .perform(
-            MockMvcRequestBuilders.multipart(FILE_UPLOAD_ENDPOINT + "/single-file/1", 1)
-                .file(mockMultipartFile))
-        .andDo(print())
-        .andExpect(status().isOk());
-    // necessary for concurrent execution of commands
-    Thread.sleep(100);
 
     this.mockMvc
         .perform(
             MockMvcRequestBuilders.delete(
-                FILE_UPLOAD_ENDPOINT + "/delete-file/" + "1/" + TEST_FILE_NAME_DELETE, 2))
-        // .andDo(print())
+                FILE_UPLOAD_ENDPOINT + "/delete-file/" + "2/" + TEST_FILE_NAME_DELETE, 2))
+        .andDo(print())
         .andExpect(status().isOk());
   }
 
