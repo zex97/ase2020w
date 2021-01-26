@@ -684,7 +684,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a request to filter the deck results based on a sign/sign group they contain
    */
   searchDecksByName() {
-    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.deckNameSearch).subscribe(
+    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.filterSearchContent(this.deckNameSearch)).subscribe(
       (decksList: Deck[]) => {
         this.decks = decksList;
       },
@@ -692,6 +692,10 @@ export class FlashcardManagerComponent implements OnInit {
         this.defaultErrorHandling(error);
       }
     );
+  }
+
+  filterSearchContent(searchContent: string) {
+    return searchContent.replace('/', '').replace(';', '');
   }
 
   /**

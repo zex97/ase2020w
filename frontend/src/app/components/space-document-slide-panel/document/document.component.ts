@@ -131,7 +131,6 @@ export class DocumentComponent implements OnInit, OnChanges {
   }
 
 
-
   /**
    * Fetches a file as resource from the backend
    * */
@@ -193,18 +192,6 @@ export class DocumentComponent implements OnInit, OnChanges {
     });
   }
 
-  private defaultSuccessHandling(message: string) {
-    console.log(message);
-    this.success = true;
-    this.successMessage = '';
-    this.successMessage = message;
-  }
-
-  vanishSuccessMessage() {
-    this.success = false;
-    this.successMessage = '';
-  }
-
   private defaultErrorHandling(error: any) {
     console.log(error);
     this.error = true;
@@ -214,7 +201,7 @@ export class DocumentComponent implements OnInit, OnChanges {
 
 
   searchDocumentsByName() {
-    this.spaceService.getDocumentsByName(this.space.id, this.documentNameSearch).subscribe(
+    this.spaceService.getDocumentsByName(this.space.id, this.filterSearchContent(this.documentNameSearch)).subscribe(
       (documentList: Document[]) => {
         this.documentsOfSpace = documentList;
       },
@@ -231,6 +218,10 @@ export class DocumentComponent implements OnInit, OnChanges {
 
   scrollUp() {
     window.scrollTo(0, 0);
+  }
+
+  filterSearchContent(searchContent: string) {
+    return searchContent.replace('/', '').replace(';', '');
   }
 
 }

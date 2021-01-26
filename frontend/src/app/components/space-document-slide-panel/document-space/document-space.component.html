@@ -151,7 +151,7 @@
         <div class="form-group" style="max-width: 100%">
           <div *ngIf="fileUploadModuleError" class="alert alert-warning alert-dismissible fade show"
                role="alert">
-            <strong>{{fileUploadModuleErrorMessage}}</strong> {{ errorMessage }}
+            <strong>{{fileUploadModuleErrorMessage}}</strong>
           </div>
           <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames"
                  accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
