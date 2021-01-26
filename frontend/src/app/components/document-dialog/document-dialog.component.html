@@ -1,5 +1,5 @@
 <!--Video and audio display-->
-<div class="contentDialog" *ngIf="this.currentDocument && (this.currentDocument.name.includes('.mp3') || this.currentDocument.name.includes('.mp4'))">
+<div class="contentDialog modal-scroll" *ngIf="this.currentDocument && (this.currentDocument.name.includes('.mp3') || this.currentDocument.name.includes('.mp4'))">
   <div class="modal-header">
     <h2 class="modal-title">{{this.currentDocument.name}}</h2>
   </div>
@@ -29,17 +29,17 @@
 
   <!--Transcription-->
   <div class="modal-body">
-    <div style="display:flex; justify-content:space-between">
+    <div style="display:flex; justify-content:space-between;">
       <h2>Transcription</h2>
       <span *ngIf="this.editState==false" (click)="this.prepareEdit()" class="close"><mat-icon>edit</mat-icon></span>
     </div>
     <p *ngIf="this.editState==false">{{this.currentDocument.transcription}}</p>
     <mat-progress-bar *ngIf="isTranscriptionDone()" mode="indeterminate"></mat-progress-bar>
     <form *ngIf="this.editState==true"  style="min-width: 300px; width:100%">
-      <mat-form-field [formGroup]="transcriptionEditForm" appearance="outline" class="modal-input-full-width" style="height: 100%">
+      <mat-form-field [formGroup]="transcriptionEditForm" appearance="outline" class="modal-input-full-width" style="height: max-content">
         <mat-label class="modal-label">Edit transcription</mat-label>
-        <textarea formControlName="content" formGroupName="content"
-                  id="editAudioContent" matInput required type="text"></textarea>
+        <textarea formControlName="content" formGroupName="content" cdkTextareaAutosize cdkAutosizeMinRows="2"
+                  id="editAudioContent" matInput required type="text" style="height: max-content"></textarea>
         <mat-hint *ngIf="transcriptionEditForm.controls.content.errors" class="control-label invalid-input-text">
           Can't be empty!
         </mat-hint>
