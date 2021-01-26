@@ -178,7 +178,6 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
             MediaType.APPLICATION_PDF_VALUE,
             "Hello World!!!".getBytes());
 
-
     this.mockMvc
         .perform(
             MockMvcRequestBuilders.multipart(FILE_UPLOAD_ENDPOINT + "/single-file/1", 1)
@@ -216,8 +215,9 @@ public class FileUploadControllerTest extends BaseIntegrationTest {
 
     Files.createDirectories(Path.of("uploadedFiles", TEST_USER.getUsername(), "2"));
     Files.write(
-            Path.of("uploadedFiles/" + TEST_USER.getUsername() + "/" + "2" + "/_" + TEST_FILE_NAME_DELETE),
-            "Hello World!".getBytes(StandardCharsets.UTF_8));
+        Path.of(
+            "uploadedFiles/" + TEST_USER.getUsername() + "/" + "2" + "/_" + TEST_FILE_NAME_DELETE),
+        "Hello World!".getBytes(StandardCharsets.UTF_8));
 
     List<Document> list = Collections.singletonList(TEST_DOCUMENT);
     TEST_SPACE_1.setDocuments(list);
