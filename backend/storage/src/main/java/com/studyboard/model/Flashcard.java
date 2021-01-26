@@ -14,10 +14,10 @@ public class Flashcard {
     @Column(name = "f_id")
     private long id;
 
-    @Column(nullable = false, name = "question")
+    @Column(nullable = false, name = "question", columnDefinition="TEXT")
     private String question;
 
-    @Column(nullable = false, name = "answer")
+    @Column(nullable = false, name = "answer", columnDefinition="TEXT")
     private String answer;
 
     @Column(nullable = true, name = "confidenceLevel")
