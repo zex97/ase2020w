@@ -180,7 +180,7 @@
             <mat-autocomplete #autoDocs="matAutocomplete">
                 <span *ngFor="let space of getSpaces()">
                  <div *ngIf="isSpaceNotEmpty(space.id)">
-                    <h4 style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                    <h4 style="padding: 5px 0px 0px 15px; color:#808080" class="name-overflow"> Space {{space.name}}</h4>
                     <mat-option (click)="updateReferenceList(document.id);inputDocs.value=null"
                                 *ngFor="let document of this.filteredDocuments.get(space.id)"
                                 [value]="document.id">
@@ -217,7 +217,7 @@
         <div class="card">
 
           <div class="card-body">
-            <h3 class="card-title wrapper txt-clr-dark deck-name"> {{deck.name}}</h3>
+            <h3 class="card-title wrapper txt-clr-dark name-overflow"> {{deck.name}}</h3>
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div *ngIf="deck.favorite" class="wrapper"><img src="../../../assets/deck.png" width="90%;">
               <div class="heart">
@@ -714,7 +714,7 @@
                   <div>
                    <span *ngFor="let space of getSpaces()">
                     <h4 *ngIf="isSpaceNotEmpty(space.id)"
-                        style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                        style="padding: 5px 0px 0px 15px; color:#808080" class="name-overflow"> Space {{space.name}}</h4>
                       <mat-option (click)="updateReferenceList(document.id);inputDocsChange.value=null"
                                   *ngFor="let document of this.filteredDocuments.get(space.id)"
                                   [value]="document.id">
