@@ -392,14 +392,7 @@ export class DocumentSpaceComponent implements OnInit {
   }
 
   searchSpacesByName() {
-    this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch).subscribe(
-      (spaceList: Space[]) => {
-        this.spaces = spaceList;
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
+    this.spaces = this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch);
   }
 
   backToAll() {
