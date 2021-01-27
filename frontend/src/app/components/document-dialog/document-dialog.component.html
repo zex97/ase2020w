@@ -31,7 +31,7 @@
   <div class="modal-body">
     <div style="display:flex; justify-content:space-between;">
       <h2>Transcription</h2>
-      <span *ngIf="this.editState==false" (click)="this.prepareEdit()" class="close"><mat-icon>edit</mat-icon></span>
+      <span *ngIf="this.editState==false && !isTranscriptionDone()" (click)="this.prepareEdit()" class="close"><mat-icon>edit</mat-icon></span>
     </div>
     <p *ngIf="this.editState==false">{{this.currentDocument.transcription}}</p>
     <mat-progress-bar *ngIf="isTranscriptionDone()" mode="indeterminate"></mat-progress-bar>
