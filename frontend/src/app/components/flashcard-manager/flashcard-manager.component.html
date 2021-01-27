@@ -48,6 +48,9 @@
 <div class="warningMessageContainer" *ngIf="isEmptyDecks()">
   <h2 class="warningMessage">No decks were created!</h2>
 </div>
+<div class="warningMessageContainer" *ngIf="isEmptySpecificDecks()">
+  <h2 class="warningMessage">No decks with "{{this.deckNameSearch}}" were created!</h2>
+</div>
 
 <!--Create a deck-->
 <div aria-hidden="true" aria-labelledby="Create deck modal" class="modal fade create-deck-modal" role="dialog"
@@ -265,7 +268,7 @@
     <h3 id="flashcard-title">Flashcards:</h3>
 
     <div class="warningMessageContainer" *ngIf="isEmptyFlashcards()">
-      <h2 class="warningMessage">No flashcards were created in this deck!</h2>
+      <h2 class="warningMessage">No flashcards were created for this deck!</h2>
     </div>
 
     <div class="row" style="margin-left:-4%;">

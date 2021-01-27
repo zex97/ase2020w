@@ -766,7 +766,11 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   isEmptyDecks() {
-    return this.decks?.length === 0;
+    return this.decks?.length === 0 && this.deckNameSearch.length === 0;
+  }
+
+  isEmptySpecificDecks() {
+        return this.decks?.length === 0 && this.deckNameSearch.length !== 0;
   }
 
   isEmptyFlashcards() {
