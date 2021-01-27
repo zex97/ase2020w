@@ -128,6 +128,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
       (decksList: Deck[]) => {
         this.decks = decksList;
+        this.filteredDecks = decksList;
       },
       error => {
         this.defaultErrorHandling(error);
@@ -270,7 +271,7 @@ export class FlashcardManagerComponent implements OnInit {
       this.selectedDecks = [this.selectedDeck.id];
     }
     this.selectedDocuments = undefined;
-    this.filteredDecks = this.getDecks();
+    this.searchDecksInModal('');
     this.resetFlashcardForm();
   }
 
