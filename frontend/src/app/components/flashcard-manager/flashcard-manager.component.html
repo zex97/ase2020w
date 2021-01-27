@@ -497,7 +497,7 @@
             <form class="modal-input-form text-center border border-light p-5">
 
               <!-- Question -->
-              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width" style="max-height: 200px; overflow: scroll;">
+              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width" style="max-height: 200px; overflow-y:a auto;">
                 <mat-label class="modal-label">Edit question</mat-label>
                 <textarea formControlName="question" formGroupName="question"
                        id="editQuestion" matInput cdkTextareaAutosize cdkAutosizeMinRows="2"
@@ -508,7 +508,7 @@
               </mat-form-field>
 
               <!--Answer-->
-              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width" style="max-height: 400px; overflow: scroll;">
+              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width" style="max-height: 400px;   overflow-y: auto;">
                 <mat-label class="modal-label">Edit answer</mat-label>
                 <textarea formControlName="answer" formGroupName="answer"
                           id="editAnswer" matInput cdkTextareaAutosize cdkAutosizeMinRows="2"
