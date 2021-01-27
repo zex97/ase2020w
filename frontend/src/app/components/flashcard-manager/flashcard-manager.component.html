@@ -27,6 +27,7 @@
       Create a flashcard
     </button>
   </div>
+  <div *ngIf="!this.viewAll" style="height: 30px;"></div>
   <div *ngIf="this.selectedDeck === undefined" class="sortingDropdownMenuContainer">
     <mat-form-field class="orderByDropdown" appearance="fill">
       <mat-label style="color: #FEFFFF">Order by</mat-label>
