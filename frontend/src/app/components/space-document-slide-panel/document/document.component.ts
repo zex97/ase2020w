@@ -199,16 +199,8 @@ export class DocumentComponent implements OnInit, OnChanges {
     this.errorMessage = error.error.message;
   }
 
-
-  searchDocumentsByName() {
-    this.spaceService.getDocumentsByName(this.space.id, this.filterSearchContent(this.documentNameSearch)).subscribe(
-      (documentList: Document[]) => {
-        this.documentsOfSpace = documentList;
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
+  searchDocumentsByNameAndTags() {
+    this.documentsOfSpace = this.spaceService.getDocumentsByNameAndTags(this.space.id, this.documentNameSearch);
   }
 
   backToAll() {

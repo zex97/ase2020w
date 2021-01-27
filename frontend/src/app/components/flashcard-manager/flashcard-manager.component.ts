@@ -684,14 +684,7 @@ export class FlashcardManagerComponent implements OnInit {
    * Sends a request to filter the deck results based on a sign/sign group they contain
    */
   searchDecksByName() {
-    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.filterSearchContent(this.deckNameSearch)).subscribe(
-      (decksList: Deck[]) => {
-        this.decks = decksList;
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
+    this.decks = this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.deckNameSearch);
   }
 
   filterSearchContent(searchContent: string) {
@@ -704,27 +697,23 @@ export class FlashcardManagerComponent implements OnInit {
    */
   searchDecksInModal(inputVal: string) {
     console.log(inputVal);
-    this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), inputVal).subscribe(
-      (decksList: Deck[]) => {
-        const selected = this.getChosenDecks();
-        this.filteredDecks = decksList.filter((el) => !selected.find(rm => (rm.id === el.id)));
-        if (this.selectedFlashcard !== undefined) {
-          this.flashcardService.getFlashcardAssignments(this.selectedFlashcard.id).subscribe(
-            (assignedDecks: number[]) => {
+    let decksList = this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), inputVal);
+
+    const selected = this.getChosenDecks();
+    this.filteredDecks = decksList.filter((el) => !selected.find(rm => (rm.id === el.id)));
+    if(this.selectedFlashcard != undefined) {
+      this.flashcardService.getFlashcardAssignments(this.selectedFlashcard.id).subscribe(
+          (assignedDecks: number[]) => {
               console.log(assignedDecks);
-              this.unassignedFilteredDecks = decksList.filter((el) => !assignedDecks.find(rm => (rm === el.id)));
-              this.unassignedFilteredDecks = this.unassignedFilteredDecks.filter((el) => !selected.find(rm => (rm.id === el.id)));
-            },
-            error => {
-              this.defaultErrorHandling(error);
-            }
-          );
-        }
-      },
-      error => {
-        this.defaultErrorHandling(error);
+              this.unassignedFilteredDecks =  decksList.filter((el) => !assignedDecks.find(rm => (rm === el.id)));
+              this.unassignedFilteredDecks =  this.unassignedFilteredDecks.filter((el) => !selected.find(rm => (rm.id === el.id)));
+          },
+          error => {
+            this.defaultErrorHandling(error);
+          }
+        );
       }
-    );
+
   }
 
   getFilteredDecks() {
@@ -753,16 +742,10 @@ export class FlashcardManagerComponent implements OnInit {
    * Filters out already selected options
    */
   searchDocumentsOfSpace(inputVal: string, spaceId: number) {
-    this.spaceService.getDocumentsByName(spaceId, inputVal).subscribe(
-      (documentList: Document[]) => {
-        const selected = this.getReferences();
-        documentList = documentList.filter((el) => !selected.find(rm => (rm.id === el.id)));
-        this.filteredDocuments.set(spaceId, documentList);
-      },
-      error => {
-        this.defaultErrorHandling(error);
-      }
-    );
+    let documentList = this.spaceService.getDocumentsByName(spaceId, inputVal);
+    const selected = this.getReferences();
+    documentList = documentList.filter((el) => !selected.find(rm => (rm.id === el.id)));
+    this.filteredDocuments.set(spaceId, documentList);
   }
 
   isEmptyDecks() {
