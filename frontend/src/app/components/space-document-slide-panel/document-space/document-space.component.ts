@@ -395,6 +395,10 @@ export class DocumentSpaceComponent implements OnInit {
     this.spaces = this.spaceService.getSpacesByName(localStorage.getItem('currentUser'), this.spaceNameSearch);
   }
 
+  filterSearchContent(searchContent: string) {
+    return searchContent.replace('/', '').replace(';', '');
+  }
+
   backToAll() {
     this.resetSpaceFrom();
     this.loadAllSpaces();

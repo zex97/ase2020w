@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FlashcardService} from '../../services/flashcard.service';
 import {UserService} from '../../services/user.service';
@@ -71,6 +71,8 @@ export class FlashcardManagerComponent implements OnInit {
   removable = true;
   showInfo = false;
 
+  @ViewChild('sortOption') sortOption;
+
   constructor(private formBuilder: FormBuilder, private flashcardService: FlashcardService,
               private userService: UserService, private spaceService: SpaceService,
               private fileUploadService: FileUploadService, private snackBar: MatSnackBar,
@@ -126,6 +128,7 @@ export class FlashcardManagerComponent implements OnInit {
     this.flashcardService.getDecks(localStorage.getItem('currentUser')).subscribe(
       (decksList: Deck[]) => {
         this.decks = decksList;
+        this.filteredDecks = decksList;
       },
       error => {
         this.defaultErrorHandling(error);
@@ -139,6 +142,29 @@ export class FlashcardManagerComponent implements OnInit {
    * @return all decks belonging to the logged-in user
    */
   getDecks() {
+
+    if (this.sortOption != null) {
+      switch (this.sortOption.value) {
+        case 'name-asc' : {
+          return this.decks.sort((d1, d2) => d1.name.localeCompare(d2.name));
+        }
+        case 'name-desc' : {
+          return this.decks.sort((d1, d2) => d2.name.localeCompare(d1.name));
+        }
+        case 'date-asc': {
+          return this.decks.sort((d1, d2) => Date.parse(d1.creationDate) - Date.parse(d2.creationDate));
+        }
+        case 'date-desc': {
+          return this.decks.sort((d2, d1) => Date.parse(d1.creationDate) - Date.parse(d2.creationDate));
+        }
+        case 'default': {
+          return this.decks;
+        }
+        default : {
+          return this.decks;
+        }
+      }
+    }
     return this.decks;
   }
 
@@ -245,7 +271,7 @@ export class FlashcardManagerComponent implements OnInit {
       this.selectedDecks = [this.selectedDeck.id];
     }
     this.selectedDocuments = undefined;
-    this.filteredDecks = this.getDecks();
+    this.searchDecksInModal('');
     this.resetFlashcardForm();
   }
 
@@ -652,14 +678,18 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   /**
-  * Get all decks a flashcard doesn't belong to
-  */
+   * Get all decks a flashcard doesn't belong to
+   */
 
   /**
    * Sends a request to filter the deck results based on a sign/sign group they contain
    */
   searchDecksByName() {
     this.decks = this.flashcardService.getDecksByName(localStorage.getItem('currentUser'), this.deckNameSearch);
+  }
+
+  filterSearchContent(searchContent: string) {
+    return searchContent.replace('/', '').replace(';', '');
   }
 
   /**
@@ -684,19 +714,19 @@ export class FlashcardManagerComponent implements OnInit {
           }
         );
       }
-    
+
   }
 
   getFilteredDecks() {
     return this.filteredDecks;
   }
 
-    /**
-     * Gets all decks a flashcard doesn't belongs to
-     */
-    getUnassignedFilteredDecks() {
-      return this.unassignedFilteredDecks;
-    }
+  /**
+   * Gets all decks a flashcard doesn't belongs to
+   */
+  getUnassignedFilteredDecks() {
+    return this.unassignedFilteredDecks;
+  }
 
   /**
    * Calls the filter/search function for documents of all spaces
@@ -720,7 +750,11 @@ export class FlashcardManagerComponent implements OnInit {
   }
 
   isEmptyDecks() {
-    return this.decks?.length === 0;
+    return this.decks?.length === 0 && this.deckNameSearch.length === 0;
+  }
+
+  isEmptySpecificDecks() {
+        return this.decks?.length === 0 && this.deckNameSearch.length !== 0;
   }
 
   isEmptyFlashcards() {

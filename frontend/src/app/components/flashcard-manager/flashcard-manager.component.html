@@ -27,10 +27,30 @@
       Create a flashcard
     </button>
   </div>
+  <div *ngIf="!this.viewAll" style="height: 30px;"></div>
+  <div *ngIf="this.selectedDeck === undefined" class="sortingDropdownMenuContainer">
+    <mat-form-field class="orderByDropdown" appearance="fill">
+      <mat-label style="color: #FEFFFF">Order by</mat-label>
+      <mat-select value="default" id="bla" class="mat-select" #sortOption>
+        <mat-optgroup label="Name">
+          <mat-option value="name-asc">a-Z</mat-option>
+          <mat-option value="name-desc">Z-a</mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Date">
+          <mat-option value="name-asc">Newest first</mat-option>
+          <mat-option value="name-desc">Oldest first</mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
 </div>
 
 <div class="warningMessageContainer" *ngIf="isEmptyDecks()">
   <h2 class="warningMessage">No decks were created!</h2>
+</div>
+<div class="warningMessageContainer" *ngIf="isEmptySpecificDecks()">
+  <h2 class="warningMessage">No decks with "{{this.deckNameSearch}}" were created!</h2>
 </div>
 
 <!--Create a deck-->
@@ -164,7 +184,7 @@
             <mat-autocomplete #autoDocs="matAutocomplete">
                 <span *ngFor="let space of getSpaces()">
                  <div *ngIf="isSpaceNotEmpty(space.id)">
-                    <h4 style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                    <h4 style="padding: 5px 0px 0px 15px; color:#808080" class="name-overflow"> Space {{space.name}}</h4>
                     <mat-option (click)="updateReferenceList(document.id);inputDocs.value=null"
                                 *ngFor="let document of this.filteredDocuments.get(space.id)"
                                 [value]="document.id">
@@ -201,7 +221,7 @@
         <div class="card">
 
           <div class="card-body">
-            <h3 class="card-title wrapper txt-clr-dark deck-name"> {{deck.name}}</h3>
+            <h3 class="card-title wrapper txt-clr-dark name-overflow"> {{deck.name}}</h3>
             <p class="card-text wrapper txt-clr-dark">Size: {{deck.size}}</p>
             <div *ngIf="deck.favorite" class="wrapper"><img src="../../../assets/deck.png" width="90%;">
               <div class="heart">
@@ -249,7 +269,7 @@
     <h3 id="flashcard-title">Flashcards:</h3>
 
     <div class="warningMessageContainer" *ngIf="isEmptyFlashcards()">
-      <h2 class="warningMessage">No flashcards were created in this deck!</h2>
+      <h2 class="warningMessage">No flashcards were created for this deck!</h2>
     </div>
 
     <div class="row" style="margin-left:-4%;">
@@ -481,21 +501,21 @@
             <form class="modal-input-form text-center border border-light p-5">
 
               <!-- Question -->
-              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width">
+              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width" style="max-height: 200px; overflow-y:a auto;">
                 <mat-label class="modal-label">Edit question</mat-label>
-                <input formControlName="question" formGroupName="question"
-                       id="editQuestion" matInput
-                       placeholder="Your question" required type="text">
+                <textarea formControlName="question" formGroupName="question"
+                       id="editQuestion" matInput cdkTextareaAutosize cdkAutosizeMinRows="2"
+                          placeholder="Your question" required type="text"></textarea>
                 <mat-hint *ngIf="flashcardEditForm.controls.question.errors" class="control-label invalid-input-text">
                   Can't be empty!
                 </mat-hint>
               </mat-form-field>
 
               <!--Answer-->
-              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width">
+              <mat-form-field [formGroup]="flashcardEditForm" appearance="outline" class="modal-input-full-width" style="max-height: 400px;   overflow-y: auto;">
                 <mat-label class="modal-label">Edit answer</mat-label>
                 <textarea formControlName="answer" formGroupName="answer"
-                          id="editAnswer" matInput
+                          id="editAnswer" matInput cdkTextareaAutosize cdkAutosizeMinRows="2"
                           placeholder="Your answer" required title="Answer"></textarea>
                 <mat-hint *ngIf="flashcardEditForm.controls.answer.errors" class="control-label invalid-input-text">
                   Can't be empty!
@@ -701,7 +721,7 @@
                   <div>
                    <span *ngFor="let space of getSpaces()">
                     <h4 *ngIf="isSpaceNotEmpty(space.id)"
-                        style="padding: 5px 0px 0px 15px; color:#808080"> Space {{space.name}}</h4>
+                        style="padding: 5px 0px 0px 15px; color:#808080" class="name-overflow"> Space {{space.name}}</h4>
                       <mat-option (click)="updateReferenceList(document.id);inputDocsChange.value=null"
                                   *ngFor="let document of this.filteredDocuments.get(space.id)"
                                   [value]="document.id">
