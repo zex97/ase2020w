@@ -1,0 +1,24 @@
+.modal-body {
+  max-height:250px;
+  overflow-y: auto;
+}
+
+.dialog-buttons {
+  float:right;
+  margin:20px;
+}
+
+.document-dialog-content {
+  overflow-y: auto;
+  height: 80vh;
+}
+
+.image-dialog-content {
+  height: 80vh;
+}
+
+.video-dialog-content {
+  width: 50vw;
+  max-height: 70vh;
+}
+

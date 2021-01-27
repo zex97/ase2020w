@@ -25,11 +25,17 @@ public class Deck {
     @Column(nullable = true, name = "lastTimeUsed")
     private LocalDateTime lastTimeUsed;
 
+    @Column(nullable = true, name = "favorite")
+    private boolean favorite;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sb_user_id")
     private User user;
 
-    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(name = "flashcards_assignment",
+            joinColumns = @JoinColumn(name = "deck_id"),
+            inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
     private List<Flashcard> flashcards;
 
     public Deck() {
@@ -103,6 +109,13 @@ public class Deck {
         this.lastTimeUsed = lastTimeUsed;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 
     public User getUser() {
         return user;

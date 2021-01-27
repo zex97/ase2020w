@@ -2,6 +2,9 @@ FROM adoptopenjdk/openjdk11:jre-11.0.3_7-alpine
 
 WORKDIR /opt/config
 
-COPY rest-api/target/*.jar ./application.jar
+COPY application/target/*.jar ./application.jar
+COPY service/target/classes/*.json ./credentials.json
 
-ENTRYPOINT java -jar application.jar
+RUN apk add  --no-cache ffmpeg
+
+ENTRYPOINT java -jar -Dspring.profiles.active=prod application.jar

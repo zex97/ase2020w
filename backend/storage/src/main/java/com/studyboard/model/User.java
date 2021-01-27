@@ -3,12 +3,12 @@ package com.studyboard.model;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "sb_user")
 public class User {
 
-    @Column(name="sb_user_id")
     private long id;
     private String username;
     private String password;
@@ -58,9 +58,10 @@ public class User {
         this.enabled = enabled;
     }
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name="sb_user_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
+    @SequenceGenerator(name = "seq_user_id", sequenceName = "seq_user_id")
     public long getId() {
         return id;
     }
@@ -69,17 +70,17 @@ public class User {
         this.id = id;
     }
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  public List<Space> getSpaces() {
-    if (spaces == null) {
-      spaces = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Space> getSpaces() {
+        if (spaces == null) {
+            spaces = new ArrayList<>();
+        }
+        return spaces;
     }
-    return spaces;
-  }
 
-  public void setSpaces(List<Space> spaces) {
-    this.spaces = spaces;
-  }
+    public void setSpaces(List<Space> spaces) {
+        this.spaces = spaces;
+    }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Deck> getDecks() {
@@ -139,5 +140,32 @@ public class User {
                 ", loginAttempts='" + loginAttempts + '\'' +
                 ", enabled='" + enabled + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User that = (User) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(username, that.username)) return false;
+        if (!Objects.equals(password, that.password)) return false;
+        if (!Objects.equals(email, that.email)) return false;
+        if (!Objects.equals(enabled, that.enabled)) return false;
+        return Objects.equals(loginAttempts, that.loginAttempts);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Long.valueOf(id).hashCode();
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (loginAttempts != null ? loginAttempts.hashCode() : 0);
+        result = 31 * result + (enabled != null ? enabled.hashCode() : 0);
+        return result;
     }
 }

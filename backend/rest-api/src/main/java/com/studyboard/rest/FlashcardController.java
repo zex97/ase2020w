@@ -2,8 +2,9 @@ package com.studyboard.rest;
 
 import com.studyboard.dto.DeckDTO;
 import com.studyboard.dto.FlashcardDTO;
-import com.studyboard.flashcard.exception.FlashcardConstraintException;
-import com.studyboard.flashcard.service.FlashcardService;
+import com.studyboard.exception.FlashcardConstraintException;
+import com.studyboard.model.Flashcard;
+import com.studyboard.service.FlashcardService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,18 @@ public class FlashcardController {
                 .collect(Collectors.toList());
     }
 
+    @RequestMapping(value = "/{username}/{searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(
+            value = "Get all decks containing the search parameter in the name.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<DeckDTO> findDecksByName(
+            @PathVariable(name = "username") String username,
+            @PathVariable(name = "searchParam") String searchParam) {
+        return flashcardService.findDecksByName(username, searchParam).stream()
+                .map(DeckDTO::of)
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping(value = "/deck{deckId}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(
             value = "Get a deck with a specific id.",
@@ -43,22 +56,20 @@ public class FlashcardController {
     @ApiOperation(
             value = "Create deck associated to a user specified in the DTO",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity createDeck(
+    public DeckDTO createDeck(
             @RequestBody DeckDTO deckDTO) {
-        flashcardService.createDeck(deckDTO.toDeck());
-        return ResponseEntity.ok().build();
+        return DeckDTO.of(flashcardService.createDeck(deckDTO.toDeck()));
     }
 
     @RequestMapping(
-            value = "/{deckId}",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
-            value = "Edit deck with a specific id.",
+            value = "Edit a specific deck",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editDeckName(
+    public ResponseEntity editDeck(
             @RequestBody DeckDTO deckDTO) {
-        flashcardService.updateDeckName(deckDTO.toDeck());
+        flashcardService.editDeck(deckDTO.toDeck());
         return ResponseEntity.ok().build();
     }
 
@@ -77,13 +88,15 @@ public class FlashcardController {
     }
 
     @RequestMapping(
-            value = "/{deckId}/flashcards/{size}",
+            value = "/{deckId}/size{size}/version{version}/update{updateLastTimeUsed}",
             method = RequestMethod.GET,
             produces = "application/json")
     public List<FlashcardDTO> getFlashcardsForRevision(
             @PathVariable(name = "deckId") long deckId,
-            @PathVariable(name = "size") int size) {
-        return flashcardService.getFlashcardsForRevision(deckId, size).stream()
+            @PathVariable(name = "size") int size,
+            @PathVariable(name = "version") int version,
+            @PathVariable(name = "updateLastTimeUsed") boolean updateLastTimeUsed) {
+        return flashcardService.getFlashcardsForRevision(deckId, size, version, updateLastTimeUsed).stream()
                 .map(FlashcardDTO::FlashcardDTOFromFlashcard)
                 .collect(Collectors.toList());
     }
@@ -96,25 +109,35 @@ public class FlashcardController {
             value = "Get flashcard with specific flashcard, user and deck id.",
             authorizations = {@Authorization(value = "apiKey")})
     public FlashcardDTO getOneFlashcard(
-            @PathVariable(name = "deckId") long deckId,
             @PathVariable(name = "flashcardId") long flashcardId) {
         return FlashcardDTO.FlashcardDTOFromFlashcard(
-                flashcardService.getOneFlashcard(deckId, flashcardId));
+                flashcardService.getOneFlashcard(flashcardId));
     }
 
     @RequestMapping(
-            value = "/{deckId}",
+            value = "/flashcard",
             method = RequestMethod.POST,
             produces = "application/json")
     @ApiOperation(
             value = "Create a flashcard.",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity createFlashcard(
-            @PathVariable(name = "deckId") long deckId,
+    public FlashcardDTO createFlashcard(
             @RequestBody FlashcardDTO flashcardDTO) {
         System.out.println(flashcardDTO.toString());
-        flashcardService.createFlashcard(deckId, flashcardDTO.FlashcardFromFlashcardDTO());
-        return ResponseEntity.ok().build();
+        return FlashcardDTO.FlashcardDTOFromFlashcard(flashcardService.createFlashcard(flashcardDTO.FlashcardFromFlashcardDTO()));
+    }
+
+    @RequestMapping(
+            value = "/flashcard{flashcardId}/decks",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    @ApiOperation(
+            value = "Get all decks a flashcard belongs to.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<Long> getAssignments(
+            @PathVariable(name = "flashcardId") long flashcardId) {
+        System.out.println("Getting decks flashcard " + flashcardId + " is assigned to");
+        return flashcardService.getAssignments(flashcardId);
     }
 
     @RequestMapping(
@@ -140,23 +163,34 @@ public class FlashcardController {
     public ResponseEntity deleteFlashcard(
             @PathVariable(name = "deckId") long deckId,
             @PathVariable(name = "flashcardId") long flashcardId) {
-        flashcardService.deleteFlashcard(deckId, flashcardId);
+        flashcardService.removeAssignment(deckId, flashcardId);
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(
-            value = "/{deckId}/flashcard{flashcardId}",
+            value = "/flashcard{flashcardId}",
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(
             value =
-                    "Edit or rate the flashcard based on personal confidence level with the value between 1 and 5.",
+                    "Edit a flashcard's question or answer.",
             authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editFlashcard(
-            @PathVariable(name = "deckId") long deckId,
+    public FlashcardDTO editFlashcard(
+            @RequestBody FlashcardDTO flashcardDTO) {
+        return FlashcardDTO.FlashcardDTOFromFlashcard(flashcardService.editFlashcard(flashcardDTO.FlashcardFromFlashcardDTO()));
+    }
+
+    @RequestMapping(
+            value = "/rate{flashcardId}",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    @ApiOperation(
+            value =
+                    "Rate the flashcard based on personal confidence level with the value between 0 and 5.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public void rateFlashcard(
             @RequestBody FlashcardDTO flashcardDTO)
             throws FlashcardConstraintException {
-        flashcardService.editFlashcard(deckId, flashcardDTO.FlashcardFromFlashcardDTO());
-        return ResponseEntity.ok().build();
+        flashcardService.rateFlashcard(flashcardDTO.FlashcardFromFlashcardDTO());
     }
 }

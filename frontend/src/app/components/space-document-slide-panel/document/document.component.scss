@@ -1,0 +1,89 @@
+.mat-list-base {
+  padding-top: 1px;
+}
+
+.mat-list-item {
+  height: 49.5px;
+  background-color: #FEFFFF;
+}
+
+.mat-list-item:hover {
+  background-color: lightgrey !important;
+}
+
+.row {
+  margin-left: 16px !important;
+  padding-left: 0 !important;
+}
+
+.topPageDiv {
+  min-width: 700px !important;
+}
+
+.document-name {
+  display: inline-block;
+  width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+#listOfDocuments {
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-width: 50%;
+  padding-right: 1px;
+}
+
+.mat-card-content {
+  width: 100%;
+}
+
+.mat-list-base {
+  padding-top: 1px;
+}
+
+#documentListItem {
+  height: max-content;
+  width: 100%;
+  background-color: #FEFFFF;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.unselectable {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+
+/* Copy to every page scss with a search bar*/
+::ng-deep.mat-form-field-underline {
+  /*change color of underline*/
+  background-color: #FEFFFF !important;
+}
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: #FEFFFF !important;
+}
+::ng-deep.mat-form-field-ripple {
+  /*change color of underline when focused*/
+  background-color: #FEFFFF !important;
+}
+
+.invalid-input-text {
+  user-select: none;
+  color: #d93025;
+  display: block;
+  text-align: left;
+}
+.modal-input-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}

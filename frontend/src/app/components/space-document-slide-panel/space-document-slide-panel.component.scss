@@ -1,0 +1,16 @@
+.panes {
+  width: 200%;
+  display: flex;
+}
+
+.leftSide {
+  height: auto !important;
+}
+
+.rightSide {
+  height: auto !important;
+}
+
+.panes div {
+  flex: 1;
+}

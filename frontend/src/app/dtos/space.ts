@@ -1,9 +1,12 @@
-import {User} from "./user"
+import {User} from './user';
 
 export class Space {
   constructor(
     public id: number,
     public name: string,
+    public description: string,
+    public creationDate: string,
+    public favorite: boolean,
     public userDTO: User) {
   }
 }

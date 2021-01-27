@@ -1,8 +1,11 @@
 package com.studyboard.rest;
 
+import com.studyboard.dto.DocumentDTO;
 import com.studyboard.dto.SpaceDTO;
+import com.studyboard.dto.TagDTO;
+
 import com.studyboard.model.Document;
-import com.studyboard.space.service.SimpleUserSpaceService;
+import com.studyboard.service.implementation.SimpleUserSpaceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,35 @@ public class UserSpaceController {
     @Autowired
     private SimpleUserSpaceService service;
 
-    @RequestMapping(value = "/{username}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/search/{username}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(value = "Get space associated with specific user.", authorizations = {@Authorization(value = "apiKey")})
     public List<SpaceDTO> getUserSpaces(@PathVariable(name = "username") String username) {
         return service.getUserSpaces(username).stream()
                 .map(SpaceDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/search/{username}/{searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(
+            value = "Get all spaces containing the search parameter in the name.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<SpaceDTO> getUserSpacesByName(
+            @PathVariable(name = "username") String username,
+            @PathVariable(name = "searchParam") String searchParam) {
+        return service.getSpacesByName(username, searchParam).stream()
+                .map(SpaceDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/search/{spaceId}/p={searchParam}", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(
+            value = "Get all documents containing the search parameter in the name.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public List<DocumentDTO> getSpaceDocumentsByName(
+            @PathVariable(name = "spaceId") long spaceId,
+            @PathVariable(name = "searchParam") String searchParam) {
+        return service.getDocumentsByName(spaceId, searchParam).stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
                 .collect(Collectors.toList());
     }
 
@@ -51,21 +78,25 @@ public class UserSpaceController {
             method = RequestMethod.PUT,
             produces = "application/json")
     @ApiOperation(value = "Edit space associated with specific user username.", authorizations = {@Authorization(value = "apiKey")})
-    public ResponseEntity editSpaceName(
+    public ResponseEntity editSpace(
             @RequestBody SpaceDTO spaceDTO) {
-        service.updateSpaceName(spaceDTO.toSpace());
+        service.updateSpace(spaceDTO.toSpace());
         return ResponseEntity.ok().build();
     }
 
-    /**Change after file upload is done*/
+    /**
+     * Change after file upload is done
+     */
     @RequestMapping(
             value = "/{username}/{spaceId}",
             method = RequestMethod.GET,
             produces = "application/json")
     @ApiOperation(value = "Get all documents associated with specific user and space.", authorizations = {@Authorization(value = "apiKey")})
-    public List<Document> getAllDocuments(
+    public List<DocumentDTO> getAllDocuments(
             @PathVariable(name = "username") String username, @PathVariable(name = "spaceId") long spaceId) {
-        return service.geAllDocumentsFromSpace(spaceId);
+        return service.getAllDocumentsFromSpace(spaceId).stream()
+                .map(DocumentDTO::DocumentDTOFromDocument)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(
@@ -77,6 +108,41 @@ public class UserSpaceController {
             @PathVariable(name = "spaceId") long spaceId,
             @PathVariable(name = "documentId") long documentId) {
         service.removeDocumentFromSpace(spaceId, documentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/{documentId}",
+            method = RequestMethod.POST,
+            produces = "application/json")
+    @ApiOperation(value = "Add new tag to a document.", authorizations = {@Authorization(value = "apiKey")})
+    public void addTagToDocument(@PathVariable(name = "documentId") long documentId,
+                                           @RequestBody TagDTO tagDTO) {
+         service.addTagToDocument(documentId, tagDTO.toTag());
+//         return ResponseEntity..build();
+    }
+
+    @RequestMapping(
+            value = "/{documentId}/tag={tag}",
+            method = RequestMethod.DELETE,
+            produces = "application/json")
+    @ApiOperation(value = "Delete a tag from a document.", authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity deleteTagFromDocument(@PathVariable(name = "documentId") long documentId,
+                                                @PathVariable(name = "tag") String tag) {
+        service.removeTagFromDocument(documentId, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/document{documentId}",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    @ApiOperation(
+            value = "Edit a transcription of a particular document.",
+            authorizations = {@Authorization(value = "apiKey")})
+    public ResponseEntity editTranscription(
+            @RequestBody DocumentDTO documentDTO) {
+        service.editTranscription(documentDTO.DocumentFromDocumentDTO());
         return ResponseEntity.ok().build();
     }
 }

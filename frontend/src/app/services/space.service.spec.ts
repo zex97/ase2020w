@@ -1,6 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {SpaceService} from './space.service';
+import {FlashcardService} from './flashcard.service';
 import {AppModule} from '../app.module';
 
 describe('SpaceService', () => {

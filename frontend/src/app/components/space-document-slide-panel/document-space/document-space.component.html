@@ -1,0 +1,263 @@
+<app-space-document-slide-panel [activePane]="isLeftVisible ? 'left' : 'right'">
+  <div leftPane>
+    <div class="topPageDiv">
+      <div class="row p-2 mb-4">
+        <mat-form-field (keyup.enter)="searchSpacesByName()" class="pageTopBarSearchField">
+          <mat-placeholder style="color: #FEFFFF">Search spaces</mat-placeholder>
+          <input matInput style="color: #FEFFFF" title="search" type="search" [(ngModel)]="spaceNameSearch"
+                 (ngModelChange)="searchSpacesByName()">
+          <button (click)="searchSpacesByName()" aria-label="search" mat-button mat-stroked-button matSuffix
+                  style="border-color: #FEFFFF">
+            <mat-icon style="color: #FEFFFF">search</mat-icon>
+          </button>
+        </mat-form-field>
+
+
+        <button (click)="backToAll()" *ngIf="this.spaceNameSearch.length!==0" class="pageTopBarButton"
+                mat-stroked-button>
+          Clear search
+        </button>
+
+        <button (click)="resetSpaceFrom()" class="pageTopBarButton" data-target=".create-space-modal"
+                data-toggle="modal"
+                mat-stroked-button>
+          Create a space
+        </button>
+      </div>
+
+      <div class="sortingDropdownMenuContainer">
+        <mat-form-field class="orderByDropdown" appearance="fill">
+          <mat-label style="color: #FEFFFF;">Order by</mat-label>
+          <mat-select value="default" id="bla" #sortOption>
+            <mat-optgroup label="Name">
+              <mat-option value="name-asc">a-Z</mat-option>
+              <mat-option value="name-desc">Z-a</mat-option>
+            </mat-optgroup>
+            <mat-optgroup label="Date">
+              <mat-option value="date-asc">Oldest first</mat-option>
+              <mat-option value="date-desc">Newest first</mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="col" id="listOfSpaces">
+      <mat-nav-list *ngFor="let space of getSpaces()">
+        <mat-list-item (click)="loadSpaceDetails(space.id); setSelectSpace(space);setCurrentSpace(space);toggleSlide()"
+                       id="spacesListItem">
+          <mat-card-content>
+            <mat-card-title>
+              <h3 class="space-name"> {{space.name}}
+                <mat-icon style="position: relative; top:7px;" *ngIf="space.favorite" matTooltip="Favorite space">
+                  favorite
+                </mat-icon>
+              </h3>
+              <span (click)="setCurrentSpace(space)" class="close" data-target=".delete-space-modal"
+                    matTooltip="Delete space"
+                    data-toggle="modal" style="margin-right:1.5%;"><mat-icon>delete</mat-icon></span>
+              <span (click)="setCurrentSpace(space)" class="close" data-target=".edit-space-modal"
+                    matTooltip="Edit space"
+                    data-toggle="modal" style="margin-right:5%;"><mat-icon>edit</mat-icon></span>
+              <span (click)="setCurrentSpace(space); clearInputFiles()" class="close" data-target=".upload-file-modal"
+                    matTooltip="Upload files"
+                    data-toggle="modal" style="margin-right:5%;"><mat-icon> attach_file</mat-icon></span>
+            </mat-card-title>
+            <div class="card-text" *ngIf="space.description?.length!=0">{{space.description}}</div>
+            <div class="card-text" *ngIf="space.description == null">This space has no description!</div>
+
+          </mat-card-content>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+    <div class="warningMessageContainer" *ngIf="spacesExist()">
+      <h2 class="warningMessage">No spaces were created!</h2>
+    </div>
+    <div class="warningMessageContainer" *ngIf="specificSpaceExists()">
+      <h2 class="warningMessage">No spaces with "{{this.spaceNameSearch}}" were created!</h2>
+    </div>
+  </div>
+  <div rightPane>
+    <app-document *ngIf="selectSpace" [space]=selectSpace (documentEvents)="parentEventHandlerFunction($event)"
+                  #documentComponent></app-document>
+  </div>
+</app-space-document-slide-panel>
+
+<span id="deleteSpaceHidden" data-target=".delete-space-modal" data-toggle="modal" style="display: none;">delete</span>
+<span id="editSpaceHidden" data-target=".edit-space-modal" data-toggle="modal" style="display: none;">edit</span>
+<span id="uploadToSpaceHidden" data-target=".upload-file-modal" data-toggle="modal" style="display: none;">upload</span>
+
+
+<!--------------------------------------------------MODALS------------------------------------------------------>
+
+<!--Create space modal-->
+<div aria-hidden="true" aria-labelledby="Create space modal" class="modal fade create-space-modal" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Create a new space for documents</h2>
+      </div>
+      <div class="modal-body">
+        <form class="modal-input-form">
+
+          <mat-form-field [formGroup]="spaceForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Space Name</mat-label>
+            <input [value]="spaceForm.value.name" formControlName="name" formGroupName="name" id="name"
+                   matInput placeholder="eg. MathSpace"
+                   required title="name" type="text">
+            <mat-hint *ngIf="spaceForm.controls.name.errors" class="control-label invalid-input-text">Can't be
+              empty!
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-form-field [formGroup]="spaceForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Space description</mat-label>
+            <input [value]="spaceForm.value.description" formControlName="description" formGroupName="description"
+                   id="description"
+                   matInput placeholder="eg. This spaces contains..."
+                   title="description" type="text">
+          </mat-form-field>
+
+          <mat-checkbox [formControl]="spaceFavorite" color="primary"> Favorite space</mat-checkbox>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="spaceForm.controls.name.errors" (click)="createSpace()" data-dismiss="modal" mat-button
+                mat-dialog-actions type="button">
+          Save
+        </button>
+        <button type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- file upload modal -->
+<div *ngIf="currentSpace" aria-hidden="true" aria-label="Upload Files" class="modal fade upload-file-modal"
+     data-backdrop="static"
+     data-keyboard="false" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Upload Files to {{getCurrentSpace().name}}</h2>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group" style="max-width: 100%">
+          <div *ngIf="fileUploadModuleError" class="alert alert-warning alert-dismissible fade show"
+               role="alert">
+            <strong>{{fileUploadModuleErrorMessage}}</strong>
+          </div>
+          <input (change)="handleFileInput($event.target.files)" [value]="filesToUploadNames"
+                 accept=".pdf,.mp3,.mp4,.jpeg,.png" class="hide-text" id="files"
+                 multiple type="file"
+                 value="name" style="display: none;">
+
+          <input class="custom-file-upload" type="button" value="Choose Files"
+                 onclick="document.getElementById('files').click();"/>
+          <span>
+            {{filesCountString}}
+          </span>
+          <!--<label for="files">Choose files </label>-->
+        </div>
+        <div *ngIf="filesToUpload.length>0">
+          <label for="files">Names of files to upload: </label>
+          <mat-card *ngFor="let file of getFilesToUpload(); let i = index" style="padding-right: 0;">
+            {{file.name}}
+            <button (click)="removeFileFromList(i)" aria-label="Remove" data-toggle="modal"
+                    mat-button style="float: right;" matTooltip="Remove file">
+              <mat-icon style="height: 35px">close</mat-icon>
+            </button>
+            <!--<span (click)="removeFileFromList(i)" class="close" data-toggle="modal">&times;</span>-->
+          </mat-card>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button (click)="uploadFiles(currentSpace);" *ngIf="filesReadyForUpload()" type="button" data-dismiss="modal"
+                mat-button mat-dialog-actions>
+          Submit
+        </button>
+        <button (click)="clearInputFiles();resetModalWarning()" type="button" data-dismiss="modal" mat-button
+                mat-dialog-actions>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Edit space modal-->
+<div *ngIf="currentSpace" aria-hidden="true" aria-labelledby="Edit space modal"
+     class="modal fade edit-space-modal"
+     role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Edit space {{getCurrentSpace().name}}</h2>
+      </div>
+      <div class="modal-body">
+        <form class="modal-input-form">
+          <mat-form-field [formGroup]="spaceEditForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Edit name</mat-label>
+            <input [value]="currentSpace.name" formControlName="name" formGroupName="name"
+                   id="newName" matInput
+                   placeholder="eg. MathSpace" required type="text">
+            <mat-hint *ngIf="spaceEditForm.controls.name.errors" class="control-label invalid-input-text">
+              Can't be empty!
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field [formGroup]="spaceEditForm" appearance="outline" class="modal-input-full-width">
+            <mat-label style="color: #5f6368">Edit description</mat-label>
+            <input [value]="currentSpace.description" formControlName="description" formGroupName="description"
+                   id="newDescription" matInput
+                   placeholder="eg. This space contains..." required type="text">
+          </mat-form-field>
+          <mat-checkbox [formControl]="this.spaceFavorite" color="primary"> Favorite Space</mat-checkbox>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button (click)="saveEdits(currentSpace);" [disabled]="spaceEditForm.controls.name.errors" type="button"
+                data-dismiss="modal" mat-button mat-dialog-actions>
+          Submit
+        </button>
+        <button (click)="spaceEditForm.reset();" type="button" data-dismiss="modal" mat-button mat-dialog-actions>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Delete space modal-->
+<div *ngIf="currentSpace" [attr.space]="currentSpace" aria-hidden="true" aria-labelledby="Delete space modal"
+     class="modal fade delete-space-modal"
+     role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Delete space {{getCurrentSpace().name}}</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Are you sure you want to delete space {{getCurrentSpace().name}}?</h3>
+      </div>
+      <div class="modal-footer">
+        <button (click)="deleteSpace(currentSpace.id);toggleSlide()" type="button" data-dismiss="modal" mat-button
+                mat-dialog-actions>
+          Submit
+        </button>
+        <button (click)="spaceEditForm.reset();toggleSlide()" type="button" data-dismiss="modal" mat-button
+                mat-dialog-actions>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

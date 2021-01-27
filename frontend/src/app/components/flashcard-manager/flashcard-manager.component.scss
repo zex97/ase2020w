@@ -1,6 +1,16 @@
 .page-title {
   font-size: 3em;
   font-weight: lighter;
+  background-color: #2b7a78;
+}
+
+.topPageDiv {
+  padding-bottom: 0 !important; // necessary because of global style changes for orderBy
+}
+
+.modal-label {
+  color: #5f6368;
+  width: 100%;
 }
 
 .txt-clr-dark {
@@ -12,16 +22,39 @@
   color: #ffffff;
 }
 
-#deck-buttons > button {
-  margin-left: 5px;
+#deck-buttons > span {
+  margin-left: 10px;
 }
 
-.wrapper{
-  text-align:center;
+.wrapper {
+  text-align: center;
 }
 
 .flashcardModalBody {
-  overflow-y:inherit !important;
+  overflow-y: inherit !important;
+}
+
+.name-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  align: center;
+}
+
+.name-details {
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: initial;
+}
+
+#deck-info {
+  background-color: #ffffff;
+  padding: 5px 10px 10px 10px;
+}
+
+.flex-grid {
+  display: flex;
 }
 
 .flex-container-space-between {
@@ -29,38 +62,97 @@
   justify-content: space-between;
 }
 
-.flex-container-space-between > button {
-  margin-left: 5%;
-  margin-right: 5%;
-  background-color: #def2f1;
+.flex-container-space-between > span {
+  margin-left: 3%;
+  margin-right: 3%;
+}
+
+.flex-container-space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+#flashcard-title {
+  margin-top: 10px;
+  color: #17252A;
 }
 
 .flashcard {
   background-color: #3aafa9;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
+  overflow-wrap: break-word;
 }
 
 .flashcard-answer {
   background-color: #2b7a78;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
+  overflow-wrap: break-word;
 }
 
-::ng-deep .mat-expansion-panel{
+.flashcard-reference {
+  background-color: #def2f1;
+  color: #2b7a78;
+  text-align: center;
+}
+
+::ng-deep .mat-chip {
+  overflow: hidden;
+  white-space: nowrap;
+  display: block !important;
+}
+
+#matChipRemove {
+  display: inline-block;
+}
+
+::ng-deep .mat-expansion-panel {
   background-color: #3aafa9;
   color: #ffffff;
-  text-align:center;
 }
 
-::ng-deep .mat-expansion-panel-body{
+::ng-deep .mat-expansion-panel-header {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .mat-expansion-panel-body {
   background-color: #2b7a78;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
+  overflow-wrap: break-word;
 }
 
 ::ng-deep .mat-expansion-panel-body > h4 {
   margin-top: 20px;
+}
+
+ngb-rating {
+  font-size: 90px;
+  color: #2b7a78;
+  background: #ffffff;
+}
+
+mat-checkbox {
+  margin-top: 5px;
+  margin-left: 3px;
+}
+
+.heart {
+  position: absolute;
+  top: 125px;
+  left: 30px;
+  color: #3AAFA9;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #3aafa9 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #3aafa9 !important; /*outer ring color change*/
 }
 
 

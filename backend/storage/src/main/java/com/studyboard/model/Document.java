@@ -1,8 +1,13 @@
 package com.studyboard.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
 
 @Entity
 // @Inheritance(strategy = InheritanceType.JOINED)
@@ -13,6 +18,8 @@ public class Document {
     private String name;
     private Space space;
     private String filePath;
+    private List<String> tags;
+    private List<Flashcard> flashcards;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -40,6 +47,8 @@ public class Document {
         this.name = name;
     }
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     public String getTranscription() {
         return transcription;
     }
@@ -64,5 +73,35 @@ public class Document {
 
     public void setNeedsTranscription(boolean needsTranscription) {
         this.needsTranscription = needsTranscription;
+    }
+
+    @ElementCollection
+    public List<String> getTags() {
+        if (tags == null){
+            this.tags = new ArrayList<>();
+        }
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    @PreRemove
+    private void removeDocumentFromSpaces() {
+        this.space.removeDocument(this);
+    }
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "flashcards_reference",
+            joinColumns = @JoinColumn(name = "document_id"),
+            inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
+    public List<Flashcard> getFlashcards() {
+        return flashcards;
+    }
+
+    public void setFlashcards(List<Flashcard> flashcards) {
+        this.flashcards = flashcards;
     }
 }

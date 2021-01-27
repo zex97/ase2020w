@@ -4,6 +4,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +18,9 @@ public class Space {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Document> documents;
     private User user;
+    private String description;
+    private LocalDate creationDate;
+    private boolean favorite;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,7 +40,32 @@ public class Space {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "description")
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column(nullable = false, name = "creationDate")
+    public LocalDate getCreationDate() {
+        return this.creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @Column(nullable = true, name = "favorite")
+    public boolean isFavorite() { return this.favorite; }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<Document> getDocuments() {
         if (documents == null) {
             documents = new ArrayList<>();
@@ -47,7 +77,7 @@ public class Space {
         this.documents = documents;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sb_user_id")
     public User getUser() {
         return user;
@@ -68,5 +98,28 @@ public class Space {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, documents);
+    }
+
+    public void removeDocument(Document document) {
+        documents.removeIf(storedDocument -> storedDocument.getId() == document.getId());
+    }
+
+    public Space () {}
+
+    public Space (String name, User user) {
+        this.name = name;
+        this.user = user;
+    }
+
+    public Space (String name, LocalDate creationDate, User user) {
+        this.name = name;
+        this.creationDate = creationDate;
+        this.user = user;
+    }
+
+    public Space (String name, String description, User user) {
+        this.name = name;
+        this.user = user;
+        this.description = description;
     }
 }

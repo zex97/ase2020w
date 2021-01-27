@@ -26,6 +26,14 @@ public interface UserRepository extends CrudRepository<User, Long> {
     User findOneByUsername(String username);
 
     /**
+     * Find a single user entry by email.
+     *
+     * @param email the email of the user entry
+     * @return user object with specified email
+     */
+    User findOneByEmail(String email);
+
+    /**
      * Returns a list of all users.
      */
     List<User> findAll();

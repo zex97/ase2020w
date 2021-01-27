@@ -9,6 +9,12 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
+/* Default theme for video player. */
+@import '~@vime/core/themes/default.css';
+
+/* Extended default theme for video player. */
+@import '~@vime/core/themes/light.css';
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
@@ -43,6 +49,7 @@ body {
 
 html, body {
   height: 100%;
+  overflow-x: hidden; //horizontal
 }
 body {
   margin: 0;
@@ -51,7 +58,7 @@ body {
 }
 
 
-/* Page title wrapper */
+/* Page title */
 .page-title {  // aditional css properties required in component scss files
   text-align: center;
   color: white;
@@ -59,8 +66,24 @@ body {
   padding: 0.3em;
 }
 .page-title-wrapper{
-  background: #2b7a78;
   height: 4em;
+}
+
+.page-title-small {
+  color: #FEFFFF !important;
+  font-weight: lighter !important;
+  margin-bottom: 0 !important;
+  padding-left: 25px !important;
+}
+
+/* Top of every component page */
+.topPageDiv {
+  background: #2b7a78;
+  padding: 20px
+}
+.row {
+  margin-bottom: 0 !important;
+  padding-left: 30px !important;
 }
 
 /* Snackbars */
@@ -86,16 +109,46 @@ body {
   }
 }
 
+.orderByDropdown {
+  padding-left: 22px;
+}
 
+.mat-select-value {
+  color: #FEFFFF;
+}
 
-/* Buttons*/
-.mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus, {
+.mat-select-arrow {
+  color: #FEFFFF;
+}
+
+mat-select.mat-form-field-underline {
+  color: #FEFFFF;
+  background: #FEFFFF;
+}
+
+/* Empty content message */
+.warningMessageContainer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 40em !important;
+  color: grey !important;
+}
+.warningMessage {
+  font-weight: lighter !important;
+}
+
+/* Buttons */
+.mat-icon-button, .mat-icon-button:active, .mat-icon-button:focus {
   outline: none;
 }
-.mat-raised-button:focus {
+.mat-button, .mat-button:active, .mat-button:focus {
   outline: none;
 }
-.mat-button:focus {
+.mat-stroked-button, .mat-stroked-button:active, .mat-stroked-button:focus {
+  outline: none;
+}
+.mat-raised-button, .mat-raised-button:active, .mat-raised-button:focus {
   outline: none;
 }
 
@@ -103,5 +156,79 @@ body {
   background-color: #2b7a78;
   color: white;
 }
+
+.pageTopBarButton {
+  height: fit-content !important;
+  margin: 8px 10px !important;
+  border-color: #FEFFFF !important;
+  color: #FEFFFF !important;
+}
+
+.pageTopBarSearchField {
+  height: 50px !important;
+  margin: 0px 10px !important;
+}
+
+.pageTopBarSearchField .mat-form-field-underline {
+  background-color: white !important;
+}
+
+/* Display mat-select fields over the modal (depth adjustment) */
+.cdk-global-overlay-wrapper, .cdk-overlay-container { z-index: 9999!important; }
+
+
+
+/* Modal windows */
+.mat-hint {
+  color: grey !important;
+}
+.modal-header {
+  text-align: center !important;
+}
+.modal-title {
+  margin: 0 !important;
+  font-weight: normal !important;
+}
+.modal-input-full-width {
+  width: 100%;
+}
+.modal-input-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+
+/* Sorting dropdown menu */
+.orderByDropdown .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+.orderByDropdown .mat-form-field-flex {
+  padding-top: 0 !important;
+}
+.orderByDropdown .mat-form-field-infix {
+  padding-bottom: 0 !important;
+}
+.orderByDropdown .mat-form-field-underline {
+  opacity: 0;
+}
+.topPageDiv .row {
+  padding-bottom: 0 !important;
+}
+.sortingDropdownMenuContainer {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  align-content: center !important;
+}
+.orderByDropdown {
+  align-self: flex-end !important;
+  padding-right: 15px !important;
+}
+.topPageDiv {
+  padding-bottom: 0 !important;
+}
+
 
 

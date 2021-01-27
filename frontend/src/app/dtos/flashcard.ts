@@ -1,11 +1,13 @@
-import {Deck} from "./deck"
+import {Deck} from './deck';
+import {Document} from './document';
 
 export class Flashcard {
   constructor(
     public id: number,
     public question: string,
     public answer: string,
-    public confidence_level: number,
-    public deckDTO: Deck) {
+    public confidenceLevel: number,
+    public deckDTOs: Deck[],
+    public documentReferences: Document[]) {
   }
 }
